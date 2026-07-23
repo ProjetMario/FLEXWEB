@@ -9,16 +9,37 @@ export async function getStaticPaths() {
     (entry: CollectionEntry<"locations">) => !entry.data.isDraft
   );
 
+  const normalizeName = (name: string) =>
+    name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+  const nameToSlug = Object.fromEntries(
+    locations.map((loc: CollectionEntry<"locations">) => [
+      normalizeName(loc.data.name),
+      loc.data.slug,
+    ])
+  );
+
   return locations.map((entry: CollectionEntry<"locations">) => ({
     params: { slug: entry.data.slug },
-    props: { entry },
+    props: { entry, nameToSlug },
   }));
 }
 
-const { entry } = Astro.props as { entry: CollectionEntry<"locations"> };
+const { entry, nameToSlug } = Astro.props as {
+  entry: CollectionEntry<"locations">;
+  nameToSlug: Record<string, string>;
+};
 const { Content } = await render(entry);
 const { data } = entry;
 const preposition = data.type === "city" ? "à" : "en";
+
+const normalizeName = (name: string) =>
+  name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+const nearbyCityLinks = data.nearbyCities.map((city) => ({
+  name: city,
+  slug: nameToSlug[normalizeName(city)] || null,
+}));
 
 const siteUrl = "https://flex-web.fr";
 const canonicalUrl = new URL(data.slug, siteUrl).toString();
@@ -110,6 +131,74 @@ if (faqSchema) {
     <div class="mt-12 space-y-6 text-lg leading-relaxed" style="color: var(--color-text)">
       <Content />
     </div>
+
+    {
+      data.targetIndustries.length > 0 && (
+        <section class="mt-12">
+          <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+            Secteurs d'activité à {data.name}
+          </h2>
+          <ul class="mt-4 grid gap-2 sm:grid-cols-2">
+            {data.targetIndustries.map((industry) => (
+              <li class="flex items-center gap-2" style="color: var(--color-text-muted)">
+                <span aria-hidden="true">•</span>
+                {industry}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      data.services.length > 0 && (
+        <section class="mt-12">
+          <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+            Services disponibles à {data.name}
+          </h2>
+          <ul class="mt-4 grid gap-2 sm:grid-cols-2">
+            {data.services.map((service) => (
+              <li class="flex items-center gap-2" style="color: var(--color-text-muted)">
+                <span aria-hidden="true">•</span>
+                {service}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      nearbyCityLinks.length > 0 && (
+        <section class="mt-12">
+          <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+            Communes proches de {data.name}
+          </h2>
+          <ul class="mt-4 flex flex-wrap gap-3">
+            {nearbyCityLinks.map((city) => (
+              <li>
+                {city.slug ? (
+                  <a
+                    href={`/${city.slug}/`}
+                    class="inline-block rounded-full px-4 py-2 text-sm font-medium transition hover:opacity-90"
+                    style="background-color: var(--color-surface); color: var(--color-accent)"
+                  >
+                    {city.name}
+                  </a>
+                ) : (
+                  <span
+                    class="inline-block rounded-full px-4 py-2 text-sm font-medium"
+                    style="background-color: var(--color-surface); color: var(--color-text-muted)"
+                  >
+                    {city.name}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
 
     {
       "faq" in data && data.faq && data.faq.length > 0 && (
