@@ -17,7 +17,7 @@ export default function Footer({ data = {} }) {
       <div className="mx-auto max-w-6xl px-5 sm:px-6 md:px-8">
         <div className="grid grid-cols-1 gap-9 md:grid-cols-2 lg:grid-cols-4 lg:gap-12 mb-10">
           <div className="lg:col-span-2">
-            <Logo className="h-6" />
+            <Logo className="h-10" />
             <p className="mt-3 max-w-sm text-sm font-light leading-relaxed text-[#6e6e73]">
               {data.description}
             </p>
