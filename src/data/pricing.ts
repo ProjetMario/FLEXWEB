@@ -98,6 +98,27 @@ export const pricingPlans: PricingPlan[] = [
       features: ["Hébergement", "Sauvegardes", "Sécurité", "Support", "Mises à jour"],
     },
   },
+  {
+    name: "Applications",
+    price: "Sur devis",
+    priceNote: "Web & mobile sur mesure",
+    badge: "Sur mesure",
+    description: "Développement d'applications web et mobiles personnalisées pour votre activité.",
+    features: [
+      "Développement sur mesure",
+      "Applications web (SaaS)",
+      "Applications mobiles",
+      "Interfaces administrateur",
+      "API et intégrations",
+      "Base de données sécurisée",
+      "Hébergement dédié",
+      "Maintenance évolutive",
+      "Code source remis",
+      "Support technique",
+    ],
+    cta: "Demander un devis",
+    href: "/#contact",
+  },
 ];
 
 export const comparisonRows: ComparisonRow[] = [

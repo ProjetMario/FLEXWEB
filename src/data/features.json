@@ -41,6 +41,11 @@
       "icon": "Pencil",
       "title": "Modifications simples",
       "description": "Demandez des mises à jour de contenu facilement, sans toucher au code."
+    },
+    {
+      "icon": "AppWindow",
+      "title": "Applications",
+      "description": "Applications web et mobiles sur mesure, adaptées à vos processus et à vos utilisateurs."
     }
   ]
 }
