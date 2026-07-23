@@ -1,0 +1,81 @@
+{
+  "updated": "23 juillet 2026",
+  "sections": [
+    {
+      "title": "1. Responsable du traitement et engagement de confidentialité",
+      "content": [
+        "Flex-Web est une marque commerciale de Fleximmo, société par actions simplifiée dont le siège social est situé 93 chemin de la Combe, 73420 Voglans.",
+        "Fleximmo est identifiée sous le SIREN 989 123 633, le SIRET du siège social 989 123 633 00012 et le numéro de TVA intracommunautaire FR67989123633. La société a été créée le 17 juillet 2025.",
+        "Flex-Web accorde une grande importance à la protection de votre vie privée et s'engage à protéger vos données personnelles. Cette politique décrit comment nous collectons, utilisons, partageons et protégeons vos informations lorsque vous utilisez notre site web et nos services."
+      ]
+    },
+    {
+      "title": "2. Informations que nous collectons",
+      "content": [
+        "Les informations que vous nous fournissez comprennent : nom, email, téléphone, message et toute autre donnée communiquée via nos formulaires de contact, devis ou newsletter.",
+        "Les informations collectées automatiquement incluent : pages visitées, durée de navigation, adresse IP, type de navigateur, système d'exploitation, cookies et source de trafic."
+      ]
+    },
+    {
+      "title": "3. Comment nous utilisons vos informations",
+      "content": [
+        "Nous utilisons vos données pour répondre à vos demandes, vous accompagner dans votre projet digital, améliorer nos services, vous tenir informé de nos actualités avec votre accord, assurer la sécurité du site et respecter nos obligations légales. Les bases légales sont les mesures précontractuelles pour une demande de devis, le contrat pour exécuter une prestation, l'obligation légale pour la facturation et l'intérêt légitime pour la sécurité du site. Toute newsletter ou prospection électronique est envoyée uniquement sur la base d'un consentement lorsque celui-ci est requis."
+      ]
+    },
+    {
+      "title": "4. Partage de vos informations",
+      "content": [
+        "Nous ne vendons jamais vos données personnelles. Les formulaires de contact sont transmis via FormSubmit (formsubmit.co), service d'acheminement d'emails, afin de nous faire parvenir votre demande. Les données saisies peuvent être transmises à ses serveurs et à notre messagerie. Nous vous invitons à ne pas transmettre de données sensibles via le formulaire. Les autres prestataires techniques et hébergeurs sont contractuellement tenus de protéger les données, et les données peuvent être communiquées lorsque la loi l'exige."
+      ]
+    },
+    {
+      "title": "5. Utilisation des cookies",
+      "content": [
+        "Le site utilise uniquement un stockage local strictement nécessaire pour mémoriser votre choix concernant le bandeau de confidentialité. Aucun cookie analytique, publicitaire ou marketing n'est activé par défaut. Si de nouveaux traceurs sont ajoutés, ils seront bloqués avant consentement et feront l'objet d'une information et d'un réglage dédiés."
+      ]
+    },
+    {
+      "title": "6. Sécurité de vos données",
+      "content": [
+        "Nous mettons en place des mesures techniques et organisationnelles pour protéger vos données : chiffrement SSL/TLS, hébergement sécurisé, accès restreint au personnel autorisé, sauvegardes régulières et mises à jour de nos systèmes."
+      ]
+    },
+    {
+      "title": "7. Conservation de vos données",
+      "content": [
+        "Nous conservons vos données personnelles uniquement le temps nécessaire : demandes de prospects 3 ans après le dernier contact, données clients pendant la relation commerciale puis selon les obligations légales, pièces comptables 10 ans. Les données analytiques ne sont pas activées par défaut."
+      ]
+    },
+    {
+      "title": "8. Vos droits",
+      "content": [
+        "Conformément au RGPD, vous disposez des droits d'accès, de rectification, de suppression, d'opposition, de portabilité, de limitation et de retrait de votre consentement.",
+        "Pour exercer vos droits, contactez-nous par email à contact@flex-web.fr ou par courrier à Fleximmo, 93 chemin de la Combe, 73420 Voglans."
+      ]
+    },
+    {
+      "title": "9. Transferts internationaux",
+      "content": [
+        "FormSubmit et certains prestataires peuvent traiter des données hors de l'Union Européenne. Lorsque cela est nécessaire, Fleximmo s'assure que le transfert repose sur une décision d'adéquation ou sur des garanties appropriées prévues par le RGPD, notamment des clauses contractuelles types lorsque cela est applicable."
+      ]
+    },
+    {
+      "title": "10. Protection des mineurs",
+      "content": [
+        "Notre site n'est pas destiné aux personnes de moins de 16 ans. Nous ne collectons pas sciemment de données personnelles auprès de mineurs sans le consentement des parents."
+      ]
+    },
+    {
+      "title": "11. Modifications de cette politique",
+      "content": [
+        "Nous pouvons modifier cette politique de confidentialité à tout moment. Les modifications importantes seront publiées sur cette page avec une date de mise à jour."
+      ]
+    },
+    {
+      "title": "12. Nous contacter",
+      "content": [
+        "Pour toute question concernant cette politique de confidentialité ou vos données personnelles, contactez-nous à contact@flex-web.fr ou par courrier à Fleximmo, 93 chemin de la Combe, 73420 Voglans. Pour un litige de consommation non résolu après réclamation préalable, vous pouvez consulter les modalités de saisine de Médiation Consommation Développement sur https://www.medconsodev.eu/."
+      ]
+    }
+  ]
+}

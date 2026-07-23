@@ -1,0 +1,157 @@
+---
+import BaseLayout from "../layout/BaseLayout.astro";
+import StructuredData from "../components/seo/StructuredData.astro";
+import { getCollection, render, type CollectionEntry } from "astro:content";
+
+export async function getStaticPaths() {
+  const locations = await getCollection(
+    "locations",
+    (entry: CollectionEntry<"locations">) => !entry.data.isDraft
+  );
+
+  return locations.map((entry: CollectionEntry<"locations">) => ({
+    params: { slug: entry.data.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props as { entry: CollectionEntry<"locations"> };
+const { Content } = await render(entry);
+const { data } = entry;
+const preposition = data.type === "city" ? "à" : "en";
+
+const siteUrl = "https://flex-web.fr";
+const canonicalUrl = new URL(data.slug, siteUrl).toString();
+
+const webPageSchema = {
+  "@type": "WebPage",
+  "@id": canonicalUrl,
+  url: canonicalUrl,
+  name: data.seoTitle,
+  description: data.seoDescription,
+  isPartOf: { "@id": siteUrl },
+};
+
+const serviceSchema = {
+  "@type": "ProfessionalService",
+  name: `FLEX-WEB — Création de site internet ${preposition} ${data.name}`,
+  url: canonicalUrl,
+  serviceType: "Création de site internet",
+  areaServed: {
+    "@type": "AdministrativeArea",
+    name: data.name,
+  },
+};
+
+const breadcrumbSchema = {
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Accueil",
+      item: siteUrl,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: data.name,
+      item: canonicalUrl,
+    },
+  ],
+};
+
+const faqSchema: Record<string, unknown> | null =
+  data.faq && data.faq.length > 0
+    ? {
+        "@type": "FAQPage",
+        mainEntity: data.faq.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.answer,
+          },
+        })),
+      }
+    : null;
+
+const schemas: Record<string, unknown>[] = [
+  webPageSchema,
+  serviceSchema,
+  breadcrumbSchema,
+];
+
+if (faqSchema) {
+  schemas.push(faqSchema);
+}
+---
+
+<BaseLayout title={data.seoTitle} description={data.seoDescription}>
+  <div class="mx-auto max-w-3xl px-6 py-16 lg:py-24">
+    <nav aria-label="Fil d'Ariane" class="mb-8 text-sm" style="color: var(--color-text-muted)">
+      <a href="/" class="hover:underline">Accueil</a>
+      <span class="mx-2">/</span>
+      <span>{data.name}</span>
+    </nav>
+
+    <h1 class="text-4xl font-semibold tracking-tight lg:text-5xl" style="color: var(--color-text)">
+      Création de site internet {preposition} {data.name}
+    </h1>
+
+    <p class="mt-6 text-lg leading-relaxed" style="color: var(--color-text-muted)">
+      {data.introduction}
+    </p>
+
+    <p class="mt-4 text-lg leading-relaxed" style="color: var(--color-text)">
+      {data.localContext}
+    </p>
+
+    <div class="mt-12 space-y-6 text-lg leading-relaxed" style="color: var(--color-text)">
+      <Content />
+    </div>
+
+    {
+      "faq" in data && data.faq && data.faq.length > 0 && (
+        <section class="mt-16">
+          <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+            Questions fréquentes
+          </h2>
+          <div class="mt-6 space-y-4">
+            {data.faq.map((item: { question: string; answer: string }) => (
+              <details class="group rounded-2xl border p-5" style="border-color: var(--color-border); background-color: var(--color-surface)">
+                <summary class="flex cursor-pointer list-none items-center justify-between font-medium" style="color: var(--color-text)">
+                  {item.question}
+                  <span class="transition-transform group-open:rotate-180" aria-hidden="true">
+                    ▼
+                  </span>
+                </summary>
+                <p class="mt-4 leading-relaxed" style="color: var(--color-text-muted)">
+                  {item.answer}
+                </p>
+              </details>
+            ))}
+          </div>
+        </section>
+      )
+    }
+
+    <aside class="mt-16 rounded-3xl p-8 text-center" style="background-color: var(--color-surface)">
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Vous souhaitez un site web {preposition} {data.name} ?
+      </h2>
+      <p class="mt-4" style="color: var(--color-text-muted)">
+        Discutons de votre projet et obtenez un devis gratuit.
+      </p>
+      <a
+        href="/contact"
+        class="mt-6 inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-medium text-white transition hover:opacity-90"
+        style="background-color: var(--color-accent)"
+      >
+        Demander un devis
+      </a>
+    </aside>
+  </div>
+
+  <StructuredData schemas={schemas} slot="head" />
+</BaseLayout>

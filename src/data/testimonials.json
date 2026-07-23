@@ -1,0 +1,26 @@
+{
+  "label": "Ils nous font confiance",
+  "items": [
+    {
+      "quote": "Mon site a été livré en une semaine. Le design est moderne, les pages sont rapides et j'ai déjà reçu plusieurs demandes de devis.",
+      "name": "Claire Dubois",
+      "role": "Coaching & Bien-être, Lyon",
+      "avatar": "https://randomuser.me/api/portraits/women/44.jpg",
+      "rating": 5
+    },
+    {
+      "quote": "Enfin une agence qui parle simple et livre vite. L'abonnement tout inclus me rassure : je n'ai plus à me soucier de la technique.",
+      "name": "Marc Lefevre",
+      "role": "Artisan menuisier, Bordeaux",
+      "avatar": "https://randomuser.me/api/portraits/men/32.jpg",
+      "rating": 5
+    },
+    {
+      "quote": "FLEX-WEB a modernisé l'image de notre restaurant. Le site est beau, les réservations augmentent et le référencement local fonctionne très bien.",
+      "name": "Sophia Benali",
+      "role": "Restaurant L'Épicure, Paris",
+      "avatar": "https://randomuser.me/api/portraits/women/68.jpg",
+      "rating": 5
+    }
+  ]
+}

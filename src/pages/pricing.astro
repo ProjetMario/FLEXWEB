@@ -1,0 +1,55 @@
+---
+import BaseLayout from "../layout/BaseLayout.astro";
+import { SectionHeader } from "../components/ui/SectionHeader.jsx";
+import PricingCard from "../components/pricing/PricingCard.jsx";
+import ComparisonTable from "../components/pricing/ComparisonTable.jsx";
+import BuyoutSection from "../components/pricing/BuyoutSection.jsx";
+import PricingFAQ from "../components/pricing/PricingFAQ.jsx";
+import PricingCTA from "../components/pricing/PricingCTA.jsx";
+import { pricingPlans, comparisonRows, buyoutTiers, pricingFaq } from "../data/pricing.ts";
+---
+
+<BaseLayout
+  title="Tarifs"
+  description="Découvrez les offres FLEX-WEB : abonnement tout compris ou achat définitif de votre site web professionnel."
+>
+  <div class="relative overflow-hidden bg-white">
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#f5f5f7] via-white to-transparent" />
+
+    <header class="relative mx-auto max-w-4xl px-5 pb-20 pt-32 text-center sm:px-6 sm:pt-40 md:pb-24">
+      <span class="mb-4 block text-sm font-medium text-[#6e6e73]">Tarifs FLEX-WEB</span>
+      <h1 class="text-5xl font-semibold tracking-[-0.055em] text-[#1d1d1f] leading-[1.04] sm:text-6xl md:text-7xl">Des offres simples, transparentes et sans engagement.</h1>
+      <p class="mx-auto mt-6 max-w-2xl text-lg font-light leading-relaxed text-[#6e6e73]">Choisissez la formule qui correspond à votre activité. Que vous souhaitiez un abonnement tout compris ou acheter votre site définitivement, FLEX-WEB s'adapte à vos besoins.</p>
+    </header>
+
+    <main class="relative mx-auto max-w-6xl px-5 pb-28 sm:px-6 md:px-8">
+      <section aria-labelledby="offers-title">
+        <h2 id="offers-title" class="sr-only">Nos offres</h2>
+        <div class="grid items-stretch gap-5 lg:grid-cols-3 lg:gap-6">
+          {pricingPlans.map((plan) => <PricingCard plan={plan} client:load />)}
+        </div>
+      </section>
+
+      <section class="mt-32" aria-labelledby="comparison-title">
+        <SectionHeader label="Comparer les offres" title="La bonne formule, sans zones grises." align="center" />
+        <ComparisonTable rows={comparisonRows} client:load />
+      </section>
+
+      <section class="mt-32" aria-labelledby="buyout-title">
+        <h2 id="buyout-title" class="sr-only">Rachat du site</h2>
+        <BuyoutSection tiers={buyoutTiers} client:load />
+      </section>
+
+      <section class="mt-32" aria-labelledby="faq-title">
+        <SectionHeader label="Questions fréquentes" title="Tout savoir avant de commencer." align="center" />
+        <h2 id="faq-title" class="sr-only">FAQ tarifs FLEX-WEB</h2>
+        <PricingFAQ items={pricingFaq} client:load />
+      </section>
+
+      <section class="mt-32" aria-labelledby="pricing-cta-title">
+        <h2 id="pricing-cta-title" class="sr-only">Besoin d'aide pour choisir</h2>
+        <PricingCTA client:load />
+      </section>
+    </main>
+  </div>
+</BaseLayout>

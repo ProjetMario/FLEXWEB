@@ -1,0 +1,643 @@
+[
+  {
+    "slug": "dyson-pencilvac",
+    "name": "Dyson PencilVac™",
+    "title": "Dyson PencilVac™",
+    "description": "The Dyson PencilVac™ is a concept ultra-lightweight, cordless vacuum cleaner designed for quick spot cleaning and precision tasks.",
+    "image": "/images/img1.png",
+    "specsAccordion": [
+      {
+        "title": "Overview",
+        "content": "The Dyson PencilVac™ is a concept ultra-lightweight, cordless vacuum cleaner designed for quick spot cleaning and precision tasks. This fictional product merges Dyson’s proven cyclone technology with a compact, pen-like form factor, perfect for desktop, car, and small-surface use."
+      },
+      {
+        "title": "General",
+        "content": [
+          "Model Name: Dyson PencilVac™",
+          "Type: Cordless handheld vacuum",
+          "Form Factor: Pen/marker-sized cylindrical body",
+          "Weight: 120g (0.26 lbs)",
+          "Dimensions: 190mm (length) x 20mm (diameter)",
+          "Color Options: Graphite, Silver, Limited Edition Purple"
+        ]
+      },
+      {
+        "title": "Performance",
+        "content": [
+          "Suction Power: 10 Airwatts (AW)",
+          "Motor: Dyson HyperMini digital motor (custom, brushless)",
+          "Cyclone Technology: Single radial cyclone",
+          "Filtration: Washable HEPA micro-filter",
+          "Dustbin Capacity: 0.03L (30ml), transparent chamber",
+          "Noise Level: <60 dB"
+        ]
+      },
+      {
+        "title": "Power & Battery",
+        "content": [
+          "Battery Type: Lithium-polymer rechargeable",
+          "Run Time: Up to 12 minutes (continuous use, standard mode)",
+          "Charging Time: ~45 minutes to full charge",
+          "Charging Method: USB-C",
+          "Battery Indicator: LED, 3-level (low/med/full)"
+        ]
+      },
+      {
+        "title": "Features",
+        "content": [
+          "One-touch debris emptying",
+          "Replaceable filter",
+          "Quick-swap nozzle tips",
+          "Precision crevice tool",
+          "Soft dusting brush",
+          "Keyboard attachment",
+          "Integrated storage clip",
+          "Safety auto-shutoff"
+        ]
+      },
+      {
+        "title": "Package Contents",
+        "content": [
+          "Dyson PencilVac™ main unit",
+          "3 precision nozzle attachments",
+          "USB-C charging cable",
+          "HEPA micro-filter (pre-installed)",
+          "Quick start guide & warranty"
+        ]
+      },
+      {
+        "title": "Warranty",
+        "content": "2-year limited warranty (parts & labor)"
+      },
+      {
+        "title": "Use Cases",
+        "content": [
+          "Desktop/keyboard cleaning",
+          "Car interior touch-ups",
+          "Craft/tabletop debris pickup",
+          "Pet hair on upholstery",
+          "Tight crevices and corners"
+        ]
+      },
+      {
+        "title": "Disclaimers",
+        "content": [
+          "Dyson PencilVac™ is a conceptual product; specifications are for illustrative purposes only."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "supersonic-r-hair-dryer",
+    "name": "Supersonic r™ Hair Dryer",
+    "title": "Supersonic r™ Hair Dryer",
+    "description": "The Supersonic r™ Hair Dryer is a concept high-performance hair dryer designed for rapid drying and intelligent heat control, inspired by Dyson’s engineering excellence.",
+    "image": "/images/img2.png",
+    "href": "#",
+    "specsAccordion": [
+      {
+        "title": "Overview",
+        "content": "The Supersonic r™ Hair Dryer is a conceptual product that combines advanced airflow technology with ergonomic design. It delivers fast drying while protecting hair from extreme heat damage."
+      },
+      {
+        "title": "General",
+        "content": [
+          "Model Name: Supersonic r™ Hair Dryer",
+          "Type: Cordless high-speed hair dryer",
+          "Form Factor: Sleek, balanced handle with circular nozzle",
+          "Weight: 420g (0.93 lbs)",
+          "Dimensions: 245mm (length) x 78mm (diameter)",
+          "Color Options: Silver, Black, Limited Edition Rose"
+        ]
+      },
+      {
+        "title": "Performance",
+        "content": [
+          "Airflow: 41 liters/second",
+          "Motor: Digital V9 brushless motor",
+          "Heat Settings: 4 precise heat settings",
+          "Speed Settings: 3 airflow speeds",
+          "Noise Level: <62 dB"
+        ]
+      },
+      {
+        "title": "Power & Battery",
+        "content": [
+          "Battery Type: Lithium-ion rechargeable",
+          "Run Time: Up to 25 minutes (standard mode)",
+          "Charging Time: ~90 minutes to full charge",
+          "Charging Method: Magnetic charging dock",
+          "Battery Indicator: LED, 4-level"
+        ]
+      },
+      {
+        "title": "Features",
+        "content": [
+          "Intelligent heat control to prevent extreme heat damage",
+          "Magnetic styling attachments",
+          "Cool shot button",
+          "Removable filter for easy cleaning",
+          "Lightweight and balanced design"
+        ]
+      },
+      {
+        "title": "Package Contents",
+        "content": [
+          "Supersonic r™ Hair Dryer main unit",
+          "Smoothing nozzle",
+          "Styling concentrator",
+          "Diffuser",
+          "Magnetic charging dock",
+          "Quick start guide & warranty"
+        ]
+      },
+      {
+        "title": "Warranty",
+        "content": "2-year limited warranty (parts & labor)"
+      },
+      {
+        "title": "Use Cases",
+        "content": [
+          "Fast hair drying",
+          "Frizz control and smoothing",
+          "Defined curls and waves",
+          "Gentle drying for sensitive scalps"
+        ]
+      },
+      {
+        "title": "Disclaimers",
+        "content": [
+          "Supersonic r™ Hair Dryer is a conceptual product; specifications are for illustrative purposes only."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "dyson-360-vis-nav",
+    "name": "Dyson 360 Vis Nav™ Robot Vacuum",
+    "title": "Dyson 360 Vis Nav™ Robot Vacuum",
+    "description": "The Dyson 360 Vis Nav™ is a conceptual robot vacuum featuring advanced navigation, powerful suction, and intelligent room mapping for a hands-free cleaning experience.",
+    "image": "/images/img3.png",
+    "href": "#",
+    "specsAccordion": [
+      {
+        "title": "Overview",
+        "content": "The Dyson 360 Vis Nav™ Robot Vacuum is designed to autonomously clean your home with precision. Its advanced sensors and mapping technology ensure thorough coverage and efficient cleaning on all floor types."
+      },
+      {
+        "title": "General",
+        "content": [
+          "Model Name: Dyson 360 Vis Nav™",
+          "Type: Robot vacuum cleaner",
+          "Form Factor: Circular, low-profile body",
+          "Weight: 3.5kg (7.7 lbs)",
+          "Dimensions: 240mm (diameter) x 99mm (height)",
+          "Color Options: Blue, Silver"
+        ]
+      },
+      {
+        "title": "Performance",
+        "content": [
+          "Suction Power: 65 Airwatts (AW)",
+          "Motor: Dyson digital motor V10",
+          "Filtration: Whole-machine HEPA filtration",
+          "Dustbin Capacity: 0.33L",
+          "Noise Level: <68 dB"
+        ]
+      },
+      {
+        "title": "Power & Battery",
+        "content": [
+          "Battery Type: Lithium-ion rechargeable",
+          "Run Time: Up to 75 minutes (standard mode)",
+          "Charging Time: ~2.5 hours to full charge",
+          "Charging Method: Auto-docking station",
+          "Battery Indicator: LED, 4-level"
+        ]
+      },
+      {
+        "title": "Features",
+        "content": [
+          "360° vision system for intelligent navigation",
+          "Room mapping and zone cleaning",
+          "Wi-Fi connectivity and app control",
+          "Voice assistant compatibility",
+          "Automatic return to dock and recharge",
+          "Cliff and obstacle detection sensors"
+        ]
+      },
+      {
+        "title": "Package Contents",
+        "content": [
+          "Dyson 360 Vis Nav™ main unit",
+          "Charging dock",
+          "Cleaning brush",
+          "Quick start guide & warranty"
+        ]
+      },
+      {
+        "title": "Warranty",
+        "content": "2-year limited warranty (parts & labor)"
+      },
+      {
+        "title": "Use Cases",
+        "content": [
+          "Whole-home cleaning",
+          "Pet hair removal",
+          "Carpet and hard floor cleaning",
+          "Scheduled cleaning routines"
+        ]
+      },
+      {
+        "title": "Disclaimers",
+        "content": [
+          "Dyson 360 Vis Nav™ is a conceptual product; specifications are for illustrative purposes only."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "purifier-big-quiet-formaldehyde",
+    "name": "Dyson Purifier Big+Quiet Formaldehyde",
+    "title": "Purifier Big+Quiet Formaldehyde",
+    "description": "The Dyson Purifier Big+Quiet Formaldehyde is a conceptual air purifier designed for large spaces, featuring advanced filtration technology that captures ultrafine particles and destroys formaldehyde for cleaner, quieter air.",
+    "image": "/images/img4.png",
+    "href": "#",
+    "specsAccordion": [
+      {
+        "title": "Overview",
+        "content": "The Dyson Purifier Big+Quiet Formaldehyde is engineered for powerful purification in large rooms. It uses advanced HEPA filtration and a catalytic filter to destroy formaldehyde, ensuring a healthier indoor environment."
+      },
+      {
+        "title": "General",
+        "content": [
+          "Model Name: Purifier Big+Quiet Formaldehyde",
+          "Type: Air purifier",
+          "Form Factor: Tower, large footprint",
+          "Weight: 12kg (26.5 lbs)",
+          "Dimensions: 830mm (height) x 434mm (diameter)",
+          "Color Options: Silver, White, Blue"
+        ]
+      },
+      {
+        "title": "Performance",
+        "content": [
+          "Filtration: HEPA H13, activated carbon, and selective catalytic oxidation (SCO) filter",
+          "Formaldehyde Destruction: Catalytic filter breaks down formaldehyde into water and CO₂",
+          "Airflow: Up to 90 liters/second",
+          "Noise Level: <56 dB"
+        ]
+      },
+      {
+        "title": "Features",
+        "content": [
+          "Quiet operation for large spaces",
+          "360° air intake",
+          "LCD display for real-time air quality monitoring",
+          "Wi-Fi connectivity and app control",
+          "Automatic mode and night mode",
+          "Filter life indicator"
+        ]
+      },
+      {
+        "title": "Package Contents",
+        "content": [
+          "Purifier Big+Quiet Formaldehyde main unit",
+          "HEPA and carbon filters (pre-installed)",
+          "Quick start guide & warranty"
+        ]
+      },
+      {
+        "title": "Warranty",
+        "content": "2-year limited warranty (parts & labor)"
+      },
+      {
+        "title": "Use Cases",
+        "content": [
+          "Large living rooms",
+          "Open-plan offices",
+          "Allergy and asthma relief",
+          "Formaldehyde and VOC removal"
+        ]
+      },
+      {
+        "title": "Disclaimers",
+        "content": [
+          "Dyson Purifier Big+Quiet Formaldehyde is a conceptual product; specifications are for illustrative purposes only."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "wearable-air-purifier",
+    "name": "Wearable Air Purifier",
+    "title": "Wearable Air Purifier",
+    "description": "The Wearable Air Purifier is a conceptual personal air filtration device designed to be worn around the neck or clipped to clothing. It provides clean, filtered air directly to the user, ideal for urban environments, travel, or allergy sufferers.",
+    "image": "/images/img5.png",
+    "href": "#",
+    "specsAccordion": [
+      {
+        "title": "Overview",
+        "content": "This wearable air purifier uses advanced HEPA filtration and a compact fan system to deliver purified air to the user's breathing zone. Lightweight and rechargeable, it's designed for comfort and portability."
+      },
+      {
+        "title": "General",
+        "content": [
+          "Model Name: Wearable Air Purifier",
+          "Type: Personal air purifier",
+          "Form Factor: Neckband or clip-on device",
+          "Weight: 120g (0.26 lbs)",
+          "Dimensions: 150mm x 40mm x 25mm",
+          "Color Options: White, Black, Blue"
+        ]
+      },
+      {
+        "title": "Performance",
+        "content": [
+          "Filtration: HEPA H13 and activated carbon",
+          "Airflow: 10 liters/minute",
+          "Noise Level: <40 dB"
+        ]
+      },
+      {
+        "title": "Power & Battery",
+        "content": [
+          "Battery Type: Lithium-ion rechargeable",
+          "Run Time: Up to 8 hours",
+          "Charging Time: ~2 hours",
+          "Charging Method: USB-C"
+        ]
+      },
+      {
+        "title": "Features",
+        "content": [
+          "Three fan speed settings",
+          "Replaceable filter cartridge",
+          "LED air quality indicator",
+          "Silent operation mode",
+          "Lightweight and ergonomic design"
+        ]
+      },
+      {
+        "title": "Package Contents",
+        "content": [
+          "Wearable Air Purifier main unit",
+          "HEPA/carbon filter (pre-installed)",
+          "USB-C charging cable",
+          "Quick start guide & warranty"
+        ]
+      },
+      {
+        "title": "Warranty",
+        "content": "1-year limited warranty (parts & labor)"
+      },
+      {
+        "title": "Use Cases",
+        "content": [
+          "Commuting in polluted cities",
+          "Traveling on airplanes or public transport",
+          "Allergy relief outdoors",
+          "Personal air purification in crowded spaces"
+        ]
+      },
+      {
+        "title": "Disclaimers",
+        "content": [
+          "Wearable Air Purifier is a conceptual product; specifications are for illustrative purposes only."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "dyson-zone",
+    "name": "Dyson Zone™",
+    "title": "Dyson Zone™",
+    "description": "The Dyson Zone™ is a conceptual wearable air purifier and headphone hybrid, designed to deliver immersive audio and purified air simultaneously. It features advanced filtration technology, active noise cancellation, and a comfortable ergonomic fit for urban commuters and travelers.",
+    "image": "/images/img6.png",
+    "size": "large",
+    "href": "#",
+    "specsAccordion": [
+      {
+        "title": "Overview",
+        "content": "Dyson Zone™ combines high-fidelity headphones with a detachable air purification visor, offering both personal audio and clean air on the go. It is engineered for comfort, style, and performance in urban environments."
+      },
+      {
+        "title": "General",
+        "content": [
+          "Model Name: Dyson Zone™",
+          "Type: Wearable air purifier headphones",
+          "Form Factor: Over-ear headphones with attachable visor",
+          "Weight: 595g (1.3 lbs)",
+          "Color Options: Blue, Silver, Black"
+        ]
+      },
+      {
+        "title": "Performance",
+        "content": [
+          "Filtration: Dual-layer electrostatic and carbon filters",
+          "Airflow: 2-speed purified airflow",
+          "Noise Cancellation: Active noise cancellation (ANC)",
+          "Audio: High-fidelity, custom drivers"
+        ]
+      },
+      {
+        "title": "Power & Battery",
+        "content": [
+          "Battery Type: Lithium-ion rechargeable",
+          "Run Time: Up to 4 hours (air purification + audio)",
+          "Charging Time: ~3 hours",
+          "Charging Method: USB-C"
+        ]
+      },
+      {
+        "title": "Features",
+        "content": [
+          "Detachable air purification visor",
+          "Active noise cancellation",
+          "Bluetooth connectivity",
+          "Touch controls for audio and airflow",
+          "Replaceable filter cartridges",
+          "LED status indicators"
+        ]
+      },
+      {
+        "title": "Package Contents",
+        "content": [
+          "Dyson Zone™ headphones",
+          "Air purification visor",
+          "Dual-layer filters (pre-installed)",
+          "USB-C charging cable",
+          "Carrying case",
+          "Quick start guide & warranty"
+        ]
+      },
+      {
+        "title": "Warranty",
+        "content": "1-year limited warranty (parts & labor)"
+      },
+      {
+        "title": "Use Cases",
+        "content": [
+          "Urban commuting",
+          "Traveling in polluted environments",
+          "Personal audio and air purification",
+          "Allergy relief on the go"
+        ]
+      },
+      {
+        "title": "Disclaimers",
+        "content": [
+          "Dyson Zone™ is a conceptual product; specifications are for illustrative purposes only."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "dyson-microfan",
+    "name": "Dyson MicroFan™",
+    "title": "Dyson MicroFan™",
+    "description": "The Dyson MicroFan™ is a conceptual ultra-compact, bladeless personal fan designed for on-the-go cooling with whisper-quiet operation and USB-C charging.",
+    "image": "/images/img7.png",
+    "href": "#",
+    "specsAccordion": [
+      {
+        "title": "Overview",
+        "content": "Dyson MicroFan™ delivers a gentle, focused stream of cool air in a pocket-sized, bladeless design. Ideal for travel, office, or outdoor use, it combines Dyson’s airflow expertise with ultimate portability."
+      },
+      {
+        "title": "General",
+        "content": [
+          "Model Name: Dyson MicroFan™",
+          "Type: Personal bladeless fan",
+          "Form Factor: Handheld, cylindrical",
+          "Weight: 90g (0.2 lbs)",
+          "Dimensions: 130mm (height) x 35mm (diameter)",
+          "Color Options: Silver, Blue, Pink"
+        ]
+      },
+      {
+        "title": "Performance",
+        "content": [
+          "Airflow: 3 speed settings",
+          "Noise Level: <38 dB",
+          "Bladeless safety design"
+        ]
+      },
+      {
+        "title": "Power & Battery",
+        "content": [
+          "Battery Type: Lithium-polymer rechargeable",
+          "Run Time: Up to 6 hours (low speed)",
+          "Charging Time: ~1.5 hours",
+          "Charging Method: USB-C"
+        ]
+      },
+      {
+        "title": "Features",
+        "content": [
+          "Bladeless airflow for safety and easy cleaning",
+          "Pocket-sized and lightweight",
+          "LED battery indicator",
+          "Removable air intake filter"
+        ]
+      },
+      {
+        "title": "Package Contents",
+        "content": [
+          "Dyson MicroFan™ main unit",
+          "USB-C charging cable",
+          "Removable filter (pre-installed)",
+          "Quick start guide & warranty"
+        ]
+      },
+      {
+        "title": "Warranty",
+        "content": "1-year limited warranty (parts & labor)"
+      },
+      {
+        "title": "Use Cases",
+        "content": [
+          "Personal cooling at desk or outdoors",
+          "Travel and commuting",
+          "Makeup setting and skincare routines"
+        ]
+      },
+      {
+        "title": "Disclaimers",
+        "content": [
+          "Dyson MicroFan™ is a conceptual product; specifications are for illustrative purposes only."
+        ]
+      }
+    ]
+  },
+  {
+    "slug": "dyson-airstrait",
+    "name": "Dyson Airstrait™ Straightener",
+    "title": "Dyson Airstrait™ Straightener",
+    "description": "The Dyson Airstrait™ is a wet-to-dry straightener that uses high-pressure airflow to straighten hair without hot plates, minimizing heat damage and preserving hair strength.",
+    "image": "/images/img8.png",
+    "size": "large",
+    "href": "#",
+    "specsAccordion": [
+      {
+        "title": "Overview",
+        "content": "The Dyson Airstrait™ Straightener uses precisely angled airflow to dry and straighten hair simultaneously, with no hot plates and less heat damage."
+      },
+      {
+        "title": "General",
+        "content": [
+          "Model Name: Dyson Airstrait™",
+          "Type: Wet-to-dry hair straightener",
+          "Form Factor: Handheld, corded",
+          "Weight: 0.8kg (1.76 lbs)",
+          "Color Options: Nickel/Copper, Prussian Blue/Rich Copper"
+        ]
+      },
+      {
+        "title": "Performance",
+        "content": [
+          "Airflow: High-pressure, directional airflow",
+          "Heat Settings: 80°C, 110°C, 140°C (175°F, 230°F, 285°F)",
+          "Modes: Wet, Dry, Cool"
+        ]
+      },
+      {
+        "title": "Features",
+        "content": [
+          "No hot plates—uses only air",
+          "Intelligent heat control",
+          "LCD display",
+          "Auto-pause sensor",
+          "Fast drying and styling"
+        ]
+      },
+      {
+        "title": "Package Contents",
+        "content": [
+          "Dyson Airstrait™ main unit",
+          "Filter cleaning brush",
+          "Heat-resistant travel pouch",
+          "Quick start guide & warranty"
+        ]
+      },
+      {
+        "title": "Warranty",
+        "content": "2-year limited warranty (parts & labor)"
+      },
+      {
+        "title": "Use Cases",
+        "content": [
+          "Wet-to-dry straightening",
+          "Smooth, natural finish",
+          "Reduced heat damage"
+        ]
+      },
+      {
+        "title": "Disclaimers",
+        "content": [
+          "Dyson Airstrait™ is an actual Dyson product. Specifications may vary by region."
+        ]
+      }
+    ]
+  }
+]

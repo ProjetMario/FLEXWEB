@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../layout/BaseLayout.astro";
+import BaseHead from "../components/global/BaseHead.astro";
+import Cards from "../components/cards/Card.jsx";
+import Title from "../components/Title.jsx";
+
+import journalData from "../data/journal.json";
+---
+
+<BaseLayout>
+  <BaseHead title="Products" />
+  <Title title="All Products" client:load />
+  <Cards data={journalData} basePath="/products" client:load />
+</BaseLayout>

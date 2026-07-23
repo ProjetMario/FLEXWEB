@@ -1,0 +1,26 @@
+{
+  "label": "Comment ça marche",
+  "title": "De l'idée au site en ligne en 4 étapes",
+  "items": [
+    {
+      "number": "01",
+      "title": "Vous nous contactez",
+      "description": "Remplissez le formulaire ou prenez rendez-vous. Nous discutons de votre activité, vos objectifs et votre style."
+    },
+    {
+      "number": "02",
+      "title": "Nous créons votre site",
+      "description": "Nous rédigeons les contenus, sélectionnons un design sur mesure et construisons votre site avec soin."
+    },
+    {
+      "number": "03",
+      "title": "Vous validez",
+      "description": "Vous visualisez le résultat. Nous ajustons ensemble les textes, les images et les couleurs jusqu'à votre satisfaction."
+    },
+    {
+      "number": "04",
+      "title": "Votre site est en ligne",
+      "description": "Nous connectons votre domaine, activons l'hébergement et livrons un site rapide, sécurisé et prêt à convertir."
+    }
+  ]
+}

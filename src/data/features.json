@@ -1,0 +1,46 @@
+{
+  "label": "Pourquoi choisir FLEX-WEB",
+  "title": "Tout ce qu'il faut pour réussir en ligne",
+  "items": [
+    {
+      "icon": "Zap",
+      "title": "Site rapide",
+      "description": "Des pages optimisées pour un chargement éclair et une expérience utilisateur fluide."
+    },
+    {
+      "icon": "Smartphone",
+      "title": "Compatible mobile",
+      "description": "Un design responsive qui s'adapte parfaitement à tous les écrans, du mobile au desktop."
+    },
+    {
+      "icon": "Search",
+      "title": "SEO optimisé",
+      "description": "Une structure technique et un contenu pensés pour être visibles sur Google."
+    },
+    {
+      "icon": "Cloud",
+      "title": "Hébergement inclus",
+      "description": "Hébergement sécurisé, sauvegardes et certificat SSL inclus dans l'abonnement."
+    },
+    {
+      "icon": "Shield",
+      "title": "Sécurité",
+      "description": "Mises à jour régulières, protection et surveillance pour garder votre site sûr."
+    },
+    {
+      "icon": "Wrench",
+      "title": "Maintenance",
+      "description": "Maintenance continue et corrections incluses pour un site toujours opérationnel."
+    },
+    {
+      "icon": "Globe",
+      "title": "Domaine personnalisé",
+      "description": "Votre nom de domaine connecté et configuré par nos soins."
+    },
+    {
+      "icon": "Pencil",
+      "title": "Modifications simples",
+      "description": "Demandez des mises à jour de contenu facilement, sans toucher au code."
+    }
+  ]
+}

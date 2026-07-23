@@ -1,0 +1,60 @@
+{
+  "label": "Nos templates",
+  "title": "Un site adapté à votre métier",
+  "items": [
+    {
+      "id": "restaurant",
+      "title": "Restaurant",
+      "description": "Menu, réservations et ambiance.",
+      "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": "artisan",
+      "title": "Artisan",
+      "description": "Présentation de savoir-faire et devis.",
+      "image": "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": "coach",
+      "title": "Coach",
+      "description": "Programmes, prise de rendez-vous et blog.",
+      "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": "consultant",
+      "title": "Consultant",
+      "description": "Expertise, cas clients et contact.",
+      "image": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": "commerce",
+      "title": "Commerce",
+      "description": "Catalogue, promotions et localisation.",
+      "image": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": "association",
+      "title": "Association",
+      "description": "Actualités, adhésion et événements.",
+      "image": "https://images.unsplash.com/photo-1531206715517-28c3489e8d9a?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": "agence",
+      "title": "Agence",
+      "description": "Portfolio, services et collaborations.",
+      "image": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": "immobilier",
+      "title": "Immobilier",
+      "description": "Annonces, filtres et demandes de visite.",
+      "image": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop&q=80"
+    },
+    {
+      "id": "sante",
+      "title": "Santé",
+      "description": "Cabinet, spécialités et rendez-vous.",
+      "image": "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&auto=format&fit=crop&q=80"
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+---
+import BaseLayout from "../../layout/BaseLayout.astro";
+import StructuredData from "../../components/seo/StructuredData.astro";
+
+const title = "Combien coûte un site internet en Savoie ?";
+const description =
+  "Découvrez les tarifs d'un site internet en Savoie en 2026 : vitrine, professionnel et e-commerce. FLEX-WEB vous donne les fourchettes et les critères de prix.";
+const canonicalUrl = "https://flex-web.fr/journal/combien-coute-site-internet-savoie";
+const published = "2026-07-22";
+
+const webPageSchema = {
+  "@type": "WebPage",
+  "@id": canonicalUrl,
+  url: canonicalUrl,
+  name: title,
+  description: description,
+  isPartOf: { "@id": "https://flex-web.fr" },
+};
+
+const articleSchema = {
+  "@type": "Article",
+  headline: title,
+  description: description,
+  author: {
+    "@type": "Organization",
+    name: "FLEX-WEB",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "FLEX-WEB",
+    logo: { "@type": "ImageObject", url: "https://flex-web.fr/favicon.png" },
+  },
+  datePublished: published,
+};
+
+const breadcrumbSchema = {
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Accueil", item: "https://flex-web.fr" },
+    { "@type": "ListItem", position: 2, name: "Journal", item: "https://flex-web.fr/journal" },
+    { "@type": "ListItem", position: 3, name: title, item: canonicalUrl },
+  ],
+};
+
+const schemas = [webPageSchema, articleSchema, breadcrumbSchema];
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="mx-auto max-w-3xl px-6 py-16 lg:py-24">
+    <nav aria-label="Fil d'Ariane" class="mb-8 text-sm" style="color: var(--color-text-muted)">
+      <a href="/" class="hover:underline">Accueil</a>
+      <span class="mx-2">/</span>
+      <a href="/journal" class="hover:underline">Journal</a>
+      <span class="mx-2">/</span>
+      <span>{title}</span>
+    </nav>
+
+    <h1 class="text-4xl font-semibold tracking-tight lg:text-5xl" style="color: var(--color-text)">
+      {title}
+    </h1>
+
+    <p class="mt-4 text-sm" style="color: var(--color-text-muted)">
+      Publié le {published}
+    </p>
+
+    <div class="mt-12 space-y-6 text-lg leading-relaxed" style="color: var(--color-text)">
+      <p>
+        Le prix d'un site internet en Savoie varie selon le type de projet, le nombre de pages et les fonctionnalités. Voici un guide clair pour comprendre les tarifs en 2026.
+      </p>
+
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Site vitrine : la solution la plus accessible
+      </h2>
+      <p>
+        Un site vitrine professionnel, avec une page d'accueil, une page de présentation, une page de services et un formulaire de contact, représente souvent le meilleur rapport qualité-prix pour les artisans, commerçants et professions libérales.
+      </p>
+      <p>
+        En Savoie, ce type de site est accessible à partir de quelques centaines d'euros. Avec un paiement en achat définitif ou un abonnement incluant l'hébergement et la maintenance, chaque entreprise peut trouver une formule adaptée.
+      </p>
+
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Site professionnel multi-pages
+      </h2>
+      <p>
+        Pour les PME et les professionnels qui veulent plusieurs pages de services, un blog, des témoignages ou des études de cas, le budget augmente en fonction du volume de contenu.
+      </p>
+      <p>
+        Un site professionnel complet, optimisé pour Google et pensé pour convertir, représente généralement un budget plus important que le vitrine, mais il offre une bien plus grande capacité à capter du trafic.
+      </p>
+
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Site e-commerce
+      </h2>
+      <p>
+        Un site e-commerce avec catalogue de produits, panier, paiement en ligne et gestion des commandes demande un travail de développement plus conséquent. C'est le type de projet qui demande le plus de budget, surtout si les produits sont nombreux.
+      </p>
+
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Quels critères influencent le prix ?
+      </h2>
+      <ul class="list-disc space-y-2 pl-6">
+        <li>Le nombre de pages et de sections.</li>
+        <li>La rédaction du contenu ou sa fourniture par le client.</li>
+        <li>L'intégration de fonctionnalités : formulaires, galeries, blog, réservations.</li>
+        <li>Le niveau d'optimisation SEO et de référencement local.</li>
+        <li>La prise en charge de l'hébergement, de la maintenance et des mises à jour.</li>
+      </ul>
+
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Achter ou s'abonner ?
+      </h2>
+      <p>
+        L'achat définitif vous donne la propriété du site. L'abonnement inclut l'hébergement, les mises à jour et le support dans une mensualité prévisible. Les deux options ont leurs avantages selon votre situation.
+      </p>
+
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Conclusion
+      </h2>
+      <p>
+        Le coût d'un site internet en Savoie dépend avant tout de vos objectifs. Pour obtenir un devis adapté à votre activité, le mieux est d'échanger sur votre projet et sur les fonctionnalités dont vous avez réellement besoin.
+      </p>
+    </div>
+
+    <aside class="mt-16 rounded-3xl p-8 text-center" style="background-color: var(--color-surface)">
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Vous souhaitez un devis pour votre site ?
+      </h2>
+      <p class="mt-4" style="color: var(--color-text-muted)">
+        FLEX-WEB accompagne les entreprises de Savoie et de Haute-Savoie.
+      </p>
+      <a
+        href="/contact"
+        class="mt-6 inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-medium text-white transition hover:opacity-90"
+        style="background-color: var(--color-accent)"
+      >
+        Demander un devis
+      </a>
+    </aside>
+  </article>
+
+  <StructuredData schemas={schemas} slot="head" />
+</BaseLayout>

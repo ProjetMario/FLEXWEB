@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../layout/BaseLayout.astro";
+import BaseHead from "../components/global/BaseHead.astro";
+import Title from "../components/Title.jsx";
+import TwoColumnLayout from "../components/TwoColumnLayout.jsx";
+import Cta from "../components/global/Cta.jsx";
+
+import CgvData from "../data/cgv.json";
+import ctaData from "../data/cta.json";
+---
+
+<BaseLayout>
+  <BaseHead title="Conditions générales de vente" />
+  <Title title="Conditions générales de vente" client:load />
+  <TwoColumnLayout
+    data={{
+      sections: CgvData.sections,
+      updated: CgvData.updated,
+    }}
+    client:load
+  />
+  <Cta data={ctaData} client:load />
+</BaseLayout>

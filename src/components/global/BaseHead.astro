@@ -1,0 +1,126 @@
+---
+import "../../styles/global.css";
+
+/**
+ * BaseHead – SEO, Open Graph, Twitter Cards, favicons and preconnects.
+ * @property {string} [title] - Page title suffix.
+ * @property {string} [description] - Page description.
+ * @property {string} [image] - Absolute or root-relative OG image path.
+ * @property {boolean} [noindex] - Disallow indexing for this page.
+ */
+const {
+  title,
+  description = "Flex-Web crée des sites internet professionnels, rapides et optimisés pour les artisans, commerçants, indépendants et PME. Demandez votre devis gratuit.",
+  image = "/thumbnail-dyson.jpg",
+  noindex = false,
+} = Astro.props;
+
+const siteName = "Flex-Web";
+const siteUrl = "https://flex-web.fr";
+const pageTitle = title ? `${title} — ${siteName}` : `${siteName} — Création de sites internet professionnels`;
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
+const ogImage = new URL(image, siteUrl).toString();
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Basic Meta Tags -->
+<title>{pageTitle}</title>
+<meta name="description" content={description} />
+<meta name="keywords" content="création site internet, site web professionnel, agence web, site vitrine, SEO local, référencement naturel, Savoie, Haute-Savoie, hébergement, maintenance" />
+<meta name="author" content="Flex-Web — Fleximmo" />
+<meta name="application-name" content="Flex-Web" />
+<meta name="language" content="fr-FR" />
+
+<!-- Favicons -->
+<link rel="icon" href="/favicon.png" />
+<link rel="icon" href="/icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="shortcut icon" href="/favicon.png" type="image/x-icon" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:site_name" content={siteName} />
+<meta property="og:locale" content="fr_FR" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={canonicalUrl} />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<!-- Canonical URL -->
+<link rel="canonical" href={canonicalUrl} />
+
+<!-- Robots -->
+{noindex ? (
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="googlebot" content="noindex, nofollow" />
+) : (
+  <>
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+  </>
+)}
+
+<link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+<link rel="alternate" type="text/plain" href="/llms.txt" title="Présentation de Flex-Web pour les moteurs IA" />
+
+<!-- Apple Touch Icon (backward compatibility) -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+<!-- Theme Color -->
+<meta name="theme-color" content="#ffffff" />
+<meta name="msapplication-TileColor" content="#ffffff" />
+
+<!-- IE compatibility -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+<!-- Preconnect / Fonts -->
+<link rel="preconnect" href="https://rsms.me/" crossorigin />
+<link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+
+<!-- JSON-LD Organization schema -->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "@id": "https://flex-web.fr/#organization",
+    "name": "Flex-Web",
+    "legalName": "Fleximmo",
+    "url": "https://flex-web.fr",
+    "description": "Flex-Web crée des sites internet professionnels, rapides et optimisés pour les artisans, commerçants, indépendants et PME.",
+    "foundingDate": "2025-07-17",
+    "telephone": "+33757830262",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "93 chemin de la Combe",
+      "postalCode": "73420",
+      "addressLocality": "Voglans",
+      "addressCountry": "FR"
+    },
+    "identifier": [
+      { "@type": "PropertyValue", "propertyID": "SIREN", "value": "989123633" },
+      { "@type": "PropertyValue", "propertyID": "SIRET", "value": "98912363300012" },
+      { "@type": "PropertyValue", "propertyID": "TVA intracommunautaire", "value": "FR67989123633" }
+    ],
+    "email": "contact@flex-web.fr",
+    "areaServed": ["Savoie", "Haute-Savoie", "France"],
+    "serviceType": ["Création de site internet", "Référencement naturel", "Hébergement et maintenance"],
+    "parentOrganization": {
+      "@type": "Organization",
+      "name": "Fleximmo"
+    }
+  }
+</script>
+

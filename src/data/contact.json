@@ -1,0 +1,9 @@
+{
+  "label": "Contact",
+  "title": "Parlez-nous de votre projet",
+  "description": "Demande de devis ou contact par soumission du formulaire ci-dessous. Nous vous recontactons sous 24h pour étudier votre besoin et vous envoyer un devis personnalisé.",
+  "details": [
+    { "label": "Téléphone", "value": "07 57 83 02 62" },
+    { "label": "Horaires", "value": "Lun – Ven, 9h – 18h" }
+  ]
+}

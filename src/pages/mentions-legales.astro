@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../layout/BaseLayout.astro";
+import BaseHead from "../components/global/BaseHead.astro";
+import Title from "../components/Title.jsx";
+import TwoColumnLayout from "../components/TwoColumnLayout.jsx";
+import Cta from "../components/global/Cta.jsx";
+
+import LegalData from "../data/legal.json";
+import ctaData from "../data/cta.json";
+---
+
+<BaseLayout>
+  <BaseHead title="Mentions légales" />
+  <Title title="Mentions légales" client:load />
+  <TwoColumnLayout
+    data={{
+      sections: LegalData.sections,
+      updated: LegalData.updated,
+    }}
+    client:load
+  />
+  <Cta data={ctaData} client:load />
+</BaseLayout>

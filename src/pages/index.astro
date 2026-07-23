@@ -1,0 +1,91 @@
+---
+import BaseLayout from "../layout/BaseLayout.astro";
+import StructuredData from "../components/seo/StructuredData.astro";
+
+import Hero from "../components/sections/Hero.jsx";
+import Benefits from "../components/sections/Benefits.jsx";
+import HowItWorks from "../components/sections/HowItWorks.jsx";
+import Templates from "../components/sections/Templates.jsx";
+import Comparison from "../components/sections/Comparison.jsx";
+import Stats from "../components/sections/Stats.jsx";
+import Testimonials from "../components/sections/Testimonials.jsx";
+import FAQ from "../components/sections/FAQ.jsx";
+import CTA from "../components/sections/CTA.jsx";
+import Contact from "../components/sections/Contact.jsx";
+
+import featuresData from "../data/features.json";
+import howItWorksData from "../data/howItWorks.json";
+import templatesData from "../data/templates.json";
+import comparisonData from "../data/comparison.json";
+import statsData from "../data/stats.json";
+import testimonialsData from "../data/testimonials.json";
+import faqData from "../data/faq.json";
+import ctaData from "../data/cta.json";
+import contactData from "../data/contact.json";
+
+const siteUrl = "https://flex-web.fr";
+const schemas = [
+  {
+    "@type": "WebSite",
+    "@id": `${siteUrl}/#website`,
+    url: siteUrl,
+    name: "Flex-Web",
+    inLanguage: "fr-FR",
+    publisher: { "@id": `${siteUrl}/#organization` },
+    potentialAction: {
+      "@type": "ContactAction",
+      target: `${siteUrl}/contact`,
+      name: "Demander un devis"
+    }
+  },
+  {
+    "@type": "ProfessionalService",
+    "@id": `${siteUrl}/#organization`,
+    name: "Flex-Web",
+    legalName: "Fleximmo",
+    url: siteUrl,
+    foundingDate: "2025-07-17",
+    telephone: "+33757830262",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "93 chemin de la Combe",
+      postalCode: "73420",
+      addressLocality: "Voglans",
+      addressCountry: "FR"
+    },
+    identifier: [
+      { "@type": "PropertyValue", propertyID: "SIREN", value: "989123633" },
+      { "@type": "PropertyValue", propertyID: "SIRET", value: "98912363300012" },
+      { "@type": "PropertyValue", propertyID: "TVA intracommunautaire", value: "FR67989123633" }
+    ],
+    areaServed: ["Savoie", "Haute-Savoie", "France"],
+    serviceType: ["Création de site internet", "SEO local", "Hébergement et maintenance"]
+  },
+  {
+    "@type": "FAQPage",
+    mainEntity: faqData.items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer }
+    }))
+  }
+];
+---
+
+<BaseLayout
+  transparentNav={true}
+  title="Création de sites web professionnels"
+  description="FLEX-WEB crée votre site web moderne, rapide et optimisé. Hébergement, maintenance et support inclus. Demandez un devis gratuit."
+>
+  <Hero client:load />
+  <Benefits data={featuresData} client:load />
+  <HowItWorks data={howItWorksData} client:load />
+  <Templates data={templatesData} client:load />
+  <Comparison data={comparisonData} client:load />
+  <Stats data={statsData} client:load />
+  <Testimonials data={testimonialsData} client:load />
+  <FAQ data={faqData} client:load />
+  <CTA data={ctaData} client:load />
+  <Contact data={contactData} client:load />
+  <StructuredData schemas={schemas} slot="head" />
+</BaseLayout>

@@ -1,0 +1,12 @@
+---
+import BaseLayout from "../layout/BaseLayout.astro";
+import BaseHead from "../components/global/BaseHead.astro";
+import CreatorProfile from "../components/CreatorProfile.jsx";
+
+import AboutData from "../data/about.json";
+---
+
+<BaseLayout>
+  <BaseHead title="About" />
+  <CreatorProfile data={AboutData} client:load />
+</BaseLayout>

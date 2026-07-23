@@ -1,0 +1,14 @@
+---
+interface Props {
+  schemas: Record<string, unknown>[];
+}
+
+const { schemas } = Astro.props;
+
+const jsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@graph": schemas,
+});
+---
+
+<Fragment set:html={`<script type="application/ld+json">${jsonLd}</script>`} />

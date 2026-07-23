@@ -1,0 +1,12 @@
+{
+  "title": "FLEX-WEB",
+  "links": [
+    { "label": "Avantages", "href": "#avantages" },
+    { "label": "Tarifs", "href": "/pricing" },
+    { "label": "Comment ça marche", "href": "#comment" },
+    { "label": "Templates", "href": "#templates" },
+    { "label": "Témoignages", "href": "#temoignages" },
+    { "label": "FAQ", "href": "#faq" },
+    { "label": "Contact", "href": "#contact" }
+  ]
+}

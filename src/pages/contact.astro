@@ -1,0 +1,10 @@
+---
+import BaseLayout from "../layout/BaseLayout.astro";
+import ContactSection from "../components/ContactSection.jsx";
+
+import contactData from "../data/contact.json";
+---
+
+<BaseLayout title="Contact" description="Contactez FLEX-WEB pour votre site web professionnel. Nous vous recontactons sous 24h.">
+  <ContactSection data={contactData} client:load />
+</BaseLayout>

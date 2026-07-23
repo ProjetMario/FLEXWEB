@@ -1,0 +1,13 @@
+{
+  "label": "Comparaison",
+  "title": "Pourquoi FLEX-WEB gagne du temps et de l'argent",
+  "rows": [
+    { "feature": "Prix initial", "flex-web": "Abonnement clair", "alone": "Coûts cachés", "agency": "Très élevé" },
+    { "feature": "Délai de livraison", "flex-web": "1 à 2 semaines", "alone": "Plusieurs mois", "agency": "2 à 4 mois" },
+    { "feature": "Hébergement", "flex-web": "Inclus", "alone": "À payer", "agency": "Souvent facturé" },
+    { "feature": "Maintenance", "flex-web": "Incluse", "alone": "À votre charge", "agency": "Facturée à l'heure" },
+    { "feature": "Modifications", "flex-web": "Simples et incluses", "alone": "Difficiles", "agency": "Devis à chaque fois" },
+    { "feature": "SEO & performance", "flex-web": "Optimisé dès le départ", "alone": " À apprendre", "agency": "Variable" },
+    { "feature": "Support", "flex-web": "Réponse sous 24h", "alone": "Aucun", "agency": "Selon contrat" }
+  ]
+}

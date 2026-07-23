@@ -1,0 +1,9 @@
+{
+  "name": "Dyson",
+  "short_name": "Dyson",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "description": "Personal site built with Astro",
+  "icons": []
+}

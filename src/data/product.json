@@ -1,0 +1,22 @@
+{
+  "cards": [
+    {
+      "id": "1",
+      "name": "PencilVac vacuum cleaner",
+      "image": "/images/prd2.png",
+      "size": "large"
+    },
+    {
+      "id": "2",
+      "name": "Supersonic r™ Hair Dryer",
+      "image": "/images/prd1.png",
+      "size": "small"
+    },
+    {
+      "id": "3",
+      "name": "Airwrap i.d.™ Multi-Styler and Dryer",
+      "image": "/images/prd3.png",
+      "size": "small"
+    }
+  ]
+}

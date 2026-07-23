@@ -1,0 +1,15 @@
+---
+import BaseLayout from "../layout/BaseLayout.astro";
+import BaseHead from "../components/global/BaseHead.astro";
+import JournalListing from "../components/JournalListing.jsx";
+
+import journalData from "../data/journal.json";
+
+const featured = journalData[0];
+const rest = journalData.slice(1);
+---
+
+<BaseLayout>
+  <BaseHead title="Journal" />
+  <JournalListing data={rest} featured={featured} client:load />
+</BaseLayout>

@@ -1,0 +1,31 @@
+---
+import BaseHead from "../components/global/BaseHead.astro";
+import Navbar from "../components/global/Navigation.jsx";
+import Footer from "../components/global/Footer.jsx";
+import CookieConsent from "../components/global/CookieConsent.jsx";
+
+import navigationLinks from "../data/navigation.json";
+import footerData from "../data/footer.json";
+
+const { title, description, image, noindex, transparentNav = false } = Astro.props;
+---
+
+<html
+  lang="fr"
+  class="scroll-smooth no-touchevents hydrated bg-white"
+>
+  <head>
+    <BaseHead title={title} description={description} image={image} noindex={noindex} />
+    <slot name="head" />
+  </head>
+  <body class="flex min-h-svh flex-col bg-white">
+    <div id="smooth-wrapper">
+      <div id="smooth-content" class="flex flex-col min-h-svh">
+        <Navbar data={navigationLinks} transparent={transparentNav} client:load />
+        <main class="grow"><slot /></main>
+        <Footer data={footerData} client:load />
+        <CookieConsent client:load />
+      </div>
+    </div>
+  </body>
+</html>

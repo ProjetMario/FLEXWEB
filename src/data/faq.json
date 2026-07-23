@@ -1,0 +1,26 @@
+{
+  "label": "FAQ",
+  "title": "Questions fréquentes",
+  "items": [
+    {
+      "question": "Combien coûte un site ?",
+      "answer": "Nous proposons un abonnement mensuel tout inclus. Pas de surprise : le design, l'hébergement, la maintenance et le support sont compris. Le prix dépend du nombre de pages et des fonctionnalités souhaitées."
+    },
+    {
+      "question": "Puis-je modifier mon contenu ?",
+      "answer": "Oui. Vous pouvez nous envoyer vos modifications de texte ou d'image à tout moment. Nous les intégrons rapidement, sans que vous ayez à toucher au code."
+    },
+    {
+      "question": "Combien de temps faut-il ?",
+      "answer": "La plupart des sites sont livrés en une à deux semaines, après validation de votre brief et de vos contenus."
+    },
+    {
+      "question": "Suis-je propriétaire du domaine ?",
+      "answer": "Oui, totalement. Vous restez propriétaire de votre nom de domaine et de votre contenu. Nous nous chargeons uniquement de la configuration technique."
+    },
+    {
+      "question": "Que comprend l'abonnement ?",
+      "answer": "L'abonnement comprend la création du site, l'hébergement, le certificat SSL, les sauvegardes, la maintenance, les mises à jour de sécurité et un support réactif."
+    }
+  ]
+}

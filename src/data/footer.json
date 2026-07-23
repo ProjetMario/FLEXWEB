@@ -1,0 +1,15 @@
+{
+  "brand": "FLEX-WEB",
+  "description": "Création de sites web professionnels modernes, rapides et optimisés. Hébergement, maintenance et support inclus pour développer votre activité en ligne.",
+  "privacyUrl": "/privacy",
+  "privacyLabel": "Politique de confidentialité",
+  "termsUrl": "/mentions-legales",
+  "termsLabel": "Mentions légales",
+  "cgvUrl": "/cgv",
+  "cgvLabel": "CGV",
+  "socials": [
+    { "label": "Twitter", "href": "https://twitter.com/flex-web" },
+    { "label": "LinkedIn", "href": "https://linkedin.com/company/flex-web" },
+    { "label": "Instagram", "href": "https://instagram.com/flex-web" }
+  ]
+}

@@ -1,0 +1,139 @@
+---
+import BaseLayout from "../../layout/BaseLayout.astro";
+import StructuredData from "../../components/seo/StructuredData.astro";
+
+const title = "Création de site internet pour artisan en Haute-Savoie";
+const description =
+  "Pourquoi et comment créer un site internet quand on est artisan en Haute-Savoie ? Conseils pratiques pour gagner en visibilité locale et capter de nouveaux clients.";
+const canonicalUrl = "https://flex-web.fr/journal/site-internet-artisan-haute-savoie";
+const published = "2026-07-22";
+
+const webPageSchema = {
+  "@type": "WebPage",
+  "@id": canonicalUrl,
+  url: canonicalUrl,
+  name: title,
+  description: description,
+  isPartOf: { "@id": "https://flex-web.fr" },
+};
+
+const articleSchema = {
+  "@type": "Article",
+  headline: title,
+  description: description,
+  author: {
+    "@type": "Organization",
+    name: "FLEX-WEB",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "FLEX-WEB",
+    logo: { "@type": "ImageObject", url: "https://flex-web.fr/favicon.png" },
+  },
+  datePublished: published,
+};
+
+const breadcrumbSchema = {
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Accueil", item: "https://flex-web.fr" },
+    { "@type": "ListItem", position: 2, name: "Journal", item: "https://flex-web.fr/journal" },
+    { "@type": "ListItem", position: 3, name: title, item: canonicalUrl },
+  ],
+};
+
+const schemas = [webPageSchema, articleSchema, breadcrumbSchema];
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="mx-auto max-w-3xl px-6 py-16 lg:py-24">
+    <nav aria-label="Fil d'Ariane" class="mb-8 text-sm" style="color: var(--color-text-muted)">
+      <a href="/" class="hover:underline">Accueil</a>
+      <span class="mx-2">/</span>
+      <a href="/journal" class="hover:underline">Journal</a>
+      <span class="mx-2">/</span>
+      <span>{title}</span>
+    </nav>
+
+    <h1 class="text-4xl font-semibold tracking-tight lg:text-5xl" style="color: var(--color-text)">
+      {title}
+    </h1>
+
+    <p class="mt-4 text-sm" style="color: var(--color-text-muted)">
+      Publié le {published}
+    </p>
+
+    <div class="mt-12 space-y-6 text-lg leading-relaxed" style="color: var(--color-text)">
+      <p>
+        Pour un artisan en Haute-Savoie, avoir un site internet n'est plus un luxe. C'est un outil de prospection au quotidien. Voici comment en tirer parti sans y passer des heures.
+      </p>
+
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Pourquoi un site internet quand on est artisan ?
+      </h2>
+      <p>
+        Les clients recherchent désormais leurs prestataires en ligne, même à proximité. Un site internet permet d'être trouvé sur Google, de présenter ses réalisations et de donner confiance avant le premier contact.
+      </p>
+
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Quel contenu mettre en avant ?
+      </h2>
+      <ul class="list-disc space-y-2 pl-6">
+        <li>Une page d'accueil claire avec votre métier et votre zone d'intervention.</li>
+        <li>Une page de présentation de votre entreprise et de votre savoir-faire.</li>
+        <li>Une galerie de vos réalisations.</li>
+        <li>Les coordonnées et un formulaire de contact simple.</li>
+        <li>Les avis et témoignages de clients.</li>
+      </ul>
+
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Les erreurs à éviter
+      </h2>
+      <ul class="list-disc space-y-2 pl-6">
+        <li>Un site difficile à consulter sur mobile.</li>
+        <li>Un contenu trop technique ou trop vague.</li>
+        <li>L'absence de coordonnées et d'appel à l'action.</li>
+        <li>Un site jamais mis à jour.</li>
+      </ul>
+
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Le référencement local
+      </h2>
+      <p>
+        Pour les artisans, le référencement local est essentiel. Pensez à créer ou optimiser votre fiche Google Business Profile, à utiliser vos villes d'intervention dans votre contenu et à demander des avis à vos clients satisfaits.
+      </p>
+
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Combien ça coûte ?
+      </h2>
+      <p>
+        Un site vitrine pour artisan est accessible dès quelques centaines d'euros. L'investissement se rentabilise rapidement si le site vous apporte ne serait-ce qu'un ou deux nouveaux clients par mois.
+      </p>
+
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Conclusion
+      </h2>
+      <p>
+        Un site internet professionnel est un atout pour tout artisan en Haute-Savoie. Il renforce votre crédibilité, améliore votre visibilité locale et aide vos clients à vous trouver au bon moment.
+      </p>
+    </div>
+
+    <aside class="mt-16 rounded-3xl p-8 text-center" style="background-color: var(--color-surface)">
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Artisan en Haute-Savoie ? Obtenez un devis
+      </h2>
+      <p class="mt-4" style="color: var(--color-text-muted)">
+        FLEX-WEB crée des sites internet pour artisans et PME en Haute-Savoie.
+      </p>
+      <a
+        href="/contact"
+        class="mt-6 inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-medium text-white transition hover:opacity-90"
+        style="background-color: var(--color-accent)"
+      >
+        Demander un devis
+      </a>
+    </aside>
+  </article>
+
+  <StructuredData schemas={schemas} slot="head" />
+</BaseLayout>

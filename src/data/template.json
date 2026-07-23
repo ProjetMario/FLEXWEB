@@ -1,0 +1,118 @@
+{
+  "slug": "dyson-template",
+  "thumbnail": "/thumbnail-dyson.jpg",
+  "categories": "blog",
+  "title": "Dyson Inspired",
+  "price": 0,
+  "number": "03",
+  "description": "Dyson Inspired is a premium Astro 6 web template built for B2B product showcases. Powered by Astro 6, React 19, and Tailwind CSS v4 — three of the fastest-growing tools in modern front-end development. Features include a fully responsive layout with pixel-perfect designs across all devices, 10+ unique pages for products, journals, about, and contact, and a modern component library including BentoCards, SplitLayouts, TwoColumnLayouts, and more. Data-driven architecture via JSON files makes content management effortless without a CMS. Privacy-first structure with built-in compliance pages. Easily customize brand identity and scale as your business grows.",
+  "about": [
+    { "name": "Modern clean design", "icon": "/icoonia/adjust.svg" },
+    { "name": "High-performance build", "icon": "/icoonia/acceleration.svg" },
+    { "name": "Built-in product pages", "icon": "/icoonia/filter.svg" },
+    { "name": "Customizable features", "icon": "/icoonia/edit-pen.svg" },
+    { "name": "SEO-optimized", "icon": "/icoonia/globe-connected.svg" },
+    { "name": "JSON-driven content", "icon": "/icoonia/document.svg" }
+  ],
+  "benefits": [
+    { "name": "Modern Tech Stack", "icon": "/icoonia/atom.svg" },
+    { "name": "Static & Dynamic Capabilities", "icon": "/icoonia/globe.svg" },
+    { "name": "SEO Optimization", "icon": "/icoonia/globe-connected.svg" },
+    { "name": "Reusable React Components", "icon": "/icoonia/dashboard-grid.svg" },
+    { "name": "Smooth CSS Animations", "icon": "/icoonia/acceleration.svg" },
+    { "name": "Data-Driven Design", "icon": "/icoonia/bar-chart.svg" },
+    { "name": "Developer-Friendly", "icon": "/icoonia/configuration.svg" },
+    { "name": "Rich Media Support", "icon": "/icoonia/file-image.svg" }
+  ],
+  "stack": [
+    { "name": "Sanity for content management", "url": "/tutorial/sanity-cms", "icon": "/icoonia/edit-pen.svg" },
+    { "name": "PostHog for analytics", "url": "/tutorial/posthog", "icon": "/icoonia/analytics.svg" },
+    { "name": "Git for version control", "url": "/tutorial/git", "icon": "/icoonia/branch-left-right.svg" },
+    { "name": "Vercel for deployment", "url": "/tutorial/vercel", "icon": "/icoonia/cloud-upload.svg" },
+    { "name": "Hostinger for domain management", "url": "/tutorial/hostinger", "icon": "/icoonia/globe.svg" },
+    { "name": "Cloudflare for CDN & security", "url": "/tutorial/cloudflare", "icon": "/icoonia/globe-shield.svg" }
+  ],
+  "year": "2025",
+  "tag": "product",
+  "images": [
+    "/blog-1/gallery-1.jpg",
+    "/blog-1/gallery-2.png",
+    "/blog-1/gallery-3.png",
+    "/blog-1/gallery-4.png"
+  ],
+  "extra": "10+",
+  "paymentLink": "https://buy.polar.sh/polar_cl_G4BhqHUmYslKf43gWhJfewB1IzIhbPj38M0fK0u5RLZ",
+  "demoLink": "https://dyson-n9hb.onrender.com/",
+  "sections": [
+    {
+      "label": "Specifications",
+      "content": {
+        "released": "2025-01-01",
+        "updated": "2025-06-01",
+        "astro": "Astro v6.0",
+        "tailwind": "Tailwind CSS v4.1",
+        "react": "React v19",
+        "pagespeed": {
+          "performance": 98,
+          "accessibility": 100,
+          "bestPractices": 100,
+          "seo": 97
+        },
+        "compatibility": [
+          "Chrome (latest)",
+          "Firefox (latest)",
+          "Safari (latest)",
+          "Edge (latest)"
+        ],
+        "integrations": [
+          "React 19",
+          "Sitemap",
+          "Tailwind CSS v4",
+          "Image Optimization",
+          "Prettier",
+          "ESLint"
+        ],
+        "categories": ["Product", "B2B", "Landing Page"]
+      }
+    },
+    {
+      "label": "Components",
+      "content": [
+        {
+          "group": "Landing Pages",
+          "items": ["Home", "About", "Contact", "Privacy"]
+        },
+        {
+          "group": "Product Pages",
+          "items": ["Products Index", "Product Detail"]
+        },
+        {
+          "group": "Journal Pages",
+          "items": ["Journal Index", "Journal Post"]
+        },
+        {
+          "group": "System Pages",
+          "items": ["404 Not Found", "Privacy Policy"]
+        },
+        {
+          "group": "Landing Sections",
+          "items": ["Hero", "Stats", "Marquee", "Features", "Testimonials", "CTA"]
+        },
+        {
+          "group": "Components",
+          "items": [
+            "Navbar",
+            "Footer",
+            "Breadcrumb",
+            "Card",
+            "BentoCard",
+            "SplitLayout",
+            "TwoColumnLayout",
+            "CreatorProfile",
+            "Title"
+          ]
+        }
+      ]
+    }
+  ]
+}

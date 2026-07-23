@@ -1,0 +1,40 @@
+---
+import BaseLayout from "../../layout/BaseLayout.astro";
+import SplitLayout from "../../components/SplitLayout.jsx";
+import Breadcrumb from "../../components/Breadcrumb.jsx";
+import journalData from "../../data/journal.json";
+
+export async function getStaticPaths() {
+  return journalData
+    .filter((item) => item.slug)
+    .map((item) => ({
+      params: { slug: item.slug },
+    }));
+}
+
+const { slug } = Astro.params;
+const item = journalData.find((item) => item.slug === slug);
+
+if (!item) {
+  throw new Error("Product not found");
+}
+
+const breadcrumbs = [
+  { label: "Home", href: "/" },
+  { label: "Products", href: "/products" },
+];
+
+const image = { src: item.image, alt: item.title };
+---
+
+<BaseLayout title={item.title}>
+  <Breadcrumb data={breadcrumbs} pageTitle={item.title} />
+  <SplitLayout
+    client:load
+    data={{
+      ...item,
+      services: item.specsAccordion,
+      image,
+    }}
+  />
+</BaseLayout>
