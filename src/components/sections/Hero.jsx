@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Play, ChevronLeft, ChevronRight, X, ExternalLink } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight, X, ExternalLink } from "lucide-react";
 
 const slides = [
   { src: "/images/showcase/foot-nation.jpg", alt: "foot-nation.com", title: "Foot Nation", url: "https://www.foot-nation.com" },
@@ -39,12 +39,12 @@ export default function Hero() {
               Nous créons un site moderne, rapide et optimisé pour développer votre activité. Hébergement, maintenance et support inclus.
             </motion.p>
 
-            <motion.div initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.24 }} className="flex flex-col items-start gap-4 sm:flex-row">
+            <motion.div initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.24 }} className="flex flex-col items-start gap-4">
               <a href="#contact" className="group inline-flex items-center gap-2 rounded-full bg-[#0071e3] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#0077ed]">
                 Demander un devis <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
               </a>
-              <a href="#templates" className="group inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-[#0071e3] transition hover:underline hover:underline-offset-4">
-                <Play className="h-4 w-4 fill-current" /> Voir une démo
+              <a href="#showcase" className="group inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-[#0071e3] transition hover:underline hover:underline-offset-4">
+                <ExternalLink className="h-4 w-4" /> Nos exemples de sites
               </a>
             </motion.div>
 
@@ -53,7 +53,7 @@ export default function Hero() {
             </motion.p>
           </div>
 
-          <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, delay: 0.2 }} className="relative z-10">
+          <motion.div id="showcase" initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, delay: 0.2 }} className="relative z-10">
             <div className="relative rounded-[2rem] border border-black/[0.06] bg-white p-2 shadow-[0_24px_64px_rgba(0,0,0,0.10)]">
               <div className="relative aspect-[4/3] overflow-hidden rounded-[1.65rem] bg-[#f5f5f7]">
                 <button

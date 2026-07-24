@@ -25,7 +25,7 @@ export default function Navigation({ data = {}, transparent = false }) {
   return (
     <nav className={navClass}>
       <div className="mx-auto flex max-w-6xl flex-row items-center justify-between px-5 py-3.5 md:px-7 relative">
-        <Logo className="h-10 md:h-14" />
+        <Logo className="h-14 md:h-[5.25rem]" />
 
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center gap-6 text-xs font-medium text-[#424245]">
           {links.map((link) => (
@@ -71,7 +71,7 @@ export default function Navigation({ data = {}, transparent = false }) {
           >
             <div className="flex flex-row justify-between items-center border-b border-stone-100 py-4 mb-6">
               <div onClick={() => setOpen(false)}>
-                <Logo className="h-10 md:h-14" />
+                <Logo className="h-14 md:h-[5.25rem]" />
               </div>
               <button
                 className="text-2xl cursor-pointer font-light text-stone-500 leading-none"
