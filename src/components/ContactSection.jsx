@@ -36,7 +36,7 @@ export default function ContactSection({ data = {} }) {
           )}
         </MotionWrapper>
 
-        <motion.form initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.7 }} method="POST" action="https://formsubmit.co/bonjour@flex-web.fr" className="flex flex-col gap-4">
+        <motion.form initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.7 }} method="POST" action="https://formsubmit.co/contact@flex-web.fr" className="flex flex-col gap-4">
           <input type="hidden" name="_subject" value="Nouvelle demande de devis FLEX-WEB" />
           <input type="hidden" name="_next" value="https://flex-web.fr/contact" />
           <input type="hidden" name="_captcha" value="false" />

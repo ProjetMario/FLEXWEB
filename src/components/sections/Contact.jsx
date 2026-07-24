@@ -22,7 +22,7 @@ export default function Contact({ data = {} }) {
             </div>
           </div>
 
-          <motion.form initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.7 }} method="POST" action="https://formsubmit.co/bonjour@flex-web.fr" className="rounded-[1.5rem] bg-white p-6 sm:p-8 shadow-[0_14px_36px_rgba(0,0,0,0.05)]">
+          <motion.form initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.7 }} method="POST" action="https://formsubmit.co/contact@flex-web.fr" className="rounded-[1.5rem] bg-white p-6 sm:p-8 shadow-[0_14px_36px_rgba(0,0,0,0.05)]">
             <input type="hidden" name="_subject" value="Nouvelle demande de devis FLEX-WEB" />
             <input type="hidden" name="_next" value="https://flex-web.fr/#contact" />
             <input type="hidden" name="_captcha" value="false" />

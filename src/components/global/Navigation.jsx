@@ -33,7 +33,13 @@ export default function Navigation({ data = {}, transparent = false }) {
           ))}
         </div>
 
-        <div className="hidden md:block">
+        <div className="hidden md:flex items-center gap-4">
+          <a
+            href="tel:+33757830262"
+            className="text-sm font-medium text-[#1d1d1f] transition hover:text-[#0071e3]"
+          >
+            07 57 83 02 62
+          </a>
           <a
             href="/#contact"
             className="inline-flex items-center rounded-full bg-[#0071e3] px-3.5 py-1.5 text-xs font-medium text-white transition hover:bg-[#0077ed]"
