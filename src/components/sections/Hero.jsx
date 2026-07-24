@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Play, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, Play, ChevronLeft, ChevronRight, X, ExternalLink } from "lucide-react";
 
 const slides = [
-  { src: "/images/showcase/foot-nation.jpg", alt: "foot-nation.com" },
-  { src: "/images/showcase/2savoie-immo.jpg", alt: "2savoie.immo" },
-  { src: "/images/showcase/serrurier73.jpg", alt: "serrurier73.fr" },
-  { src: "/images/showcase/agencevoglans.jpg", alt: "agencevoglans.fr" }
+  { src: "/images/showcase/foot-nation.jpg", alt: "foot-nation.com", title: "Foot Nation", url: "https://www.foot-nation.com" },
+  { src: "/images/showcase/2savoie-immo.jpg", alt: "2savoie.immo", title: "2Savoie Immo", url: "https://www.2savoie.immo" },
+  { src: "/images/showcase/serrurier73.jpg", alt: "serrurier73.fr", title: "Serrurier 73", url: "https://serrurier73.fr" },
+  { src: "/images/showcase/agencevoglans.jpg", alt: "agencevoglans.fr", title: "L'Agence de Voglans", url: "https://www.agencevoglans.fr" }
 ];
 
 export default function Hero() {
   const [current, setCurrent] = useState(0);
+  const [previewIndex, setPreviewIndex] = useState(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -55,17 +56,29 @@ export default function Hero() {
           <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.9, delay: 0.2 }} className="relative z-10">
             <div className="relative rounded-[2rem] border border-black/[0.06] bg-white p-2 shadow-[0_24px_64px_rgba(0,0,0,0.10)]">
               <div className="relative aspect-[4/3] overflow-hidden rounded-[1.65rem] bg-[#f5f5f7]">
-                <motion.img
-                  key={current}
-                  src={slides[current].src}
-                  alt={slides[current].alt}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.7 }}
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
+                <button
+                  type="button"
+                  onClick={() => setPreviewIndex(current)}
+                  className='group absolute inset-0 z-10 cursor-pointer overflow-hidden rounded-[1.65rem]'
+                  aria-label={"Voir l'aperçu de " + slides[current].title}
+                >
+                  <motion.img
+                    key={current}
+                    src={slides[current].src}
+                    alt={slides[current].title}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.7 }}
+                    className='h-full w-full object-cover transition-transform duration-700 group-hover:scale-105'
+                  />
+                  <div className='absolute inset-0 flex items-center justify-center bg-black/0 transition group-hover:bg-black/10'>
+                    <span className='rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-[#1d1d1f] opacity-0 shadow-sm transition group-hover:opacity-100'>
+                      Voir l'aperçu
+                    </span>
+                  </div>
+                </button>
               </div>
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-full bg-white/80 px-3 py-1.5 shadow-[0_4px_14px_rgba(0,0,0,0.06)] backdrop-blur-sm">
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 rounded-full bg-white/80 px-3 py-1.5 shadow-[0_4px_14px_rgba(0,0,0,0.06)] backdrop-blur-sm">
                 <button
                   type="button"
                   onClick={() => setCurrent((c) => (c - 1 + slides.length) % slides.length)}
@@ -99,6 +112,40 @@ export default function Hero() {
           </motion.div>
         </div>
       </motion.div>
+    {previewIndex !== null && (
+      <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm' onClick={() => setPreviewIndex(null)}>
+        <div className='relative flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl' onClick={(e) => e.stopPropagation()}>
+          <div className='flex items-center justify-between border-b border-black/[0.06] px-5 py-3'>
+            <span className='text-sm font-semibold text-[#1d1d1f]'>{slides[previewIndex].title}</span>
+            <button
+              type='button'
+              onClick={() => setPreviewIndex(null)}
+              className='rounded-full p-2 text-[#424245] transition hover:bg-[#f5f5f7]'
+              aria-label="Fermer l'aperçu"
+            >
+              <X className='h-5 w-5' />
+            </button>
+          </div>
+          <div className='flex-1 overflow-auto bg-[#f5f5f7] p-4'>
+            <img
+              src={slides[previewIndex].src}
+              alt={slides[previewIndex].title}
+              className='mx-auto h-auto max-h-[70vh] w-full rounded-xl object-contain'
+            />
+          </div>
+          <div className='border-t border-black/[0.06] px-5 py-3'>
+            <a
+              href={slides[previewIndex].url}
+              target='_blank'
+              rel='noopener noreferrer'
+              className='inline-flex items-center gap-2 rounded-full bg-[#0071e3] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#0077ed]'
+            >
+              Visiter le site <ExternalLink className='h-4 w-4' />
+            </a>
+          </div>
+        </div>
+      </div>
+    )}
     </section>
   );
 }
