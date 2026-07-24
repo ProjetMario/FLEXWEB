@@ -17,10 +17,10 @@ export default function Navigation({ data = {}, transparent = false }) {
   const navClass = transparent
     ? `fixed top-0 left-0 right-0 z-40 w-full transition-colors duration-300 ${
         scrolled
-          ? "bg-white md:bg-white/72 border-b border-black/[0.08] backdrop-blur-2xl"
+          ? "bg-white md:bg-white/72 border-b border-black/[0.08] md:backdrop-blur-2xl"
           : "bg-white md:bg-transparent border-b border-black/[0.08] md:border-transparent"
       }`
-    : "sticky top-0 z-40 w-full bg-white md:bg-white/72 border-b border-black/[0.08] backdrop-blur-2xl";
+    : "sticky top-0 z-40 w-full bg-white md:bg-white/72 border-b border-black/[0.08] md:backdrop-blur-2xl";
 
   return (
     <nav className={navClass}>
@@ -63,38 +63,44 @@ export default function Navigation({ data = {}, transparent = false }) {
       </div>
 
       {open && (
-        <div className="fixed inset-0 bg-white z-50 flex flex-col px-6 pt-5 md:hidden">
-          <div className="flex flex-row justify-between items-center border-b border-stone-100 py-4 mb-6">
-            <div onClick={() => setOpen(false)}>
-              <Logo className="h-10 md:h-14" />
-            </div>
-            <button
-              className="text-2xl cursor-pointer font-light text-stone-500 leading-none"
-              aria-label="Fermer le menu"
-              onClick={() => setOpen(false)}
-            >
-              &times;
-            </button>
-          </div>
-          <nav className="flex flex-col">
-            {links.map((link) => (
-              <a
-                key={link.href}
-                href={link.href.startsWith("#") ? `/${link.href}` : link.href}
+        <div className="fixed inset-0 z-50 md:hidden" onClick={() => setOpen(false)}>
+          <div className="absolute inset-0 bg-black/60" />
+          <div
+            className="absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white shadow-2xl flex flex-col px-6 pt-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-row justify-between items-center border-b border-stone-100 py-4 mb-6">
+              <div onClick={() => setOpen(false)}>
+                <Logo className="h-10 md:h-14" />
+              </div>
+              <button
+                className="text-2xl cursor-pointer font-light text-stone-500 leading-none"
+                aria-label="Fermer le menu"
                 onClick={() => setOpen(false)}
-                className="text-2xl font-medium text-stone-900 py-4 border-b border-stone-100 hover:text-stone-500 transition-colors"
               >
-                {link.label}
+                &times;
+              </button>
+            </div>
+            <nav className="flex flex-col overflow-y-auto">
+              {links.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href.startsWith("#") ? `/${link.href}` : link.href}
+                  onClick={() => setOpen(false)}
+                  className="text-2xl font-medium text-stone-900 py-4 border-b border-stone-100 hover:text-stone-500 transition-colors"
+                >
+                  {link.label}
+                </a>
+              ))}
+              <a
+                href="/#contact"
+                onClick={() => setOpen(false)}
+                className="mt-8 inline-flex items-center justify-center rounded-full bg-stone-900 px-6 py-3 text-sm font-medium text-white"
+              >
+                Devis gratuit
               </a>
-            ))}
-            <a
-              href="/#contact"
-              onClick={() => setOpen(false)}
-              className="mt-8 inline-flex items-center justify-center rounded-full bg-stone-900 px-6 py-3 text-sm font-medium text-white"
-            >
-              Devis gratuit
-            </a>
-          </nav>
+            </nav>
+          </div>
         </div>
       )}
     </nav>
