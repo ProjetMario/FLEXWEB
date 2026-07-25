@@ -39,27 +39,16 @@ const schemas = [
     }
   },
   {
-    "@type": "ProfessionalService",
-    "@id": `${siteUrl}/#organization`,
-    name: "Flex-Web",
-    legalName: "Fleximmo",
-    url: siteUrl,
-    foundingDate: "2025-07-17",
-    telephone: "+33757830262",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "93 chemin de la Combe",
-      postalCode: "73420",
-      addressLocality: "Voglans",
-      addressCountry: "FR"
-    },
-    identifier: [
-      { "@type": "PropertyValue", propertyID: "SIREN", value: "989123633" },
-      { "@type": "PropertyValue", propertyID: "SIRET", value: "98912363300012" },
-      { "@type": "PropertyValue", propertyID: "TVA intracommunautaire", value: "FR67989123633" }
-    ],
-    areaServed: ["Savoie", "Haute-Savoie", "France"],
-    serviceType: ["Création de site internet", "SEO local", "Hébergement et maintenance"]
+    "@type": "HowTo",
+    "@id": `${siteUrl}/#how-it-works`,
+    name: howItWorksData.title,
+    description: "Processus de création d'un site web professionnel en 4 étapes.",
+    step: howItWorksData.items.map((item, index) => ({
+      "@type": "HowToStep",
+      position: index + 1,
+      name: item.title,
+      text: item.description
+    }))
   },
   {
     "@type": "FAQPage",

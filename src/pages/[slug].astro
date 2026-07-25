@@ -54,10 +54,12 @@ const webPageSchema = {
 };
 
 const serviceSchema = {
-  "@type": "ProfessionalService",
-  name: `FLEX-WEB — Création de site internet ${preposition} ${data.name}`,
+  "@type": "Service",
+  "@id": canonicalUrl,
+  name: `Création de site internet ${preposition} ${data.name}`,
   url: canonicalUrl,
   serviceType: "Création de site internet",
+  provider: { "@id": `${siteUrl}/#organization` },
   areaServed: {
     "@type": "AdministrativeArea",
     name: data.name,

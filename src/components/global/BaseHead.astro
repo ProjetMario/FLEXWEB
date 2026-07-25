@@ -115,6 +115,45 @@ const ogImage = new URL(image, siteUrl).toString();
     "email": "contact@flex-web.fr",
     "areaServed": ["Savoie", "Haute-Savoie", "France"],
     "serviceType": ["Création de site internet", "Référencement naturel", "Hébergement et maintenance"],
+    "logo": "https://flex-web.fr/logo.png",
+    "image": "https://flex-web.fr/thumbnail-dyson.jpg",
+    "priceRange": "€€",
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Services Flex-Web",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Création de site vitrine",
+            "description": "Site de présentation responsive avec hébergement et maintenance inclus."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Site professionnel / blog",
+            "description": "Site complet avec SEO avancé, galerie, blog et modifications incluses."
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Application web & mobile sur mesure",
+            "description": "Développement SaaS, applications web et mobiles personnalisées."
+          }
+        }
+      ]
+    },
     "parentOrganization": {
       "@type": "Organization",
       "name": "Fleximmo"
