@@ -6,7 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://flex-web.fr",
+  site: "https://www.flex-web.fr",
   devToolbar: {
     enabled: false,
   },
