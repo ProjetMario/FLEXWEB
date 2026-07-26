@@ -8,8 +8,10 @@ export const GET: APIRoute = async () => {
     { url: "/", priority: 1.0, changefreq: "weekly" },
     { url: "/about/", priority: 0.8, changefreq: "monthly" },
     { url: "/contact/", priority: 0.8, changefreq: "monthly" },
-    { url: "/journal/", priority: 0.9, changefreq: "weekly" },
-    { url: "/products/", priority: 0.9, changefreq: "weekly" },
+    { url: "/pricing/", priority: 0.9, changefreq: "monthly" },
+    { url: "/journal/combien-coute-site-internet-savoie/", priority: 0.8, changefreq: "yearly" },
+    { url: "/journal/comment-choisir-agence-web-chambery/", priority: 0.8, changefreq: "yearly" },
+    { url: "/journal/site-internet-artisan-haute-savoie/", priority: 0.8, changefreq: "yearly" },
     { url: "/privacy/", priority: 0.5, changefreq: "yearly" },
     { url: "/mentions-legales/", priority: 0.5, changefreq: "yearly" },
     { url: "/cgv/", priority: 0.5, changefreq: "yearly" },
@@ -35,7 +37,6 @@ export const GET: APIRoute = async () => {
     }));
 
   const allPages = [...staticPages, ...locationPages, ...servicePages];
-  const lastmod = new Date().toISOString().split("T")[0];
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -43,7 +44,6 @@ ${allPages
   .map(
     ({ url, priority, changefreq }) => `  <url>
     <loc>${site}${url}</loc>
-    <lastmod>${lastmod}</lastmod>
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
   </url>`

@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../layout/BaseLayout.astro";
-import BaseHead from "../components/global/BaseHead.astro";
 import JournalListing from "../components/JournalListing.jsx";
 
 import journalData from "../data/journal.json";
@@ -9,7 +8,10 @@ const featured = journalData[0];
 const rest = journalData.slice(1);
 ---
 
-<BaseLayout>
-  <BaseHead title="Journal" />
+<BaseLayout
+  title="Journal"
+  description="Conseils pratiques sur la création de site internet, les tarifs web et le référencement local en Savoie et Haute-Savoie."
+  noindex
+>
   <JournalListing data={rest} featured={featured} client:load />
 </BaseLayout>

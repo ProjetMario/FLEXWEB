@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../layout/BaseLayout.astro";
-import BaseHead from "../components/global/BaseHead.astro";
 import Title from "../components/Title.jsx";
 import TwoColumnLayout from "../components/TwoColumnLayout.jsx";
 import Cta from "../components/global/Cta.jsx";
@@ -9,8 +8,7 @@ import PrivacyData from "../data/privacy.json";
 import ctaData from "../data/cta.json";
 ---
 
-<BaseLayout>
-  <BaseHead title="Politique de confidentialité" />
+<BaseLayout title="Politique de confidentialité">
   <Title title="Politique de confidentialité" client:load />
   <TwoColumnLayout
     data={{

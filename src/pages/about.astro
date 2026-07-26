@@ -1,12 +1,13 @@
 ---
 import BaseLayout from "../layout/BaseLayout.astro";
-import BaseHead from "../components/global/BaseHead.astro";
 import CreatorProfile from "../components/CreatorProfile.jsx";
 
 import AboutData from "../data/about.json";
 ---
 
-<BaseLayout>
-  <BaseHead title="About" />
+<BaseLayout
+  title="À propos de Flex-Web"
+  description="Découvrez Flex-Web, créateur de sites internet professionnels pour les artisans, indépendants, commerçants et PME."
+>
   <CreatorProfile data={AboutData} client:load />
 </BaseLayout>
