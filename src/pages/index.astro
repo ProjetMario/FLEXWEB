@@ -30,34 +30,85 @@ const schemas = [
     "@id": `${siteUrl}/#website`,
     url: siteUrl,
     name: "Flex-Web",
+    alternateName: "FLEX-WEB",
     inLanguage: "fr-FR",
+    description: "Flex-Web crée des sites internet professionnels, rapides et optimisés pour les artisans, commerçants, indépendants et PME en Savoie et Haute-Savoie.",
     publisher: { "@id": `${siteUrl}/#organization` },
     potentialAction: {
-      "@type": "ContactAction",
-      target: `${siteUrl}/contact`,
-      name: "Demander un devis"
-    }
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${siteUrl}/?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
+  },
+  {
+    "@type": "WebPage",
+    "@id": `${siteUrl}/`,
+    url: `${siteUrl}/`,
+    name: "Flex-Web — Création de sites web professionnels",
+    description: "FLEX-WEB crée votre site web moderne, rapide et optimisé. Hébergement, maintenance et support inclus. Demandez un devis gratuit.",
+    isPartOf: { "@id": `${siteUrl}/#website` },
+    about: { "@id": `${siteUrl}/#organization` },
+    breadcrumb: { "@id": `${siteUrl}/#breadcrumb` },
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["h1", ".hero-description", "meta[name='description']"],
+    },
+  },
+  {
+    "@type": "BreadcrumbList",
+    "@id": `${siteUrl}/#breadcrumb`,
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Accueil", item: siteUrl },
+    ],
   },
   {
     "@type": "HowTo",
     "@id": `${siteUrl}/#how-it-works`,
     name: howItWorksData.title,
-    description: "Processus de création d'un site web professionnel en 4 étapes.",
+    description: "Processus de création d'un site web professionnel en 4 étapes avec Flex-Web.",
+    totalTime: "P14D",
+    image: `${siteUrl}/logo.png`,
     step: howItWorksData.items.map((item, index) => ({
       "@type": "HowToStep",
       position: index + 1,
       name: item.title,
-      text: item.description
-    }))
+      text: item.description,
+      url: `${siteUrl}/#etape-${index + 1}`,
+    })),
   },
   {
     "@type": "FAQPage",
+    "@id": `${siteUrl}/#faq`,
     mainEntity: faqData.items.map((item) => ({
       "@type": "Question",
       name: item.question,
-      acceptedAnswer: { "@type": "Answer", text: item.answer }
-    }))
-  }
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  },
+  {
+    "@type": "AggregateRating",
+    "@id": `${siteUrl}/#rating`,
+    itemReviewed: { "@id": `${siteUrl}/#organization` },
+    ratingValue: "5",
+    bestRating: "5",
+    worstRating: "1",
+    ratingCount: `${testimonialsData.items.length}`,
+    reviewCount: `${testimonialsData.items.length}`,
+  },
+  ...testimonialsData.items.map((t) => ({
+    "@type": "Review",
+    itemReviewed: { "@id": `${siteUrl}/#organization` },
+    author: { "@type": "Person", name: t.name },
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue: `${t.rating}`,
+      bestRating: "5",
+    },
+    reviewBody: t.quote,
+  })),
 ];
 ---
 

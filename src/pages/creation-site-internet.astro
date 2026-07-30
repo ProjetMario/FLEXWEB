@@ -31,10 +31,61 @@ const serviceSchema = {
   url: canonicalUrl,
   description: data.description,
   provider: { "@id": `${siteUrl}/#organization` },
-  areaServed: "France",
+  areaServed: [
+    { "@type": "AdministrativeArea", name: "Savoie" },
+    { "@type": "AdministrativeArea", name: "Haute-Savoie" },
+    { "@type": "Country", name: "France" },
+  ],
   audience: {
     "@type": "Audience",
     audienceType: data.targetAudience.join(", "),
+  },
+  serviceType: "Création de site internet",
+  offers: [
+    {
+      "@type": "Offer",
+      name: "Site Essentiel",
+      price: "49",
+      priceCurrency: "EUR",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        price: "49",
+        priceCurrency: "EUR",
+        unitCode: "MON",
+        referenceQuantity: { "@type": "QuantitativeValue", value: "1", unitCode: "MON" },
+      },
+      url: `${siteUrl}/pricing/`,
+      availability: "https://schema.org/InStock",
+    },
+    {
+      "@type": "Offer",
+      name: "Site Professionnel",
+      price: "99",
+      priceCurrency: "EUR",
+      priceSpecification: {
+        "@type": "UnitPriceSpecification",
+        price: "99",
+        priceCurrency: "EUR",
+        unitCode: "MON",
+        referenceQuantity: { "@type": "QuantitativeValue", value: "1", unitCode: "MON" },
+      },
+      url: `${siteUrl}/pricing/`,
+      availability: "https://schema.org/InStock",
+    },
+    {
+      "@type": "Offer",
+      name: "Achat définitif",
+      price: "990",
+      priceCurrency: "EUR",
+      url: `${siteUrl}/pricing/`,
+      availability: "https://schema.org/InStock",
+    },
+  ],
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "5",
+    bestRating: "5",
+    ratingCount: "3",
   },
 };
 

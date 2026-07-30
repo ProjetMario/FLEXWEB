@@ -55,14 +55,29 @@ const webPageSchema = {
 
 const serviceSchema = {
   "@type": "Service",
-  "@id": canonicalUrl,
+  "@id": `${canonicalUrl}#service`,
   name: `Création de site internet ${preposition} ${data.name}`,
   url: canonicalUrl,
   serviceType: "Création de site internet",
+  description: `Flex-Web accompagne les professionnels ${preposition} ${data.name} pour concevoir un site internet clair, rapide et adapté à leur activité.`,
   provider: { "@id": `${siteUrl}/#organization` },
   areaServed: {
     "@type": "AdministrativeArea",
     name: data.name,
+  },
+  offers: {
+    "@type": "AggregateOffer",
+    lowPrice: "49",
+    highPrice: "990",
+    priceCurrency: "EUR",
+    offerCount: "3",
+    url: `${siteUrl}/pricing/`,
+  },
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "5",
+    bestRating: "5",
+    ratingCount: "3",
   },
 };
 
