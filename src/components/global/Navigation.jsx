@@ -17,10 +17,10 @@ export default function Navigation({ data = {}, transparent = false }) {
   const navClass = transparent
     ? `fixed top-0 left-0 right-0 z-40 w-full transition-colors duration-300 ${
         scrolled
-          ? "bg-white md:bg-white/72 border-b border-black/[0.08] md:backdrop-blur-2xl"
-          : "bg-white md:bg-transparent border-b border-black/[0.08] md:border-transparent"
+          ? "bg-[#f5f5f7]/90 md:bg-[#f5f5f7]/85 border-b border-black/[0.08] md:backdrop-blur-2xl"
+          : "bg-white md:bg-[#f5f5f7]/50 border-b border-black/[0.08] md:border-transparent"
       }`
-    : "sticky top-0 z-40 w-full bg-white md:bg-white/72 border-b border-black/[0.08] md:backdrop-blur-2xl";
+    : "sticky top-0 z-40 w-full bg-[#f5f5f7]/90 border-b border-black/[0.08] md:backdrop-blur-2xl";
 
   return (
     <nav className={navClass}>
