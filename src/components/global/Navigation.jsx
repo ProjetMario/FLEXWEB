@@ -27,24 +27,18 @@ export default function Navigation({ data = {}, transparent = false }) {
       <div className="mx-auto flex max-w-6xl flex-row items-center justify-between px-5 py-3.5 md:px-7 relative">
         <Logo className="h-14 md:h-[5.25rem]" />
 
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center gap-6 text-xs font-medium text-[#424245]">
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center gap-8 text-sm font-medium text-[#424245]">
           {links.map((link) => (
-            <a key={link.href} href={link.href.startsWith("#") ? `/${link.href}` : link.href} className="transition hover:text-[#0071e3]">
+            <a key={link.href} href={link.href.startsWith("#") ? `/${link.href}` : link.href} className="transition-colors duration-200 hover:text-[#0071e3]">
               {link.label}
             </a>
           ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-4">
-          <a
-            href="tel:+33757830262"
-            className="text-sm font-medium text-[#1d1d1f] transition hover:text-[#0071e3]"
-          >
-            07 57 83 02 62
-          </a>
+        <div className="hidden md:flex items-center">
           <a
             href="/#contact"
-            className="inline-flex items-center rounded-full bg-[#0071e3] px-3.5 py-1.5 text-xs font-medium text-white transition hover:bg-[#0077ed]"
+            className="inline-flex items-center rounded-full bg-[#0071e3] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0077ed]"
           >
             Devis gratuit
           </a>
