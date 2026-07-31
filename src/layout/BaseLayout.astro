@@ -7,7 +7,7 @@ import CookieConsent from "../components/global/CookieConsent.jsx";
 import navigationLinks from "../data/navigation.json";
 import footerData from "../data/footer.json";
 
-const { title, description, image, noindex, transparentNav = false } = Astro.props;
+const { title, description, image, noindex, keywords, transparentNav = false } = Astro.props;
 ---
 
 <html
@@ -15,7 +15,7 @@ const { title, description, image, noindex, transparentNav = false } = Astro.pro
   class="scroll-smooth no-touchevents hydrated bg-white"
 >
   <head>
-    <BaseHead title={title} description={description} image={image} noindex={noindex} />
+    <BaseHead title={title} description={description} image={image} noindex={noindex} keywords={keywords} />
     <slot name="head" />
   </head>
   <body class="flex min-h-svh flex-col bg-white">
