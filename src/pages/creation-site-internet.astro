@@ -3,6 +3,8 @@ import BaseLayout from "../layout/BaseLayout.astro";
 import StructuredData from "../components/seo/StructuredData.astro";
 import { getEntry, render } from "astro:content";
 
+import faqData from "../data/faq.json";
+
 const entry = await getEntry("services", "creation-site-internet");
 
 if (!entry) {
@@ -97,7 +99,63 @@ const breadcrumbSchema = {
   ],
 };
 
-const schemas = [webPageSchema, serviceSchema, breadcrumbSchema];
+const howItWorksSchema = {
+  "@type": "HowTo",
+  "@id": `${canonicalUrl}#how-it-works`,
+  name: `Processus de création d'un site internet avec FLEX-WEB`,
+  description: `Les 5 étapes de création d'un site internet professionnel en Savoie et Haute-Savoie avec FLEX-WEB.`,
+  image: `${siteUrl}/logo.png`,
+  totalTime: "P14D",
+  step: [
+    {
+      "@type": "HowToStep",
+      position: 1,
+      name: "Échange",
+      text: "Nous comprenons votre activité, vos objectifs et votre clientèle.",
+      url: `${canonicalUrl}#etape-1`,
+    },
+    {
+      "@type": "HowToStep",
+      position: 2,
+      name: "Conception",
+      text: "Nous structurons l'arborescence, rédigeons le contenu et définissons le graphisme.",
+      url: `${canonicalUrl}#etape-2`,
+    },
+    {
+      "@type": "HowToStep",
+      position: 3,
+      name: "Développement",
+      text: "Nous intégrons le site, testons l'affichage sur tous les écrans et optimisons les performances.",
+      url: `${canonicalUrl}#etape-3`,
+    },
+    {
+      "@type": "HowToStep",
+      position: 4,
+      name: "Mise en ligne",
+      text: "Nous publions le site, configurons le référencement et connectons les outils de suivi.",
+      url: `${canonicalUrl}#etape-4`,
+    },
+    {
+      "@type": "HowToStep",
+      position: 5,
+      name: "Suivi",
+      text: "Nous assurons la maintenance, les mises à jour et les évolutions.",
+      url: `${canonicalUrl}#etape-5`,
+    },
+  ],
+};
+
+const faqSchema = {
+  "@type": "FAQPage",
+  "@id": `${canonicalUrl}#faq`,
+  mainEntity: faqData.items.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: { "@type": "Answer", text: item.answer },
+  })),
+};
+
+const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, howItWorksSchema, faqSchema];
 ---
 
 <BaseLayout title={data.seoTitle} description={data.seoDescription}>

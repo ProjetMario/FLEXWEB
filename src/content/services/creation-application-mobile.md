@@ -27,8 +27,8 @@ relatedServices:
   - "creation-site-internet"
   - "creation-site-vitrine"
   - "creation-site-professionnel"
-seoTitle: "Création d'application mobile en Savoie et Haute-Savoie — FLEX-WEB"
-seoDescription: "FLEX-WEB développe des applications mobiles et web sur mesure pour les entreprises de Savoie et Haute-Savoie. Devis gratuit et accompagnement complet."
+seoTitle: "Création d'application mobile Savoie & Haute-Savoie — FLEX-WEB"
+seoDescription: "Développement d'applications mobiles et web sur mesure en Savoie et Haute-Savoie. Réservation, espace client, SaaS : devis gratuit et accompagnement complet."
 isDraft: false
 ---
 

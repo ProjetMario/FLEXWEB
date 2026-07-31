@@ -28,8 +28,8 @@ relatedServices:
   - "creation-site-professionnel"
   - "refonte-site-internet"
   - "creation-application-mobile"
-seoTitle: "Création de site internet — FLEX-WEB"
-seoDescription: "FLEX-WEB crée des sites web professionnels pour artisans, commerçants et PME. Design moderne, SEO et maintenance : demandez un devis gratuit."
+seoTitle: "Création de site internet Savoie & Haute-Savoie — FLEX-WEB"
+seoDescription: "Création de site internet professionnel en Savoie et Haute-Savoie. Design moderne, SEO, hébergement et maintenance inclus. Devis gratuit sous 24h."
 isDraft: false
 ---
 

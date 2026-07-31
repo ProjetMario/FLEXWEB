@@ -13,6 +13,7 @@ const {
   description = "Flex-Web crée des sites internet professionnels, rapides et optimisés pour les artisans, commerçants, indépendants et PME. Demandez votre devis gratuit.",
   image = "/thumbnail-dyson.jpg",
   noindex = false,
+  keywords = "création site internet, application mobile, agence web Savoie, agence web Haute-Savoie, site internet professionnel, SEO, Voglans, Chambéry, Annecy",
 } = Astro.props;
 
 const siteName = "Flex-Web";
@@ -28,9 +29,13 @@ const ogImage = new URL(image, siteUrl).toString();
 <!-- Basic Meta Tags -->
 <title>{pageTitle}</title>
 <meta name="description" content={description} />
+<meta name="keywords" content={keywords} />
 <meta name="author" content="Flex-Web — Fleximmo" />
 <meta name="application-name" content="Flex-Web" />
 <meta name="language" content="fr-FR" />
+
+<!-- Bing Webmaster Tools (remplace XXXXX par le code dès que tu l'as) -->
+<!-- <meta name="msvalidate.01" content="XXXXX" /> -->
 
 <!-- Favicons -->
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
@@ -63,10 +68,12 @@ const ogImage = new URL(image, siteUrl).toString();
 {noindex ? (
   <meta name="robots" content="noindex, nofollow" />
   <meta name="googlebot" content="noindex, nofollow" />
+  <meta name="bingbot" content="noindex, nofollow" />
 ) : (
   <>
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   </>
 )}
 
