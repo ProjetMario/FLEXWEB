@@ -32,6 +32,7 @@ services:
   - "Refonte de site internet"
   - "Référencement local"
   - "Maintenance et hébergement"
+  - "Création d'application mobile et web"
 faq:
   - question: "Quel est le prix d'un site internet en Haute-Savoie ?"
     answer: "Le coût varie selon les besoins : une page vitrine simple coûte moins cher qu'un site multi-pages avec blog et formulaire. Nous proposons des formules adaptées aux artisans, commerçants et PME."
@@ -43,6 +44,8 @@ faq:
     answer: "L'achat définitif vous donne la propriété du site. L'abonnement inclut l'hébergement, la maintenance et les mises à jour dans une mensualité prévisible."
   - question: "Le site est-il visible sur Google ?"
     answer: "Oui, chaque site est conçu avec une structure SEO propre, des balises optimisées, des temps de chargement courts et des données structurées pour faciliter l'indexation."
+  - question: "FLEX-WEB développe-t-il aussi des applications mobiles en Haute-Savoie ?"
+    answer: "Oui, en complément des sites internet, nous développons des applications mobiles et web sur mesure pour les entreprises de Haute-Savoie : réservation, espace client, gestion interne ou outil de fidélisation."
 seoTitle: "Création de site internet en Haute-Savoie — FLEX-WEB"
 seoDescription: "FLEX-WEB crée des sites web professionnels pour artisans, commerçants et PME en Haute-Savoie. Annecy, Annemasse, Thonon : demandez un devis gratuit."
 isDraft: false
@@ -79,6 +82,9 @@ Optimisation pour les recherches du type « création site internet Annecy » ou
 
 ### Maintenance et hébergement
 Suivi technique, mises à jour de sécurité, sauvegardes et modifications ponctuelles pour garder un site fiable au quotidien.
+
+### Création d'application mobile et web
+Nous développons également des [applications mobiles et web sur mesure](/creation-application-mobile) pour les entreprises haut-savoyardes : réservation, espace client, gestion interne ou fidélisation.
 
 ## Pourquoi choisir FLEX-WEB ?
 

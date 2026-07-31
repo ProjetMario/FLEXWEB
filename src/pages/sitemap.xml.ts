@@ -28,15 +28,19 @@ export const GET: APIRoute = async () => {
     changefreq: "monthly",
   }));
 
-  const servicePages = services
-    .filter(({ data }) => data.slug === "creation-site-internet")
-    .map(({ data }) => ({
-      url: `/${data.slug}/`,
-      priority: 0.8,
-      changefreq: "monthly",
-    }));
+  const mobileLocationPages = locations.map(({ data }) => ({
+    url: `/creation-application-mobile-${data.slug.replace("creation-site-internet-", "")}/`,
+    priority: 0.7,
+    changefreq: "monthly",
+  }));
 
-  const allPages = [...staticPages, ...locationPages, ...servicePages];
+  const servicePages = services.map((entry) => ({
+    url: `/${entry.id}/`,
+    priority: 0.8,
+    changefreq: "monthly",
+  }));
+
+  const allPages = [...staticPages, ...locationPages, ...mobileLocationPages, ...servicePages];
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

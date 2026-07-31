@@ -15,12 +15,23 @@ export default function Footer({ data = {} }) {
       className="w-full border-t border-black/[0.08] bg-[#f5f5f7] py-10 sm:py-14"
     >
       <div className="mx-auto max-w-6xl px-5 sm:px-6 md:px-8">
-        <div className="grid grid-cols-1 gap-9 md:grid-cols-2 lg:grid-cols-4 lg:gap-12 mb-10">
+        <div className="grid grid-cols-1 gap-9 md:grid-cols-2 lg:grid-cols-5 lg:gap-10 mb-10">
           <div className="lg:col-span-2">
             <Logo className="h-14 md:h-[5.25rem]" />
             <p className="mt-3 max-w-sm text-sm font-light leading-relaxed text-[#6e6e73]">
               {data.description}
             </p>
+          </div>
+
+          <div>
+            <div className="text-xs font-semibold text-[#6e6e73] mb-3">Services</div>
+            <nav className="flex flex-col gap-2 text-sm text-[#424245]">
+              <a href="/creation-site-internet" className="hover:text-[#0071e3] transition">Création de site internet</a>
+              <a href="/creation-application-mobile" className="hover:text-[#0071e3] transition">Application mobile</a>
+              <a href="/creation-site-internet-savoie" className="hover:text-[#0071e3] transition">Sites internet en Savoie</a>
+              <a href="/creation-site-internet-haute-savoie" className="hover:text-[#0071e3] transition">Sites internet en Haute-Savoie</a>
+              <a href="/pricing" className="hover:text-[#0071e3] transition">Tarifs</a>
+            </nav>
           </div>
 
           <div>

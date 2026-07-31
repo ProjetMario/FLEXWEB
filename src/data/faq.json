@@ -21,6 +21,18 @@
     {
       "question": "Que comprend l'abonnement ?",
       "answer": "L'abonnement comprend la création du site, l'hébergement, le certificat SSL, les sauvegardes, la maintenance, les mises à jour de sécurité et un support réactif."
+    },
+    {
+      "question": "Flex-Web intervient-il en Savoie et Haute-Savoie ?",
+      "answer": "Oui, Flex-Web est basé à Voglans (Savoie) et intervient dans toute la Savoie et la Haute-Savoie, notamment à Chambéry, Aix-les-Bains, Annecy, Annemasse, Albertville, Thonon-les-Bains et dans les communes environnantes."
+    },
+    {
+      "question": "Flex-Web développe-t-il des applications mobiles ?",
+      "answer": "Oui, nous développons des applications web (SaaS) et mobiles iOS/Android sur mesure pour les entreprises locales de Savoie et Haute-Savoie : réservation, espace client, outil de gestion interne ou produit SaaS."
+    },
+    {
+      "question": "Pourquoi choisir Flex-Web plutôt qu'une agence à Lyon ou Genève ?",
+      "answer": "Flex-Web connaît le tissu économique savoyard, les communes, les saisons touristiques et la proximité suisse. Cette connaissance se traduit par un contenu local pertinent, un référencement ciblé et un interlocuteur accessible."
     }
   ]
 }

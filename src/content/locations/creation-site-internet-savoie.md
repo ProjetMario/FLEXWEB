@@ -32,6 +32,7 @@ services:
   - "Refonte de site internet"
   - "Référencement local"
   - "Maintenance et hébergement"
+  - "Création d'application mobile et web"
 faq:
   - question: "Quel est le prix d'un site internet en Savoie ?"
     answer: "Le tarif dépend du nombre de pages, des fonctionnalités et de l'intégration du contenu. Un site vitrine professionnel est accessible dès quelques centaines d'euros, avec des formules d'abonnement ou d'achat définitif."
@@ -43,6 +44,8 @@ faq:
     answer: "Chaque site est construit avec une structure SEO solide, des balises optimisées, des temps de chargement rapides et des données structurées pour améliorer l'indexation."
   - question: "Puis-je modifier moi-même mon site ?"
     answer: "Oui, nous proposons des sites avec une interface d'administration simple pour modifier le contenu, ajouter des pages et gérer les images en autonomie."
+  - question: "FLEX-WEB développe-t-il aussi des applications mobiles en Savoie ?"
+    answer: "Oui, en complément des sites internet, nous développons des applications mobiles et web sur mesure pour les entreprises et artisans savoyards : gestion, réservation, espace client ou outil interne."
 seoTitle: "Création de site internet en Savoie — FLEX-WEB"
 seoDescription: "FLEX-WEB crée des sites web professionnels pour artisans, commerçants et PME en Savoie. Chambéry, Aix-les-Bains, Albertville : demandez un devis gratuit."
 isDraft: false
@@ -79,6 +82,9 @@ Optimisation pour les recherches locales, intégration de Google Business Profil
 
 ### Maintenance et hébergement
 Mises à jour régulières, sauvegardes, surveillance et support technique pour garder un site sécurisé et disponible.
+
+### Création d'application mobile et web
+Au-delà du site internet, nous développons des [applications mobiles et web sur mesure](/creation-application-mobile) pour les entreprises savoyardes : gestion d'interventions, réservation, espace client ou outil interne.
 
 ## Pourquoi choisir un prestataire local ?
 

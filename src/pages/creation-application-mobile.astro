@@ -3,17 +3,17 @@ import BaseLayout from "../layout/BaseLayout.astro";
 import StructuredData from "../components/seo/StructuredData.astro";
 import { getEntry, render } from "astro:content";
 
-const entry = await getEntry("services", "creation-site-internet");
+const entry = await getEntry("services", "creation-application-mobile");
 
 if (!entry) {
-  throw new Error("Service creation-site-internet not found");
+  throw new Error("Service creation-application-mobile not found");
 }
 
 const { Content } = await render(entry);
 const { data } = entry;
 
 const siteUrl = "https://flex-web.fr";
-const canonicalUrl = new URL("creation-site-internet", siteUrl).toString();
+const canonicalUrl = new URL("creation-application-mobile", siteUrl).toString();
 
 const webPageSchema = {
   "@type": "WebPage",
@@ -31,6 +31,7 @@ const serviceSchema = {
   url: canonicalUrl,
   description: data.description,
   provider: { "@id": `${siteUrl}/#organization` },
+  serviceType: "Développement d'application mobile et web",
   areaServed: [
     { "@type": "AdministrativeArea", name: "Savoie" },
     { "@type": "AdministrativeArea", name: "Haute-Savoie" },
@@ -40,47 +41,14 @@ const serviceSchema = {
     "@type": "Audience",
     audienceType: data.targetAudience.join(", "),
   },
-  serviceType: "Création de site internet",
-  offers: [
-    {
-      "@type": "Offer",
-      name: "Site Essentiel",
-      price: "49",
-      priceCurrency: "EUR",
-      priceSpecification: {
-        "@type": "UnitPriceSpecification",
-        price: "49",
-        priceCurrency: "EUR",
-        unitCode: "MON",
-        referenceQuantity: { "@type": "QuantitativeValue", value: "1", unitCode: "MON" },
-      },
-      url: `${siteUrl}/pricing/`,
-      availability: "https://schema.org/InStock",
-    },
-    {
-      "@type": "Offer",
-      name: "Site Professionnel",
-      price: "99",
-      priceCurrency: "EUR",
-      priceSpecification: {
-        "@type": "UnitPriceSpecification",
-        price: "99",
-        priceCurrency: "EUR",
-        unitCode: "MON",
-        referenceQuantity: { "@type": "QuantitativeValue", value: "1", unitCode: "MON" },
-      },
-      url: `${siteUrl}/pricing/`,
-      availability: "https://schema.org/InStock",
-    },
-    {
-      "@type": "Offer",
-      name: "Achat définitif",
-      price: "990",
-      priceCurrency: "EUR",
-      url: `${siteUrl}/pricing/`,
-      availability: "https://schema.org/InStock",
-    },
-  ],
+  offers: {
+    "@type": "Offer",
+    name: "Application mobile ou web sur mesure",
+    description: "Développement sur devis selon la complexité du projet.",
+    url: `${siteUrl}/pricing/`,
+    priceCurrency: "EUR",
+    availability: "https://schema.org/InStock",
+  },
   aggregateRating: {
     "@type": "AggregateRating",
     ratingValue: "5",
@@ -121,13 +89,22 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema];
         En bref
       </h2>
       <p class="mt-3 leading-relaxed" style="color: var(--color-text-muted)">
-        FLEX-WEB conçoit des sites internet pour les artisans, commerçants, indépendants et PME. Chaque projet comprend une structure optimisée pour les moteurs de recherche, un affichage adapté au mobile et un accompagnement pour l'hébergement et la maintenance.
+        FLEX-WEB développe des applications mobiles et web sur mesure pour les entreprises, artisans et PME de Savoie et Haute-Savoie. Chaque projet est conçu pour répondre précisément à vos besoins métier, avec un accompagnement complet de la conception au déploiement.
       </p>
     </section>
 
     <div class="mt-12 space-y-6 text-lg leading-relaxed" style="color: var(--color-text)">
       <Content />
     </div>
+
+    <section class="mt-16 rounded-2xl p-6" style="background-color: var(--color-surface)">
+      <h2 class="text-xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Vous cherchez plutôt un site internet ?
+      </h2>
+      <p class="mt-3 leading-relaxed" style="color: var(--color-text-muted)">
+        FLEX-WEB conçoit aussi des <a href="/creation-site-internet" class="underline hover:opacity-80" style="color: var(--color-accent)">sites internet professionnels</a> pour les entreprises de <a href="/creation-site-internet-savoie" class="underline hover:opacity-80" style="color: var(--color-accent)">Savoie</a> et <a href="/creation-site-internet-haute-savoie" class="underline hover:opacity-80" style="color: var(--color-accent)">Haute-Savoie</a>.
+      </p>
+    </section>
 
     <section class="mt-16">
       <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
@@ -138,15 +115,6 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema];
           <li>{item}</li>
         ))}
       </ul>
-    </section>
-
-    <section class="mt-16 rounded-2xl p-6" style="background-color: var(--color-surface)">
-      <h2 class="text-xl font-semibold tracking-tight" style="color: var(--color-text)">
-        Vous avez aussi un projet d'application mobile ?
-      </h2>
-      <p class="mt-3 leading-relaxed" style="color: var(--color-text-muted)">
-        FLEX-WEB développe également des <a href="/creation-application-mobile" class="underline hover:opacity-80" style="color: var(--color-accent)">applications mobiles et web sur mesure</a> pour les entreprises de <a href="/creation-site-internet-savoie" class="underline hover:opacity-80" style="color: var(--color-accent)">Savoie</a> et <a href="/creation-site-internet-haute-savoie" class="underline hover:opacity-80" style="color: var(--color-accent)">Haute-Savoie</a>.
-      </p>
     </section>
 
     <section class="mt-16">
@@ -179,7 +147,7 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema];
 
     <aside class="mt-16 rounded-3xl p-8 text-center" style="background-color: var(--color-surface)">
       <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
-        Besoin d'un site internet professionnel ?
+        Un projet d'application mobile ou web ?
       </h2>
       <p class="mt-4" style="color: var(--color-text-muted)">
         Discutons de votre projet et obtenez un devis gratuit.

@@ -71,6 +71,8 @@ const ogImage = new URL(image, siteUrl).toString();
 
 <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 <link rel="alternate" type="text/plain" href="/llms.txt" title="Présentation de Flex-Web pour les moteurs IA" />
+<link rel="alternate" type="text/plain" href="/ai-overview.txt" title="Vue d'ensemble IA de Flex-Web" />
+<meta name="ai-search-preference" content="ai-overview:https://flex-web.fr/ai-overview.txt" />
 
 <!-- Apple Touch Icon (backward compatibility) -->
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -101,7 +103,53 @@ const ogImage = new URL(image, siteUrl).toString();
     "name": "Flex-Web",
     "legalName": "Fleximmo",
     "url": "https://flex-web.fr",
-    "description": "Flex-Web crée des sites internet professionnels, rapides et optimisés pour les artisans, commerçants, indépendants et PME.",
+    "slogan": "La référence pour la création de sites internet et d'applications mobiles en Savoie et Haute-Savoie",
+    "description": "Flex-Web crée des sites internet et des applications mobiles professionnels, rapides et optimisés pour les artisans, commerçants, indépendants et PME de Savoie et Haute-Savoie.",
+    "knowsAbout": [
+      "Création de site internet",
+      "Développement d'application mobile",
+      "Référencement local (SEO)",
+      "Hébergement et maintenance web",
+      "Design web sur mesure"
+    ],
+    "brand": {
+      "@type": "Brand",
+      "name": "Flex-Web",
+      "slogan": "La référence pour la création de sites internet et d'applications mobiles en Savoie et Haute-Savoie"
+    },
+    "sameAs": [
+      "https://twitter.com/flex-web",
+      "https://linkedin.com/company/flex-web",
+      "https://instagram.com/flex-web"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "bestRating": "5",
+      "worstRating": "1",
+      "ratingCount": "3",
+      "reviewCount": "3"
+    },
+    "review": [
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Claire Dubois" },
+        "reviewBody": "Mon site a été livré en une semaine. Le design est moderne, les pages sont rapides et j'ai déjà reçu plusieurs demandes de devis.",
+        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }
+      },
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Marc Lefevre" },
+        "reviewBody": "Enfin une agence qui parle simple et livre vite. L'abonnement tout inclus me rassure : je n'ai plus à me soucier de la technique.",
+        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }
+      },
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Sophia Benali" },
+        "reviewBody": "FLEX-WEB a modernisé l'image de notre restaurant. Le site est beau, les réservations augmentent et le référencement local fonctionne très bien.",
+        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }
+      }
+    ],
     "foundingDate": "2025-07-17",
     "telephone": "+33757830262",
     "address": {
@@ -123,8 +171,17 @@ const ogImage = new URL(image, siteUrl).toString();
       { "@type": "PropertyValue", "propertyID": "TVA intracommunautaire", "value": "FR67989123633" }
     ],
     "email": "contact@flex-web.fr",
-    "areaServed": ["Savoie", "Haute-Savoie", "France"],
-    "serviceType": ["Création de site internet", "Référencement naturel", "Hébergement et maintenance"],
+    "areaServed": [
+      { "@type": "AdministrativeArea", "name": "Savoie" },
+      { "@type": "AdministrativeArea", "name": "Haute-Savoie" },
+      { "@type": "Country", "name": "France" }
+    ],
+    "serviceType": [
+      "Création de site internet",
+      "Développement d'application mobile",
+      "Référencement naturel",
+      "Hébergement et maintenance"
+    ],
     "logo": "https://flex-web.fr/logo.png",
     "image": "https://flex-web.fr/thumbnail-dyson.jpg",
     "priceRange": "€€",

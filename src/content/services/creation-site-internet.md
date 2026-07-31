@@ -27,6 +27,7 @@ relatedServices:
   - "creation-site-vitrine"
   - "creation-site-professionnel"
   - "refonte-site-internet"
+  - "creation-application-mobile"
 seoTitle: "Création de site internet — FLEX-WEB"
 seoDescription: "FLEX-WEB crée des sites web professionnels pour artisans, commerçants et PME. Design moderne, SEO et maintenance : demandez un devis gratuit."
 isDraft: false

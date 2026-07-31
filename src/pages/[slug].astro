@@ -3,7 +3,12 @@ import BaseLayout from "../layout/BaseLayout.astro";
 import StructuredData from "../components/seo/StructuredData.astro";
 import { getCollection, render, type CollectionEntry } from "astro:content";
 
+const MOBILE_PREFIX = "creation-application-mobile-";
+const SITE_PREFIX = "creation-site-internet-";
+
 export async function getStaticPaths() {
+  const MOBILE = "creation-application-mobile-";
+  const SITE = "creation-site-internet-";
   const locations = await getCollection(
     "locations",
     (entry: CollectionEntry<"locations">) => !entry.data.isDraft
@@ -19,15 +24,29 @@ export async function getStaticPaths() {
     ])
   );
 
-  return locations.map((entry: CollectionEntry<"locations">) => ({
-    params: { slug: entry.data.slug },
-    props: { entry, nameToSlug },
-  }));
+  const paths = [];
+
+  for (const entry of locations) {
+    paths.push({
+      params: { slug: entry.data.slug },
+      props: { entry, nameToSlug, isMobile: false },
+    });
+
+    const citySlug = entry.data.slug.replace(SITE, "");
+    const mobileSlug = `${MOBILE}${citySlug}`;
+    paths.push({
+      params: { slug: mobileSlug },
+      props: { entry, nameToSlug, isMobile: true },
+    });
+  }
+
+  return paths;
 }
 
-const { entry, nameToSlug } = Astro.props as {
+const { entry, nameToSlug, isMobile } = Astro.props as {
   entry: CollectionEntry<"locations">;
   nameToSlug: Record<string, string>;
+  isMobile: boolean;
 };
 const { Content } = await render(entry);
 const { data } = entry;
@@ -36,43 +55,79 @@ const preposition = data.type === "city" ? "à" : "en";
 const normalizeName = (name: string) =>
   name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-const nearbyCityLinks = data.nearbyCities.map((city) => ({
-  name: city,
-  slug: nameToSlug[normalizeName(city)] || null,
-}));
+const nearbyCityLinks = data.nearbyCities.map((city) => {
+  const siteSlug = nameToSlug[normalizeName(city)] || null;
+  return {
+    name: city,
+    slug: isMobile && siteSlug
+      ? `${MOBILE_PREFIX}${siteSlug.replace(SITE_PREFIX, "")}`
+      : siteSlug,
+  };
+});
 
 const siteUrl = "https://flex-web.fr";
-const canonicalUrl = new URL(data.slug, siteUrl).toString();
+const slug = Astro.params.slug as string;
+const canonicalUrl = new URL(slug, siteUrl).toString();
+
+const pageTitle = isMobile
+  ? `Création d'application mobile ${preposition} ${data.name} — FLEX-WEB`
+  : data.seoTitle;
+const pageDescription = isMobile
+  ? `FLEX-WEB développe des applications mobiles et web sur mesure pour les entreprises ${preposition} ${data.name}. Gestion, réservation, espace client : devis gratuit.`
+  : data.seoDescription;
+
+const h1 = isMobile
+  ? `Création d'application mobile ${preposition} ${data.name}`
+  : `Création de site internet ${preposition} ${data.name}`;
+
+const introText = isMobile
+  ? `FLEX-WEB conçoit des applications mobiles et web sur mesure pour les professionnels ${preposition} ${data.name}. De la réservation en ligne aux outils de gestion interne, chaque projet est pensé pour répondre à vos besoins métier.`
+  : data.introduction;
+
+const localContextText = isMobile
+  ? `Les entreprises ${preposition} ${data.name} peuvent gagner en efficacité avec une application adaptée à leur activité. FLEX-WEB accompagne les PME, artisans, commerçants et professions libérales du territoire dans la définition, le développement et le déploiement de leur application.`
+  : data.localContext;
 
 const webPageSchema = {
   "@type": "WebPage",
   "@id": canonicalUrl,
   url: canonicalUrl,
-  name: data.seoTitle,
-  description: data.seoDescription,
+  name: pageTitle,
+  description: pageDescription,
   isPartOf: { "@id": siteUrl },
 };
 
 const serviceSchema = {
   "@type": "Service",
   "@id": `${canonicalUrl}#service`,
-  name: `Création de site internet ${preposition} ${data.name}`,
+  name: h1,
   url: canonicalUrl,
-  serviceType: "Création de site internet",
-  description: `Flex-Web accompagne les professionnels ${preposition} ${data.name} pour concevoir un site internet clair, rapide et adapté à leur activité.`,
+  serviceType: isMobile ? "Développement d'application mobile et web" : "Création de site internet",
+  description: isMobile
+    ? `Flex-Web accompagne les professionnels ${preposition} ${data.name} pour concevoir une application mobile ou web sur mesure : réservation, espace client, gestion interne ou SaaS.`
+    : `Flex-Web accompagne les professionnels ${preposition} ${data.name} pour concevoir un site internet clair, rapide et adapté à leur activité.`,
   provider: { "@id": `${siteUrl}/#organization` },
   areaServed: {
     "@type": "AdministrativeArea",
     name: data.name,
   },
-  offers: {
-    "@type": "AggregateOffer",
-    lowPrice: "49",
-    highPrice: "990",
-    priceCurrency: "EUR",
-    offerCount: "3",
-    url: `${siteUrl}/pricing/`,
-  },
+  offers: isMobile
+    ? {
+        "@type": "Offer",
+        name: "Application mobile ou web sur mesure",
+        description: "Développement sur devis selon la complexité du projet.",
+        url: `${siteUrl}/pricing/`,
+        priceCurrency: "EUR",
+        availability: "https://schema.org/InStock",
+      }
+    : {
+        "@type": "AggregateOffer",
+        lowPrice: "49",
+        highPrice: "990",
+        priceCurrency: "EUR",
+        offerCount: "3",
+        url: `${siteUrl}/pricing/`,
+      },
   aggregateRating: {
     "@type": "AggregateRating",
     ratingValue: "5",
@@ -99,11 +154,32 @@ const breadcrumbSchema = {
   ],
 };
 
+const mobileFaq = [
+  {
+    question: `Quel est le prix d'une application mobile ${preposition} ${data.name} ?`,
+    answer: `Le coût dépend du nombre de fonctionnalités et de la complexité du projet. FLEX-WEB établit un devis personnalisé après un premier échange autour de vos besoins.`
+  },
+  {
+    question: `Combien de temps faut-il pour développer une application mobile ${preposition} ${data.name} ?`,
+    answer: `La durée varie selon le périmètre : de quelques semaines pour un MVP simple à plusieurs semaines pour une application complète avec API et espace administrateur.`
+  },
+  {
+    question: `FLEX-WEB intervient-il ${preposition} ${data.name} ?`,
+    answer: `Oui, FLEX-WEB est basé à Voglans et intervient dans toute la Savoie, la Haute-Savoie, et notamment ${preposition} ${data.name}.`
+  },
+  {
+    question: `Puis-je aussi commander un site internet avec mon application mobile ?`,
+    answer: `Oui, FLEX-WEB conçoit à la fois des sites internet et des applications mobiles. Vous pouvez les faire développer ensemble pour une expérience utilisateur cohérente.`
+  }
+];
+
+const faqData = isMobile ? mobileFaq : data.faq;
+
 const faqSchema: Record<string, unknown> | null =
-  data.faq && data.faq.length > 0
+  faqData && faqData.length > 0
     ? {
         "@type": "FAQPage",
-        mainEntity: data.faq.map((item) => ({
+        mainEntity: faqData.map((item) => ({
           "@type": "Question",
           name: item.question,
           acceptedAnswer: {
@@ -125,7 +201,7 @@ if (faqSchema) {
 }
 ---
 
-<BaseLayout title={data.seoTitle} description={data.seoDescription}>
+<BaseLayout title={pageTitle} description={pageDescription}>
   <div class="mx-auto max-w-3xl px-6 py-16 lg:py-24">
     <nav aria-label="Fil d'Ariane" class="mb-8 text-sm" style="color: var(--color-text-muted)">
       <a href="/" class="hover:underline">Accueil</a>
@@ -134,15 +210,15 @@ if (faqSchema) {
     </nav>
 
     <h1 class="text-4xl font-semibold tracking-tight lg:text-5xl" style="color: var(--color-text)">
-      Création de site internet {preposition} {data.name}
+      {h1}
     </h1>
 
     <p class="mt-6 text-lg leading-relaxed" style="color: var(--color-text-muted)">
-      {data.introduction}
+      {introText}
     </p>
 
     <p class="mt-4 text-lg leading-relaxed" style="color: var(--color-text)">
-      {data.localContext}
+      {localContextText}
     </p>
 
     <section class="mt-8 rounded-2xl p-6" style="background-color: var(--color-surface)">
@@ -150,13 +226,56 @@ if (faqSchema) {
         En bref
       </h2>
       <p class="mt-3 leading-relaxed" style="color: var(--color-text-muted)">
-        FLEX-WEB accompagne les professionnels {preposition} {data.name} pour concevoir un site internet clair, rapide et adapté à leur activité. La prestation peut inclure l'optimisation pour les moteurs de recherche, l'hébergement, la maintenance et le support.
+        {isMobile
+          ? `FLEX-WEB développe des applications mobiles et web pour les professionnels ${preposition} ${data.name}. Chaque projet comprend la conception, le développement, les tests, la mise en ligne et un support évolutif.`
+          : `FLEX-WEB accompagne les professionnels ${preposition} ${data.name} pour concevoir un site internet clair, rapide et adapté à leur activité. La prestation peut inclure l'optimisation pour les moteurs de recherche, l'hébergement, la maintenance et le support.`}
       </p>
     </section>
 
-    <div class="mt-12 space-y-6 text-lg leading-relaxed" style="color: var(--color-text)">
-      <Content />
-    </div>
+    {!isMobile && (
+      <div class="mt-12 space-y-6 text-lg leading-relaxed" style="color: var(--color-text)">
+        <Content />
+      </div>
+    )}
+
+    {isMobile && (
+      <div class="mt-12 space-y-6 text-lg leading-relaxed" style="color: var(--color-text)">
+        <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+          Pour quels projets d'application mobile ?
+        </h2>
+        <p>
+          FLEX-WEB conçoit des applications mobiles et web sur mesure pour les entreprises de {data.name}. Les cas d'usage les plus courants incluent :
+        </p>
+        <ul class="list-disc space-y-2 pl-6">
+          <li>Application de réservation ou de prise de rendez-vous</li>
+          <li>Espace client sécurisé pour consulter des documents ou suivre des commandes</li>
+          <li>Outil de gestion interne pour les équipes terrain</li>
+          <li>Application SaaS pour commercialiser un service digital</li>
+          <li>Application de fidélité ou de cartes de visites digitales</li>
+        </ul>
+
+        <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+          Nos engagements
+        </h2>
+        <ul class="list-disc space-y-2 pl-6">
+          <li>Conception sur mesure selon vos processus métier</li>
+          <li>Interface intuitive pensée pour vos utilisateurs</li>
+          <li>Base de données sécurisée et hébergement adapté</li>
+          <li>API et intégrations avec vos outils existants</li>
+          <li>Accompagnement de la conception au déploiement sur les stores</li>
+          <li>Maintenance évolutive et support technique</li>
+        </ul>
+
+        <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+          Pourquoi une application mobile {preposition} {data.name} ?
+        </h2>
+        <p>
+          {data.type === "city"
+            ? `Les clients et collaborateurs à ${data.name} utilisent leur smartphone au quotidien. Une application mobile permet d'améliorer l'expérience client, de gagner en productivité et de se démarquer des concurrents locaux.`
+            : `Les entreprises ${preposition} ${data.name} gagnent en efficacité avec une application mobile adaptée à leurs besoins. FLEX-WEB connaît les spécificités du territoire et conçoit des outils pertinents pour votre activité.`}
+        </p>
+      </div>
+    )}
 
     {
       data.targetIndustries.length > 0 && (
@@ -227,13 +346,13 @@ if (faqSchema) {
     }
 
     {
-      "faq" in data && data.faq && data.faq.length > 0 && (
+      faqData && faqData.length > 0 && (
         <section class="mt-16">
           <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
             Questions fréquentes
           </h2>
           <div class="mt-6 space-y-4">
-            {data.faq.map((item: { question: string; answer: string }) => (
+            {faqData.map((item: { question: string; answer: string }) => (
               <details class="group rounded-2xl border p-5" style="border-color: var(--color-border); background-color: var(--color-surface)">
                 <summary class="flex cursor-pointer list-none items-center justify-between font-medium" style="color: var(--color-text)">
                   {item.question}
@@ -253,11 +372,23 @@ if (faqSchema) {
 
     <aside class="mt-16 rounded-3xl p-8 text-center" style="background-color: var(--color-surface)">
       <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
-        Vous souhaitez un site web {preposition} {data.name} ?
+        {isMobile
+          ? `Vous souhaitez une application mobile ${preposition} ${data.name} ?`
+          : `Vous souhaitez un site web ${preposition} ${data.name} ?`}
       </h2>
       <p class="mt-4" style="color: var(--color-text-muted)">
         Discutons de votre projet et obtenez un devis gratuit.
       </p>
+      {isMobile && (
+        <p class="mt-2 text-sm" style="color: var(--color-text-muted)">
+          Vous cherchez plutôt un <a href={`/${data.slug}/`} class="underline" style="color: var(--color-accent)">site internet {preposition} {data.name}</a> ?
+        </p>
+      )}
+      {!isMobile && (
+        <p class="mt-2 text-sm" style="color: var(--color-text-muted)">
+          Vous cherchez plutôt une <a href={`/creation-application-mobile-${data.slug.replace(SITE_PREFIX, "")}/`} class="underline" style="color: var(--color-accent)">application mobile {preposition} {data.name}</a> ?
+        </p>
+      )}
       <a
         href="/contact"
         class="mt-6 inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-medium text-white transition hover:opacity-90"

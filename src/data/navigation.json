@@ -2,6 +2,8 @@
   "title": "FLEX-WEB",
   "links": [
     { "label": "Avantages", "href": "#avantages" },
+    { "label": "Sites internet", "href": "/creation-site-internet" },
+    { "label": "Applications mobiles", "href": "/creation-application-mobile" },
     { "label": "Tarifs", "href": "/pricing" },
     { "label": "Comment ça marche", "href": "#comment" },
     { "label": "Templates", "href": "#templates" },
