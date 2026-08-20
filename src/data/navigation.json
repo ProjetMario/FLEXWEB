@@ -2,9 +2,9 @@
   "title": "FLEX-WEB",
   "links": [
     { "label": "Accueil", "href": "/" },
-    { "label": "Sites internet", "href": "/creation-site-internet" },
-    { "label": "Applications mobiles", "href": "/creation-application-mobile" },
-    { "label": "Tarifs", "href": "/pricing" },
+    { "label": "Sites internet", "href": "/creation-site-internet/" },
+    { "label": "Applications mobiles", "href": "/creation-application-mobile/" },
+    { "label": "Tarifs", "href": "/pricing/" },
     { "label": "Contact", "href": "/#contact" }
   ]
 }

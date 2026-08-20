@@ -66,7 +66,7 @@ export default function ContactSection({ data = {} }) {
           </div>
           <label className="flex items-start gap-2 text-xs leading-relaxed text-gray-500">
             <input type="checkbox" name="privacy_consent" required className="mt-0.5" />
-            <span>J'accepte que Fleximmo utilise mes données pour répondre à ma demande. <a href="/privacy" className="text-blue-600 hover:underline">Voir la politique de confidentialité</a>.</span>
+            <span>J'accepte que Fleximmo utilise mes données pour répondre à ma demande. <a href="/privacy/" className="text-blue-600 hover:underline">Voir la politique de confidentialité</a>.</span>
           </label>
           <button type="submit" className="self-start px-8 py-3 bg-gray-900 text-white text-sm font-light rounded hover:bg-gray-700 transition">
             Envoyer ma demande

@@ -52,7 +52,7 @@ export default function Contact({ data = {} }) {
             </div>
             <label className="flex items-start gap-2 text-xs leading-relaxed text-[#6e6e73]">
               <input type="checkbox" name="privacy_consent" required className="mt-0.5" />
-              <span>J'accepte que Fleximmo utilise mes données pour répondre à ma demande. <a href="/privacy" className="text-[#0071e3] hover:underline">Voir la politique de confidentialité</a>.</span>
+              <span>J'accepte que Fleximmo utilise mes données pour répondre à ma demande. <a href="/privacy/" className="text-[#0071e3] hover:underline">Voir la politique de confidentialité</a>.</span>
             </label>
             <Button type="submit" variant="primary" className="mt-4 w-full">
               Envoyer ma demande

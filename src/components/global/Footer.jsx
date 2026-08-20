@@ -26,11 +26,11 @@ export default function Footer({ data = {} }) {
           <div>
             <div className="text-xs font-semibold text-[#6e6e73] mb-3">Services</div>
             <nav className="flex flex-col gap-2 text-sm text-[#424245]">
-              <a href="/creation-site-internet" className="hover:text-[#0071e3] transition">Création de site internet</a>
-              <a href="/creation-application-mobile" className="hover:text-[#0071e3] transition">Application mobile</a>
-              <a href="/creation-site-internet-savoie" className="hover:text-[#0071e3] transition">Sites internet en Savoie</a>
-              <a href="/creation-site-internet-haute-savoie" className="hover:text-[#0071e3] transition">Sites internet en Haute-Savoie</a>
-              <a href="/pricing" className="hover:text-[#0071e3] transition">Tarifs</a>
+              <a href="/creation-site-internet/" className="hover:text-[#0071e3] transition">Création de site internet</a>
+              <a href="/creation-application-mobile/" className="hover:text-[#0071e3] transition">Application mobile</a>
+              <a href="/creation-site-internet-savoie/" className="hover:text-[#0071e3] transition">Sites internet en Savoie</a>
+              <a href="/creation-site-internet-haute-savoie/" className="hover:text-[#0071e3] transition">Sites internet en Haute-Savoie</a>
+              <a href="/pricing/" className="hover:text-[#0071e3] transition">Tarifs</a>
             </nav>
           </div>
 

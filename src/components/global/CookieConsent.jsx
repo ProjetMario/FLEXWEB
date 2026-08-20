@@ -25,7 +25,7 @@ export default function CookieConsent() {
       <div className="mt-4 flex flex-wrap items-center gap-3">
         <button type="button" onClick={() => saveConsent("accepted")} className="rounded-full bg-[#1d1d1f] px-4 py-2 text-sm font-medium text-white">J'accepte</button>
         <button type="button" onClick={() => saveConsent("refused")} className="rounded-full border border-[#d2d2d7] px-4 py-2 text-sm font-medium text-[#1d1d1f]">Je refuse</button>
-        <a href="/privacy" className="text-sm text-[#0071e3] hover:underline">En savoir plus</a>
+        <a href="/privacy/" className="text-sm text-[#0071e3] hover:underline">En savoir plus</a>
       </div>
     </aside>
   );
