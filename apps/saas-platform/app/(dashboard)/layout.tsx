@@ -66,6 +66,12 @@ export default async function DashboardLayout({
             {isSuperAdmin && (
               <>
                 <Link
+                  href="/admin/prospection"
+                  className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
+                >
+                  Prospection
+                </Link>
+                <Link
                   href="/dashboard/admin/organizations"
                   className="rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
                 >

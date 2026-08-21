@@ -505,18 +505,180 @@ model Lead {
 }
 
 model Appointment {
-  id             String   @id @default(uuid())
+  id             String    @id @default(uuid())
   organizationId String
   name           String
   email          String
   phone          String?
   date           DateTime
   notes          String?
-  status         String   @default("pending")
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  status         String    @default("pending")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  prospectId     String?
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  prospect     Prospect?    @relation(fields: [prospectId], references: [id], onDelete: SetNull)
+
+  @@index([prospectId])
+}
+
+enum ProspectionStatus {
+  NOUVEAU
+  A_CONTACTER
+  SMS_ENVOYE
+  SANS_REPONSE
+  REPONDU
+  INTERESSE
+  A_RELANCER
+  RDV_PLANIFIE
+  RDV_EFFECTUE
+  DEVIS_ENVOYE
+  NEGOCIATION
+  CLIENT_SIGNE
+  PAS_INTERESSE
+  A_RECONTACTER_PLUS_TARD
+  PERDU
+}
+
+enum InteractionType {
+  PROSPECT_AJOUTE
+  SMS_ENVOYE
+  REPONSE_RECUE
+  APPEL
+  EMAIL
+  NOTE
+  RELANCE
+  RDV
+  DEVIS
+  CLIENT_SIGNE
+  STATUT_MODIFIE
+}
+
+enum FollowUpStatus {
+  PENDING
+  DONE
+  SKIPPED
+}
+
+model SmsCampaign {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  city        String?
+  department  String?
+  country     String   @default("France")
+  businessType String?
+  startDate   DateTime @default(now())
+  endDate     DateTime?
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  prospects Prospect[]
+
+  @@index([status])
+  @@index([startDate])
+}
+
+model SmsTemplate {
+  id        String   @id @default(uuid())
+  name      String
+  body      String   @db.Text
+  variables String[] @default([])
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Prospect {
+  id                String            @id @default(uuid())
+  companyName       String
+  contactName       String?
+  phone             String
+  email             String?
+  website           String?
+  googleBusinessUrl String?
+  businessType      String?
+  category          String?
+  city              String?
+  department        String?
+  country           String            @default("France")
+  source            String?
+  googleReviewCount Int?
+  googleRating      Float?
+  internalNotes     String?           @db.Text
+  status            ProspectionStatus @default(NOUVEAU)
+
+  setupFee     Int?
+  monthlyPrice Int?
+  oneTimePrice Int?
+  estimatedValue Int?
+  signedValue  Int?
+
+  campaignId String?
+  campaign   SmsCampaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+
+  nextFollowUpAt    DateTime?
+  firstSmsSentAt    DateTime?
+  lastInteractionAt DateTime?
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+
+  interactions ProspectInteraction[]
+  followUps    FollowUp[]
+  appointments Appointment[]
+  notes        ProspectNote[]
+
+  @@index([status])
+  @@index([city])
+  @@index([businessType])
+  @@index([nextFollowUpAt])
+  @@index([campaignId])
+  @@unique([phone, companyName])
+}
+
+model ProspectInteraction {
+  id          String          @id @default(uuid())
+  prospectId  String
+  prospect    Prospect        @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+  type        InteractionType
+  note        String?         @db.Text
+  oldStatus   ProspectionStatus?
+  newStatus   ProspectionStatus?
+  createdById String?
+  createdAt   DateTime        @default(now())
+
+  @@index([prospectId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model FollowUp {
+  id          String         @id @default(uuid())
+  prospectId  String
+  prospect    Prospect       @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+  dueAt       DateTime
+  doneAt      DateTime?
+  status      FollowUpStatus @default(PENDING)
+  note        String?        @db.Text
+  createdById String?
+  createdAt   DateTime       @default(now())
+
+  @@index([prospectId])
+  @@index([dueAt])
+  @@index([status])
+}
+
+model ProspectNote {
+  id          String   @id @default(uuid())
+  prospectId  String
+  prospect    Prospect @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+  content     String   @db.Text
+  createdById String?
+  createdAt   DateTime @default(now())
+
+  @@index([prospectId])
 }
 
 model BusinessHours {
