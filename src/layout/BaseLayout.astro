@@ -16,6 +16,17 @@ const { title, description, image, noindex, keywords, transparentNav = false } =
 >
   <head>
     <BaseHead title={title} description={description} image={image} noindex={noindex} keywords={keywords} />
+
+    <!-- Google tag (gtag.js) -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-PQ639FG72J"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-PQ639FG72J');
+    </script>
+
     <slot name="head" />
   </head>
   <body class="flex min-h-svh flex-col bg-white">
