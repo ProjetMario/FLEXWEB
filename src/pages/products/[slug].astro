@@ -27,7 +27,7 @@ const breadcrumbs = [
 const image = { src: item.image, alt: item.title };
 ---
 
-<BaseLayout title={item.title} noindex>
+<BaseLayout title={item.title}>
   <Breadcrumb data={breadcrumbs} pageTitle={item.title} />
   <SplitLayout
     client:load

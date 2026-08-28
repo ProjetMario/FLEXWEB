@@ -6,7 +6,7 @@ import Title from "../components/Title.jsx";
 import journalData from "../data/journal.json";
 ---
 
-<BaseLayout title="Produits" noindex>
+<BaseLayout title="Produits">
   <Title title="All Products" client:load />
   <Cards data={journalData} basePath="/products" client:load />
 </BaseLayout>
