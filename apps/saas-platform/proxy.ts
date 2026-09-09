@@ -14,6 +14,8 @@ export default auth((req) => {
     pathname.startsWith("/api/auth") ||
     pathname.startsWith("/api/automation/") ||
     pathname.startsWith("/api/outreach/") ||
+    pathname === "/api/sms/dispatch" ||
+    pathname === "/api/sms/onoff" ||
     pathname === "/api/stripe/webhook" ||
     pathname === "/api/inquiry" ||
     pathname.startsWith("/_next") ||
