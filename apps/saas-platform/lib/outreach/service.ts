@@ -1,3 +1,4 @@
+import { smsBlocksEmail } from "../sms/guard";
 import { prisma } from "../prisma";
 import { emailSchema, emailHash, type Audit } from "./core";
 import { webUrl } from "./web-audit";
@@ -104,6 +105,7 @@ export async function saveLead(id: string, form: FormData, userId: string) {
       "Vérifiez le destinataire professionnel, la pertinence et les trois messages.",
     );
   await prisma.$transaction(async (tx) => {
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext('flexweb-sms-channel'))`;
     await tx.$queryRaw`SELECT id FROM "OutreachLead" WHERE id=${id} FOR UPDATE`;
     const lead = await tx.outreachLead.findUniqueOrThrow({
       where: { id },
@@ -115,6 +117,10 @@ export async function saveLead(id: string, form: FormData, userId: string) {
       lead.messages.some((m) => m.attemptedAt)
     )
       throw new Error("Cette prise de contact possède déjà un historique.");
+    if (approve && (await smsBlocksEmail(tx, lead)))
+      throw new Error(
+        "Une prise de contact SMS est déjà engagée ou arrêtée pour ce numéro.",
+      );
     if (approve && Date.now() - lead.sourceFetchedAt.getTime() > 30 * 86400000)
       throw new Error(
         "La fiche de l’annuaire a plus de 30 jours. Actualisez-la avant validation.",
