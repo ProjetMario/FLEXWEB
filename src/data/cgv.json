@@ -1,5 +1,5 @@
 {
-  "updated": "23 juillet 2026",
+  "updated": "9 septembre 2026",
   "sections": [
     {
       "title": "1. Préambule",
@@ -25,7 +25,8 @@
     {
       "title": "4. Commande et validation",
       "content": [
-        "Toute commande fait l'objet d'un devis préalable. La commande est ferme après validation du devis et, le cas échéant, signature du bon de commande par le client."
+        "Toute commande fait l'objet d'un devis préalable. La commande est ferme après validation du devis et, le cas échéant, signature du bon de commande par le client.",
+        "Une demande transmise par le formulaire de démarrage ne constitue pas une commande. Après qualification par Flex-Web, le client professionnel accède à une proposition indiquant son périmètre et ses prix. Son acceptation est enregistrée avec la version des conditions, la référence et la date. Le paiement initial comprend les frais de création et, pour une formule mensuelle, la première mensualité ; l’abonnement démarre à la commande. Les taxes et le total à payer sont présentés avant validation du paiement."
       ]
     },
     {
@@ -44,7 +45,8 @@
         "L'offre Essentielle comprend notamment un site jusqu'à 5 pages, l'hébergement, le nom de domaine offert la première année, le certificat SSL, les sauvegardes, la maintenance, les mises à jour de sécurité, un formulaire de contact, le SEO de base et le support par email.",
         "L'offre Professionnelle comprend les éléments de l'offre Essentielle ainsi que les modifications de contenu, le SEO avancé, une galerie photos, un blog, un tableau de bord client et un support prioritaire.",
         "L'Achat définitif comprend la création du site, jusqu'à 5 pages, le design personnalisé, le responsive, le SEO de base, la livraison clé en main, la formation, la remise du code source et la propriété du site. L'hébergement, les sauvegardes, la sécurité, le support et les mises à jour sont disponibles en option pour 49 € par mois.",
-        "Les prix sont indiqués en euros hors taxes, sauf mention contraire. Le prix applicable à la commande est celui indiqué dans le devis accepté par le client. Les fonctionnalités, limites et éventuelles options supplémentaires sont précisées dans ce devis."
+        "Les prix sont indiqués en euros hors taxes, sauf mention contraire. Le prix applicable à la commande est celui indiqué dans le devis accepté par le client. Les fonctionnalités, limites et éventuelles options supplémentaires sont précisées dans ce devis.",
+        "Pour les nouvelles commandes à compter du 9 septembre 2026, l’offre Croissance est proposée à 299 € HT par mois, avec 990 € HT de création. Elle comprend un site de cinq pages adapté au métier, un formulaire de demande de devis qualifiant, l’hébergement, les sauvegardes, la maintenance, le suivi des demandes et un bilan trimestriel. Les offres Professionnelle et Croissance incluent 30 minutes de modifications de contenu par mois, non reportables. Deux séries de corrections dans le périmètre accepté sont incluses avant livraison. Les demandes supplémentaires sont chiffrées avant intervention. Les devis et contrats déjà acceptés conservent leurs conditions propres."
       ]
     },
     {
@@ -113,7 +115,7 @@
       "content": [
         "Sauf engagement particulier prévu au devis, chaque partie peut résilier un abonnement mensuel par écrit avec un préavis de 30 jours. Les sommes dues jusqu'à la date effective de résiliation restent exigibles. Le client peut également mettre fin à l'abonnement en procédant au rachat du site selon le barème prévu à l'article 7.",
         "Les présentes CGV sont soumises au droit français. En cas de litige et à défaut d'accord amiable, il sera attribué compétence aux tribunaux compétents conformément aux règles applicables.",
-        "Dernière mise à jour : 23 juillet 2026"
+        "Dernière mise à jour : 9 septembre 2026"
       ]
     }
   ]

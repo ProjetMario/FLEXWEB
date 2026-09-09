@@ -19,6 +19,7 @@ import {
 
 const navItems = [
   { href: "/admin/prospection", label: "Tableau de bord", icon: LayoutDashboard },
+  { href: "/admin/prospection/automation", label: "Projets & automatisations", icon: UserCheck },
   { href: "/admin/prospection/prospects", label: "Prospects", icon: Users },
   { href: "/admin/prospection/campaigns", label: "Campagnes", icon: Megaphone },
   { href: "/admin/prospection/follow-ups", label: "Relances", icon: Bell },
@@ -45,7 +46,7 @@ export function AdminSidebar() {
 
       <nav className="flex-1 space-y-1 px-3 py-4">
         {navItems.map((item) => {
-          const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+          const active = pathname === item.href || (item.href !== "/admin/prospection" && pathname.startsWith(`${item.href}/`));
           return (
             <Link
               key={item.href}
@@ -64,5 +65,17 @@ export function AdminSidebar() {
         })}
       </nav>
     </aside>
+  );
+}
+
+export function AdminMobileNav() {
+  const pathname = usePathname();
+  return (
+    <nav aria-label="Navigation de gestion" className="flex gap-2 overflow-x-auto border-b bg-white p-3 lg:hidden dark:bg-slate-950">
+      {navItems.map((item) => (
+        <Link key={item.href} href={item.href} aria-current={pathname === item.href ? "page" : undefined}
+          className={cn("shrink-0 rounded-lg px-3 py-2 text-sm", pathname === item.href ? "bg-slate-900 text-white" : "border")}>{item.label}</Link>
+      ))}
+    </nav>
   );
 }

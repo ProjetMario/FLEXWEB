@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/auth";
+import NextAuth from "next-auth";
+import authConfig from "@/auth.config";
+
+const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const { nextUrl } = req;
@@ -9,6 +12,9 @@ export default auth((req) => {
   // Skip middleware for auth API routes and static files
   if (
     pathname.startsWith("/api/auth") ||
+    pathname.startsWith("/api/automation/") ||
+    pathname === "/api/stripe/webhook" ||
+    pathname === "/api/inquiry" ||
     pathname.startsWith("/_next") ||
     pathname.startsWith("/static") ||
     pathname.startsWith("/assets") ||

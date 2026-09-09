@@ -1,0 +1,58 @@
+[
+  {
+    "id": "essentielle",
+    "name": "Essentielle",
+    "monthlyCents": 4900,
+    "setupCents": 29900,
+    "pages": 5,
+    "supportMinutes": 0,
+    "features": [
+      "Site vitrine jusqu’à 5 pages",
+      "Hébergement et maintenance",
+      "SEO de base",
+      "Support par e-mail ; modifications sur devis"
+    ]
+  },
+  {
+    "id": "professionnelle",
+    "name": "Professionnelle",
+    "monthlyCents": 9900,
+    "setupCents": 29900,
+    "pages": 5,
+    "supportMinutes": 30,
+    "features": [
+      "Site vitrine, blog et galerie",
+      "Hébergement et maintenance",
+      "30 minutes de modifications par mois, non reportables",
+      "Optimisation SEO initiale et support prioritaire"
+    ]
+  },
+  {
+    "id": "croissance",
+    "name": "Croissance",
+    "monthlyCents": 29900,
+    "setupCents": 99000,
+    "pages": 5,
+    "supportMinutes": 30,
+    "features": [
+      "Site de 5 pages adapté à votre métier",
+      "Formulaire de demande de devis qualifiant",
+      "Hébergement, sauvegardes et maintenance",
+      "30 minutes de modifications par mois, non reportables",
+      "Suivi des demandes et bilan trimestriel"
+    ]
+  },
+  {
+    "id": "achat",
+    "name": "Achat définitif",
+    "monthlyCents": 0,
+    "setupCents": 99000,
+    "pages": 5,
+    "supportMinutes": 0,
+    "features": [
+      "Site vitrine jusqu’à 5 pages",
+      "Livraison du code source et formation",
+      "Hébergement et maintenance en option"
+    ]
+  }
+]

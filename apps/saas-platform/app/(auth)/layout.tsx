@@ -9,3 +9,4 @@ export default function AuthLayout({
     </div>
   );
 }
+export const metadata = { robots: { index: false, follow: false } };

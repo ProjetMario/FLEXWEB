@@ -36,42 +36,12 @@ export default function ContactSection({ data = {} }) {
           )}
         </MotionWrapper>
 
-        <motion.form initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.7 }} method="POST" action="https://formsubmit.co/contact@flex-web.fr" className="flex flex-col gap-4">
-          <input type="hidden" name="_subject" value="Nouvelle demande de devis FLEX-WEB" />
-          <input type="hidden" name="_next" value="https://flex-web.fr/contact" />
-          <input type="hidden" name="_captcha" value="false" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1">
-              <label htmlFor="name" className="text-xs text-gray-400 font-light uppercase tracking-widest">Nom</label>
-              <input id="name" type="text" name="name" required className="px-4 py-3 border border-gray-200 rounded text-sm font-light focus:outline-none focus:border-gray-400 bg-transparent" placeholder="Votre nom" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label htmlFor="company" className="text-xs text-gray-400 font-light uppercase tracking-widest">Entreprise</label>
-              <input id="company" type="text" name="company" className="px-4 py-3 border border-gray-200 rounded text-sm font-light focus:outline-none focus:border-gray-400 bg-transparent" placeholder="Votre entreprise" />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1">
-              <label htmlFor="phone" className="text-xs text-gray-400 font-light uppercase tracking-widest">Téléphone</label>
-              <input id="phone" type="tel" name="phone" className="px-4 py-3 border border-gray-200 rounded text-sm font-light focus:outline-none focus:border-gray-400 bg-transparent" placeholder="06 12 34 56 78" />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label htmlFor="email" className="text-xs text-gray-400 font-light uppercase tracking-widest">Email</label>
-              <input id="email" type="email" name="email" required className="px-4 py-3 border border-gray-200 rounded text-sm font-light focus:outline-none focus:border-gray-400 bg-transparent" placeholder="vous@exemple.fr" />
-            </div>
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="message" className="text-xs text-gray-400 font-light uppercase tracking-widest">Message</label>
-            <textarea id="message" name="message" required rows={5} className="px-4 py-3 border border-gray-200 rounded text-sm font-light focus:outline-none focus:border-gray-400 bg-transparent resize-none" placeholder="Parlez-nous de votre projet..." />
-          </div>
-          <label className="flex items-start gap-2 text-xs leading-relaxed text-gray-500">
-            <input type="checkbox" name="privacy_consent" required className="mt-0.5" />
-            <span>J'accepte que Fleximmo utilise mes données pour répondre à ma demande. <a href="/privacy/" className="text-blue-600 hover:underline">Voir la politique de confidentialité</a>.</span>
-          </label>
-          <button type="submit" className="self-start px-8 py-3 bg-gray-900 text-white text-sm font-light rounded hover:bg-gray-700 transition">
-            Envoyer ma demande
-          </button>
-        </motion.form>
+        <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.7 }} className="flex flex-col items-start gap-5 rounded-2xl border border-gray-200 bg-white p-8">
+          <h2 className="text-2xl font-semibold text-gray-900">Parlons de votre prochain site</h2>
+          <p className="text-gray-600 leading-relaxed">Décrivez votre activité, choisissez votre formule et retrouvez le suivi dans votre espace privé. Nous confirmons le périmètre avant tout paiement.</p>
+          <a href="/demarrer/" className="rounded-full bg-blue-600 px-7 py-3 font-medium text-white hover:bg-blue-700">Préparer mon projet</a>
+          <p className="text-sm leading-relaxed text-gray-500">Pour une application sur mesure ou une question, écrivez-nous à <a href="mailto:contact@flex-web.fr" className="text-blue-600 underline">contact@flex-web.fr</a>.</p>
+        </motion.div>
       </div>
     </section>
   );

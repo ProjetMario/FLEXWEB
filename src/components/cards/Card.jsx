@@ -46,7 +46,7 @@ export default function Cards({ data = [], sectionTitle, maxCards, basePath = "/
             href={seeMoreHref ?? basePath}
             className="px-6 py-2 rounded bg-gray-900 text-white text-sm font-light hover:bg-gray-700 transition"
           >
-            See more
+            Voir plus
           </a>
         </div>
       )}

@@ -15,10 +15,10 @@ export default function PricingCTA() {
         <h2 className="text-4xl font-semibold tracking-[-0.04em] text-[#1d1d1f] sm:text-5xl">Besoin d'aide pour choisir ?</h2>
         <p className="mx-auto mt-4 max-w-lg text-base font-light leading-relaxed text-[#6e6e73]">Nous vous conseillons gratuitement afin de choisir la formule la plus adaptée à votre activité.</p>
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <a href="/#contact" className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#0071e3] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#0077ed]">
+          <a href="/demarrer/" className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#0071e3] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#0077ed]">
             Demander un devis <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
           </a>
-          <a href="/#templates" className="inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-medium text-[#0071e3] transition hover:underline hover:underline-offset-4">
+          <a href="/#showcase" className="inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-medium text-[#0071e3] transition hover:underline hover:underline-offset-4">
             Voir des réalisations
           </a>
         </div>

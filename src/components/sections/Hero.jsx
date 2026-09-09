@@ -28,7 +28,7 @@ export default function Hero() {
         <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-[0.92fr_1.08fr] lg:gap-20">
           <div className="z-10 flex flex-col gap-7">
             <motion.span initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="text-sm font-medium text-[#6e6e73]">
-              Sites web livrés en 24h - 7 jours
+              Sites web livrés en 24h à 7 jours ouvrés
             </motion.span>
 
             <motion.h1 id="hero-title" initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.08 }} className="text-5xl font-semibold tracking-[-0.055em] text-[#1d1d1f] leading-[1.04] sm:text-6xl lg:text-7xl">
@@ -40,8 +40,8 @@ export default function Hero() {
             </motion.p>
 
             <motion.div initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, delay: 0.24 }} className="flex flex-col items-start gap-4">
-              <a href="#contact" className="group inline-flex items-center gap-2 rounded-full bg-[#0071e3] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#0077ed]">
-                Demander un devis <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+              <a href="/demarrer/?offre=croissance" className="group inline-flex items-center gap-2 rounded-full bg-[#0071e3] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#0077ed]">
+                Préparer mon projet <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
               </a>
               <a href="#showcase" className="group inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium text-[#0071e3] transition hover:underline hover:underline-offset-4">
                 <ExternalLink className="h-4 w-4" /> Nos exemples de sites

@@ -20,7 +20,7 @@ export function SkeletonImage({ className = "" }) {
   return (
     <div className={`skeleton w-full relative flex items-center justify-center ${className}`}>
       <span className="absolute text-[10px] uppercase tracking-[0.3em] text-gray-400/50 select-none grotesque-font">
-        dyson
+        flex-web
       </span>
     </div>
   );

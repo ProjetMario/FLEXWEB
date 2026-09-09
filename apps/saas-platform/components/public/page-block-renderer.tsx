@@ -2,6 +2,7 @@ import { HeaderBlock } from "./blocks/header-block";
 import { TextBlock } from "./blocks/text-block";
 import { ServicesBlock } from "./blocks/services-block";
 import { CTABlock } from "./blocks/cta-block";
+import { InquiryBlock } from "./blocks/inquiry-block";
 import type { PageSection } from "@prisma/client";
 
 interface PageBlockRendererProps {
@@ -29,6 +30,8 @@ async function BlockSection({
   const config = section.config as Record<string, unknown>;
 
   switch (section.type) {
+    case "inquiry":
+      return <InquiryBlock services={Array.isArray(config.services) ? config.services.map(String) : []} />;
     case "header":
       return <HeaderBlock config={config} />;
     case "text":

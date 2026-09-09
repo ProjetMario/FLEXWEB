@@ -23,6 +23,10 @@ export default async function DashboardHomePage() {
   const memberships: MembershipWithOrg[] = await getUserOrganizations(session.user.id);
   const isSuperAdmin = memberships.some((m: MembershipWithOrg) => m.role === "SUPER_ADMIN");
 
+  if (isSuperAdmin) {
+    redirect("/admin/prospection/automation");
+  }
+
   if (memberships.length === 1) {
     redirect(`/dashboard/${memberships[0].organization.slug}`);
   }

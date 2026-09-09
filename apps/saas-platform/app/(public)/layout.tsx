@@ -19,11 +19,12 @@ export default async function PublicLayout({
     where: { id: tenant.organizationId },
     include: {
       websiteSettings: true,
+      websites: { where: { isPublished: true }, select: { id: true } },
       socialLinks: { orderBy: { order: "asc" } },
     },
   });
 
-  if (!organization || organization.status === "SUSPENDED") {
+  if (!organization || organization.status === "SUSPENDED" || !organization.websites.length) {
     notFound();
   }
 

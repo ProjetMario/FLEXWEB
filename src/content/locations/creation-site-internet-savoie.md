@@ -37,7 +37,7 @@ faq:
   - question: "Quel est le prix d'un site internet en Savoie ?"
     answer: "Le tarif dépend du nombre de pages, des fonctionnalités et de l'intégration du contenu. Un site vitrine professionnel est accessible dès quelques centaines d'euros, avec des formules d'abonnement ou d'achat définitif."
   - question: "Combien de temps faut-il pour créer un site vitrine ?"
-    answer: "Un site vitrine standard est généralement en ligne entre 2 et 4 semaines, selon la disponibilité des contenus et du nombre de retours."
+    answer: "Un site vitrine standard est généralement en ligne entre 24h et 7 jours ouvrés, après validation du brief et réception des contenus."
   - question: "FLEX-WEB intervient-il à Chambéry et Aix-les-Bains ?"
     answer: "Oui, nous travaillons dans toute la Savoie, notamment à Chambéry, Aix-les-Bains, Albertville, Saint-Jean-de-Maurienne et dans les communes environnantes."
   - question: "Le site est-il optimisé pour Google ?"
