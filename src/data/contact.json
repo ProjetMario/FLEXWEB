@@ -1,9 +1,15 @@
 {
   "label": "Contact",
   "title": "Parlez-nous de votre projet",
-  "description": "Demande de devis ou prise de contact : remplissez le formulaire ci-dessous. Nous vous recontactons sous 24h pour étudier votre besoin et vous envoyer un devis personnalisé.",
+  "description": "Présentez votre activité et votre besoin dans le parcours projet. Nous vérifions le périmètre avec vous avant de vous proposer un paiement.",
   "details": [
-    { "label": "Téléphone", "value": "07 57 83 02 62" },
-    { "label": "Horaires", "value": "Lun – Ven, 9h – 18h" }
+    {
+      "label": "Téléphone",
+      "value": "07 57 83 02 62"
+    },
+    {
+      "label": "Horaires",
+      "value": "Lun – Ven, 9h – 18h"
+    }
   ]
 }

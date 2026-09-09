@@ -1,9 +1,9 @@
 {
-  "name": "Dyson",
-  "short_name": "Dyson",
+  "name": "FLEXWEB",
+  "short_name": "FLEXWEB",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "description": "Personal site built with Astro",
+  "description": "Plateforme FLEXWEB",
   "icons": []
 }

@@ -14,7 +14,7 @@ export default function JournalListing({ data = [], featured = null }) {
           </span>
         </div>
         <p className="text-sm font-light text-gray-400 mt-4 max-w-xs leading-relaxed">
-          Exploring the engineering ideas and innovations behind Dyson technology.
+          Conseils pratiques pour créer un site internet clair, rapide et visible localement.
         </p>
       </MotionWrapper>
 
@@ -34,7 +34,7 @@ export default function JournalListing({ data = [], featured = null }) {
             </div>
             <div className="flex flex-col justify-between p-8 md:p-12">
               <div className="flex flex-col gap-4">
-                <span className="text-xs text-gray-400 uppercase tracking-widest font-light">Featured</span>
+                <span className="text-xs text-gray-400 uppercase tracking-widest font-light">À la une</span>
                 <h2 className="text-2xl md:text-3xl font-light grotesque-font text-gray-900 leading-snug">
                   {featured.title}
                 </h2>
@@ -43,7 +43,7 @@ export default function JournalListing({ data = [], featured = null }) {
                 </p>
               </div>
               <div className="flex items-center gap-2 mt-8">
-                <span className="text-sm font-light text-gray-900">Read article</span>
+                <span className="text-sm font-light text-gray-900">Lire l'article</span>
                 <span className="text-xs opacity-0 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-200">↗</span>
               </div>
             </div>
@@ -53,7 +53,7 @@ export default function JournalListing({ data = [], featured = null }) {
 
       <section className="w-full max-w-8xl mx-auto px-4 pb-20">
         <hr className="mb-6 border-t border-gray-200" />
-        <h2 className="text-xs text-gray-400 uppercase tracking-widest font-light mb-8">All articles</h2>
+        <h2 className="text-xs text-gray-400 uppercase tracking-widest font-light mb-8">Tous les articles</h2>
         <MotionWrapper type="fade-up" isContainer className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12 grotesque-font">
           {data.map((item) => (
             <MotionChild key={item.slug}>

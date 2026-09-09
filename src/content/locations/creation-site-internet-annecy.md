@@ -36,7 +36,7 @@ faq:
   - question: "Quel est le prix d'un site vitrine à Annecy ?"
     answer: "Un site vitrine professionnel à Annecy démarre à partir de quelques centaines d'euros. Le prix final dépend du nombre de pages, des fonctionnalités et de la rédaction du contenu."
   - question: "Combien de temps faut-il pour créer un site à Annecy ?"
-    answer: "La plupart des sites vitrines sont en ligne en 2 à 4 semaines, selon la réactivité pour les contenus et les retours."
+    answer: "La plupart des sites vitrines sont en ligne entre 24h et 7 jours ouvrés, après validation du brief et réception des contenus."
   - question: "FLEX-WEB intervient-il dans le centre-ville d'Annecy ?"
     answer: "Oui, nous accompagnons les entreprises du centre-ville, du secteur du lac et de l'agglomération annécienne."
   - question: "Le site sera-t-il visible sur Google ?"

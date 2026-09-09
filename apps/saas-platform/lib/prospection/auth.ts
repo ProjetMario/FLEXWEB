@@ -24,7 +24,7 @@ export async function requireAdmin(): Promise<AdminUser> {
   const membership = await prisma.membership.findFirst({
     where: {
       userId: session.user.id,
-      role: { in: ["ADMIN", "SUPER_ADMIN"] },
+      role: "SUPER_ADMIN",
     },
     orderBy: { createdAt: "desc" },
   });

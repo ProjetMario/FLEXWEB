@@ -7,6 +7,7 @@ import BuyoutSection from "../components/pricing/BuyoutSection.jsx";
 import PricingFAQ from "../components/pricing/PricingFAQ.jsx";
 import PricingCTA from "../components/pricing/PricingCTA.jsx";
 import StructuredData from "../components/seo/StructuredData.astro";
+import offerCatalog from "../../apps/saas-platform/lib/automation/offers.json";
 import { pricingPlans, comparisonRows, buyoutTiers, pricingFaq } from "../data/pricing.ts";
 
 const siteUrl = "https://flex-web.fr";
@@ -34,61 +35,19 @@ const offerCatalogSchema = {
   "@type": "OfferCatalog",
   "@id": `${canonicalUrl}#offers`,
   name: "Offres de création de site internet — Flex-Web",
-  itemListElement: [
-    {
-      "@type": "Offer",
-      name: "Essentielle",
-      description: "Site vitrine jusqu'à 5 pages avec hébergement, maintenance et support inclus.",
-      price: "49",
-      priceCurrency: "EUR",
-      priceSpecification: {
-        "@type": "UnitPriceSpecification",
-        price: "49",
-        priceCurrency: "EUR",
-        unitCode: "MON",
-        referenceQuantity: { "@type": "QuantitativeValue", value: "1", unitCode: "MON" },
-      },
-      url: canonicalUrl,
-      seller: { "@id": `${siteUrl}/#organization` },
-      availability: "https://schema.org/InStock",
-    },
-    {
-      "@type": "Offer",
-      name: "Professionnelle",
-      description: "Site complet avec SEO avancé, blog, galerie, tableau de bord client et modifications incluses.",
-      price: "99",
-      priceCurrency: "EUR",
-      priceSpecification: {
-        "@type": "UnitPriceSpecification",
-        price: "99",
-        priceCurrency: "EUR",
-        unitCode: "MON",
-        referenceQuantity: { "@type": "QuantitativeValue", value: "1", unitCode: "MON" },
-      },
-      url: canonicalUrl,
-      seller: { "@id": `${siteUrl}/#organization` },
-      availability: "https://schema.org/InStock",
-    },
-    {
-      "@type": "Offer",
-      name: "Achat définitif",
-      description: "Achetez votre site une seule fois. Code source remis, vous êtes propriétaire.",
-      price: "990",
-      priceCurrency: "EUR",
-      url: canonicalUrl,
-      seller: { "@id": `${siteUrl}/#organization` },
-      availability: "https://schema.org/InStock",
-    },
-    {
-      "@type": "Offer",
-      name: "Applications web & mobile",
-      description: "Développement d'applications web et mobiles sur mesure, sur devis selon la complexité du projet.",
-      priceCurrency: "EUR",
-      url: `${siteUrl}/creation-application-mobile/`,
-      seller: { "@id": `${siteUrl}/#organization` },
-      availability: "https://schema.org/InStock",
-    },
-  ],
+  itemListElement: offerCatalog.map(offer => ({
+    "@type": "Offer",
+    name: offer.name,
+    description: `${offer.features.join(". ")}. Création : ${offer.setupCents / 100} € HT.`,
+    price: String((offer.monthlyCents || offer.setupCents) / 100),
+    priceCurrency: "EUR",
+    url: `${siteUrl}/demarrer/?offre=${offer.id}`,
+    seller: { "@id": `${siteUrl}/#organization` },
+    ...(offer.monthlyCents ? { priceSpecification: {
+      "@type": "UnitPriceSpecification", price: String(offer.monthlyCents / 100),
+      priceCurrency: "EUR", unitText: "mois", valueAddedTaxIncluded: false,
+    } } : {}),
+  })),
 };
 
 const schemas = [breadcrumbSchema, faqSchema, offerCatalogSchema];
@@ -96,7 +55,7 @@ const schemas = [breadcrumbSchema, faqSchema, offerCatalogSchema];
 
 <BaseLayout
   title="Tarifs création site internet & application mobile — FLEX-WEB"
-  description="Tarifs FLEX-WEB : site internet dès 49 €/mois tout inclus ou 990 € en achat définitif. Application mobile sur devis. Devis gratuit en Savoie et Haute-Savoie."
+  description="FLEX-WEB : offre Croissance à 299 € HT/mois + 990 € HT de création. Sites vitrines dès 49 € HT/mois. Préparez votre projet en ligne."
   keywords="tarif site internet, prix site web, abonnement site internet, achat site web, tarif application mobile, devis site internet, devis application mobile"
 >
   <div class="relative overflow-hidden bg-white">
@@ -104,20 +63,20 @@ const schemas = [breadcrumbSchema, faqSchema, offerCatalogSchema];
 
     <header class="relative mx-auto max-w-4xl px-5 pb-20 pt-32 text-center sm:px-6 sm:pt-40 md:pb-24">
       <span class="mb-4 block text-sm font-medium text-[#6e6e73]">Tarifs FLEX-WEB</span>
-      <h1 class="text-5xl font-semibold tracking-[-0.055em] text-[#1d1d1f] leading-[1.04] sm:text-6xl md:text-7xl">Des offres simples, transparentes et sans engagement.</h1>
+      <h1 class="text-5xl font-semibold tracking-[-0.055em] text-[#1d1d1f] leading-[1.04] sm:text-6xl md:text-7xl">Votre site, avec le bon niveau de suivi.</h1>
       <p class="mx-auto mt-6 max-w-2xl text-lg font-light leading-relaxed text-[#6e6e73]">Choisissez la formule qui correspond à votre activité. Que vous souhaitiez un abonnement tout compris ou acheter votre site définitivement, FLEX-WEB s'adapte à vos besoins.</p>
     </header>
 
     <main class="relative mx-auto max-w-6xl px-5 pb-28 sm:px-6 md:px-8">
       <section aria-labelledby="offers-title">
         <h2 id="offers-title" class="sr-only">Nos offres</h2>
-        <div class="grid items-stretch gap-5 lg:grid-cols-2 xl:grid-cols-4 lg:gap-6">
+        <div class="grid items-stretch gap-5 lg:grid-cols-2 xl:grid-cols-3 lg:gap-6">
           {pricingPlans.map((plan) => <PricingCard plan={plan} client:load />)}
         </div>
       </section>
 
       <section class="mt-32" aria-labelledby="comparison-title">
-        <SectionHeader label="Comparer les offres" title="La bonne formule, sans zones grises." align="center" />
+        <SectionHeader label="Comparer les offres" title="Comparer les formules vitrine." align="center" />
         <ComparisonTable rows={comparisonRows} client:load />
       </section>
 

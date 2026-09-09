@@ -784,3 +784,100 @@ model Notification {
 
   @@index([organizationId, userId])
 }
+
+// Funnel data is internal to FLEX-WEB; client access uses expiring hashed tokens.
+model SalesProject {
+  id                   String   @id @default(uuid())
+  requestKey           String   @unique
+  accessTokenHash      String   @unique
+  accessExpiresAt      DateTime
+  companyName          String
+  contactName          String
+  email                String
+  phone                String
+  city                 String
+  businessType         String
+  message              String   @db.Text
+  timeline             String
+  source               String
+  planId               String
+  monthlyCents         Int
+  setupCents           Int
+  offerSnapshot        Json
+  stage                String   @default("NEW")
+  paymentStatus        String   @default("UNPAID")
+  prospectId           String?
+  organizationId       String?  @unique
+  websiteId            String?  @unique
+  brief                Json?
+  draftVersion         Int      @default(0)
+  briefSubmittedAt     DateTime?
+  clientApprovedAt     DateTime?
+  qaApprovedAt         DateTime?
+  publishedAt          DateTime?
+  termsAcceptedAt      DateTime?
+  termsVersion         String?
+  quoteReference       String?
+  quoteUrl             String?
+  stripeCustomerId     String?
+  stripeSubscriptionId String?  @unique
+  stripeSessionId      String?  @unique
+  checkoutAttempt      Int      @default(0)
+  stripeUpdatedAt      Int      @default(0)
+  paidAt               DateTime?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  @@index([stage, createdAt])
+  @@index([email])
+}
+
+model AutomationMessage {
+  id             String   @id @default(uuid())
+  dedupeKey      String   @unique
+  projectId      String?
+  expectedStage  String?
+  to             String
+  subject        String
+  text           String   @db.Text
+  status         String   @default("PENDING")
+  attempts       Int      @default(0)
+  availableAt    DateTime @default(now())
+  firstAttemptAt DateTime?
+  lockedAt       DateTime?
+  sentAt         DateTime?
+  providerId     String?
+  lastError      String?
+  createdAt      DateTime @default(now())
+  @@index([status, availableAt])
+}
+
+model AutomationEvent {
+  id          String   @id @default(uuid())
+  externalId  String?  @unique
+  projectId   String?
+  type        String
+  detail      String
+  createdAt   DateTime @default(now())
+  @@index([projectId, createdAt])
+}
+
+model AutomationRateLimit {
+  key       String   @id
+  count     Int      @default(1)
+  expiresAt DateTime
+  @@index([expiresAt])
+}
+
+model SupportTicket {
+  id        String   @id @default(uuid())
+  projectId String
+  requestKey String  @unique
+  subject   String
+  message   String   @db.Text
+  status    String   @default("OPEN")
+  minutes   Int      @default(0)
+  response  String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([projectId, status])
+}

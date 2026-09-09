@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { env } from "@/lib/env";
+import authConfig from "@/auth.config";
 
 const credentialsSchema = z.object({
   email: z.string().email(),
@@ -19,14 +20,8 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
+  ...authConfig,
   adapter: PrismaAdapter(prisma),
-  session: {
-    strategy: "jwt",
-  },
-  pages: {
-    signIn: "/login",
-    error: "/login",
-  },
   providers: [
     Credentials({
       name: "credentials",
@@ -76,21 +71,4 @@ export const {
         ]
       : []),
   ],
-  callbacks: {
-    jwt: async ({ token, user, trigger, session }) => {
-      if (user) {
-        token.sub = user.id;
-      }
-      if (trigger === "update" && session) {
-        token.name = session.name;
-      }
-      return token;
-    },
-    session: async ({ session, token }) => {
-      if (token?.sub) {
-        session.user.id = token.sub;
-      }
-      return session;
-    },
-  },
 });

@@ -1,0 +1,8 @@
+# Configuration du projet Netlify qui héberge la plateforme Next.js.
+# Le projet vitrine flex-webb conserve le netlify.toml à la racine du dépôt.
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "24"

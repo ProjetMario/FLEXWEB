@@ -35,7 +35,7 @@ faq:
   - question: "Quel est le prix d'un site vitrine à Chambéry ?"
     answer: "Un site vitrine professionnel démarre autour de quelques centaines d'euros. Le tarif final dépend du nombre de pages et des fonctionnalités."
   - question: "Combien de temps dure la création d'un site ?"
-    answer: "En général, un site vitrine est en ligne en 2 à 4 semaines."
+    answer: "En général, un site vitrine est en ligne entre 24h et 7 jours ouvrés après validation du brief et réception des contenus."
   - question: "FLEX-WEB intervient-il dans le centre de Chambéry ?"
     answer: "Oui, nous accompagnons les entreprises du centre-ville et de l'agglomération chambérienne."
   - question: "Le site est-il optimisé pour Google ?"

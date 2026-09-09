@@ -4,6 +4,7 @@ import { auth, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
+export const metadata = { robots: { index: false, follow: false } };
 async function getUserOrganizations(userId: string) {
   return prisma.membership.findMany({
     where: { userId },
