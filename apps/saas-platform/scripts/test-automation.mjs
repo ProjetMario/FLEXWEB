@@ -28,6 +28,8 @@ const env = {
   STRIPE_SECRET_KEY: "",
   STRIPE_WEBHOOK_SECRET: "",
   AUTOMATION_TEST_DATABASE: "true",
+  OUTREACH_SEND_ENABLED: "false",
+  IONOS_MAIL_PASSWORD: "",
 };
 const run = (cmd, args, stdio = "pipe") =>
   execFileSync(cmd, args, { cwd, env, stdio });
@@ -56,6 +58,7 @@ try {
   started = true;
   run("npx", ["prisma", "db", "push"]);
   run("npx", ["tsx", "--test", "tests/automation.test.ts"], "inherit");
+  run("npx", ["tsx", "--test", "tests/outreach.test.ts"], "inherit");
 } catch (e) {
   console.error(e.stderr?.toString() || e.message);
   process.exitCode = 1;

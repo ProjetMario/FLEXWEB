@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 
 const navItems = [
+  { href: "/admin/prospection/outreach", label: "Prospection locale", icon: Megaphone },
   { href: "/admin/prospection", label: "Tableau de bord", icon: LayoutDashboard },
   { href: "/admin/prospection/automation", label: "Projets & automatisations", icon: UserCheck },
   { href: "/admin/prospection/prospects", label: "Prospects", icon: Users },

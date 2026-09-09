@@ -13,6 +13,7 @@ export default auth((req) => {
   if (
     pathname.startsWith("/api/auth") ||
     pathname.startsWith("/api/automation/") ||
+    pathname.startsWith("/api/outreach/") ||
     pathname === "/api/stripe/webhook" ||
     pathname === "/api/inquiry" ||
     pathname.startsWith("/_next") ||

@@ -13,19 +13,22 @@
       "title": "2. Informations que nous collectons",
       "content": [
         "Les informations que vous nous fournissez comprennent : nom, entreprise, activité, ville, e-mail, téléphone, besoin, offre choisie, brief, contenus à publier, validations de proposition et demandes de support. Les liens privés permettent de consulter et suivre votre projet.",
-        "Les informations collectées automatiquement incluent : pages visitées, durée de navigation, adresse IP, type de navigateur, système d'exploitation, cookies et source de trafic."
+        "Les informations collectées automatiquement incluent : pages visitées, durée de navigation, adresse IP, type de navigateur, système d'exploitation, cookies et source de trafic.",
+        "Pour notre prospection auprès des professionnels, nous consultons l’Annuaire des entreprises et l’annuaire RGE de l’ADEME. Nous retenons les informations publiques utiles : identité de l’entreprise, SIREN/SIRET, activité, commune, site, coordonnées professionnelles et source. Un contrôle technique limité aux pages publiques peut préparer un diagnostic, relu avant contact."
       ]
     },
     {
       "title": "3. Comment nous utilisons vos informations",
       "content": [
-        "Nous utilisons vos données pour répondre à vos demandes, vous accompagner dans votre projet digital, améliorer nos services, vous tenir informé de nos actualités avec votre accord, assurer la sécurité du site et respecter nos obligations légales. Les bases légales sont les mesures précontractuelles pour une demande de devis, le contrat pour exécuter une prestation, l'obligation légale pour la facturation et l'intérêt légitime pour la sécurité du site. Toute newsletter ou prospection électronique est envoyée uniquement sur la base d'un consentement lorsque celui-ci est requis."
+        "Nous utilisons vos données pour répondre à vos demandes, vous accompagner dans votre projet digital, améliorer nos services, vous tenir informé de nos actualités avec votre accord, assurer la sécurité du site et respecter nos obligations légales. Les bases légales sont les mesures précontractuelles pour une demande de devis, le contrat pour exécuter une prestation, l'obligation légale pour la facturation et l'intérêt légitime pour la sécurité du site. Toute newsletter ou prospection électronique est envoyée uniquement sur la base d'un consentement lorsque celui-ci est requis.",
+        "La prospection B2B portant sur un service en lien avec l’activité du destinataire repose sur notre intérêt légitime à développer notre activité. Chaque message indique sa source et permet de s’opposer gratuitement aux prises de contact. Les messages sont validés par une personne ; aucun score ne décide automatiquement d’une vente ou d’un engagement."
       ]
     },
     {
       "title": "4. Partage de vos informations",
       "content": [
-        "Les demandes du parcours projet sont enregistrées dans notre plateforme de gestion. Netlify héberge le site et achemine les requêtes. Lorsque ces services sont activés, Stripe prend en charge le paiement et Brevo achemine les messages de suivi ; les données de carte sont saisies chez Stripe et ne sont pas stockées dans notre plateforme. Nous ne vendons pas vos données. Ne transmettez pas de données sensibles dans le brief ou le dossier de contenus."
+        "Les demandes du parcours projet sont enregistrées dans notre plateforme de gestion. Netlify héberge le site et achemine les requêtes. Lorsque ces services sont activés, Stripe prend en charge le paiement et Brevo achemine les messages de suivi ; les données de carte sont saisies chez Stripe et ne sont pas stockées dans notre plateforme. Nous ne vendons pas vos données. Ne transmettez pas de données sensibles dans le brief ou le dossier de contenus.",
+        "IONOS héberge notre messagerie professionnelle et achemine les prises de contact validées. Notre plateforme vérifie les nouvelles réponses de la boîte de réception pour suspendre les relances. Elle conserve uniquement les métadonnées liées à cette prospection, sans copier les conversations étrangères à celle-ci ni le corps des e-mails. Les listes de contacts froids ne sont pas transférées à Brevo."
       ]
     },
     {
@@ -43,7 +46,8 @@
     {
       "title": "7. Conservation de vos données",
       "content": [
-        "Nous conservons vos données personnelles uniquement le temps nécessaire : demandes de prospects 3 ans après le dernier contact, données clients pendant la relation commerciale puis selon les obligations légales, pièces comptables 10 ans. Les données analytiques ne sont pas activées par défaut."
+        "Nous conservons vos données personnelles uniquement le temps nécessaire : demandes de prospects 3 ans après le dernier contact, données clients pendant la relation commerciale puis selon les obligations légales, pièces comptables 10 ans. Les données analytiques ne sont pas activées par défaut.",
+        "Les oppositions sont conservées sous forme d’empreinte de l’adresse e-mail afin d’éviter une nouvelle sollicitation. Vous pouvez exercer vos droits auprès de contact@flex-web.fr et introduire une réclamation auprès de la CNIL (www.cnil.fr)."
       ]
     },
     {
