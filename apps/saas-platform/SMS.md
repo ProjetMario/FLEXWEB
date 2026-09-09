@@ -21,6 +21,8 @@ Les webhooks Onoff ne constituent pas une synchronisation exhaustive : après le
 
 ## Déploiement et validation
 
+La vitrine se publie depuis la branche Git `main`. Pour le SaaS, exécuter le CLI Netlify depuis une copie isolée de `apps/saas-platform`, hors de la racine Git de la vitrine, avec l’identifiant du projet `flexweb-gestion` : sinon le CLI peut sélectionner la configuration Astro de la racine. Une prévisualisation manuelle sans connexion de base ne valide pas les routes métier ; contrôler la migration et les réponses HTTP après publication. Les deux routes SMS doivent retourner HTTP 401 sans clé et ne jamais rediriger vers `/login`.
+
 Migration additive `003_sms-onoff` : cinq tables nouvelles, aucune donnée existante supprimée. Tests sur PostgreSQL temporaire isolé : numéros, secrets distincts, validation, doublons, horaires, concurrence, plafonds, messages incertains, confirmations et STOP. Aucun SMS réel émis par les tests. Le forfait Zapier est un essai Pro de 14 jours constaté lors du raccordement ; les étapes premium nécessiteront ensuite un forfait adapté, sans achat automatique de notre part.
 
 Sources vérifiées le 10/09/2026 :
