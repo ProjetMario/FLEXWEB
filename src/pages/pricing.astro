@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../layout/BaseLayout.astro";
-import { SectionHeader } from "../components/ui/SectionHeader.jsx";
 import PricingCard from "../components/pricing/PricingCard.jsx";
 import ComparisonTable from "../components/pricing/ComparisonTable.jsx";
 import BuyoutSection from "../components/pricing/BuyoutSection.jsx";
@@ -8,7 +7,7 @@ import PricingFAQ from "../components/pricing/PricingFAQ.jsx";
 import PricingCTA from "../components/pricing/PricingCTA.jsx";
 import StructuredData from "../components/seo/StructuredData.astro";
 import offerCatalog from "../../apps/saas-platform/lib/automation/offers.json";
-import { pricingPlans, comparisonRows, buyoutTiers, pricingFaq } from "../data/pricing.ts";
+import { subscriptionPlans, ownershipPlan, ownershipMaintenancePrice, comparisonPlans, comparisonRows, buyoutTiers, pricingFaq } from "../data/pricing.ts";
 
 const siteUrl = "https://flex-web.fr";
 const canonicalUrl = `${siteUrl}/pricing/`;
@@ -38,7 +37,7 @@ const offerCatalogSchema = {
   itemListElement: offerCatalog.map(offer => ({
     "@type": "Offer",
     name: offer.name,
-    description: `${offer.features.join(". ")}. Création : ${offer.setupCents / 100} € HT.`,
+    description: `${offer.features.join(". ")}. Premier paiement : ${(offer.setupCents + offer.monthlyCents) / 100} € HT (${offer.setupCents / 100} € HT de création${offer.monthlyCents ? ` + ${offer.monthlyCents / 100} € HT pour le premier mois` : ""}).${offer.monthlyCents ? ` Puis ${offer.monthlyCents / 100} € HT par mois.` : " Hébergement et maintenance en option."}`,
     price: String((offer.monthlyCents || offer.setupCents) / 100),
     priceCurrency: "EUR",
     url: `${siteUrl}/demarrer/?offre=${offer.id}`,
@@ -55,46 +54,86 @@ const schemas = [breadcrumbSchema, faqSchema, offerCatalogSchema];
 
 <BaseLayout
   title="Tarifs création site internet & application mobile — FLEX-WEB"
-  description="FLEX-WEB : offre Croissance à 299 € HT/mois + 990 € HT de création. Sites vitrines dès 49 € HT/mois. Préparez votre projet en ligne."
+  description="Comprenez le prix de votre site FLEX-WEB : dès 348 € HT au démarrage, puis 49 € HT/mois. Achat définitif à partir de 990 € HT. Détail des frais et services inclus."
   keywords="tarif site internet, prix site web, abonnement site internet, achat site web, tarif application mobile, devis site internet, devis application mobile"
 >
-  <div class="relative overflow-hidden bg-white">
-    <div class="pointer-events-none absolute inset-x-0 top-0 h-[34rem] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#f5f5f7] via-white to-transparent" />
-
-    <header class="relative mx-auto max-w-4xl px-5 pb-20 pt-32 text-center sm:px-6 sm:pt-40 md:pb-24">
-      <span class="mb-4 block text-sm font-medium text-[#6e6e73]">Tarifs FLEX-WEB</span>
-      <h1 class="text-5xl font-semibold tracking-[-0.055em] text-[#1d1d1f] leading-[1.04] sm:text-6xl md:text-7xl">Votre site, avec le bon niveau de suivi.</h1>
-      <p class="mx-auto mt-6 max-w-2xl text-lg font-light leading-relaxed text-[#6e6e73]">Choisissez la formule qui correspond à votre activité. Que vous souhaitiez un abonnement tout compris ou acheter votre site définitivement, FLEX-WEB s'adapte à vos besoins.</p>
+  <div class="bg-white text-[#1d1d1f]">
+    <header class="mx-auto max-w-4xl px-5 pb-12 pt-32 text-center sm:px-6 sm:pt-36">
+      <p class="mb-4 text-sm font-medium text-[#0071e3]">Les tarifs, simplement</p>
+      <h1 class="text-4xl font-semibold leading-[1.12] tracking-[-0.04em] sm:text-6xl">Combien coûte votre site ?</h1>
+      <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-[#52525b] sm:text-lg">Avec un abonnement, vous payez la création une seule fois, puis une mensualité pour l’hébergement, la maintenance et les services de votre formule.</p>
+      <p class="mt-4 text-sm font-medium text-[#52525b]">Tous les montants sont hors taxes (HT) : la TVA n’est pas comprise.</p>
+      <nav aria-label="Choisir un mode de paiement" class="mt-7 flex flex-wrap justify-center gap-3">
+        <a href="#abonnements" class="rounded-full bg-[#1d1d1f] px-5 py-3 text-sm font-medium text-white hover:bg-[#424245]">Voir les abonnements</a>
+        <a href="#achat-definitif" class="rounded-full border border-black/15 px-5 py-3 text-sm font-medium hover:bg-[#f5f5f7]">Acheter sans abonnement</a>
+      </nav>
     </header>
 
-    <main class="relative mx-auto max-w-6xl px-5 pb-28 sm:px-6 md:px-8">
-      <section aria-labelledby="offers-title">
-        <h2 id="offers-title" class="sr-only">Nos offres</h2>
-        <div class="grid items-stretch gap-5 lg:grid-cols-2 xl:grid-cols-3 lg:gap-6">
-          {pricingPlans.map((plan) => <PricingCard plan={plan} client:load />)}
+    <main class="mx-auto max-w-6xl space-y-14 px-5 pb-20 sm:space-y-20 sm:px-6 lg:px-8">
+      <section id="abonnements" aria-labelledby="offers-title" class="scroll-mt-24">
+        <h2 id="offers-title" class="text-2xl font-semibold tracking-tight sm:text-3xl">Un site avec abonnement</h2>
+        <p class="mt-3 max-w-3xl text-sm leading-relaxed text-[#52525b] sm:text-base">Le premier paiement comprend la création du site et le premier mois. Ensuite, vous payez uniquement la mensualité de votre formule, hors options acceptées.</p>
+        <div class="mt-7 grid items-stretch gap-5 lg:grid-cols-3">
+          {subscriptionPlans.map((plan) => <PricingCard plan={plan} />)}
+        </div>
+        <div class="mt-6 rounded-2xl border border-[#0071e3]/15 bg-[#f2f7fd] p-5 sm:p-6">
+          <p class="text-sm font-semibold text-[#1d1d1f]">Exemple avec Essentielle</p>
+          <p class="mt-2 text-base leading-relaxed"><strong>{subscriptionPlans[0].firstPayment} HT au départ</strong> = {subscriptionPlans[0].setupPrice} pour créer votre site + {subscriptionPlans[0].monthlyPrice} pour le premier mois. Puis <strong>{subscriptionPlans[0].monthlyPrice} HT par mois</strong>.</p>
+          <p class="mt-2 text-sm text-[#52525b]">La création est payée une seule fois. Les taxes applicables et le total à payer sont précisés avant le paiement.</p>
         </div>
       </section>
 
-      <section class="mt-32" aria-labelledby="comparison-title">
-        <SectionHeader label="Comparer les offres" title="Comparer les formules vitrine." align="center" />
-        <ComparisonTable rows={comparisonRows} client:load />
+      <section id="achat-definitif" aria-labelledby="ownership-title" class="scroll-mt-24 rounded-3xl border border-black/10 bg-[#fbfbfd] p-6 sm:p-8 lg:p-10">
+        <div class="grid gap-8 lg:grid-cols-2 lg:gap-12">
+          <div>
+            <p class="text-sm font-medium text-[#0071e3]">Un autre mode de paiement</p>
+            <h2 id="ownership-title" class="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">Acheter votre site une seule fois</h2>
+            <p class="mt-4 text-base leading-relaxed text-[#52525b]">Avec l’offre Achat définitif, vous devenez propriétaire du site livré et recevez son code source.</p>
+            <p class="mt-6 text-sm font-medium text-[#52525b]">À régler pour le site vitrine de cette offre</p>
+            <p class="mt-2 flex flex-wrap items-baseline gap-2"><strong class="whitespace-nowrap text-4xl font-semibold tracking-tight">{ownershipPlan.firstPayment}</strong><span class="text-sm">HT · une seule fois</span></p>
+            <p class="mt-3 text-sm font-medium">Aucun abonnement FLEX-WEB obligatoire.</p>
+            <p class="mt-2 text-sm leading-relaxed text-[#52525b]">Ce prix couvre le site vitrine jusqu’à 5 pages. Un besoin supplémentaire fait l’objet d’un devis.</p>
+            <a href={ownershipPlan.href} class="mt-6 inline-flex rounded-full bg-[#1d1d1f] px-6 py-3.5 text-sm font-medium text-white hover:bg-[#424245]">Choisir l’achat définitif</a>
+          </div>
+          <div>
+            <h3 class="text-base font-semibold">Ce qui est inclus dans l’achat</h3>
+            <ul class="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-[#424245]">
+              <li>Un site vitrine jusqu’à 5 pages.</li>
+              <li>La livraison du code source et une formation.</li>
+              <li>La propriété du site livré.</li>
+            </ul>
+            <div class="mt-6 rounded-2xl border border-black/10 bg-white p-5">
+              <h3 class="text-sm font-semibold">L’hébergement et la maintenance se choisissent à part</h3>
+              <p class="mt-3 text-sm leading-relaxed text-[#52525b]">Pour garder le site en ligne, vous pouvez choisir votre hébergeur ou prendre notre option d’hébergement et de maintenance.</p>
+              <p class="mt-4 text-xl font-semibold">Option FLEX-WEB : {ownershipMaintenancePrice}{" "}<span class="ml-1 text-sm font-normal">HT / mois</span></p>
+              <p class="mt-2 text-sm leading-relaxed text-[#52525b]">Hébergement, sauvegardes, sécurité, support et mises à jour. Cette option s’ajoute au prix d’achat si vous la choisissez.</p>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <section class="mt-32" aria-labelledby="buyout-title">
-        <h2 id="buyout-title" class="sr-only">Rachat du site</h2>
-        <BuyoutSection tiers={buyoutTiers} client:load />
+      <section aria-label="Détail des offres">
+        <details class="group rounded-2xl border border-black/10">
+          <summary class="cursor-pointer px-5 py-5 text-base font-semibold sm:px-7">Comparer ce qui est inclus dans les 4 offres</summary>
+          <div class="px-3 pb-3 sm:px-5 sm:pb-5"><ComparisonTable rows={comparisonRows} plans={comparisonPlans} /></div>
+        </details>
       </section>
 
-      <section class="mt-32" aria-labelledby="faq-title">
-        <SectionHeader label="Questions fréquentes" title="Tout savoir avant de commencer." align="center" />
-        <h2 id="faq-title" class="sr-only">FAQ tarifs FLEX-WEB</h2>
-        <PricingFAQ items={pricingFaq} client:load />
+      <section aria-labelledby="faq-title">
+        <h2 id="faq-title" class="mb-6 text-center text-2xl font-semibold tracking-tight sm:text-3xl">Les réponses aux questions de prix</h2>
+        <PricingFAQ items={pricingFaq} />
       </section>
 
-      <section class="mt-32" aria-labelledby="pricing-cta-title">
-        <h2 id="pricing-cta-title" class="sr-only">Besoin d'aide pour choisir</h2>
-        <PricingCTA client:load />
+      <section aria-label="Option de rachat après abonnement">
+        <BuyoutSection tiers={buyoutTiers} />
       </section>
+
+      <section aria-labelledby="applications-title" class="flex flex-wrap items-center justify-between gap-6 rounded-2xl bg-[#f5f5f7] p-6 sm:p-8">
+        <div class="max-w-2xl"><h2 id="applications-title" class="text-xl font-semibold">Vous avez besoin d’une application web ou mobile ?</h2><p class="mt-3 text-sm leading-relaxed text-[#52525b]">Les applications sont réalisées sur mesure et sur devis. Leur prix dépend des fonctionnalités et du projet.</p></div>
+        <a href="/creation-application-mobile/#contact" class="inline-flex shrink-0 rounded-full border border-black/15 bg-white px-5 py-3 text-sm font-medium hover:bg-[#fbfbfd]">Demander un devis application</a>
+      </section>
+
+      <PricingCTA client:load />
     </main>
   </div>
 
