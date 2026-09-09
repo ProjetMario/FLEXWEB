@@ -1,3 +1,4 @@
+import { smsBlocksEmail } from "../sms/guard";
 import { randomUUID } from "node:crypto";
 import { prisma } from "../prisma";
 import { pilot, importRegistryPage, enrichNext, auditNext } from "./discovery";
@@ -149,12 +150,14 @@ export async function sendNext(now = new Date(), send: Deliver = deliver) {
       }
     }
     const claimed = await prisma.$transaction(async (tx) => {
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext('flexweb-sms-channel'))`;
       await tx.$queryRaw`SELECT id FROM "OutreachLead" WHERE id=${lead.id} FOR UPDATE`;
       const fresh = await tx.outreachLead.findUniqueOrThrow({
         where: { id: lead.id },
         include: { campaign: true },
       });
       if (
+        (await smsBlocksEmail(tx, fresh)) ||
         fresh.updatedAt.getTime() !== lead.updatedAt.getTime() ||
         fresh.email !== lead.email ||
         fresh.stoppedAt ||

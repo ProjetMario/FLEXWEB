@@ -102,6 +102,76 @@ model OutreachEvent {
   @@index([leadId, createdAt])
 }
 
+// SMS is a separate channel: a public phone number is not an SMS approval.
+model SmsAutomationSettings {
+  id String @id @default("onoff")
+  enabled Boolean @default(false)
+  sender String
+  webhookKeyHash String?
+  dispatchKeyHash String?
+  webhookVerifiedAt DateTime?
+  dispatchVerifiedAt DateTime?
+  lastWebhookAt DateTime?
+  dailyLimit Int @default(5)
+  updatedAt DateTime @updatedAt
+}
+
+model SmsOutreachContact {
+  id String @id @default(uuid())
+  leadId String? @unique
+  companyName String
+  city String
+  phone String @unique
+  sourceUrl String
+  websiteCheckUrl String
+  websiteFinding String @default("TO_CHECK")
+  checkedAt DateTime?
+  contactBasis String @default("TO_CHECK")
+  evidence String? @db.Text
+  reviewedBy String?
+  stoppedAt DateTime?
+  stopReason String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  messages SmsOutreachMessage[]
+  events SmsOutreachEvent[]
+}
+
+model SmsOutreachMessage {
+  id String @id @default(uuid())
+  contactId String @unique
+  body String @db.Text
+  status String @default("DRAFT")
+  approvedAt DateTime?
+  approvedBy String?
+  attemptedAt DateTime?
+  sentAt DateTime?
+  dispatchRequestHash String? @unique
+  providerEventId String? @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  contact SmsOutreachContact @relation(fields: [contactId], references: [id], onDelete: Restrict)
+  @@index([status, approvedAt])
+}
+
+model SmsOutreachEvent {
+  id String @id @default(uuid())
+  contactId String
+  externalId String? @unique
+  kind String
+  detail String @db.Text
+  occurredAt DateTime @default(now())
+  createdAt DateTime @default(now())
+  contact SmsOutreachContact @relation(fields: [contactId], references: [id], onDelete: Restrict)
+  @@index([contactId, createdAt])
+}
+
+model SmsSuppression {
+  phoneHash String @id
+  reason String
+  createdAt DateTime @default(now())
+}
+
 datasource db {
   provider = "postgresql"
 }

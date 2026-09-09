@@ -14,7 +14,7 @@
       "content": [
         "Les informations que vous nous fournissez comprennent : nom, entreprise, activité, ville, e-mail, téléphone, besoin, offre choisie, brief, contenus à publier, validations de proposition et demandes de support. Les liens privés permettent de consulter et suivre votre projet.",
         "Les informations collectées automatiquement incluent : pages visitées, durée de navigation, adresse IP, type de navigateur, système d'exploitation, cookies et source de trafic.",
-        "Pour notre prospection auprès des professionnels, nous consultons l’Annuaire des entreprises et l’annuaire RGE de l’ADEME. Nous retenons les informations publiques utiles : identité de l’entreprise, SIREN/SIRET, activité, commune, site, coordonnées professionnelles et source. Un contrôle technique limité aux pages publiques peut préparer un diagnostic, relu avant contact."
+        "Pour notre prospection auprès des professionnels, nous consultons l’Annuaire des entreprises, l’annuaire RGE de l’ADEME et les fiches professionnelles publiques trouvées sur Google. Nous retenons les informations publiques utiles : identité de l’entreprise, SIREN/SIRET, activité, commune, site, coordonnées professionnelles et source. Un contrôle technique limité aux pages publiques peut préparer un diagnostic, relu avant contact."
       ]
     },
     {
@@ -28,7 +28,7 @@
       "title": "4. Partage de vos informations",
       "content": [
         "Les demandes du parcours projet sont enregistrées dans notre plateforme de gestion. Netlify héberge le site et achemine les requêtes. Lorsque ces services sont activés, Stripe prend en charge le paiement et Brevo achemine les messages de suivi ; les données de carte sont saisies chez Stripe et ne sont pas stockées dans notre plateforme. Nous ne vendons pas vos données. Ne transmettez pas de données sensibles dans le brief ou le dossier de contenus.",
-        "IONOS héberge notre messagerie professionnelle et achemine les prises de contact validées. Notre plateforme vérifie les nouvelles réponses de la boîte de réception pour suspendre les relances. Elle conserve uniquement les métadonnées liées à cette prospection, sans copier les conversations étrangères à celle-ci ni le corps des e-mails. Les listes de contacts froids ne sont pas transférées à Brevo."
+        "IONOS héberge notre messagerie professionnelle et achemine les prises de contact validées. Notre plateforme vérifie les nouvelles réponses de la boîte de réception pour suspendre les relances. Elle conserve uniquement les métadonnées liées à cette prospection, sans copier les conversations étrangères à celle-ci ni le corps des e-mails. Les listes de contacts froids ne sont pas transférées à Brevo. Pour les SMS professionnels, Onoff Business achemine les messages et Zapier déclenche les envois validés depuis notre plateforme. Seuls le numéro expéditeur, le numéro destinataire et le texte validé sont transmis au scénario. Nous conservons les réponses SMS liées aux fiches de prospection pour assurer leur suivi et respecter les oppositions ; les conversations sans fiche correspondante ne sont pas enregistrées. Les échanges transitent par ces prestataires selon leurs garanties contractuelles de protection des données."
       ]
     },
     {

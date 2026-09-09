@@ -18,18 +18,51 @@ import {
 } from "lucide-react";
 
 const navItems = [
-  { href: "/admin/prospection/outreach", label: "Prospection locale", icon: Megaphone },
-  { href: "/admin/prospection", label: "Tableau de bord", icon: LayoutDashboard },
-  { href: "/admin/prospection/automation", label: "Projets & automatisations", icon: UserCheck },
+  {
+    href: "/admin/prospection/sms",
+    label: "Prospection SMS",
+    icon: MessageSquareText,
+  },
+  {
+    href: "/admin/prospection/outreach",
+    label: "Prospection locale",
+    icon: Megaphone,
+  },
+  {
+    href: "/admin/prospection",
+    label: "Tableau de bord",
+    icon: LayoutDashboard,
+  },
+  {
+    href: "/admin/prospection/automation",
+    label: "Projets & automatisations",
+    icon: UserCheck,
+  },
   { href: "/admin/prospection/prospects", label: "Prospects", icon: Users },
   { href: "/admin/prospection/campaigns", label: "Campagnes", icon: Megaphone },
   { href: "/admin/prospection/follow-ups", label: "Relances", icon: Bell },
-  { href: "/admin/prospection/templates", label: "Templates SMS", icon: MessageSquareText },
-  { href: "/admin/prospection/appointments", label: "Rendez-vous", icon: Calendar },
+  {
+    href: "/admin/prospection/templates",
+    label: "Templates SMS",
+    icon: MessageSquareText,
+  },
+  {
+    href: "/admin/prospection/appointments",
+    label: "Rendez-vous",
+    icon: Calendar,
+  },
   { href: "/admin/prospection/quotes", label: "Devis", icon: FileText },
   { href: "/admin/prospection/clients", label: "Clients", icon: UserCheck },
-  { href: "/admin/prospection/statistics", label: "Statistiques", icon: BarChart3 },
-  { href: "/admin/prospection/import-export", label: "Import / Export", icon: ArrowLeftRight },
+  {
+    href: "/admin/prospection/statistics",
+    label: "Statistiques",
+    icon: BarChart3,
+  },
+  {
+    href: "/admin/prospection/import-export",
+    label: "Import / Export",
+    icon: ArrowLeftRight,
+  },
   { href: "/admin/prospection/settings", label: "Paramètres", icon: Settings },
 ];
 
@@ -47,7 +80,10 @@ export function AdminSidebar() {
 
       <nav className="flex-1 space-y-1 px-3 py-4">
         {navItems.map((item) => {
-          const active = pathname === item.href || (item.href !== "/admin/prospection" && pathname.startsWith(`${item.href}/`));
+          const active =
+            pathname === item.href ||
+            (item.href !== "/admin/prospection" &&
+              pathname.startsWith(`${item.href}/`));
           return (
             <Link
               key={item.href}
@@ -56,7 +92,7 @@ export function AdminSidebar() {
                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 active
                   ? "bg-slate-900 text-white"
-                  : "text-slate-400 hover:bg-slate-900 hover:text-white"
+                  : "text-slate-400 hover:bg-slate-900 hover:text-white",
               )}
             >
               <item.icon className="h-4 w-4" />
@@ -72,10 +108,22 @@ export function AdminSidebar() {
 export function AdminMobileNav() {
   const pathname = usePathname();
   return (
-    <nav aria-label="Navigation de gestion" className="flex gap-2 overflow-x-auto border-b bg-white p-3 lg:hidden dark:bg-slate-950">
+    <nav
+      aria-label="Navigation de gestion"
+      className="flex gap-2 overflow-x-auto border-b bg-white p-3 lg:hidden dark:bg-slate-950"
+    >
       {navItems.map((item) => (
-        <Link key={item.href} href={item.href} aria-current={pathname === item.href ? "page" : undefined}
-          className={cn("shrink-0 rounded-lg px-3 py-2 text-sm", pathname === item.href ? "bg-slate-900 text-white" : "border")}>{item.label}</Link>
+        <Link
+          key={item.href}
+          href={item.href}
+          aria-current={pathname === item.href ? "page" : undefined}
+          className={cn(
+            "shrink-0 rounded-lg px-3 py-2 text-sm",
+            pathname === item.href ? "bg-slate-900 text-white" : "border",
+          )}
+        >
+          {item.label}
+        </Link>
       ))}
     </nav>
   );

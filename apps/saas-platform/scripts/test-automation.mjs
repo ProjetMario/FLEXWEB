@@ -59,6 +59,7 @@ try {
   run("npx", ["prisma", "db", "push"]);
   run("npx", ["tsx", "--test", "tests/automation.test.ts"], "inherit");
   run("npx", ["tsx", "--test", "tests/outreach.test.ts"], "inherit");
+  run("npx", ["tsx", "--test", "tests/sms.test.ts"], "inherit");
 } catch (e) {
   console.error(e.stderr?.toString() || e.message);
   process.exitCode = 1;
