@@ -181,15 +181,19 @@ export default function StartProject() {
                   {o.id === "croissance"
                     ? " · Avec suivi de votre activité"
                     : ""}
+                  <span className="flow-note">À régler au démarrage</span>
                   <span className="flow-price">
-                    {o.monthlyCents
-                      ? `${money(o.monthlyCents)} HT/mois`
-                      : `${money(o.setupCents)} HT`}
+                    {money(o.setupCents + o.monthlyCents)} HT
                   </span>
                   <span className="flow-note">
                     {o.monthlyCents
-                      ? `+ ${money(o.setupCents)} HT de création`
-                      : "À partir de · paiement unique"}
+                      ? `${money(o.setupCents)} de création + ${money(o.monthlyCents)} pour le premier mois.`
+                      : "Paiement unique pour le site vitrine prévu dans cette offre."}
+                  </span>
+                  <span className="flow-note">
+                    {o.monthlyCents
+                      ? `Puis ${money(o.monthlyCents)} HT par mois.`
+                      : "Hébergement et maintenance en option."}
                   </span>
                   <ul className="flow-list">
                     {o.features.map((f) => (
@@ -288,13 +292,30 @@ export default function StartProject() {
         <aside className="flow-aside">
           <p className="flow-eyebrow">Votre sélection</p>
           <h2>{offer.name}</h2>
+          <p className="flow-note">À régler au démarrage</p>
           <p className="flow-price">
-            {money(offer.monthlyCents || offer.setupCents)} HT
-            {offer.monthlyCents ? "/mois" : ""}
+            {money(offer.setupCents + offer.monthlyCents)} HT
           </p>
-          {offer.monthlyCents > 0 && (
-            <p className="flow-note">Création : {money(offer.setupCents)} HT</p>
+          {offer.monthlyCents > 0 ? (
+            <>
+              <p className="flow-note">
+                {money(offer.setupCents)} de création +{" "}
+                {money(offer.monthlyCents)} pour le premier mois.
+              </p>
+              <p>
+                <strong>Puis {money(offer.monthlyCents)} HT par mois.</strong>
+              </p>
+              <p className="flow-note">La création est payée une seule fois.</p>
+            </>
+          ) : (
+            <p className="flow-note">
+              Paiement unique. Hébergement et maintenance en option.
+            </p>
           )}
+          <p className="flow-note">
+            Prix hors taxes. Les taxes et le total seront indiqués avant le
+            paiement.
+          </p>
           <ul className="flow-list">
             <li>Un interlocuteur en Savoie</li>
             <li>Un périmètre validé ensemble</li>
