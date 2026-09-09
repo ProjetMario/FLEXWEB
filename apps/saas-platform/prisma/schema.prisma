@@ -2,6 +2,106 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Prospecting is deliberately separate from opted-in Brevo customer messages.
+model OutreachCampaign {
+  id            String   @id @default(uuid())
+  key           String   @unique
+  name          String
+  enabled       Boolean  @default(false)
+  targetLimit   Int      @default(50)
+  registryPage  Int      @default(1)
+  exhausted     Boolean  @default(false)
+  dailyLimit    Int      @default(10)
+  lastRunAt     DateTime?
+  lastResult    String?
+  createdAt     DateTime @default(now())
+  leads         OutreachLead[]
+}
+
+model OutreachLead {
+  id               String   @id @default(uuid())
+  campaignId       String
+  siren            String
+  siret            String
+  companyName      String
+  city             String
+  postalCode       String
+  activityCode     String
+  registryUrl      String
+  sourceFetchedAt  DateTime @default(now())
+  contactSourceUrl String?
+  website          String?
+  email            String?
+  phone            String?
+  enrichmentState String   @default("PENDING")
+  auditState       String   @default("PENDING")
+  audit            Json?
+  score            Int      @default(0)
+  stage            String   @default("NEW")
+  approvedAt       DateTime?
+  approvedBy       String?
+  firstSentAt      DateTime?
+  lastSentAt       DateTime?
+  stoppedAt        DateTime?
+  stopReason       String?
+  prospectId       String?
+  appointmentId    String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  campaign         OutreachCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  messages         OutreachMessage[]
+  events           OutreachEvent[]
+
+  @@unique([campaignId, siren])
+  @@index([campaignId, enrichmentState, auditState])
+  @@index([email])
+}
+
+model OutreachMessage {
+  id           String   @id @default(uuid())
+  leadId       String
+  step         Int
+  subject      String
+  text         String   @db.Text
+  status       String   @default("DRAFT")
+  attemptedAt  DateTime?
+  sentAt       DateTime?
+  messageId    String   @unique
+  lastError    String?
+  lead         OutreachLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  @@unique([leadId, step])
+  @@index([status, attemptedAt])
+}
+
+model OutreachSuppression {
+  emailHash String @id
+  reason    String
+  createdAt DateTime @default(now())
+}
+
+model OutreachMailbox {
+  id          String @id @default("ionos")
+  uidValidity String?
+  lastUid     Int @default(0)
+  syncedAt    DateTime?
+  verifiedAt  DateTime?
+  lastError   String?
+  needsReview Boolean @default(false)
+  lockedUntil DateTime @default(now())
+  lockToken   String?
+}
+
+model OutreachEvent {
+  id          String @id @default(uuid())
+  leadId      String?
+  externalId  String? @unique
+  type        String
+  detail      String
+  createdAt   DateTime @default(now())
+  lead        OutreachLead? @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  @@index([leadId, createdAt])
+}
+
 datasource db {
   provider = "postgresql"
 }
