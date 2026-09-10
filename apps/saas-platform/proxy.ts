@@ -20,6 +20,7 @@ export default auth((req) => {
     pathname.startsWith("/sites/") ||
     pathname === "/.well-known/flexweb-site" ||
     pathname.startsWith("/.netlify/identity") ||
+    pathname.startsWith("/.netlify/functions/") ||
     pathname.startsWith("/identity-emails/") ||
     pathname === "/api/sms/dispatch" ||
     pathname === "/api/sms/onoff" ||
@@ -69,5 +70,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico|assets).*)"],
+  matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico|assets|\\.netlify/functions/).*)"],
 };
