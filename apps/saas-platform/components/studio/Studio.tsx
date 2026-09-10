@@ -11,13 +11,20 @@ import {
   updateUser,
 } from "@netlify/identity";
 import SiteView from "./SiteView";
+import {
+  StudioInspiration,
+  StudioJourney,
+  StudioProgress,
+  PublicationOffer,
+} from "./StudioDesign";
+import styles from "./StudioDesign.module.css";
 import type { Brief, Draft } from "@/lib/studio/core";
 const input =
   "mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none";
 const button =
   "rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold disabled:opacity-40 hover:bg-slate-50";
 const primary =
-  "rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white disabled:opacity-40 hover:bg-blue-800";
+  "rounded-xl bg-blue-700 px-5 py-3 text-sm font-semibold text-white shadow-sm shadow-blue-900/10 disabled:opacity-40 hover:bg-blue-800";
 const empty: Brief = {
   company: "",
   activity: "",
@@ -253,7 +260,7 @@ export default function Studio() {
         !!s.pastDueAt &&
         new Date().getTime() < new Date(s.pastDueAt).getTime() + 7 * 86400000));
   return (
-    <div className="min-h-screen bg-[#f4f6fa] text-slate-900">
+    <div className={styles.shell + " min-h-screen"}>
       <header className="sticky top-0 z-20 border-b bg-white/95 px-5 py-4 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
           <a href="https://flex-web.fr" className="font-bold tracking-tight">
@@ -305,165 +312,181 @@ export default function Studio() {
         {!loaded ? (
           <p className="py-20 text-center">Ouverture de votre espace…</p>
         ) : !status || mode === "reset" ? (
-          <div className="grid items-start gap-10 py-8 lg:grid-cols-2 lg:py-16">
-            <section>
-              <p className="mb-4 text-xs font-bold uppercase tracking-[.2em] text-blue-700">
-                Votre entreprise. Votre site.
-              </p>
-              <h1 className="max-w-xl text-4xl font-semibold leading-tight tracking-tight md:text-6xl">
-                Un site à votre image.
-                <br />
-                <span className="text-slate-400">À votre rythme.</span>
-              </h1>
-              <p className="mt-6 max-w-lg text-lg leading-relaxed text-slate-600">
-                Présentez votre activité, laissez l’IA vous proposer les textes
-                et ajustez votre site avant de le publier.
-              </p>
-              <ul className="mt-8 space-y-3 text-sm">
-                <li>✓ Aperçu privé pendant 14 jours, sans carte bancaire</li>
-                <li>✓ Trois générations IA pour préparer votre site</li>
-                <li>✓ Publication à 49 € HT/mois, sans frais de création</li>
-              </ul>
-              <p className="mt-6 text-sm text-slate-500">
-                Un site vitrine de cinq pages. Vous gardez la main sur les
-                contenus.
-              </p>
-            </section>
-            <form
-              className="rounded-3xl border bg-white p-7 shadow-sm md:p-9"
-              onSubmit={async (e) => {
-                e.preventDefault();
-                setBusy(true);
-                setError("");
-                setMessage("");
-                const f = new FormData(e.currentTarget),
-                  email = String(f.get("email") || ""),
-                  password = String(f.get("password") || "");
-                try {
-                  if (mode === "recovery") {
-                    await requestPasswordRecovery(email);
-                    setMessage(
-                      "Si ce compte existe, un e-mail permet de réinitialiser son accès.",
-                    );
-                  } else if (mode === "reset") {
-                    await updateUser({ password });
-                    setMode("login");
-                    await refresh();
-                  } else if (mode === "signup") {
-                    const u = await signup(email, password, {
-                      full_name: String(f.get("name") || ""),
-                    });
-                    if (!u.confirmedAt)
+          <>
+            <div className={styles.authGrid}>
+              <StudioInspiration onStart={() => setMode("signup")} />
+              <form
+                id="studio-account"
+                className={styles.account}
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  setBusy(true);
+                  setError("");
+                  setMessage("");
+                  const f = new FormData(e.currentTarget),
+                    email = String(f.get("email") || ""),
+                    password = String(f.get("password") || "");
+                  try {
+                    if (mode === "recovery") {
+                      await requestPasswordRecovery(email);
                       setMessage(
-                        "Consultez votre boîte e-mail et confirmez votre adresse pour ouvrir votre espace.",
+                        "Si ce compte existe, un e-mail permet de réinitialiser son accès.",
                       );
-                    else await refresh();
-                  } else {
-                    await login(email, password);
-                    await refresh();
+                    } else if (mode === "reset") {
+                      await updateUser({ password });
+                      setMode("login");
+                      await refresh();
+                    } else if (mode === "signup") {
+                      const u = await signup(email, password, {
+                        full_name: String(f.get("name") || ""),
+                      });
+                      if (!u.confirmedAt)
+                        setMessage(
+                          "Consultez votre boîte e-mail et confirmez votre adresse pour ouvrir votre espace.",
+                        );
+                      else await refresh();
+                    } else {
+                      await login(email, password);
+                      await refresh();
+                    }
+                  } catch (e) {
+                    setError(
+                      e instanceof Error ? e.message : "Connexion impossible.",
+                    );
+                  } finally {
+                    setBusy(false);
                   }
-                } catch (e) {
-                  setError(
-                    e instanceof Error ? e.message : "Connexion impossible.",
-                  );
-                } finally {
-                  setBusy(false);
-                }
-              }}
-            >
-              <h2 className="text-2xl font-semibold">
-                {mode === "signup"
-                  ? "Créer mon espace gratuit"
-                  : mode === "login"
-                    ? "Retrouver mon site"
-                    : mode === "reset"
-                      ? "Nouveau mot de passe"
-                      : "Récupérer mon accès"}
-              </h2>
-              <div className="mt-6 space-y-4">
+                }}
+              >
                 {mode === "signup" && (
-                  <label className="block text-sm">
-                    Votre nom
-                    <input
-                      className={input}
-                      name="name"
-                      required
-                      autoComplete="name"
-                    />
-                  </label>
+                  <p className={styles.accountBadge}>
+                    14 jours pour explorer · Sans carte bancaire
+                  </p>
                 )}
-                {mode !== "reset" && (
-                  <label className="block text-sm">
-                    Adresse e-mail professionnelle
-                    <input
-                      className={input}
-                      name="email"
-                      type="email"
-                      required
-                      autoComplete="email"
-                    />
-                  </label>
-                )}
-                {mode !== "recovery" && (
-                  <label className="block text-sm">
-                    Mot de passe
-                    <input
-                      className={input}
-                      name="password"
-                      type="password"
-                      minLength={10}
-                      required
-                      autoComplete={
-                        mode === "login" ? "current-password" : "new-password"
-                      }
-                    />
-                  </label>
-                )}
-                {mode === "signup" && (
-                  <label className="flex gap-2 text-xs leading-relaxed">
-                    <input type="checkbox" required />
-                    Je crée cet espace pour mon entreprise et j’accepte les{" "}
-                    <a
-                      href="/studio/conditions"
-                      className="underline"
-                      target="_blank"
-                    >
-                      conditions de l’essai
-                    </a>
-                    .
-                  </label>
-                )}
-                <button className={primary + " w-full"} disabled={busy}>
-                  {busy
-                    ? "Un instant…"
-                    : mode === "signup"
-                      ? "Commencer gratuitement"
-                      : mode === "login"
-                        ? "Me connecter"
-                        : mode === "reset"
-                          ? "Enregistrer"
-                          : "Recevoir un lien"}
-                </button>
-              </div>
-              <div className="mt-5 flex flex-wrap gap-4 text-sm text-slate-500">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setMode(mode === "signup" ? "login" : "signup")
-                  }
-                >
+                <h2 className="text-2xl font-semibold">
                   {mode === "signup"
-                    ? "J’ai déjà un compte"
-                    : "Créer un compte"}
-                </button>
-                <button type="button" onClick={() => setMode("recovery")}>
-                  Mot de passe oublié
-                </button>
-              </div>
-            </form>
-          </div>
+                    ? "Votre site commence ici."
+                    : mode === "login"
+                      ? "Retrouver mon site"
+                      : mode === "reset"
+                        ? "Nouveau mot de passe"
+                        : "Récupérer mon accès"}
+                </h2>
+                <p className={styles.accountIntro}>
+                  {mode === "signup"
+                    ? "Créez votre compte. Votre premier aperçu restera privé : vous seul décidez de sa mise en ligne."
+                    : mode === "login"
+                      ? "Vos idées et votre brouillon vous attendent."
+                      : "Retrouvez votre espace en toute simplicité."}
+                </p>
+                <div className="mt-6 space-y-4">
+                  {mode === "signup" && (
+                    <label className="block text-sm">
+                      Votre nom
+                      <input
+                        className={input}
+                        name="name"
+                        required
+                        autoComplete="name"
+                      />
+                    </label>
+                  )}
+                  {mode !== "reset" && (
+                    <label className="block text-sm">
+                      Adresse e-mail professionnelle
+                      <input
+                        className={input}
+                        name="email"
+                        type="email"
+                        required
+                        autoComplete="email"
+                      />
+                    </label>
+                  )}
+                  {mode !== "recovery" && (
+                    <label className="block text-sm">
+                      Mot de passe
+                      <input
+                        className={input}
+                        name="password"
+                        type="password"
+                        minLength={10}
+                        required
+                        autoComplete={
+                          mode === "login" ? "current-password" : "new-password"
+                        }
+                      />
+                    </label>
+                  )}
+                  {mode === "signup" && (
+                    <label className="block text-xs leading-relaxed text-slate-600">
+                      <input
+                        type="checkbox"
+                        required
+                        className="mr-2 align-middle"
+                      />
+                      Je crée cet espace pour mon entreprise et j’accepte les{" "}
+                      <a
+                        href="/studio/conditions"
+                        className="underline"
+                        target="_blank"
+                      >
+                        conditions de l’essai
+                      </a>
+                      .
+                    </label>
+                  )}
+                  <button className={primary + " w-full"} disabled={busy}>
+                    {busy
+                      ? "Un instant…"
+                      : mode === "signup"
+                        ? "Créer mon aperçu gratuit →"
+                        : mode === "login"
+                          ? "Me connecter"
+                          : mode === "reset"
+                            ? "Enregistrer"
+                            : "Recevoir un lien"}
+                  </button>
+                </div>
+                {mode === "signup" && (
+                  <>
+                    <p className={styles.accountNote}>
+                      0 € aujourd’hui. Aucun prélèvement automatique à la fin de
+                      l’essai.
+                    </p>
+                    <div className={styles.accountDetails}>
+                      <span>Cinq pages pour présenter votre activité</span>
+                      <span>Trois générations IA incluses dans l’essai</span>
+                      <span>Vos textes et vos images restent modifiables</span>
+                    </div>
+                    <p className={styles.pilot}>
+                      Accès pilote : la création est actuellement réservée aux
+                      comptes invités. Contact : contact@flex-web.fr.
+                    </p>
+                  </>
+                )}
+                <div className="mt-5 flex flex-wrap gap-4 text-sm text-slate-500">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setMode(mode === "signup" ? "login" : "signup")
+                    }
+                  >
+                    {mode === "signup"
+                      ? "J’ai déjà un compte"
+                      : "Créer un compte"}
+                  </button>
+                  <button type="button" onClick={() => setMode("recovery")}>
+                    Mot de passe oublié
+                  </button>
+                </div>
+              </form>
+            </div>
+            <StudioJourney onStart={() => setMode("signup")} />
+          </>
         ) : !s ? (
           <section className="mx-auto max-w-3xl">
+            <StudioProgress step={0} />
             <p className="text-sm text-blue-700">
               Étape 1 · Présentez votre entreprise
             </p>
@@ -559,6 +582,16 @@ export default function Studio() {
                 </button>
               </div>
             </div>
+            <StudioProgress
+              step={
+                tab === "entreprise"
+                  ? 0
+                  : ["publication", "facturation"].includes(tab)
+                    ? 2
+                    : 1
+              }
+              onStep={setTab}
+            />
             <nav
               className="mb-6 flex gap-2 overflow-x-auto"
               aria-label="Espace client"
@@ -596,10 +629,16 @@ export default function Studio() {
               <section className="space-y-5 rounded-2xl border bg-white p-5 md:p-6">
                 {tab === "contenu" && draft && (
                   <>
-                    <h2 className="text-xl font-semibold">Votre contenu</h2>
+                    <p className="text-xs font-semibold uppercase tracking-widest text-blue-700">
+                      Votre atelier de création
+                    </p>
+                    <h2 className="text-xl font-semibold">
+                      Faites parler votre savoir-faire.
+                    </h2>
                     <p className="text-sm text-slate-500">
-                      Enregistrez avant de demander une retouche IA. Les
-                      informations non fournies ne doivent pas être inventées.
+                      Un premier texte ou une nouvelle tonalité ? Décrivez ce
+                      que vous souhaitez. Enregistrez vos modifications avant de
+                      lancer l’IA.
                     </p>
                     <textarea
                       className={input}
@@ -964,8 +1003,9 @@ export default function Studio() {
                 {tab === "publication" && (
                   <div className="mx-auto max-w-3xl space-y-6">
                     <h2 className="text-xl font-semibold">
-                      Du brouillon au site public
+                      Votre dernière étape avant la mise en ligne
                     </h2>
+                    {!isPaid && <PublicationOffer />}
                     <p className="text-slate-600">
                       Vérifiez les pages et les coordonnées dans l’aperçu. Les
                       sections vides sont masquées. Les informations légales
@@ -1140,6 +1180,7 @@ export default function Studio() {
                 )}
                 {tab === "facturation" && (
                   <div className="mx-auto max-w-3xl space-y-5">
+                    <PublicationOffer />
                     <h2 className="text-xl font-semibold">
                       Un abonnement simple
                     </h2>
@@ -1167,6 +1208,14 @@ export default function Studio() {
                         ? `Période payée jusqu’au ${date(s.paidThrough)}${s.cancelAtPeriodEnd ? " · résiliation programmée" : ""}`
                         : `Essai gratuit jusqu’au ${date(s.trialEndsAt)}`}
                     </p>
+                    {s.billingStatus === "UNPAID" && (
+                      <button
+                        className={primary}
+                        onClick={() => setTab("publication")}
+                      >
+                        Préparer ma mise en ligne →
+                      </button>
+                    )}
                     {s.billingStatus !== "UNPAID" && (
                       <button
                         className={button}
