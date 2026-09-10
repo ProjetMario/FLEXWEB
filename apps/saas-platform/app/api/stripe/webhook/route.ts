@@ -1,3 +1,4 @@
+import { applyStudioStripeEvent } from "@/lib/studio/payments";
 import { applyStripeEvent, stripeClient } from "@/lib/automation/payments";
 export const runtime = "nodejs";
 export async function POST(request: Request) {
@@ -17,7 +18,7 @@ export async function POST(request: Request) {
     return new Response("Invalid signature", { status: 400 });
   }
   try {
-    await applyStripeEvent(stripe, event);
+    if (!(await applyStudioStripeEvent(stripe, event))) await applyStripeEvent(stripe, event);
     return Response.json({ received: true });
   } catch {
     console.error("Stripe processing failed", event.id);

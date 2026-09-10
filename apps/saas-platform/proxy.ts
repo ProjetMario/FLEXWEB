@@ -15,6 +15,12 @@ export default auth((req) => {
     pathname.startsWith("/api/automation/") ||
     pathname.startsWith("/api/outreach/") ||
     pathname.startsWith("/api/crm/") ||
+    pathname.startsWith("/api/studio/") ||
+    pathname === "/studio" || pathname.startsWith("/studio/") ||
+    pathname.startsWith("/sites/") ||
+    pathname === "/.well-known/flexweb-site" ||
+    pathname.startsWith("/.netlify/identity") ||
+    pathname.startsWith("/identity-emails/") ||
     pathname === "/api/sms/dispatch" ||
     pathname === "/api/sms/onoff" ||
     pathname === "/api/stripe/webhook" ||

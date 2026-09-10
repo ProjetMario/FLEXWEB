@@ -1,3 +1,4 @@
+import { customStudio } from "@/lib/studio/public";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -9,6 +10,7 @@ export default async function PublicLayout({
 }: {
   children: React.ReactNode;
 }) {
+  if(await customStudio()) return <>{children}</>;
   const tenant = await getTenantFromRequest();
 
   if (!tenant) {

@@ -58,12 +58,13 @@ try {
   started = true;
   const migrations=join(cwd,"netlify/database/migrations");
   for(const name of readdirSync(migrations).sort())run("psql",[env.DATABASE_URL,"-X","-v","ON_ERROR_STOP=1","-f",join(migrations,name,"migration.sql")]);
-  if(process.argv[2]!=="crm"){
+  if(!["crm","studio"].includes(process.argv[2])){
     run("npx", ["tsx", "--test", "tests/automation.test.ts"], "inherit");
     run("npx", ["tsx", "--test", "tests/outreach.test.ts"], "inherit");
     run("npx", ["tsx", "--test", "tests/sms.test.ts"], "inherit");
   }
-  run("npx", ["tsx", "--test", "tests/crm.test.ts"], "inherit");
+  if(process.argv[2]!=="studio") run("npx", ["tsx", "--test", "tests/crm.test.ts"], "inherit");
+  if(process.argv[2]!=="crm") run("npx", ["tsx", "--test", "tests/studio.test.ts"], "inherit");
 } catch (e) {
   console.error(e.stderr?.toString() || e.message);
   process.exitCode = 1;

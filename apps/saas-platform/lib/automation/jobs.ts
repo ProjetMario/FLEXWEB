@@ -80,6 +80,7 @@ export async function runAutomation(transport: typeof fetch = fetch) {
     throw new Error("Configure a verified EMAIL_FROM before enabling mail");
   const messages = await prisma.automationMessage.findMany({
     where: {
+      NOT: [{dedupeKey:{startsWith:"studio:"}},{dedupeKey:{startsWith:"studio-inquiry:"}}],
       availableAt: { lte: now },
       OR: [
         { status: "PENDING" },

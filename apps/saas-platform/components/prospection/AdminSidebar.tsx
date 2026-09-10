@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 
 const navItems = [
+  {href:"/admin/prospection/studio",label:"Sites autonomes",icon:LayoutDashboard},
   {
     href: "/admin/prospection/inbox",
     label: "SMS & e-mails",

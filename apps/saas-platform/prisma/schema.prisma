@@ -268,6 +268,7 @@ model VerificationToken {
 }
 
 model Organization {
+  studioSites StudioSite[]
   id           String             @id @default(uuid())
   slug         String             @unique
   name         String
@@ -324,6 +325,7 @@ model Membership {
 }
 
 model Website {
+  studioSites StudioSite[]
   id            String   @id @default(uuid())
   organizationId String
   templateId     String?
@@ -776,6 +778,7 @@ model SmsTemplate {
 }
 
 model Prospect {
+  studioSites StudioSite[]
   id                String            @id @default(uuid())
   siren             String?           @unique
   siret             String?
@@ -1084,4 +1087,96 @@ model SupportTicket {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@index([projectId, status])
+}
+
+model StudioSite {
+  id String @id @default(uuid())
+  identityId String @unique
+  email String
+  organizationId String @unique
+  organization Organization @relation(fields: [organizationId], references: [id])
+  websiteId String @unique
+  website Website @relation(fields: [websiteId], references: [id])
+  prospectId String?
+  prospect Prospect? @relation(fields: [prospectId], references: [id])
+  slug String @unique
+  trialEndsAt DateTime
+  brief Json
+  draft Json
+  draftRevision Int @default(1)
+  published Json?
+  previousPublished Json?
+  approvedRevision Int?
+  state String @default("TRIAL")
+  stripeCustomerId String?
+  stripeSessionId String?
+  stripeSubscriptionId String? @unique
+  paidThrough DateTime?
+  pastDueAt DateTime?
+  cancelAtPeriodEnd Boolean @default(false)
+  billingStatus String @default("UNPAID")
+  publishedAt DateTime?
+  lastBillingCheck DateTime?
+  domain String? @unique
+  domainToken String?
+  domainState String @default("NONE")
+  domainError String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  jobs StudioJob[]
+  assets StudioAsset[]
+  inquiries StudioInquiry[]
+  events StudioEvent[]
+}
+model StudioJob {
+  id String @id @default(uuid())
+  siteId String
+  site StudioSite @relation(fields: [siteId], references: [id])
+  requestKey String @unique
+  kind String @default("GENERATE")
+  state String @default("PENDING")
+  input Json
+  baseRevision Int
+  quotaPeriod String
+  budgetPeriod String
+  reservedCents Int @default(10)
+  inputTokens Int @default(0)
+  outputTokens Int @default(0)
+  error String?
+  startedAt DateTime?
+  finishedAt DateTime?
+  createdAt DateTime @default(now())
+  @@index([state, createdAt])
+  @@index([siteId, quotaPeriod])
+}
+model StudioBudget {
+  period String @id
+  reservedCents Int @default(0)
+}
+model StudioAsset {
+  id String @id @default(uuid())
+  siteId String
+  site StudioSite @relation(fields: [siteId], references: [id])
+  key String @unique
+  bytes Int
+  state String @default("PENDING")
+  createdAt DateTime @default(now())
+}
+model StudioInquiry {
+  id String @id @default(uuid())
+  siteId String
+  site StudioSite @relation(fields: [siteId], references: [id])
+  name String
+  email String
+  message String @db.Text
+  createdAt DateTime @default(now())
+}
+model StudioEvent {
+  id String @id @default(uuid())
+  siteId String
+  site StudioSite @relation(fields: [siteId], references: [id])
+  key String @unique
+  kind String
+  detail String
+  createdAt DateTime @default(now())
 }

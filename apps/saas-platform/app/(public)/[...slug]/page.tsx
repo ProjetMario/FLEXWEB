@@ -1,3 +1,6 @@
+import { customStudio } from "@/lib/studio/public";
+import SiteView from "@/components/studio/SiteView";
+import type { Snapshot } from "@/lib/studio/core";
 import { notFound } from "next/navigation";
 import { getTenantFromRequest } from "@/lib/tenant";
 import { prisma } from "@/lib/prisma";
@@ -11,6 +14,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const tenant = await getTenantFromRequest();
   const { slug } = await params;
+  const studio = await customStudio();
+  if (studio) { const data=studio.published as unknown as Snapshot; return {title:data.brief.company,description:data.brief.description.slice(0,160)}; }
   const pageSlug = slug[0] ?? "";
 
   if (!tenant) return { title: "Site introuvable" };
@@ -38,6 +43,8 @@ export default async function PublicPage({
 }) {
   const tenant = await getTenantFromRequest();
   const { slug } = await params;
+  const studio = await customStudio();
+  if(studio) return <SiteView data={studio.published as unknown as Snapshot} siteId={studio.id} pageSlug={slug[0] || "accueil"}/>;
   const pageSlug = slug[0] ?? "";
 
   if (!tenant) {
