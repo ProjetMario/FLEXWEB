@@ -1,5 +1,4 @@
 import { randomUUID } from "node:crypto";
-import sharp from "sharp";
 import { getStore } from "@netlify/blobs";
 import { prisma } from "../prisma";
 import { HttpError } from "../automation/core";
@@ -11,6 +10,7 @@ export async function upload(identity: Identity, data: Uint8Array) {
     throw new HttpError(413, "Photo trop lourde : 4 Mo maximum.");
   const s = await ownSite(identity);
   if (!editable(s)) throw new HttpError(403, "Votre essai est terminé.");
+  const { default: sharp } = await import("sharp");
   const pipeline = sharp(data, { limitInputPixels: 16000000 });
   const metadata = await pipeline.metadata();
   if (!["jpeg", "png", "webp"].includes(metadata.format || ""))
