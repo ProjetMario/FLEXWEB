@@ -79,3 +79,22 @@ Netlify DB refuse de restaurer un déploiement ancien qui ne contient plus une
 migration déjà appliquée. Une version de secours doit donc également conserver
 toutes les migrations appliquées ; tester les versions dans une prévisualisation
 avant de déplacer la publication de production.
+
+Lors d’une construction macOS pour les fonctions Linux, inclure les dépendances
+optionnelles Linux x64 de Sharp (0.34.5 et libvips 1.2.4). Une installation
+native Linux les sélectionne automatiquement. Vérifier un téléversement réel
+après déploiement. Une republication sans compilation doit cibler
+`.netlify/static`, jamais les fichiers serveur de `.next`.
+
+## Recette pilote du 10 septembre 2026
+
+Vérifiés en production : connexion administrateur HTTP 200, studio HTTP 200,
+refus HTTP 401 des accès anonymes et jetons falsifiés, inscription avec
+confirmation reçue et validée, essai de 14 jours, cinq pages privées (HTTP 404
+publiquement), image convertie en WebP accessible uniquement au propriétaire,
+et une génération IA réelle terminée avec état DONE. Le compte de recette
+utilise contact@flex-web.fr ; le brouillon est explicitement un pilote privé.
+
+Stripe réel, domaine personnalisé et parcours complet de publication payée
+restent non validés. Les inscriptions générales et paiements sont désactivés.
+La page marketing est en prévisualisation Git dans la PR #7.
