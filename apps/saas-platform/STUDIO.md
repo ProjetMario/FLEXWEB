@@ -54,8 +54,8 @@ le service ne garantit ni un revenu ni l’absence totale de support.
 
 ## Vérification et ouverture
 
-`node scripts/test-automation.mjs` exécute 54 tests dans une base PostgreSQL
-locale isolée, dont 11 sur le parcours Autonome. `studio` sélectionne ces onze
+`node scripts/test-automation.mjs` exécute 55 tests dans une base PostgreSQL
+locale isolée, dont 12 sur le parcours Autonome. `studio` sélectionne ces douze
 tests uniquement. Ils couvrent les quotas concurrents, la séparation clients,
 les versions, l’expiration, la publication et Stripe avec un fournisseur simulé.
 

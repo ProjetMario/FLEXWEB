@@ -344,7 +344,29 @@ test("authoritative Stripe status publishes once, restores after recovery and re
     where: { id: site.id },
     data: { state: "SUSPENDED" },
   });
+  await prisma.website.update({ where: { id: site.websiteId }, data: { isPublished: false } });
   status = "active";
   await refreshSubscription(site.id, stripe);
   assert.equal((await ownSite(user)).state, "LIVE");
+  assert.equal((await prisma.website.findUniqueOrThrow({ where: { id: site.websiteId } })).isPublished, true);
+});
+
+test("a delayed checkout event cannot replace a newer subscription", async () => {
+  const { user, site } = await setup();
+  await prisma.studioSite.update({
+    where: { id: site.id },
+    data: { stripeSessionId: "cs_current", stripeSubscriptionId: "sub_current" },
+  });
+  const stripe = { subscriptions: { retrieve: async () => { throw Error("Stale checkout must not trigger subscription lookup"); } } } as unknown as Stripe;
+  const event = {
+    id: "evt_delayed", type: "checkout.session.completed",
+    data: { object: { object: "checkout.session", id: "cs_previous",
+      metadata: { studioSiteId: site.id }, payment_status: "paid",
+      subscription: "sub_previous", customer: "cus_previous" } },
+  } as unknown as Stripe.Event;
+  assert.equal(await applyStudioStripeEvent(stripe, event), true);
+  const current = await ownSite(user);
+  assert.equal(current.stripeSubscriptionId, "sub_current");
+  assert.equal(current.stripeSessionId, "cs_current");
+  assert.equal(current.state, "TRIAL");
 });

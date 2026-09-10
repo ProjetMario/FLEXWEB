@@ -141,6 +141,14 @@ export async function refreshSubscription(
       const through = Math.max(
         ...sub.items.data.map((i) => i.current_period_end || 0),
       );
+      const restore = state === "ACTIVE" && through * 1000 > Date.now() &&
+        !!s.published && s.state === "SUSPENDED";
+      if (restore) {
+        await tx.website.update({
+          where: { id: s.websiteId },
+          data: { isPublished: true },
+        });
+      }
       await crmLock(tx);
       if (s.prospectId && state === "ACTIVE") {
         const p = await tx.prospect.findUniqueOrThrow({
@@ -160,17 +168,13 @@ export async function refreshSubscription(
           pastDueAt: state === "PAST_DUE" ? s.pastDueAt || new Date() : null,
           cancelAtPeriodEnd: sub.cancel_at_period_end,
           lastBillingCheck: new Date(),
+          ...(restore ? { state: "LIVE" } : {}),
         },
       });
     },
     { timeout: 20000 },
   );
   if (updated.billingStatus === "ACTIVE") {
-    if (updated.published && updated.state === "SUSPENDED")
-      await prisma.studioSite.update({
-        where: { id },
-        data: { state: "LIVE" },
-      });
     if (
       !updated.published &&
       updated.approvedRevision === updated.draftRevision
@@ -217,10 +221,11 @@ export async function applyStudioStripeEvent(
         ? object.subscription
         : object.subscription?.id;
     if (!subscriptionId) throw Error("Missing subscription");
-    await prisma.$transaction(async (tx) => {
+    const currentSession = await prisma.$transaction(async (tx) => {
       await lockSite(tx, id!);
       const s = await tx.studioSite.findUniqueOrThrow({ where: { id } });
-      if (s.stripeSessionId !== object.id) throw Error("Checkout mismatch");
+      // A signed event for a previous checkout must not replace the current subscription.
+      if (s.stripeSessionId !== object.id) return false;
       await tx.studioSite.update({
         where: { id },
         data: {
@@ -231,7 +236,9 @@ export async function applyStudioStripeEvent(
               : object.customer?.id,
         },
       });
+      return true;
     });
+    if (!currentSession) return true;
   } else if (object.object === "subscription") {
     id = object.metadata.studioSiteId;
   } else if (object.object === "invoice") {
