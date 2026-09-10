@@ -98,3 +98,17 @@ utilise contact@flex-web.fr ; le brouillon est explicitement un pilote privé.
 Stripe réel, domaine personnalisé et parcours complet de publication payée
 restent non validés. Les inscriptions générales et paiements sont désactivés.
 La page marketing est en prévisualisation Git dans la PR #7.
+
+## Design du studio
+
+La page d’inscription présente trois exemples illustratifs interactifs, les
+conditions de l’essai et une offre détaillée. Un parcours en trois étapes guide
+l’entreprise vers ses contenus, son style et sa publication. Le prix reste
+49 € HT/mois ; aucun paiement n’est activé par ces changements visuels.
+
+Rendu vérifié sur ordinateur et à 390 px de largeur : changement d’exemple,
+accès direct au formulaire sur mobile et lisibilité des conditions. TypeScript,
+lint ciblé et compilation Next réussis. La prévisualisation contrôlée
+`6aa2799257a49b7884db9338` a été publiée sur la plateforme le 10 septembre 2026.
+Après publication : studio et connexion HTTP 200, API privée HTTP 401 pour les
+visiteurs anonymes et les jetons falsifiés, modèle de confirmation HTTP 200.
