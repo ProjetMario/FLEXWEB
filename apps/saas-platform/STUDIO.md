@@ -64,3 +64,18 @@ génération réelle, upload, confidentialité ; puis Stripe en mode test avec
 paiement, répétition des webhooks, impayé et résiliation. Ces tests ne remplacent
 pas le raccordement et la validation des comptes externes. Passer ensuite aux
 clés réelles et ouvrir les inscriptions seulement après réussite de ces étapes.
+
+## Déploiement
+
+La plateforme et la vitrine sont deux projets Netlify distincts. Construire la
+plateforme depuis son répertoire isolé pour éviter la configuration Astro de la
+racine. Ne pas utiliser de lien symbolique externe pour `node_modules` : le
+paquet de routage Next peut contenir des chemins locaux inutilisables en ligne.
+Utiliser une installation locale au répertoire de construction. La commande
+de build supprime uniquement le cache Webpack après compilation pour limiter
+l’espace disque nécessaire à l’empaquetage.
+
+Netlify DB refuse de restaurer un déploiement ancien qui ne contient plus une
+migration déjà appliquée. Une version de secours doit donc également conserver
+toutes les migrations appliquées ; tester les versions dans une prévisualisation
+avant de déplacer la publication de production.
