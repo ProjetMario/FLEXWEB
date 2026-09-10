@@ -45,6 +45,7 @@ model OutreachLead {
   stoppedAt        DateTime?
   stopReason       String?
   prospectId       String?
+  prospect         Prospect? @relation(fields: [prospectId], references: [id], onDelete: SetNull)
   appointmentId    String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
@@ -55,6 +56,8 @@ model OutreachLead {
   @@unique([campaignId, siren])
   @@index([campaignId, enrichmentState, auditState])
   @@index([email])
+  @@index([prospectId])
+  @@index([phone])
 }
 
 model OutreachMessage {
@@ -116,8 +119,19 @@ model SmsAutomationSettings {
   updatedAt DateTime @updatedAt
 }
 
+model CrmMessageTemplate {
+  id String @id @default(uuid())
+  name String
+  channel String
+  subject String?
+  body String @db.Text
+  updatedAt DateTime @updatedAt
+}
+
 model SmsOutreachContact {
   id String @id @default(uuid())
+  prospectId String? @unique
+  prospect Prospect? @relation(fields: [prospectId], references: [id], onDelete: SetNull)
   leadId String? @unique
   companyName String
   city String
@@ -763,6 +777,19 @@ model SmsTemplate {
 
 model Prospect {
   id                String            @id @default(uuid())
+  siren             String?           @unique
+  siret             String?
+  importKey         String?           @unique
+  importBatch       String?
+  sourceUrl         String?
+  sourceCheckedAt   DateTime?
+  registryState     String?
+  websiteFinding    String            @default("TO_CHECK")
+  websiteEvidence   String?           @db.Text
+  websiteCheckedAt  DateTime?
+  preferredChannel  String            @default("NONE")
+  doNotContactAt    DateTime?
+  stopReason        String?
   companyName       String
   contactName       String?
   phone             String
@@ -799,17 +826,24 @@ model Prospect {
   followUps    FollowUp[]
   appointments Appointment[]
   notes        ProspectNote[]
+  emailLeads   OutreachLead[]
+  smsContact   SmsOutreachContact?
 
   @@index([status])
   @@index([city])
   @@index([businessType])
   @@index([nextFollowUpAt])
   @@index([campaignId])
+  @@index([importBatch])
+  @@index([department, websiteFinding])
+  @@index([email])
+  @@index([phone])
   @@unique([phone, companyName])
 }
 
 model ProspectInteraction {
   id          String          @id @default(uuid())
+  externalKey String?         @unique
   prospectId  String
   prospect    Prospect        @relation(fields: [prospectId], references: [id], onDelete: Cascade)
   type        InteractionType

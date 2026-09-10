@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/prospection/auth";
 import { prisma } from "@/lib/prisma";
+import { crmLock, stopCrmSequences } from "@/lib/prospection/crm-service";
 import { InteractionType, ProspectionStatus } from "@prisma/client";
 
 const statusUpdateSchema = z.object({
@@ -23,31 +24,63 @@ export async function updateProspectStatus(formData: FormData) {
 
   const { prospectId, status, note } = parsed.data;
 
-  const prospect = await prisma.prospect.findUnique({ where: { id: prospectId } });
+  const prospect = await prisma.prospect.findUnique({
+    where: { id: prospectId },
+  });
   if (!prospect) {
     return { ok: false, error: "Prospect introuvable" };
   }
 
   const oldStatus = prospect.status;
 
-  await prisma.prospect.update({
-    where: { id: prospectId },
-    data: {
-      status,
-      lastInteractionAt: new Date(),
-      signedValue: status === "CLIENT_SIGNE" ? prospect.estimatedValue ?? null : prospect.signedValue,
-    },
-  });
+  await prisma.$transaction(async (tx) => {
+    await crmLock(tx);
+    const fresh = await tx.prospect.findUniqueOrThrow({
+      where: { id: prospectId },
+    });
+    if (
+      fresh.doNotContactAt &&
+      status !== "PAS_INTERESSE" &&
+      status !== "CLIENT_SIGNE"
+    )
+      throw Error("Cette entreprise a demandé à ne plus être contactée.");
+    if (
+      ![
+        "NOUVEAU",
+        "A_CONTACTER",
+        "SANS_REPONSE",
+        "SMS_ENVOYE",
+        "A_RELANCER",
+      ].includes(status)
+    )
+      await stopCrmSequences(
+        tx,
+        prospectId,
+        `CRM_${status}`,
+        status === "PAS_INTERESSE",
+      );
+    await tx.prospect.update({
+      where: { id: prospectId },
+      data: {
+        status,
+        lastInteractionAt: new Date(),
+        signedValue:
+          status === "CLIENT_SIGNE"
+            ? (prospect.estimatedValue ?? null)
+            : prospect.signedValue,
+      },
+    });
 
-  await prisma.prospectInteraction.create({
-    data: {
-      prospectId,
-      type: InteractionType.STATUT_MODIFIE,
-      note: note || `Statut mis à jour par ${user.email}`,
-      oldStatus,
-      newStatus: status,
-      createdById: user.id,
-    },
+    await tx.prospectInteraction.create({
+      data: {
+        prospectId,
+        type: InteractionType.STATUT_MODIFIE,
+        note: note || `Statut mis à jour par ${user.email}`,
+        oldStatus,
+        newStatus: status,
+        createdById: user.id,
+      },
+    });
   });
 
   revalidatePath(`/admin/prospection/prospects/${prospectId}`);
@@ -71,7 +104,9 @@ export async function addInteraction(formData: FormData) {
 
   const { prospectId, type, note } = parsed.data;
 
-  const prospect = await prisma.prospect.findUnique({ where: { id: prospectId } });
+  const prospect = await prisma.prospect.findUnique({
+    where: { id: prospectId },
+  });
   if (!prospect) {
     return { ok: false, error: "Prospect introuvable" };
   }

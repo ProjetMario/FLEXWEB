@@ -14,6 +14,7 @@ export default auth((req) => {
     pathname.startsWith("/api/auth") ||
     pathname.startsWith("/api/automation/") ||
     pathname.startsWith("/api/outreach/") ||
+    pathname.startsWith("/api/crm/") ||
     pathname === "/api/sms/dispatch" ||
     pathname === "/api/sms/onoff" ||
     pathname === "/api/stripe/webhook" ||
@@ -27,7 +28,8 @@ export default auth((req) => {
   }
 
   const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN;
-  const isDashboard = !rootDomain || host === rootDomain || host === `www.${rootDomain}`;
+  const isDashboard =
+    !rootDomain || host === rootDomain || host === `www.${rootDomain}`;
 
   if (isDashboard) {
     // Dashboard routes require authentication

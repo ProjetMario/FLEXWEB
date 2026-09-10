@@ -37,6 +37,9 @@ beforeEach(async () => {
   await prisma.smsOutreachEvent.deleteMany();
   await prisma.smsOutreachMessage.deleteMany();
   await prisma.smsOutreachContact.deleteMany();
+  await prisma.prospect.deleteMany({
+    where: { source: "Prospection SMS / e-mail" },
+  });
   await prisma.smsSuppression.deleteMany();
   await prisma.smsAutomationSettings.deleteMany();
   keys = await createConnectionKeys();

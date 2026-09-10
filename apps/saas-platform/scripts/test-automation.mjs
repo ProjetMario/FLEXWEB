@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, rmSync, readdirSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -56,10 +56,14 @@ try {
     "start",
   ]);
   started = true;
-  run("npx", ["prisma", "db", "push"]);
-  run("npx", ["tsx", "--test", "tests/automation.test.ts"], "inherit");
-  run("npx", ["tsx", "--test", "tests/outreach.test.ts"], "inherit");
-  run("npx", ["tsx", "--test", "tests/sms.test.ts"], "inherit");
+  const migrations=join(cwd,"netlify/database/migrations");
+  for(const name of readdirSync(migrations).sort())run("psql",[env.DATABASE_URL,"-X","-v","ON_ERROR_STOP=1","-f",join(migrations,name,"migration.sql")]);
+  if(process.argv[2]!=="crm"){
+    run("npx", ["tsx", "--test", "tests/automation.test.ts"], "inherit");
+    run("npx", ["tsx", "--test", "tests/outreach.test.ts"], "inherit");
+    run("npx", ["tsx", "--test", "tests/sms.test.ts"], "inherit");
+  }
+  run("npx", ["tsx", "--test", "tests/crm.test.ts"], "inherit");
 } catch (e) {
   console.error(e.stderr?.toString() || e.message);
   process.exitCode = 1;

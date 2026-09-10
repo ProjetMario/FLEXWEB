@@ -70,7 +70,7 @@ export const textSchema = z
     "Le message doit identifier FLEX-WEB, inclure STOP et le lien flex-web.fr/privacy/.",
   );
 export function defaultSms(company: string) {
-  return `Bonjour, Mario de FLEX-WEB. J'ai trouve ${company.slice(0, 50)} sur Google. Un site pour presenter vos realisations et recevoir des demandes de devis vous serait-il utile ? Infos : flex-web.fr/privacy/ Repondez STOP pour ne plus etre contacte.`;
+  return `Bonjour, Mario de FLEX-WEB. Pour ${company.slice(0, 50)}, un site presentant vos realisations et facilitant les demandes de devis serait-il utile ? Infos : flex-web.fr/privacy/ Repondez STOP pour ne plus etre contacte.`;
 }
 export function isOpposition(body: string) {
   const t = body

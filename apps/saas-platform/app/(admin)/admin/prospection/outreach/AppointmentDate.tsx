@@ -1,11 +1,15 @@
 "use client";
 import { useState } from "react";
-export default function AppointmentDate() {
+export default function AppointmentDate({
+  label = "Date du rendez-vous",
+}: {
+  label?: string;
+}) {
   const [value, setValue] = useState("");
   const date = value ? new Date(value) : null;
   return (
     <label className="block text-sm">
-      Date du rendez-vous (heure de cet appareil)
+      {label} (heure de cet appareil)
       <input
         type="datetime-local"
         value={value}

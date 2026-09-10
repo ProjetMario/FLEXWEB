@@ -1,4 +1,9 @@
 import { prisma } from "../prisma";
+import {
+  crmBlocksChannel,
+  ensureCrmProspect,
+  recordCrmEvent,
+} from "../prospection/crm-service";
 import { z } from "zod";
 import type { Prisma } from "@prisma/client";
 import { randomBytes } from "node:crypto";
@@ -78,26 +83,38 @@ export async function addContact(form: FormData) {
       throw new SmsInputError(
         "Ce numéro est déjà présent. Ouvrez sa fiche existante.",
       );
-    const candidates = await tx.outreachLead.findMany({
-      where: { phone: { not: null } },
-      take: 500,
-    });
-    const lead = candidates.find((l) => {
-      try {
-        return mobileNumber(l.phone!) === phone;
-      } catch {
-        return false;
-      }
-    });
+    const matches = await tx.$queryRaw<{ id: string }[]>`
+      SELECT id FROM "OutreachLead"
+      WHERE regexp_replace(phone, '[^0-9]', '', 'g') IN (${phone.slice(1)}, ${'0' + phone.slice(3)})
+      LIMIT 2`;
+    if (matches.length > 1)
+      throw new SmsInputError("Plusieurs fiches e-mail utilisent ce numéro. Résolvez le doublon dans le CRM.");
+    const lead = matches[0] ? await tx.outreachLead.findUnique({ where: { id: matches[0].id } }) : null;
     if (lead?.stoppedAt || lead?.firstSentAt)
       throw new SmsInputError(
         "Ce prospect possède déjà une prise de contact ou un arrêt dans la prospection par e-mail.",
       );
+    const prospect = await ensureCrmProspect(tx, {
+      companyName: v.companyName,
+      phone,
+      city: v.city,
+      sourceUrl: v.sourceUrl,
+    });
+    if (prospect.doNotContactAt)
+      throw new SmsInputError(
+        "Cette entreprise est sur la liste de non-contact.",
+      );
+    if (lead && !lead.prospectId)
+      await tx.outreachLead.update({
+        where: { id: lead.id },
+        data: { prospectId: prospect.id },
+      });
     await tx.smsOutreachContact.create({
       data: {
         ...v,
         phone,
         leadId: lead?.id,
+        prospectId: prospect.id,
         messages: { create: { body: defaultSms(v.companyName) } },
       },
     });
@@ -133,6 +150,10 @@ export async function saveSms(id: string, form: FormData, userId: string) {
       where: { id },
       include: { messages: true },
     });
+    if (approve && (await crmBlocksChannel(tx, contact.prospectId, "SMS")))
+      throw new SmsInputError(
+        "Vérifiez le statut et le canal choisi dans la fiche CRM.",
+      );
     if (
       contact.stoppedAt ||
       contact.messages.some((m) => m.attemptedAt || m.sentAt)
@@ -172,6 +193,17 @@ export async function saveSms(id: string, form: FormData, userId: string) {
         approvedBy: approve ? userId : null,
       },
     });
+    if (approve && contact.prospectId)
+      await tx.prospect.update({
+        where: { id: contact.prospectId },
+        data: {
+          websiteFinding: finding,
+          websiteEvidence: evidence,
+          websiteCheckedAt: new Date(),
+          preferredChannel: "SMS",
+          status: "A_CONTACTER",
+        },
+      });
     await tx.smsOutreachEvent.create({
       data: {
         contactId: id,
@@ -239,6 +271,17 @@ export async function stopSms(id: string, reason: "STOP" | "CLOSED") {
   await prisma.$transaction(async (tx) => {
     await lock(tx);
     await stopContact(tx, id, reason);
+    const c = await tx.smsOutreachContact.findUniqueOrThrow({ where: { id } });
+    await recordCrmEvent(tx, {
+      prospectId: c.prospectId,
+      key: `sms-stop:${id}:${reason}`,
+      channel: "SMS",
+      kind: reason,
+      body:
+        reason === "STOP"
+          ? "Demande de non-contact enregistrée."
+          : "Séquence SMS arrêtée.",
+    });
     await tx.smsOutreachEvent.create({
       data: {
         contactId: id,
@@ -337,6 +380,7 @@ export async function claimSms(
       take: 50,
     });
     for (const m of pending) {
+      if (await crmBlocksChannel(tx, m.contact.prospectId, "SMS")) continue;
       if (
         await tx.smsSuppression.findUnique({
           where: { phoneHash: hash(m.contact.phone) },
@@ -416,6 +460,14 @@ export async function recordOnoff(payload: unknown) {
           occurredAt: date,
         },
       });
+      await recordCrmEvent(tx, {
+        prospectId: contact.prospectId,
+        key: externalId,
+        channel: "SMS",
+        kind: reason,
+        body: event.body,
+        at: date,
+      });
     } else {
       const m = await tx.smsOutreachMessage.findUnique({
         where: { contactId: contact.id },
@@ -441,6 +493,14 @@ export async function recordOnoff(payload: unknown) {
             "Envoi confirmé par Onoff. Cette confirmation ne prouve pas la lecture du SMS.",
           occurredAt: date,
         },
+      });
+      await recordCrmEvent(tx, {
+        prospectId: contact.prospectId,
+        key: externalId,
+        channel: "SMS",
+        kind: "SENT",
+        body: event.body,
+        at: date,
       });
     }
     return { received: true };
@@ -476,6 +536,15 @@ export async function reconcileSms(id: string, form: FormData) {
         status: outcome === "sent" ? "SENT" : "SKIPPED",
         sentAt: outcome === "sent" ? m.attemptedAt : null,
       },
+    });
+    const contact = await tx.smsOutreachContact.findUniqueOrThrow({ where: { id } });
+    await recordCrmEvent(tx, {
+      prospectId: contact.prospectId,
+      key: `sms-reconciliation:${m.id}`,
+      channel: "SMS",
+      kind: outcome === "sent" ? "SENT" : "Échec confirmé",
+      body: `${m.body}\nVérification Onoff : ${evidence}`,
+      at: outcome === "sent" ? m.attemptedAt : new Date(),
     });
     await tx.smsOutreachEvent.create({
       data: {

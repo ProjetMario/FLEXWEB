@@ -8,7 +8,6 @@ import {
   emailHash,
   parisTime,
   dueStep,
-  newMessageId,
 } from "../lib/outreach/core";
 import {
   publicAddress,
@@ -34,15 +33,17 @@ after(async () => {
   await prisma.$disconnect();
 });
 const now = new Date("2026-09-09T08:00:00Z");
+let registrySequence = 210000000;
 async function lead() {
+  const siren = String(registrySequence++);
   const campaign = await prisma.outreachCampaign.create({
     data: { key: "test-" + randomUUID(), name: "Test isolé", enabled: true },
   });
   const l = await prisma.outreachLead.create({
     data: {
       campaignId: campaign.id,
-      siren: "123456789",
-      siret: "12345678900001",
+      siren,
+      siret: siren + "00001",
       companyName: "Atelier " + randomUUID().slice(0, 8),
       city: "Chambéry",
       postalCode: "73000",

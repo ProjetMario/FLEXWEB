@@ -24,6 +24,7 @@ export default async function LeadPage({
     prisma.outreachLead.findUnique({
       where: { id },
       include: {
+        prospect: true,
         messages: { orderBy: { step: "asc" } },
         events: { orderBy: { createdAt: "desc" }, take: 20 },
       },
@@ -53,6 +54,14 @@ export default async function LeadPage({
           {lead.city} · {lead.postalCode} · {stages[lead.stage] || lead.stage}
         </p>
       </div>
+      {lead.prospectId && (
+        <Link
+          href={`/admin/prospection/prospects/${lead.prospectId}`}
+          className="block rounded-lg border bg-white p-3 text-sm text-blue-700 underline"
+        >
+          Ouvrir la fiche CRM : qualification, coordonnées et historique commun
+        </Link>
+      )}
       {query.error && (
         <p role="alert" className="rounded-lg bg-red-50 p-4 text-red-800">
           {query.error}
@@ -65,13 +74,15 @@ export default async function LeadPage({
       )}
       <section className={card}>
         <h2 className="font-semibold">Sources et diagnostic</h2>
-        {!locked && (
-          <form action={action} className="mt-3">
-            <button className={button} name="action" value="refresh">
-              Actualiser la fiche officielle
-            </button>
-          </form>
-        )}
+        {!locked &&
+          !lead.prospect?.importBatch &&
+          /^\d{9}$/.test(lead.siren) && (
+            <form action={action} className="mt-3">
+              <button className={button} name="action" value="refresh">
+                Actualiser la fiche officielle
+              </button>
+            </form>
+          )}
         <p className="mt-2 text-sm">
           <a
             className="text-blue-700 underline"
@@ -79,7 +90,8 @@ export default async function LeadPage({
             target="_blank"
             rel="noreferrer"
           >
-            Annuaire officiel · SIREN {lead.siren}
+            Source de la fiche{" "}
+            {/^\d{9}$/.test(lead.siren) ? `· SIREN ${lead.siren}` : ""}
           </a>{" "}
           · importé le {lead.sourceFetchedAt.toLocaleDateString("fr-FR")}
         </p>

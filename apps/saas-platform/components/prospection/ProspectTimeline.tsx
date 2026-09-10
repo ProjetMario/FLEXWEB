@@ -1,7 +1,21 @@
 import { STATUS_LABELS } from "@/lib/prospection/status";
 import { ProspectStatusBadge } from "./ProspectStatusBadge";
-import { Calendar, MessageSquare, CheckCircle, Phone, Mail, FileText, UserCheck, StickyNote, RotateCcw } from "lucide-react";
-import type { ProspectInteraction, FollowUp, ProspectNote } from "@prisma/client";
+import {
+  Calendar,
+  MessageSquare,
+  CheckCircle,
+  Phone,
+  Mail,
+  FileText,
+  UserCheck,
+  StickyNote,
+  RotateCcw,
+} from "lucide-react";
+import type {
+  ProspectInteraction,
+  FollowUp,
+  ProspectNote,
+} from "@prisma/client";
 import type { ProspectionStatus } from "@prisma/client";
 
 const icons: Record<string, typeof MessageSquare> = {
@@ -59,14 +73,16 @@ export function ProspectTimeline({
       id: i.id,
       date: i.createdAt,
       type: i.type,
-      title: i.type === "STATUT_MODIFIE" && i.newStatus ? (
-        <span className="flex items-center gap-2">
-          Statut modifié {i.oldStatus ? `de ${STATUS_LABELS[i.oldStatus]}` : ""}
-          <ProspectStatusBadge status={i.newStatus} />
-        </span>
-      ) : (
-        i.type.replace("_", " ").toLowerCase()
-      ),
+      title:
+        i.type === "STATUT_MODIFIE" && i.newStatus ? (
+          <span className="flex items-center gap-2">
+            Statut modifié{" "}
+            {i.oldStatus ? `de ${STATUS_LABELS[i.oldStatus]}` : ""}
+            <ProspectStatusBadge status={i.newStatus} />
+          </span>
+        ) : (
+          i.type.replace("_", " ").toLowerCase()
+        ),
       note: i.note || "",
     })),
     ...followUps.map((f) => ({
@@ -81,7 +97,9 @@ export function ProspectTimeline({
   return (
     <div className="space-y-6">
       <div className="rounded-xl border bg-card p-5 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Notes internes</h2>
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          Notes internes
+        </h2>
         <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">
           {prospect.internalNotes || "Aucune note interne."}
         </p>
@@ -111,7 +129,9 @@ export function ProspectTimeline({
       </div>
 
       <div className="rounded-xl border bg-card p-5 shadow-sm">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Historique</h2>
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+          Historique
+        </h2>
         <ul className="mt-4 space-y-4">
           {timelineItems.map((item) => {
             const Icon = icons[item.type] || CheckCircle;
@@ -125,7 +145,11 @@ export function ProspectTimeline({
                   <p className="text-xs text-muted-foreground">
                     {new Date(item.date).toLocaleString("fr-FR")}
                   </p>
-                  {item.note && <p className="mt-1 text-sm text-muted-foreground">{item.note}</p>}
+                  {item.note && (
+                    <p className="mt-1 whitespace-pre-wrap break-words text-sm text-muted-foreground">
+                      {item.note}
+                    </p>
+                  )}
                 </div>
               </li>
             );

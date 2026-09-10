@@ -1,4 +1,11 @@
 import { smsBlocksEmail } from "../sms/guard";
+import {
+  crmBlocksChannel,
+  crmLock,
+  ensureCrmProspect,
+  recordCrmEvent,
+  stopCrmSequences,
+} from "../prospection/crm-service";
 import { prisma } from "../prisma";
 import { emailSchema, emailHash, type Audit } from "./core";
 import { webUrl } from "./web-audit";
@@ -10,6 +17,7 @@ export async function stopLead(
   id: string,
   reason: string,
   externalId?: string,
+  content?: string,
 ) {
   if (
     !["REPLIED", "REFUSED", "BOUNCED", "UNSUBSCRIBED", "CLOSED"].includes(
@@ -18,6 +26,7 @@ export async function stopLead(
   )
     throw new Error("Motif invalide.");
   await prisma.$transaction(async (tx) => {
+    await crmLock(tx);
     await tx.$queryRaw`SELECT id FROM "OutreachLead" WHERE id=${id} FOR UPDATE`;
     const lead = await tx.outreachLead.findUnique({ where: { id } });
     if (!lead) return;
@@ -65,6 +74,17 @@ export async function stopLead(
             : "Séquence arrêtée.",
       },
     });
+    await recordCrmEvent(tx, {
+      prospectId: lead.prospectId,
+      key: externalId || `email-stop:${id}:${reason}`,
+      channel: "EMAIL",
+      kind: reason,
+      body:
+        content ||
+        (reason === "REPLIED"
+          ? "Réponse détectée ; consulter la boîte IONOS."
+          : "Séquence arrêtée."),
+    });
   });
 }
 const contactSchema = z.object({
@@ -111,6 +131,23 @@ export async function saveLead(id: string, form: FormData, userId: string) {
       where: { id },
       include: { messages: true },
     });
+    const prospect = lead.prospectId
+      ? await tx.prospect.findUniqueOrThrow({ where: { id: lead.prospectId } })
+      : await ensureCrmProspect(tx, { ...lead, sourceUrl: source });
+    if (approve && (await crmBlocksChannel(tx, prospect.id, "EMAIL")))
+      throw Error(
+        "Cette entreprise est arrêtée ou réservée au canal SMS dans le CRM.",
+      );
+    if (
+      approve &&
+      prospect.importBatch &&
+      (!prospect.websiteCheckedAt ||
+        prospect.websiteFinding !== "NOT_FOUND" ||
+        Date.now() - prospect.websiteCheckedAt.getTime() > 30 * 86400000)
+    )
+      throw Error(
+        "Qualifiez d’abord l’absence de site dans la fiche CRM (contrôle de moins de 30 jours).",
+      );
     if (
       lead.firstSentAt ||
       lead.stoppedAt ||
@@ -158,6 +195,7 @@ export async function saveLead(id: string, form: FormData, userId: string) {
       where: { id },
       data: {
         email: contact.email,
+        prospectId: prospect.id,
         website,
         contactSourceUrl: source,
         enrichmentState: "VERIFIED",
@@ -175,6 +213,17 @@ export async function saveLead(id: string, form: FormData, userId: string) {
               },
               score: 0,
             }
+          : {}),
+      },
+    });
+    await tx.prospect.update({
+      where: { id: prospect.id },
+      data: {
+        email: contact.email,
+        website,
+        sourceUrl: source,
+        ...(approve
+          ? { preferredChannel: "EMAIL", status: "A_CONTACTER" }
           : {}),
       },
     });
@@ -248,6 +297,7 @@ export async function classifyLead(
   if (!["INTERESTED", "MEETING", "WON"].includes(outcome))
     throw new Error("Étape invalide.");
   await prisma.$transaction(async (tx) => {
+    await crmLock(tx);
     await tx.$queryRaw`SELECT id FROM "OutreachLead" WHERE id=${id} FOR UPDATE`;
     const lead = await tx.outreachLead.findUniqueOrThrow({ where: { id } });
     if (["REFUSED", "UNSUBSCRIBED", "BOUNCED"].includes(lead.stage))
@@ -306,6 +356,8 @@ export async function classifyLead(
               : "INTERESSE",
       },
     });
+    await stopCrmSequences(tx,prospectId,`CRM_${outcome}`);
+    await tx.prospectInteraction.create({data:{prospectId,type:'STATUT_MODIFIE',createdById:userId,note:`Qualification depuis l’e-mail : ${outcome==='MEETING'?'Rendez-vous planifié':outcome==='WON'?'Client signé':'Intéressé'}.`}});
     if (
       outcome === "INTERESTED" &&
       !(await tx.followUp.count({ where: { prospectId, status: "PENDING" } }))

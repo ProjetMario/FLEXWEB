@@ -19,7 +19,7 @@ export const PROSPECTION_STATUSES: ProspectionStatus[] = [
 ];
 
 export const STATUS_LABELS: Record<ProspectionStatus, string> = {
-  NOUVEAU: "Nouveau",
+  NOUVEAU: "À qualifier",
   A_CONTACTER: "À contacter",
   SMS_ENVOYE: "SMS envoyé",
   SANS_REPONSE: "Sans réponse",
@@ -36,7 +36,10 @@ export const STATUS_LABELS: Record<ProspectionStatus, string> = {
   PERDU: "Perdu",
 };
 
-export const STATUS_VARIANTS: Record<ProspectionStatus, "default" | "secondary" | "success" | "warning" | "danger" | "info"> = {
+export const STATUS_VARIANTS: Record<
+  ProspectionStatus,
+  "default" | "secondary" | "success" | "warning" | "danger" | "info"
+> = {
   NOUVEAU: "secondary",
   A_CONTACTER: "info",
   SMS_ENVOYE: "info",

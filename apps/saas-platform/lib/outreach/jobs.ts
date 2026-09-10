@@ -1,4 +1,9 @@
 import { smsBlocksEmail } from "../sms/guard";
+import {
+  crmBlocksChannel,
+  crmLock,
+  recordCrmEvent,
+} from "../prospection/crm-service";
 import { randomUUID } from "node:crypto";
 import { prisma } from "../prisma";
 import { pilot, importRegistryPage, enrichNext, auditNext } from "./discovery";
@@ -158,6 +163,7 @@ export async function sendNext(now = new Date(), send: Deliver = deliver) {
       });
       if (
         (await smsBlocksEmail(tx, fresh)) ||
+        (await crmBlocksChannel(tx, fresh.prospectId, "EMAIL")) ||
         fresh.updatedAt.getTime() !== lead.updatedAt.getTime() ||
         fresh.email !== lead.email ||
         fresh.stoppedAt ||
@@ -191,6 +197,7 @@ export async function sendNext(now = new Date(), send: Deliver = deliver) {
       });
       if (!accepted) throw new Error("Non accepté");
       await prisma.$transaction(async (tx) => {
+        await crmLock(tx);
         await tx.outreachMessage.update({
           where: { id: message.id },
           data: { status: "SENT", sentAt: now },
@@ -210,6 +217,14 @@ export async function sendNext(now = new Date(), send: Deliver = deliver) {
             type: "SENT",
             detail: `Message ${message.step + 1} accepté par le serveur SMTP ; livraison non garantie.`,
           },
+        });
+        await recordCrmEvent(tx, {
+          prospectId: lead.prospectId,
+          key: `email-sent:${message.id}`,
+          channel: "EMAIL",
+          kind: "SENT",
+          body: `${message.subject}\n\n${message.text}`,
+          at: now,
         });
       });
       return "Un message accepté par IONOS.";

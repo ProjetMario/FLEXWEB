@@ -5,8 +5,11 @@ export async function getProspectById(id: string) {
     where: { id },
     include: {
       campaign: { select: { id: true, name: true } },
+      smsContact: { include: { messages: true } },
+      emailLeads: { include: { messages: { orderBy: { step: "asc" } } } },
       interactions: {
         orderBy: { createdAt: "desc" },
+        take: 100,
       },
       followUps: {
         orderBy: { dueAt: "desc" },

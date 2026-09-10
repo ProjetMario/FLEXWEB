@@ -1,4 +1,5 @@
 import { prisma } from "../prisma";
+import { crmEmailDrafts } from "../prospection/crm-core";
 import {
   PILOT_KEY,
   emailSchema,
@@ -150,7 +151,12 @@ export async function prepareDrafts(id: string, audit: Audit | null) {
     await tx.$queryRaw`SELECT id FROM "OutreachLead" WHERE id=${id} FOR UPDATE`;
     const lead = await tx.outreachLead.findUniqueOrThrow({ where: { id } });
     if (lead.approvedAt || lead.stoppedAt || lead.firstSentAt) return;
-    for (const draft of draftMessages(lead.companyName, lead.city, audit))
+    const prospect = lead.prospectId
+      ? await tx.prospect.findUnique({ where: { id: lead.prospectId } })
+      : null;
+    for (const draft of prospect?.importBatch
+      ? crmEmailDrafts(lead.companyName, lead.city, prospect.businessType)
+      : draftMessages(lead.companyName, lead.city, audit))
       await tx.outreachMessage.upsert({
         where: { leadId_step: { leadId: id, step: draft.step } },
         update: { subject: draft.subject, text: draft.text, status: "DRAFT" },

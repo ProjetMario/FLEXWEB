@@ -19,13 +19,23 @@ import {
 
 const navItems = [
   {
+    href: "/admin/prospection/inbox",
+    label: "SMS & e-mails",
+    icon: MessageSquareText,
+  },
+  {
+    href: "/admin/prospection/pipeline",
+    label: "Suivi commercial",
+    icon: ArrowLeftRight,
+  },
+  {
     href: "/admin/prospection/sms",
     label: "Prospection SMS",
     icon: MessageSquareText,
   },
   {
     href: "/admin/prospection/outreach",
-    label: "Prospection locale",
+    label: "Recherche locale",
     icon: Megaphone,
   },
   {
@@ -43,7 +53,7 @@ const navItems = [
   { href: "/admin/prospection/follow-ups", label: "Relances", icon: Bell },
   {
     href: "/admin/prospection/templates",
-    label: "Templates SMS",
+    label: "Modèles de messages",
     icon: MessageSquareText,
   },
   {

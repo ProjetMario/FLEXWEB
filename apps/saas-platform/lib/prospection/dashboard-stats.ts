@@ -47,26 +47,44 @@ export async function getDashboardStats(period: StatsPeriod = "all") {
     signedClients,
   ] = await Promise.all([
     prisma.prospect.count({ where }),
-    prisma.prospect.count({
-      where: {
-        ...where,
-        status: { in: ["SMS_ENVOYE", "SANS_REPONSE", "REPONDU", "INTERESSE", "A_RELANCER", "RDV_PLANIFIE", "RDV_EFFECTUE", "DEVIS_ENVOYE", "NEGOCIATION", "CLIENT_SIGNE"] },
-      },
+    prisma.smsOutreachMessage.count({
+      where: { status: "SENT", ...(dateFilter ? { sentAt: dateFilter } : {}) },
     }),
     prisma.prospect.count({ where: { ...where, status: "SANS_REPONSE" } }),
     prisma.prospect.count({
       where: {
         ...where,
-        status: { in: ["REPONDU", "INTERESSE", "RDV_PLANIFIE", "RDV_EFFECTUE", "DEVIS_ENVOYE", "NEGOCIATION", "CLIENT_SIGNE"] },
+        status: {
+          in: [
+            "REPONDU",
+            "INTERESSE",
+            "RDV_PLANIFIE",
+            "RDV_EFFECTUE",
+            "DEVIS_ENVOYE",
+            "NEGOCIATION",
+            "CLIENT_SIGNE",
+          ],
+        },
       },
     }),
     prisma.prospect.count({
       where: {
         ...where,
-        status: { in: ["INTERESSE", "RDV_PLANIFIE", "RDV_EFFECTUE", "DEVIS_ENVOYE", "NEGOCIATION", "CLIENT_SIGNE"] },
+        status: {
+          in: [
+            "INTERESSE",
+            "RDV_PLANIFIE",
+            "RDV_EFFECTUE",
+            "DEVIS_ENVOYE",
+            "NEGOCIATION",
+            "CLIENT_SIGNE",
+          ],
+        },
       },
     }),
-    prisma.prospect.count({ where: { ...where, status: { in: ["PAS_INTERESSE", "PERDU"] } } }),
+    prisma.prospect.count({
+      where: { ...where, status: { in: ["PAS_INTERESSE", "PERDU"] } },
+    }),
     prisma.followUp.count({
       where: {
         status: "PENDING",
@@ -88,8 +106,10 @@ export async function getDashboardStats(period: StatsPeriod = "all") {
   ]);
 
   const responseRate = smsSent > 0 ? Math.round((replied / smsSent) * 100) : 0;
-  const appointmentRate = smsSent > 0 ? Math.round((appointments / smsSent) * 100) : 0;
-  const conversionRate = smsSent > 0 ? Math.round((signedClients / smsSent) * 100) : 0;
+  const appointmentRate =
+    smsSent > 0 ? Math.round((appointments / smsSent) * 100) : 0;
+  const conversionRate =
+    smsSent > 0 ? Math.round((signedClients / smsSent) * 100) : 0;
 
   const signedAgg = await prisma.prospect.aggregate({
     where: { ...where, status: "CLIENT_SIGNE" },
@@ -134,8 +154,8 @@ const PIPELINE_STATUSES: ProspectionStatus[] = [
 export async function getPipelineStats() {
   const counts = await Promise.all(
     PIPELINE_STATUSES.map((status) =>
-      prisma.prospect.count({ where: { status } })
-    )
+      prisma.prospect.count({ where: { status } }),
+    ),
   );
   return PIPELINE_STATUSES.map((status, index) => ({
     status,
@@ -175,25 +195,49 @@ export async function getActionsToday() {
     prisma.followUp.count({
       where: {
         status: "PENDING",
-        dueAt: { gte: new Date(), lte: new Date(Date.now() + 24 * 60 * 60 * 1000) },
+        dueAt: {
+          gte: new Date(),
+          lte: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        },
       },
     }),
     prisma.appointment.count({
       where: {
-        date: { gte: new Date(), lte: new Date(Date.now() + 24 * 60 * 60 * 1000) },
+        date: {
+          gte: new Date(),
+          lte: new Date(Date.now() + 24 * 60 * 60 * 1000),
+        },
       },
     }),
   ]);
 
   return [
-    { label: "Nouveaux prospects à contacter", value: newProspects, sub: "N'ont pas encore été contactés" },
-    { label: "Prospects à relancer", value: followUpsToday, sub: "Relances prévues aujourd'hui" },
-    { label: "Rendez-vous aujourd'hui", value: appointmentsToday, sub: "Ne pas oublier !" },
+    {
+      label: "Nouveaux prospects à contacter",
+      value: newProspects,
+      sub: "N'ont pas encore été contactés",
+    },
+    {
+      label: "Prospects à relancer",
+      value: followUpsToday,
+      sub: "Relances prévues aujourd'hui",
+    },
+    {
+      label: "Rendez-vous aujourd'hui",
+      value: appointmentsToday,
+      sub: "Ne pas oublier !",
+    },
   ];
 }
 
 export async function getEvolutionData(days = 30) {
-  const data: { date: string; sms: number; replies: number; appointments: number; clients: number }[] = [];
+  const data: {
+    date: string;
+    sms: number;
+    replies: number;
+    appointments: number;
+    clients: number;
+  }[] = [];
   const now = new Date();
 
   for (let i = days - 1; i >= 0; i--) {
@@ -219,7 +263,10 @@ export async function getEvolutionData(days = 30) {
     ]);
 
     data.push({
-      date: date.toLocaleDateString("fr-FR", { day: "2-digit", month: "short" }),
+      date: date.toLocaleDateString("fr-FR", {
+        day: "2-digit",
+        month: "short",
+      }),
       sms,
       replies,
       appointments: apps,

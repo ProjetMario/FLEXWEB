@@ -15,13 +15,14 @@ const date = (v: Date | null) =>
 export default async function SmsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; saved?: string }>;
+  searchParams: Promise<{ error?: string; saved?: string; id?: string }>;
 }) {
   await requireAdmin();
   const params = await searchParams;
-  const [cfg, contacts, suppressionCount] = await Promise.all([
+  const [cfg, contacts, suppressionCount, counts] = await Promise.all([
     settings(),
     prisma.smsOutreachContact.findMany({
+      where: params.id ? { id: params.id } : undefined,
       include: {
         messages: true,
         events: { orderBy: { createdAt: "desc" }, take: 8 },
@@ -30,8 +31,10 @@ export default async function SmsPage({
       take: 100,
     }),
     prisma.smsSuppression.count(),
+    prisma.smsOutreachMessage.groupBy({ by: ["status"], _count: true }),
   ]);
-  const messages = contacts.flatMap((c) => c.messages);
+  const count = (status: string) => counts.find((c) => c.status === status)?._count || 0;
+  const now = new Date().getTime();
   return (
     <div className="space-y-6 p-4 sm:p-6">
       <header>
@@ -54,11 +57,11 @@ export default async function SmsPage({
       )}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {[
-          ["À vérifier", messages.filter((m) => m.status === "DRAFT").length],
-          ["SMS prêts", messages.filter((m) => m.status === "APPROVED").length],
+          ["À vérifier", count("DRAFT")],
+          ["SMS prêts", count("APPROVED")],
           [
             "Envois confirmés",
-            messages.filter((m) => m.status === "SENT").length,
+            count("SENT"),
           ],
           ["Numéros à ne plus contacter", suppressionCount],
         ].map(([label, value]) => (
@@ -203,10 +206,18 @@ export default async function SmsPage({
           const stale =
             m.status === "DISPATCHED" &&
             m.attemptedAt &&
-            Date.now() - m.attemptedAt.getTime() > 15 * 60000;
+            now - m.attemptedAt.getTime() > 15 * 60000;
           const length = smsLength(m.body);
           return (
             <article key={c.id} id={c.id} className={card}>
+              {c.prospectId && (
+                <Link
+                  href={`/admin/prospection/prospects/${c.prospectId}`}
+                  className="block text-sm text-blue-700 underline"
+                >
+                  Ouvrir la fiche CRM et l’historique SMS / e-mail
+                </Link>
+              )}
               <div className="flex flex-wrap justify-between gap-3">
                 <div>
                   <h3 className="font-semibold">{c.companyName}</h3>

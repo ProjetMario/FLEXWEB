@@ -3,6 +3,8 @@ import { ImapFlow } from "imapflow";
 import { prisma } from "../prisma";
 import { SENDER } from "./core";
 import { stopLead } from "./service";
+import { simpleParser } from "mailparser";
+import { isOpposition } from "../sms/core";
 
 export const mailboxConfigured = () => !!process.env.IONOS_MAIL_PASSWORD;
 function password() {
@@ -74,8 +76,14 @@ export type Incoming = {
   references: string[];
   bounceRecipient?: string;
   bounce: boolean;
+  subject?: string;
+  text?: string;
 };
-export async function processIncoming(incoming: Incoming, uidValidity: string) {
+export async function processIncoming(
+  incoming: Incoming,
+  uidValidity: string,
+  loadText?: () => Promise<string>,
+) {
   const conditions = [
     { email: { in: incoming.from.map((x) => x.toLowerCase()) } },
     {
@@ -98,11 +106,24 @@ export async function processIncoming(incoming: Incoming, uidValidity: string) {
     },
     select: { id: true },
   });
+  // Fetch body only after matching an existing prospect; never ingest unrelated mail.
+  const body = leads.length
+    ? (incoming.text ?? (loadText ? await loadText() : ""))
+    : "";
+  const firstPart = body
+    .split(/\n(?:>|Le .*écrit|On .*wrote|De\s*:|From\s*:)/i)[0]
+    .slice(0, 2000);
   for (const lead of leads)
     await stopLead(
       lead.id,
-      incoming.bounce ? "BOUNCED" : "REPLIED",
+      incoming.bounce
+        ? "BOUNCED"
+        : isOpposition(firstPart)
+          ? "REFUSED"
+          : "REPLIED",
       `imap:${uidValidity}:${incoming.uid}:${lead.id}`,
+      [incoming.subject, body].filter(Boolean).join("\n\n").slice(0, 10000) ||
+        undefined,
     );
   return leads.length;
 }
@@ -205,8 +226,33 @@ export async function syncMailbox(): Promise<boolean> {
         ];
       }
       await processIncoming(
-        { uid: m.uid, from, references, bounce, bounceRecipient },
+        {
+          uid: m.uid,
+          from,
+          references,
+          bounce,
+          bounceRecipient,
+          subject: m.envelope?.subject,
+        },
         validity,
+        async () => {
+          const raw = await client.fetchOne(
+            m.uid,
+            { source: { maxLength: 100000 } },
+            { uid: true },
+          );
+          if (!raw || !raw.source)
+            return "Contenu indisponible ; ouvrir la boîte IONOS.";
+          const parsed = await simpleParser(raw.source, {
+            skipHtmlToText: true,
+            skipTextToHtml: true,
+            skipImageLinks: true,
+          });
+          return (
+            parsed.text?.slice(0, 10000) ||
+            "Message HTML ou pièce jointe : consulter IONOS."
+          );
+        },
       );
     }
     await prisma.outreachMailbox.update({
