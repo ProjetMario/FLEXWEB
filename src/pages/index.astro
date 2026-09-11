@@ -16,6 +16,34 @@ const steps = [
   { title: "Tester avec vous", text: "Nous vérifions les cas courants, les erreurs et la reprise manuelle avant de mettre en service." },
   { title: "Organiser le suivi", text: "Vous gardez la main. La maintenance et les évolutions sont définies dans la prestation choisie." },
 ];
+
+const realizedSites = [
+  {
+    name: 'Site Flex-Web',
+    type: 'Landing page commerciale',
+    href: 'https://flex-web.fr/',
+    description:
+      'Un site vitrine pensé pour convertir les visiteurs en demandes de devis, avec une tarification claire, des pages SEO locales et un parcours de contact simple.',
+    tags: ['Site vitrine', 'SEO local', 'Devis'],
+  },
+  {
+    name: 'Gestion Flex-Web',
+    type: 'CRM et prospection',
+    href: 'https://flexweb-gestion.netlify.app/',
+    description:
+      'Une plateforme de gestion pour suivre les prospects, préparer les relances SMS et e-mail, centraliser les demandes et piloter l’activité commerciale.',
+    tags: ['CRM', 'Prospection', 'Automatisation'],
+  },
+  {
+    name: 'Studio de création IA',
+    type: 'Prototype SaaS',
+    href: 'https://flexweb-gestion.netlify.app/studio',
+    description:
+      'Un espace de test pour créer une première version de site internet, organiser les contenus et accélérer la production avec l’aide de l’IA.',
+    tags: ['IA', 'Création de site', 'Production'],
+  },
+];
+
 const guides = [
   { title: "Quelles tâches automatiser dans une PME ?", href: "/journal/taches-automatiser-pme/", text: "Choisir un premier processus simple et mesurable." },
   { title: "Comment connecter vos demandes à un CRM ?", href: "/journal/connecter-demandes-crm/", text: "Passer d’un formulaire à un suivi commercial organisé." },
@@ -57,6 +85,28 @@ const schemas = [
     </div>
     <p class="small muted">Sites : paiement unique. Maintenance avec modifications : option à 49 € TTC/mois. CRM, automatisation et référencement : option à 99 € TTC/mois. <a href="/pricing/">Voir les tarifs et les demandes de devis.</a></p>
   </section>
+
+  <section id="realisations" class="home-wrap section work-section">
+    <p class="eyebrow">RÉALISATIONS</p>
+    <h2>Des exemples déjà réalisés et mis en ligne.</h2>
+    <p class="section-copy">
+      Ces projets montrent ce que Flex-Web peut livrer : un site clair pour vendre, un outil de prospection pour suivre les clients et un studio pour accélérer la création avec l’IA.
+    </p>
+    <div class="work-grid">
+      {realizedSites.map((site) => (
+        <article class="work-card">
+          <p class="work-type">{site.type}</p>
+          <h3>{site.name}</h3>
+          <p>{site.description}</p>
+          <div class="work-tags">
+            {site.tags.map((tag) => <span>{tag}</span>)}
+          </div>
+          <a href={site.href} target="_blank" rel="noreferrer">Voir l’exemple</a>
+        </article>
+      ))}
+    </div>
+  </section>
+
   <section id="templates" class="tinted"><div class="home-wrap section split">
     <div><p class="eyebrow">DES USAGES CONCRETS</p><h2>Commencez par ce qui vous prend du temps.</h2><p class="section-copy">Une automatisation utile répond à une tâche précise. Voici des exemples à étudier ensemble, sans promesse de résultat chiffré.</p><a class="text-link" href="/automatisation-ia/">Voir les possibilités et les limites ↗</a></div>
     <div class="use-cases"><article><span>COMMERCIAL</span><h3>Suivre chaque demande</h3><p>Centraliser les demandes et préparer les prochaines actions dans votre CRM.</p></article><article><span>ADMINISTRATIF</span><h3>Préparer les documents</h3><p>Extraire ou résumer les informations utiles, puis faire vérifier les éléments importants.</p></article><article><span>RELATION CLIENT</span><h3>Garder une réponse claire</h3><p>Préparer des réponses et orienter les demandes complexes vers la bonne personne.</p></article><p class="small muted">Exemples de scénarios, pas des témoignages clients.</p></div>
