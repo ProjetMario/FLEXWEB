@@ -61,7 +61,7 @@ export default function PricingCard({ plan }) {
         href={plan.href}
         className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3.5 text-sm font-medium transition focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#0071e3] ${plan.featured ? "bg-[#0071e3] text-white hover:bg-[#0065cc]" : "bg-[#1d1d1f] text-white hover:bg-[#424245]"}`}
       >
-        Choisir {plan.name}
+        Demander un devis {plan.name}
         <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
       </a>
     </article>

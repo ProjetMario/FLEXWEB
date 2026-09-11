@@ -31,7 +31,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel prix pour un site vitrine à Albiez-Montrond ?"
-    answer: "Un site vitrine professionnel démarre à quelques centaines d'euros."
+    answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
   - question: "FLEX-WEB travaille-t-il à Albiez-Montrond ?"
     answer: "Oui, nous accompagnons les entreprises d'Albiez-Montrond et des stations de Maurienne."
   - question: "Le site sera-t-il visible localement ?"

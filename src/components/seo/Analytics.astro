@@ -1,0 +1,44 @@
+---
+// Single property; override only after verifying account ownership.
+const measurementId = import.meta.env.PUBLIC_GA_ID || "G-PQ639FG72J";
+const { pageView = true } = Astro.props;
+---
+<script is:inline define:vars={{ measurementId, pageView }}>
+  (() => {
+    if (!/^G-[A-Z0-9]+$/.test(measurementId) || location.pathname.startsWith('/espace-projet')) return;
+    const accepted = () => {
+      try { return localStorage.getItem('flex-web-cookie-consent') === 'accepted'; } catch { return false; }
+    };
+    function start() {
+      if (!accepted() || window.flexwebAnalyticsStarted) return;
+      window.flexwebAnalyticsStarted = true;
+      window['ga-disable-' + measurementId] = false;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag('consent', 'default', { analytics_storage: 'granted', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+      window.gtag('js', new Date());
+      const page_location = location.origin + location.pathname;
+      let page_referrer = '';
+      try { page_referrer = new URL(document.referrer).origin; } catch {}
+      window.gtag('config', measurementId, {
+        send_page_view: false, page_location, page_referrer,
+        allow_google_signals: false, allow_ad_personalization_signals: false,
+      });
+      if (pageView) window.gtag('event', 'page_view', { page_location, page_referrer });
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=' + measurementId;
+      document.head.append(script);
+    }
+    window.addEventListener('flexweb-consent-change', () => {
+      if (accepted()) {
+        window['ga-disable-' + measurementId] = false;
+        if (window.gtag) window.gtag('consent', 'update', { analytics_storage: 'granted' });
+        start();
+      } else {
+        window['ga-disable-' + measurementId] = true;
+      }
+    });
+    start();
+  })();
+</script>

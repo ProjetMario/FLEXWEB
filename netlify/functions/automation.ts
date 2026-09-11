@@ -7,6 +7,12 @@ const respond = (error: string, status: number) =>
     { status, headers: { "Cache-Control": "no-store" } },
   );
 export default async (request: Request, context: Context) => {
+  const deployContext = context.deploy.context;
+  if (deployContext === "deploy-preview" || deployContext === "branch-deploy")
+    return respond(
+      "Les demandes sont désactivées dans cet aperçu. Utilisez flex-web.fr pour envoyer votre projet.",
+      503,
+    );
   const actions = new Set([
     "intake",
     "status",

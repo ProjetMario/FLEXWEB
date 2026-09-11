@@ -3,7 +3,24 @@ import BaseLayout from "../layout/BaseLayout.astro";
 import StructuredData from "../components/seo/StructuredData.astro";
 import { getEntry, render } from "astro:content";
 
-import faqData from "../data/faq.json";
+const serviceFaq = [
+  {
+    "question": "Quel est le prix d'une application web ou mobile ?",
+    "answer": "Chaque application est sur devis. Le prix dépend des parcours, des rôles, des intégrations et des données à reprendre. Le devis distingue le premier développement, l'hébergement, les services tiers, la maintenance et les évolutions."
+  },
+  {
+    "question": "Faut-il publier l'application sur les stores ?",
+    "answer": "Cela dépend de l'usage. Une application web accessible par navigateur suffit pour de nombreux outils internes et portails clients. Une application mobile est étudiée lorsqu'elle répond à un besoin précis. Les modalités de publication sont convenues au devis."
+  },
+  {
+    "question": "Pouvez-vous travailler avec une entreprise partout en France ?",
+    "answer": "Oui. FLEX-WEB accompagne les projets en Savoie, en Haute-Savoie et dans toute la France. Les ateliers, les démonstrations et les validations peuvent être organisés à distance."
+  },
+  {
+    "question": "Une automatisation peut-elle remplacer une application ?",
+    "answer": "Si le besoin consiste à transmettre ou traiter des informations entre vos outils, une automatisation peut suffire. Une application est pertinente lorsqu'il faut créer un nouveau parcours ou un espace dédié aux utilisateurs. Cette distinction est examinée au cadrage."
+  }
+];
 
 const entry = await getEntry("services", "creation-application-mobile");
 
@@ -15,7 +32,7 @@ const { Content } = await render(entry);
 const { data } = entry;
 
 const siteUrl = "https://flex-web.fr";
-const canonicalUrl = new URL("creation-application-mobile", siteUrl).toString();
+const canonicalUrl = `${siteUrl}/creation-application-mobile/`;
 
 const webPageSchema = {
   "@type": "WebPage",
@@ -23,7 +40,7 @@ const webPageSchema = {
   url: canonicalUrl,
   name: data.seoTitle,
   description: data.seoDescription,
-  isPartOf: { "@id": siteUrl },
+  isPartOf: { "@id": `${siteUrl}/#website` },
 };
 
 const serviceSchema = {
@@ -51,79 +68,27 @@ const serviceSchema = {
     priceCurrency: "EUR",
     availability: "https://schema.org/InStock",
   },
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "5",
-    bestRating: "5",
-    ratingCount: "3",
-  },
 };
 
 const breadcrumbSchema = {
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Accueil", item: siteUrl },
+    { "@type": "ListItem", position: 1, name: "Accueil", item: `${siteUrl}/` },
     { "@type": "ListItem", position: 2, name: data.title, item: canonicalUrl },
-  ],
-};
-
-const howItWorksSchema = {
-  "@type": "HowTo",
-  "@id": `${canonicalUrl}#how-it-works`,
-  name: `Processus de création d'une application mobile avec FLEX-WEB`,
-  description: `Les 5 étapes du développement d'une application mobile ou web sur mesure en Savoie et Haute-Savoie avec FLEX-WEB.`,
-  image: `${siteUrl}/logo.png`,
-  totalTime: "P28D",
-  step: [
-    {
-      "@type": "HowToStep",
-      position: 1,
-      name: "Cahier des charges",
-      text: "Nous cadrons vos besoins, vos utilisateurs et vos objectifs.",
-      url: `${canonicalUrl}#etape-1`,
-    },
-    {
-      "@type": "HowToStep",
-      position: 2,
-      name: "Conception",
-      text: "Maquettes, parcours utilisateur et architecture technique.",
-      url: `${canonicalUrl}#etape-2`,
-    },
-    {
-      "@type": "HowToStep",
-      position: 3,
-      name: "Développement",
-      text: "Construction de l'application, intégration des API et tests.",
-      url: `${canonicalUrl}#etape-3`,
-    },
-    {
-      "@type": "HowToStep",
-      position: 4,
-      name: "Déploiement",
-      text: "Mise en production, publication sur les stores si nécessaire.",
-      url: `${canonicalUrl}#etape-4`,
-    },
-    {
-      "@type": "HowToStep",
-      position: 5,
-      name: "Suivi",
-      text: "Maintenance évolutive, corrections et nouvelles fonctionnalités.",
-      url: `${canonicalUrl}#etape-5`,
-    },
   ],
 };
 
 const faqSchema = {
   "@type": "FAQPage",
   "@id": `${canonicalUrl}#faq`,
-  mainEntity: faqData.items.map((item) => ({
+  mainEntity: serviceFaq.map((item) => ({
     "@type": "Question",
     name: item.question,
     acceptedAnswer: { "@type": "Answer", text: item.answer },
   })),
 };
 
-const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, howItWorksSchema, faqSchema];
+const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
 ---
 
 <BaseLayout title={data.seoTitle} description={data.seoDescription} keywords="création application mobile, application web sur mesure, application iOS, application Android, développement app Savoie, app Haute-Savoie, devis application mobile gratuit">
@@ -147,7 +112,7 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, howItWorksSchem
         En bref
       </h2>
       <p class="mt-3 leading-relaxed" style="color: var(--color-text-muted)">
-        FLEX-WEB développe des applications mobiles et web sur mesure pour les entreprises, artisans et PME de Savoie et Haute-Savoie. Chaque projet est conçu pour répondre précisément à vos besoins métier, avec un accompagnement complet de la conception au déploiement.
+        FLEX-WEB développe des applications métier, des portails clients et des SaaS pour les entreprises en France, avec un accompagnement en Savoie et Haute-Savoie. Le devis précise le premier périmètre, les intégrations, le déploiement et les modalités de suivi.
       </p>
     </section>
 
@@ -193,17 +158,34 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, howItWorksSchem
       <div class="mt-4 flex flex-wrap gap-3">
         {data.relatedLocations.map((slug: string) => (
           <a
-            href={`/${slug}`}
+            href={`/${slug}/`}
             class="rounded-full px-4 py-2 text-sm font-medium transition hover:opacity-90"
             style="background-color: var(--color-surface); color: var(--color-text)"
           >
-            {slug.replace("creation-site-internet-", "").replace(/-/g, " ")}
+            {slug.replace("creation-site-internet-", "").replace("creation-application-mobile-", "").replace(/-/g, " ")}
           </a>
         ))}
       </div>
     </section>
 
-    <aside class="mt-16 rounded-3xl p-8 text-center" style="background-color: var(--color-surface)">
+    <section class="mt-16 rounded-2xl border p-6" style="border-color: var(--color-border)">
+      <h2 class="text-2xl font-semibold tracking-tight">Automatiser les tâches autour de votre projet</h2>
+      <p class="mt-4 leading-relaxed">Découvrez le <a href="/automatisation-ia/" class="underline">cadrage d'une automatisation IA</a>, avec des parcours dédiés à la <a href="/automatisation-ia-savoie/" class="underline">Savoie</a> et à la <a href="/automatisation-ia-haute-savoie/" class="underline">Haute-Savoie</a>. Les demandes, les documents et le CRM peuvent être reliés selon vos outils et le périmètre du devis.</p>
+    </section>
+
+    <section id="faq" class="mt-16">
+      <h2 class="text-2xl font-semibold tracking-tight">Questions fréquentes</h2>
+      <div class="mt-6 space-y-4">
+        {serviceFaq.map((item) => (
+          <details class="rounded-2xl border p-5" style="border-color: var(--color-border)">
+            <summary class="cursor-pointer font-medium">{item.question}</summary>
+            <p class="mt-4 leading-relaxed" style="color: var(--color-text-muted)">{item.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <aside id="contact" class="mt-16 rounded-3xl p-8 text-center" style="background-color: var(--color-surface)">
       <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
         Un projet d'application mobile ou web ?
       </h2>
@@ -211,7 +193,7 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, howItWorksSchem
         Discutons de votre projet et obtenez un devis gratuit.
       </p>
       <a
-        href="/contact/"
+        href="/demarrer/?service=application"
         class="mt-6 inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-medium text-white transition hover:opacity-90"
         style="background-color: var(--color-accent)"
       >

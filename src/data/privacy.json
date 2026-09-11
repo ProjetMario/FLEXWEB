@@ -1,5 +1,5 @@
 {
-  "updated": "9 septembre 2026",
+  "updated": "11 septembre 2026",
   "sections": [
     {
       "title": "1. Responsable du traitement et engagement de confidentialité",
@@ -34,7 +34,8 @@
     {
       "title": "5. Utilisation des cookies",
       "content": [
-        "Le stockage local mémorise votre choix de confidentialité. Le parcours projet utilise également le stockage de session, nécessaire pour conserver votre accès privé et éviter de créer deux demandes lors d’une nouvelle tentative. Les pages du parcours projet ne chargent aucun outil publicitaire ou analytique."
+        "Le stockage local mémorise votre choix de confidentialité. Google Analytics est chargé uniquement après votre accord pour mesurer les visites et les demandes de devis enregistrées. Aucun nom, e-mail, téléphone ou texte de formulaire n’est envoyé dans nos événements de mesure ; les paramètres et fragments des URL sont exclus. Vous pouvez refuser ou modifier ce choix via « Choix des cookies » en bas de page.",
+        "Le formulaire de demande utilise le stockage de session pour éviter les doublons et conserver l’accès à votre projet. La confirmation d’une demande peut être mesurée avec votre accord. L’espace privé /espace-projet/ ne charge aucun outil publicitaire ou analytique."
       ]
     },
     {

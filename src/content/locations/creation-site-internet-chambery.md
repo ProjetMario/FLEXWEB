@@ -33,9 +33,9 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel est le prix d'un site vitrine à Chambéry ?"
-    answer: "Un site vitrine professionnel démarre autour de quelques centaines d'euros. Le tarif final dépend du nombre de pages et des fonctionnalités."
+    answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
   - question: "Combien de temps dure la création d'un site ?"
-    answer: "En général, un site vitrine est en ligne entre 24h et 7 jours ouvrés après validation du brief et réception des contenus."
+    answer: "Le calendrier est confirmé dans le devis après validation du périmètre et réception des contenus nécessaires. Les étapes de conception, de vérification et de publication sont convenues avec vous."
   - question: "FLEX-WEB intervient-il dans le centre de Chambéry ?"
     answer: "Oui, nous accompagnons les entreprises du centre-ville et de l'agglomération chambérienne."
   - question: "Le site est-il optimisé pour Google ?"

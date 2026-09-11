@@ -1,5 +1,23 @@
 [
   {
+    "slug": "taches-automatiser-pme",
+    "title": "Quelles tâches automatiser dans une PME ?",
+    "description": "Choisir un premier parcours utile : demandes, devis, tâches de rappel et préparation de réponses, avec des repères pour mesurer l’intérêt.",
+    "image": "/images/journal/automatisation-pme.svg"
+  },
+  {
+    "slug": "connecter-demandes-crm",
+    "title": "Comment relier les demandes de votre site à un CRM ?",
+    "description": "Du formulaire à la prochaine action : centraliser les demandes, gérer les exceptions et organiser le suivi de votre équipe.",
+    "image": "/images/journal/demandes-crm.svg"
+  },
+  {
+    "slug": "automatisation-ou-application-sur-mesure",
+    "title": "Automatisation ou application sur mesure : que choisir ?",
+    "description": "Comparer la connexion de vos outils et la création d’un espace métier selon les usages, les utilisateurs et les coûts de fonctionnement.",
+    "image": "/images/journal/application-sur-mesure.svg"
+  },
+  {
     "slug": "combien-coute-site-internet-savoie",
     "title": "Combien coûte un site internet en Savoie ?",
     "description": "Repères concrets pour comprendre le budget d'un site vitrine, d'un site professionnel ou d'un projet plus complet.",

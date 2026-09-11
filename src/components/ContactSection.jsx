@@ -36,10 +36,10 @@ export default function ContactSection({ data = {} }) {
           )}
         </MotionWrapper>
 
-        <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.7 }} className="flex flex-col items-start gap-5 rounded-2xl border border-gray-200 bg-white p-8">
-          <h2 className="text-2xl font-semibold text-gray-900">Parlons de votre prochain site</h2>
-          <p className="text-gray-600 leading-relaxed">Décrivez votre activité, choisissez votre formule et retrouvez le suivi dans votre espace privé. Nous confirmons le périmètre avant tout paiement.</p>
-          <a href="/demarrer/" className="rounded-full bg-blue-600 px-7 py-3 font-medium text-white hover:bg-blue-700">Préparer mon projet</a>
+        <motion.div initial={false} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.7 }} className="flex flex-col items-start gap-5 rounded-2xl border border-gray-200 bg-white p-8">
+          <h2 className="text-2xl font-semibold text-gray-900">Parlons de votre projet IA, site ou application</h2>
+          <p className="text-gray-600 leading-relaxed">Décrivez les tâches à simplifier ou le service à développer. Nous étudions le besoin et confirmons le périmètre avant tout paiement.</p>
+          <a href="/demarrer/?service=automation" className="rounded-full bg-blue-600 px-7 py-3 font-medium text-white hover:bg-blue-700">Demander un devis IA</a>
           <p className="text-sm leading-relaxed text-gray-500">Pour une application sur mesure ou une question, écrivez-nous à <a href="mailto:contact@flex-web.fr" className="text-blue-600 underline">contact@flex-web.fr</a>.</p>
         </motion.div>
       </div>

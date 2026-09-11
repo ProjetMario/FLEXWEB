@@ -31,7 +31,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel prix pour un site vitrine à Vimines ?"
-    answer: "Un site vitrine professionnel est accessible à partir de quelques centaines d'euros."
+    answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
   - question: "FLEX-WEB intervient-il à Vimines ?"
     answer: "Oui, nous accompagnons les entreprises de Vimines et des communes autour de Chambéry."
   - question: "Le site sera-t-il visible localement ?"

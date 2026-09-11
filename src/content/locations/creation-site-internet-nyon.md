@@ -31,7 +31,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel prix pour un site vitrine à Nyon ?"
-    answer: "Un site vitrine professionnel est accessible à partir de quelques centaines de francs suisses."
+    answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
   - question: "FLEX-WEB travaille-t-il à Nyon ?"
     answer: "Oui, nous accompagnons les entreprises de Nyon et de la région lémanique."
   - question: "Le site sera-t-il visible localement ?"

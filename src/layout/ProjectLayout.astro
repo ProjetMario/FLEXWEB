@@ -1,7 +1,10 @@
 ---
 import "../styles/global.css";
 import "../styles/onboarding.css";
+import Analytics from "../components/seo/Analytics.astro";
+import CookieConsent from "../components/global/CookieConsent.jsx";
 const { title } = Astro.props;
+const isIntake = Astro.url.pathname.replace(/\/$/, "") === "/demarrer";
 ---
 <!doctype html>
 <html lang="fr">
@@ -12,10 +15,15 @@ const { title } = Astro.props;
     <meta name="referrer" content="no-referrer" />
     <title>{title} — FLEX-WEB</title>
     <link rel="icon" href="/favicon.png" />
+    {isIntake && <Analytics pageView={false} />}
   </head>
   <body class="project-flow bg-[#fafafa]">
     <header class="border-b border-[#e5e5e7] bg-white"><div class="mx-auto flex max-w-[1080px] flex-wrap items-center justify-between gap-4 px-6 py-5"><a href="/" class="text-xl font-semibold tracking-tight !text-[#1d1d1f] !no-underline">FLEX-WEB</a><a href="mailto:contact@flex-web.fr" class="text-sm">Besoin d’aide ?</a></div></header>
     <main class="flow-wrap"><slot /></main>
-    <footer class="mx-auto max-w-[1080px] px-6 pb-8 text-sm text-[#6e6e73]">Fleximmo · Voglans, Savoie · <a href="/privacy/">Confidentialité</a> · <a href="/cgv/">Conditions de vente</a></footer>
+    {isIntake && <CookieConsent client:load />}
+    <footer class="mx-auto max-w-[1080px] px-6 pb-8 text-sm text-[#6e6e73]">Fleximmo · Voglans, Savoie · <a href="/privacy/">Confidentialité</a> · <a href="/cgv/">Conditions de vente</a>{isIntake && <> · <button type="button" id="project-cookie-settings" class="underline">Choix des cookies</button></>}</footer>
+    {isIntake && <script is:inline>
+      document.getElementById('project-cookie-settings')?.addEventListener('click', () => window.dispatchEvent(new Event('flexweb-cookie-settings')));
+    </script>}
   </body>
 </html>

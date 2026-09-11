@@ -31,7 +31,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel prix pour un site vitrine à La Motte-Servolex ?"
-    answer: "Un site vitrine professionnel est accessible à partir de quelques centaines d'euros, selon les pages et fonctionnalités souhaitées."
+    answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
   - question: "FLEX-WEB travaille-t-il près de Chambéry ?"
     answer: "Oui, nous accompagnons les entreprises de La Motte-Servolex et de l'agglomération chambérienne."
   - question: "Le site sera-t-il visible sur Google ?"

@@ -5,7 +5,7 @@ type: "department"
 department: "Savoie"
 region: "Auvergne-Rhône-Alpes"
 country: "France"
-introduction: "FLEX-WEB accompagne les entreprises, artisans et indépendants de la Savoie dans la création de sites internet professionnels, rapides, accessibles et optimisés pour Google et les moteurs généraux."
+introduction: "FLEX-WEB accompagne les entreprises, artisans et indépendants de la Savoie dans la création de sites internet professionnels, rapides, accessibles et structurés pour Google et compréhensibles pour leurs visiteurs."
 localContext: "La Savoie est un département au tissu économique diversifié : tourisme, artisanat, commerce de proximité, PME industrielles et professions libérales. Une présence en ligne pertinente permet à chacun de ces acteurs de capter les recherches locales et de convertir les visiteurs en clients."
 targetIndustries:
   - "Artisans et entreprises du bâtiment"
@@ -35,9 +35,9 @@ services:
   - "Création d'application mobile et web"
 faq:
   - question: "Quel est le prix d'un site internet en Savoie ?"
-    answer: "Le tarif dépend du nombre de pages, des fonctionnalités et de l'intégration du contenu. Un site vitrine professionnel est accessible dès quelques centaines d'euros, avec des formules d'abonnement ou d'achat définitif."
+    answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
   - question: "Combien de temps faut-il pour créer un site vitrine ?"
-    answer: "Un site vitrine standard est généralement en ligne entre 24h et 7 jours ouvrés, après validation du brief et réception des contenus."
+    answer: "Le calendrier est confirmé dans le devis après validation du périmètre et réception des contenus nécessaires. Les étapes de conception, de vérification et de publication sont convenues avec vous."
   - question: "FLEX-WEB intervient-il à Chambéry et Aix-les-Bains ?"
     answer: "Oui, nous travaillons dans toute la Savoie, notamment à Chambéry, Aix-les-Bains, Albertville, Saint-Jean-de-Maurienne et dans les communes environnantes."
   - question: "Le site est-il optimisé pour Google ?"
@@ -51,53 +51,48 @@ seoDescription: "FLEX-WEB crée des sites web professionnels pour artisans, comm
 isDraft: false
 ---
 
-## Création de sites internet pour les entreprises savoyardes
+## Un site pour expliquer vos prestations et qualifier les demandes
 
-FLEX-WEB aide les entreprises de Savoie à créer des sites internet qui transmettent clairement leur activité et convertissent les visiteurs. Chaque projet débute par une compréhension du métier, des objectifs et des clients cibles.
+Un artisan qui travaille dans plusieurs communes n'a pas les mêmes informations à recueillir qu'une entreprise de services ou un hébergeur. Le site doit présenter votre activité, les prestations proposées, votre zone réelle d'intervention et la manière de vous contacter. Des photos et des exemples dont vous possédez les droits peuvent compléter cette présentation.
 
-Un bon site local doit être rapide, lisible sur mobile, structuré pour Google et utile pour l'utilisateur. C'est exactement ce que nous construisons.
+Pour un projet en Savoie, nous commençons par les recherches et les questions de vos clients : type de travaux, disponibilité d'une prestation, modalités d'accueil ou besoin d'un devis. Le nom d'une commune ne remplace pas ces explications.
 
-## Pour quels professionnels en Savoie ?
+## Choisir entre un site simple et un site complet
 
-- **Artisans** : menuisiers, électriciens, plombiers, peintres, couvreurs.
-- **Commerçants** : boutiques locales, commerces alimentaires, boutiques spécialisées.
-- **Hôtellerie-restauration** : hôtels, restaurants, cafés, gîtes, chambres d'hôtes.
-- **Professions libérales** : avocats, notaires, consultants, ostéopathes, coachs.
-- **PME et industriels** : entreprises locales qui veulent moderniser leur image.
-- **Associations** : structures qui ont besoin d'un site clair et administrable.
+Le **site vitrine simple à 299 € HT** permet de présenter votre entreprise et de faciliter un premier contact. Le **site vitrine complet à 990 € HT** prévoit une présentation et une personnalisation plus développées dans le périmètre du devis. La création est payée une seule fois.
 
-## Nos services en Savoie
+La **maintenance avec modifications à 49 € HT/mois** et l'option **CRM, automatisation et référencement à 99 € HT/mois** sont facultatives. Le devis décrit les pages, les contenus, le domaine, l'hébergement et les éventuels outils tiers. [Voir les tarifs et demander un devis](/pricing/).
 
-### Site vitrine
-Un site clair qui présente votre activité, vos prestations, vos coordonnées et vos réalisations. Idéal pour les artisans et professions libérales.
+## Exemples de parcours pour une entreprise savoyarde
 
-### Site professionnel
-Un site structuré avec plusieurs pages de service, des appels à l'action, un blog et des options de contact avancées.
+Les exemples ci-dessous servent au cadrage ; ils ne représentent pas des références clients.
 
-### Refonte de site internet
-Modernisation d'un site existant avec mise à jour du contenu, amélioration de la vitesse et optimisation du référencement.
+### Artisan et interventions dans plusieurs communes
 
-### Référencement local
-Optimisation pour les recherches locales, intégration de Google Business Profile, données structurées et maillage interne.
+La page de service précise les travaux réalisés et les secteurs desservis. Le formulaire demande la commune, la nature du besoin et les coordonnées utiles. L'entreprise peut ainsi vérifier sa capacité à intervenir avant de proposer un rendez-vous. Des informations exactes sont préférables à une liste de villes où elle n'intervient pas.
 
-### Maintenance et hébergement
-Mises à jour régulières, sauvegardes, surveillance et support technique pour garder un site sécurisé et disponible.
+### Hébergement ou activité saisonnière
 
-### Création d'application mobile et web
-Au-delà du site internet, nous développons des [applications mobiles et web sur mesure](/creation-application-mobile) pour les entreprises savoyardes : gestion d'interventions, réservation, espace client ou outil interne.
+Le site présente les prestations, les conditions d'accueil et les informations pratiques à jour. Une demande de disponibilité peut être transmise à l'équipe ; une réservation confirmée nécessite des règles et, selon le projet, une connexion au logiciel existant. Cette intégration est cadrée avant le devis.
 
-## Pourquoi choisir un prestataire local ?
+### PME et services aux entreprises
 
-Travailler avec FLEX-WEB, c'est bénéficier d'un interlocuteur qui connaît le territoire savoyard, les communes desservies et les spécificités des métiers locaux. Cela se traduit par un contenu pertinent, un maillage local solide et un référencement adapté.
+Plusieurs pages permettent d'expliquer les prestations, les profils de clients et la façon de démarrer une mission. Une demande qualifiée peut ensuite être enregistrée dans un CRM pour attribuer une action et suivre la réponse.
 
-## Comment se déroule la création d'un site ?
+## Référencement naturel en Savoie : partir de votre zone réelle
 
-1. **Premier échange** : compréhension de votre activité, de vos objectifs et de vos concurrents locaux.
-2. **Conception** : structuration du site, arborescence, rédaction du contenu et choix graphique.
-3. **Développement** : intégration, optimisation des performances et tests sur mobile et desktop.
-4. **Mise en ligne** : publication, configuration du référencement et connexion aux outils de suivi.
-5. **Suivi** : formation rapide, maintenance et améliorations continues selon les retours.
+Une page utile décrit vos services, vos modalités de travail et les questions fréquentes de vos clients. Les titres, les descriptions et les données structurées doivent refléter ce contenu. Les coordonnées du site et de votre fiche Google Business Profile, si vous en avez une, doivent rester cohérentes.
 
-## Villes et communes que nous desservons
+Le suivi porte sur l'indexation, les recherches qui apportent des visites et les demandes reçues. Il sert à choisir les prochains contenus à améliorer. Une position Google ou une citation dans une réponse IA ne peut pas être promise.
 
-Nous intervenons dans l'ensemble du département : **Chambéry, Aix-les-Bains, Albertville, Saint-Jean-de-Maurienne, Bourg-Saint-Maurice, Moûtiers, Ugine, La Motte-Servolex, Le Bourget-du-Lac, Montmélian** et leurs environs.
+## Automatiser le traitement des demandes
+
+La création du site peut être complétée par une [automatisation IA en Savoie](/automatisation-ia-savoie/) : enregistrer une demande dans le CRM, préparer une tâche, signaler des pièces manquantes ou proposer un brouillon de réponse. Les envois et les décisions sont encadrés selon vos règles et les possibilités des outils.
+
+Si vos clients doivent consulter leur dossier ou si vos équipes ont besoin d'un outil de terrain, découvrez le [développement d'applications en Savoie](/creation-application-mobile-savoie/). Une application sur mesure fait l'objet d'un devis spécifique.
+
+## Préparer votre projet et son calendrier
+
+Fournissez la description de votre activité, vos prestations, les coordonnées à publier, les contenus disponibles et un exemple de demande idéale. Nous cadrons ensuite la structure, les responsabilités et les étapes de validation. Le calendrier est confirmé après accord sur le périmètre et réception des éléments nécessaires.
+
+FLEX-WEB est basé à Voglans. Nous accompagnons notamment les entreprises de [Chambéry](/creation-site-internet-chambery/), [Aix-les-Bains](/creation-site-internet-aix-les-bains/) et [Albertville](/creation-site-internet-albertville/), avec des échanges à distance selon les besoins. Pour une activité qui dépasse le département, la [création de sites en France](/creation-site-internet/) permet de présenter une zone d'intervention nationale sans inventer d'implantation locale.

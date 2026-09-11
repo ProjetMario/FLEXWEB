@@ -30,21 +30,27 @@ export default function Contact({ data = {} }) {
             Nous préparons la suite.
           </h3>
           <ol className="my-8 space-y-4 text-sm text-[#6e6e73]">
-            <li>1. Choisissez votre offre et décrivez votre besoin.</li>
+            <li>1. Décrivez votre besoin et vos outils actuels.</li>
             <li>2. Retrouvez votre proposition dans un espace privé.</li>
-            <li>3. Transmettez votre brief et validez votre site.</li>
+            <li>3. Validez le périmètre, le budget et le calendrier.</li>
           </ol>
           <a
-            href="/demarrer/"
+            href="/demarrer/?service=automation"
             className="inline-flex rounded-full bg-[#0071e3] px-6 py-3 text-sm font-medium text-white"
           >
-            Préparer mon projet
+            Demander un devis automatisation IA
           </a>
           <p className="mt-4 text-xs text-[#6e6e73]">
             Demande gratuite · Aucun paiement avant validation du périmètre
           </p>
           <p className="mt-7 text-sm text-[#6e6e73]">
-            Pour une application ou un besoin particulier :{" "}
+            Pour un autre projet :{" "}
+            <a href="/demarrer/?service=site" className="text-[#0071e3] underline">devis site internet</a>
+            {" · "}
+            <a href="/demarrer/?service=application" className="text-[#0071e3] underline">devis application</a>.
+          </p>
+          <p className="mt-4 text-sm text-[#6e6e73]">
+            Vous pouvez aussi nous écrire :{" "}
             <a
               href="mailto:contact@flex-web.fr"
               className="text-[#0071e3] underline"

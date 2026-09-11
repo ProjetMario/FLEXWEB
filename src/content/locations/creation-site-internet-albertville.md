@@ -34,7 +34,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel est le prix d'un site vitrine à Albertville ?"
-    answer: "Un site vitrine professionnel à Albertville démarre à quelques centaines d'euros, selon le nombre de pages et les fonctionnalités."
+    answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
   - question: "FLEX-WEB intervient-il en Tarentaise ?"
     answer: "Oui, nous accompagnons les entreprises d'Albertville et des vallées environnantes."
   - question: "Le site peut-il être adapté au tourisme hivernal ?"

@@ -1,38 +1,30 @@
 {
-  "label": "FAQ",
-  "title": "Questions fréquentes",
+  "label": "Vos questions",
+  "title": "Avant de lancer votre projet",
   "items": [
     {
-      "question": "Combien coûte un site ?",
-      "answer": "Nous proposons un abonnement mensuel tout inclus. Pas de surprise : le design, l'hébergement, la maintenance et le support sont compris. Le prix dépend du nombre de pages et des fonctionnalités souhaitées."
+      "question": "Quelles tâches peut-on automatiser avec l’IA ?",
+      "answer": "Le tri des demandes, la préparation de réponses, la synthèse de documents et le suivi CRM sont des points de départ. Flex-Web étudie vos outils, la qualité des données et les validations à garder avant de proposer un scénario sur devis."
     },
     {
-      "question": "Puis-je modifier mon contenu ?",
-      "answer": "Oui. Les offres Professionnelle et Croissance incluent 30 minutes de modifications par mois, non reportables. Pour l’offre Essentielle, l’achat définitif ou une demande hors périmètre, nous vous proposons un devis avant intervention."
+      "question": "Combien coûte un site internet Flex-Web ?",
+      "answer": "La création d’un site vitrine simple est proposée à 299 € HT, celle d’un site complet à 990 € HT, en paiement unique. La maintenance avec modifications est une option à 49 € HT/mois ; le CRM, l’automatisation et le référencement sont une option à 99 € HT/mois. Le périmètre et les éventuels coûts tiers sont précisés au devis."
     },
     {
-      "question": "Combien de temps faut-il ?",
-      "answer": "La plupart des sites vitrines sont livrés entre 24h et 7 jours ouvrés, après validation de votre brief et réception de vos contenus."
+      "question": "Intervenez-vous en Savoie, Haute-Savoie et dans toute la France ?",
+      "answer": "Flex-Web est basé à Voglans, en Savoie. Nous accompagnons les professionnels de Savoie et Haute-Savoie, notamment autour de Chambéry et Annecy, ainsi que les entreprises de toute la France à distance."
     },
     {
-      "question": "Suis-je propriétaire du domaine ?",
-      "answer": "Oui, totalement. Vous restez propriétaire de votre nom de domaine et de votre contenu. Nous nous chargeons uniquement de la configuration technique."
+      "question": "Développez-vous des applications sur mesure ?",
+      "answer": "Oui. Applications web, espaces clients, outils internes et applications mobiles sont étudiés sur devis. Nous définissons avec vous les utilisateurs, les fonctionnalités et les connexions utiles avant le développement."
     },
     {
-      "question": "Que comprend l'abonnement ?",
-      "answer": "L'abonnement comprend la création du site, l'hébergement, le certificat SSL, les sauvegardes, la maintenance, les mises à jour de sécurité et un support réactif."
+      "question": "Quel délai prévoir pour mon projet ?",
+      "answer": "Le calendrier est défini dans le devis après étude du périmètre et des contenus disponibles. Une automatisation dépend notamment de l’accès à vos outils ; une application dépend des fonctionnalités et des validations nécessaires."
     },
     {
-      "question": "Flex-Web intervient-il en Savoie et Haute-Savoie ?",
-      "answer": "Oui, Flex-Web est basé à Voglans (Savoie) et intervient dans toute la Savoie et la Haute-Savoie, notamment à Chambéry, Aix-les-Bains, Annecy, Annemasse, Albertville, Thonon-les-Bains et dans les communes environnantes."
-    },
-    {
-      "question": "Flex-Web développe-t-il des applications mobiles ?",
-      "answer": "Oui, nous développons des applications web (SaaS) et mobiles iOS/Android sur mesure pour les entreprises locales de Savoie et Haute-Savoie : réservation, espace client, outil de gestion interne ou produit SaaS."
-    },
-    {
-      "question": "Pourquoi choisir Flex-Web plutôt qu'une agence à Lyon ou Genève ?",
-      "answer": "Flex-Web connaît le tissu économique savoyard, les communes, les saisons touristiques et la proximité suisse. Cette connaissance se traduit par un contenu local pertinent, un référencement ciblé et un interlocuteur accessible."
+      "question": "L’IA peut-elle gérer mon activité seule ?",
+      "answer": "Les tâches répétitives peuvent être automatisées, mais les cas ambigus, les décisions commerciales et les validations sensibles doivent avoir un responsable. Nous définissons les contrôles, les alertes et la reprise manuelle avec vous."
     }
   ]
 }

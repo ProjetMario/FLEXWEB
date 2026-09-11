@@ -34,7 +34,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel prix pour un site vitrine à Aix-les-Bains ?"
-    answer: "Les tarifs débutent à quelques centaines d'euros. Ils varient selon le nombre de pages et les fonctionnalités souhaitées."
+    answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
   - question: "Le site peut-il être adapté au tourisme ?"
     answer: "Oui, nous créons des sites pour hôtels, restaurants et spas avec prise de contact, galerie photos et informations pratiques."
   - question: "FLEX-WEB intervient-il au bord du lac du Bourget ?"

@@ -27,7 +27,7 @@ export default function Navigation({ data = {}, transparent = false }) {
       <div className="mx-auto flex max-w-6xl flex-row items-center justify-between px-5 py-3.5 md:px-7 relative">
         <Logo className="h-14 md:h-[5.25rem]" />
 
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center gap-8 text-sm font-medium text-[#424245]">
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden lg:flex items-center gap-6 text-sm font-medium text-[#424245]">
           {links.map((link) => (
             <a key={link.href} href={link.href.startsWith("#") ? `/${link.href}` : link.href} className="transition-colors duration-200 hover:text-[#0071e3]">
               {link.label}
@@ -35,9 +35,9 @@ export default function Navigation({ data = {}, transparent = false }) {
           ))}
         </div>
 
-        <div className="hidden md:flex items-center">
+        <div className="hidden lg:flex items-center">
           <a
-            href="/#contact"
+            href="/demarrer/?service=automation"
             className="inline-flex items-center rounded-full bg-[#0071e3] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0077ed]"
           >
             Devis gratuit
@@ -46,7 +46,7 @@ export default function Navigation({ data = {}, transparent = false }) {
 
         {!open && (
           <button
-            className="flex flex-col cursor-pointer justify-center items-center space-y-1.5 md:hidden focus:outline-none"
+            className="flex flex-col cursor-pointer justify-center items-center space-y-1.5 lg:hidden focus:outline-none"
             aria-label="Ouvrir le menu"
             onClick={() => setOpen(true)}
           >
@@ -57,7 +57,7 @@ export default function Navigation({ data = {}, transparent = false }) {
       </div>
 
       {open && (
-        <div className="fixed inset-0 z-50 md:hidden" onClick={() => setOpen(false)}>
+        <div className="fixed inset-0 z-50 lg:hidden" onClick={() => setOpen(false)}>
           <div className="absolute inset-0 bg-black/60" />
           <div
             className="absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white shadow-2xl flex flex-col px-6 pt-5"
@@ -87,7 +87,7 @@ export default function Navigation({ data = {}, transparent = false }) {
                 </a>
               ))}
               <a
-                href="/#contact"
+                href="/demarrer/?service=automation"
                 onClick={() => setOpen(false)}
                 className="mt-8 inline-flex items-center justify-center rounded-full bg-stone-900 px-6 py-3 text-sm font-medium text-white"
               >

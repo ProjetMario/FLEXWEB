@@ -1,13 +1,16 @@
 ---
 import BaseLayout from "../layout/BaseLayout.astro";
-import CreatorProfile from "../components/CreatorProfile.jsx";
-
-import AboutData from "../data/about.json";
+import { business } from "../data/business";
 ---
-
-<BaseLayout
-  title="À propos de Flex-Web"
-  description="Découvrez Flex-Web, créateur de sites internet professionnels pour les artisans, indépendants, commerçants et PME."
->
-  <CreatorProfile data={AboutData} client:load />
+<BaseLayout title="À propos de Flex-Web, studio numérique à Voglans" description="Flex-Web à Voglans : automatisation IA, sites internet et applications pour les entreprises de Savoie, Haute-Savoie et France.">
+  <article class="mx-auto max-w-4xl px-6 py-16 md:py-24">
+    <p class="text-sm font-medium text-blue-700">FLEX-WEB · VOGLANS, SAVOIE</p>
+    <h1 class="mt-6 text-4xl font-semibold tracking-tight md:text-6xl">Des outils numériques<br />au service de votre activité.</h1>
+    <p class="mt-8 text-xl leading-relaxed text-zinc-600">{business.description}</p>
+    <section class="mt-12 rounded-3xl bg-zinc-50 p-8"><h2 class="text-2xl font-semibold">Qui porte votre projet ?</h2><p class="mt-5 leading-relaxed text-zinc-600">Flex-Web est une marque commerciale de Fleximmo. Le studio est basé au 93 chemin de la Combe, 73420 Voglans. Les demandes sont étudiées avec un périmètre, des conditions et un calendrier précisés au devis.</p><p class="mt-4"><a class="text-blue-700 underline" href="/mentions-legales/">Consulter l’identité légale de l’entreprise</a></p></section>
+    <section class="mt-12"><h2 class="text-2xl font-semibold">Une méthode progressive</h2><ol class="mt-6 list-decimal space-y-4 pl-6 leading-relaxed text-zinc-600"><li>Comprendre votre activité, les tâches à simplifier et les outils déjà utilisés.</li><li>Choisir une première version utile et formaliser le devis.</li><li>Construire, tester les usages réels et traiter les erreurs avec vous.</li><li>Prévoir les validations, la maintenance et les évolutions nécessaires.</li></ol></section>
+    <section class="mt-12"><h2 class="text-2xl font-semibold">Des exemples pour comprendre</h2><p class="mt-5 leading-relaxed text-zinc-600">Les scénarios présentés sur ce site sont des démonstrations illustratives. Ils servent à expliquer un fonctionnement possible. Aucun résultat client, classement Google ou gain de temps chiffré n’est présenté comme acquis.</p></section>
+    <nav aria-label="Découvrir nos services" class="mt-10 flex flex-wrap gap-5 text-blue-700 underline"><a href="/automatisation-ia/">Automatisation IA</a><a href="/creation-site-internet/">Sites internet</a><a href="/creation-application-mobile/">Applications</a></nav>
+    <a class="mt-12 inline-flex rounded-full bg-blue-700 px-7 py-4 font-medium text-white" href="/demarrer/?service=automation">Parlons de vos tâches à automatiser</a>
+  </article>
 </BaseLayout>
