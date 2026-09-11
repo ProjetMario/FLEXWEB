@@ -71,7 +71,9 @@ Configurer un endpoint `https://flexweb-gestion.netlify.app/api/stripe/webhook` 
 - `invoice.paid`
 - `invoice.payment_failed`
 
-Configurer les informations d'entreprise, facturation et Stripe Tax avant activation. Le tarif Croissance enregistré est 990 € HT de création + 299 € HT/mois. Le premier paiement comprend les deux. Les offres antérieures restent disponibles et les projets conservent leur prix et leur périmètre d'origine.
+Configurer les informations d'entreprise, facturation et Stripe Tax avant activation. Le catalogue public `2026-09-11-ttc` propose 299 € TTC ou 990 € TTC en paiement unique, avec les options facultatives 49 € TTC/mois et 99 € TTC/mois. La demande est gratuite ; le paiement suit l'acceptation du devis. L'instantané de chaque nouvelle proposition porte sa version et `taxBasis: TTC` ; Stripe utilise une taxe inclusive et le webhook vérifie le total TTC.
+
+Les propositions antérieures gardent leurs montants, leur périmètre et leur calcul fiscal : notamment le catalogue public `2026-09-11` et l'ancien tarif Croissance à 990 € HT de création + 299 € HT/mois. Ne pas convertir ces instantanés : Stripe conserve la taxe exclusive et le contrôle du sous-total pour ces contrats historiques.
 
 Créer une configuration dédiée du portail Stripe autorisant l'accès aux factures et la mise à jour du moyen de paiement. Ne pas activer un changement d'offre ou une résiliation immédiate qui contredirait le préavis contractuel ; les résiliations sont traitées selon le contrat. Le bouton du portail reste masqué sans identifiant de configuration.
 
