@@ -2,6 +2,8 @@ import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 import { z } from "zod";
 import offers from "./offers.json";
 import publicQuotes from "./public-quotes.json";
+import legacyPublicQuotes from "./public-quotes-2026-09-11.json";
+import { TTC_QUOTE_VERSION, LEGACY_QUOTE_VERSION } from "./public-quote-pricing";
 
 export const catalog = offers;
 export const TERMS_VERSION = "2026-09-09";
@@ -45,14 +47,14 @@ export function secretMatches(
 const text = (max: number) => z.string().trim().min(1).max(max);
 export const publicQuoteSchema = z.discriminatedUnion("service", [
   z.object({
-    version: z.literal("2026-09-11"),
+    version: z.enum([LEGACY_QUOTE_VERSION, TTC_QUOTE_VERSION]),
     service: z.literal("site"),
     tier: z.enum(["simple", "complete"]),
     options: z.array(z.enum(["maintenance", "crm"])).max(2)
       .refine((options) => new Set(options).size === options.length, "Option dupliquée."),
   }).strict(),
-  z.object({ version: z.literal("2026-09-11"), service: z.literal("automation") }).strict(),
-  z.object({ version: z.literal("2026-09-11"), service: z.literal("application") }).strict(),
+  z.object({ version: z.enum([LEGACY_QUOTE_VERSION, TTC_QUOTE_VERSION]), service: z.literal("automation") }).strict(),
+  z.object({ version: z.enum([LEGACY_QUOTE_VERSION, TTC_QUOTE_VERSION]), service: z.literal("application") }).strict(),
 ]);
 export type PublicQuote = z.infer<typeof publicQuoteSchema>;
 
@@ -60,19 +62,21 @@ export type PublicQuote = z.infer<typeof publicQuoteSchema>;
 export function offerForIntake(data: { planId: string; publicQuote?: PublicQuote }) {
   if (!data.publicQuote) return offerFor(data.planId);
   const selection = publicQuoteSchema.parse(data.publicQuote);
+  const catalogue = selection.version === TTC_QUOTE_VERSION ? publicQuotes : legacyPublicQuotes;
+  const taxBasis = selection.version === TTC_QUOTE_VERSION ? "TTC" : "HT";
   if (selection.service !== "site") return {
     id: "achat", name: selection.service === "automation" ? "Automatisation IA sur mesure" : "Application web ou mobile",
     setupCents: 0, monthlyCents: 0, pages: 0, supportMinutes: 0,
     features: ["Prestation sur mesure à chiffrer", "Périmètre, budget et calendrier à confirmer dans un devis distinct"],
-    publicQuote: selection, quoteOnly: true,
+    publicQuote: selection, taxBasis, quoteOnly: true,
   };
-  const website = publicQuotes.websiteOffers.find((offer) => offer.tier === selection.tier)!;
-  const options = publicQuotes.options.filter((option) => selection.options.includes(option.id as "maintenance" | "crm"));
+  const website = catalogue.websiteOffers.find((offer) => offer.tier === selection.tier)!;
+  const options = catalogue.options.filter((option) => selection.options.includes(option.id as "maintenance" | "crm"));
   return {
     ...website,
     monthlyCents: options.reduce((sum, option) => sum + option.monthlyCents, 0),
-    features: [...website.features, ...options.map((option) => `Option ${option.name} : ${option.monthlyCents / 100} € HT/mois. ${option.description}`)],
-    publicQuote: selection, quoteOnly: false,
+    features: [...website.features, ...options.map((option) => `Option ${option.name} : ${option.monthlyCents / 100} € ${taxBasis}/mois. ${option.description}`)],
+    publicQuote: selection, taxBasis, quoteOnly: false,
   };
 }
 

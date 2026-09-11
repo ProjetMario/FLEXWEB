@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { isPublicQuote, isInclusiveQuote, quoteTaxLabel, TTC_QUOTE_VERSION, type QuoteSnapshot } from "./public-quote-pricing";
 import { prisma } from "../prisma";
 import { HttpError, offerFor, TERMS_VERSION, assertStandardQuote } from "./core";
 import { marketingUrl } from "./service";
@@ -62,8 +63,10 @@ export async function startCheckout(
           );
       }
       const offer = offerFor(current.planId);
-      const snapshot = current.offerSnapshot as { name?: string; publicQuote?: { version?: string } };
-      const versionedQuote = snapshot.publicQuote?.version === "2026-09-11";
+      const snapshot = current.offerSnapshot as QuoteSnapshot & { name?: string };
+      if (snapshot.publicQuote?.version === TTC_QUOTE_VERSION && !isInclusiveQuote(snapshot))
+        throw new HttpError(409, "La base TTC de cette proposition doit être vérifiée avant paiement.");
+      const versionedQuote = isPublicQuote(snapshot);
       const offerName = versionedQuote && snapshot.name ? snapshot.name : offer.name;
       const termsVersion = versionedQuote ? "2026-09-11" : TERMS_VERSION;
       const item = (
@@ -75,7 +78,7 @@ export async function startCheckout(
         price_data: {
           currency: "eur",
           unit_amount: amount,
-          tax_behavior: "exclusive",
+          tax_behavior: isInclusiveQuote(snapshot) ? "inclusive" : "exclusive",
           product_data: { name },
           ...(recurring ? { recurring: { interval: "month" as const } } : {}),
         },
@@ -86,7 +89,7 @@ export async function startCheckout(
           mode: current.monthlyCents ? "subscription" : "payment",
           customer_email: current.email,
           client_reference_id: current.id,
-          metadata: { projectId: current.id, termsVersion },
+          metadata: { projectId: current.id, termsVersion, taxBasis: quoteTaxLabel(snapshot), ...(versionedQuote ? { quoteVersion: snapshot.publicQuote!.version! } : {}) },
           ...(current.monthlyCents
             ? { subscription_data: { metadata: { projectId: current.id } } }
             : { invoice_creation: { enabled: true } }),
@@ -127,7 +130,7 @@ export async function startCheckout(
         data: {
           projectId: current.id,
           type: "TERMS_ACCEPTED",
-          detail: `Proposition ${current.quoteReference}, conditions ${termsVersion}, création ${current.setupCents} centimes HT, mensualité ${current.monthlyCents} centimes HT.`,
+          detail: `Proposition ${current.quoteReference}, conditions ${termsVersion}, création ${current.setupCents} centimes ${quoteTaxLabel(snapshot)}, mensualité ${current.monthlyCents} centimes ${quoteTaxLabel(snapshot)}.`,
         },
       });
       return session.url;
@@ -194,7 +197,7 @@ export async function applyStripeEvent(
         if (
           session.id !== project.stripeSessionId ||
           session.currency !== "eur" ||
-          session.amount_subtotal !== project.setupCents + project.monthlyCents
+          (isInclusiveQuote(project.offerSnapshot as QuoteSnapshot) ? session.amount_total : session.amount_subtotal) !== project.setupCents + project.monthlyCents
         )
           throw new Error("Checkout does not match the approved project");
         if (!project.paidAt) {

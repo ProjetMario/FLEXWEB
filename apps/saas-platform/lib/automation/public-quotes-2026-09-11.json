@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-11-ttc",
+  "version": "2026-09-11",
   "websiteOffers": [
     {
       "tier": "simple",
@@ -47,6 +47,5 @@
       "monthlyCents": 9900,
       "description": "Suivi des demandes dans le CRM, automatisations et travail de référencement, selon les outils et actions définis au devis."
     }
-  ],
-  "taxBasis": "TTC"
+  ]
 }
