@@ -15,3 +15,5 @@ La compilation doit afficher l’étape « Netlify Database setup ». Vérifier 
 Exécuter la compilation **dans** la commande de déploiement : séparer `netlify build` et `netlify deploy --no-build` omet l'association de la base au déploiement. Pour l'aperçu : `netlify deploy --alias codex-devis-ttc --context production`. Le contexte de compilation reprend les variables configurées ; Netlify affecte à cet aperçu la base séparée `codex-devis-ttc`. Pour la publication : `netlify deploy --prod --context production`. Ne pas promouvoir directement l'aperçu, qui conserverait sa base de branche.
 
 Aperçu vérifié : `6aa415cad752df9f63cfb634`, https://codex-devis-ttc--flexweb-gestion.netlify.app. Les deux versions de catalogue passent la validation des champs requis sans créer de projet.
+
+Production vérifiée : `6aa41669c5c724b3f6d1d03d`, https://flexweb-gestion.netlify.app, base `production`. Les deux versions de catalogue sont reconnues ; les requêtes volontairement incomplètes sont rejetées avant création de projet. Le code applicatif correspond au commit `d21d2d5` (les commits suivants documentent uniquement la publication).
