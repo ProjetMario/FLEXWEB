@@ -3,6 +3,7 @@ import BaseHead from "../components/global/BaseHead.astro";
 import Navbar from "../components/global/Navigation.jsx";
 import Footer from "../components/global/Footer.jsx";
 import CookieConsent from "../components/global/CookieConsent.jsx";
+import Analytics from "../components/seo/Analytics.astro";
 
 import navigationLinks from "../data/navigation.json";
 import footerData from "../data/footer.json";
@@ -17,15 +18,7 @@ const { title, description, image, noindex, keywords, transparentNav = false } =
   <head>
     <BaseHead title={title} description={description} image={image} noindex={noindex} keywords={keywords} />
 
-    <!-- Google tag (gtag.js) -->
-    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-PQ639FG72J"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-PQ639FG72J');
-    </script>
+    <Analytics />
 
     <slot name="head" />
   </head>

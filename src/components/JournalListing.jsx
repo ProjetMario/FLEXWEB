@@ -7,7 +7,7 @@ export default function JournalListing({ data = [], featured = null }) {
         <hr className="mb-6 border-t border-gray-200" />
         <div className="flex items-end justify-between">
           <h1 className="text-4xl md:text-6xl font-light grotesque-font text-gray-900 leading-none">
-            Journal
+            Guides pratiques
           </h1>
           <span className="text-xs text-gray-400 font-light uppercase tracking-widest mb-1">
             {data.length + (featured ? 1 : 0)} articles

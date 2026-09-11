@@ -1,0 +1,39 @@
+---
+import AutomationGuideLayout from "../../layout/AutomationGuideLayout.astro";
+---
+
+<AutomationGuideLayout
+  title="Comment relier les demandes de votre site à un CRM ?"
+  description="Du formulaire au suivi commercial : les informations à recueillir, les étapes à connecter et les contrôles à prévoir pour retrouver chaque demande dans votre CRM."
+  slug="connecter-demandes-crm"
+  answer="Le parcours relie le formulaire à une fiche de demande dans le CRM, puis à une personne et une prochaine action. Pour qu’il soit utile, prévoyez les doublons, les informations manquantes et les échecs de connexion. Une notification interne et l’envoi d’un message au client sont deux actions différentes."
+  readingTime="5 min"
+>
+  <p>Un site peut recueillir des demandes sans que le suivi commercial soit bien organisé. Si les coordonnées restent dans une boîte mail, l’équipe doit ensuite les recopier, se répartir les dossiers et décider quoi faire. Relier le formulaire au CRM permet de structurer ces étapes, sous réserve des possibilités de connexion des outils.</p>
+
+  <h2>Partir d’une demande, pas d’une liste de contacts</h2>
+  <p>Le CRM, ou outil de gestion de la relation client, sert à retrouver les échanges et les actions liées à une personne ou une entreprise. Une même entreprise peut formuler plusieurs demandes. Il faut donc distinguer le contact de son besoin du moment, afin de ne pas écraser l’historique lors d’une nouvelle prise de contact.</p>
+  <p>Pour une demande de devis, les informations utiles peuvent être le nom de l’entreprise, une coordonnée de réponse, la prestation recherchée et une description libre. Un lieu d’intervention peut être pertinent pour un artisan ; il ne l’est pas nécessairement pour une prestation entièrement à distance. Demandez seulement les éléments utiles au parcours.</p>
+
+  <h2>Le parcours en cinq étapes</h2>
+  <ol><li><strong>Recevoir :</strong> le site enregistre la demande et son contexte, notamment la page ou le service choisi.</li><li><strong>Contrôler :</strong> les champs nécessaires sont vérifiés. Une information manquante est signalée au lieu d’être inventée.</li><li><strong>Rattacher :</strong> la demande est liée à un contact existant lorsque le rapprochement est fiable, ou créée séparément si le doute reste important.</li><li><strong>Affecter :</strong> une personne reçoit la responsabilité du traitement et une prochaine action.</li><li><strong>Suivre :</strong> l’équipe met à jour l’état et conserve une trace des échanges utiles.</li></ol>
+  <p>Des états comme « nouvelle demande », « à compléter », « échange en cours », « devis transmis » et « clôturée » peuvent suffire au démarrage. Ils doivent correspondre au travail réel de l’équipe, sans ajouter des étapes qu’elle n’utilisera pas.</p>
+
+  <aside class="example"><h3>Démonstration : une demande de site internet</h3><p>Exemple fictif : une entreprise demande un site vitrine et laisse son adresse de réponse. Le formulaire crée une demande associée au service « création de site », puis une tâche de prise de contact. Si cette entreprise revient pour une application, un nouveau dossier est ajouté au même contact après vérification. Ce scénario illustre un fonctionnement possible, sans constituer un résultat client.</p></aside>
+
+  <h2>Prévoir ce qui se passe quand une connexion échoue</h2>
+  <p>La confirmation affichée sur le site doit correspondre à un enregistrement effectif de la demande. Si le CRM ne répond pas, le parcours doit conserver une trace consultable de ce qui reste à traiter ou signaler clairement l’échec. Une opération retentée ne doit pas créer plusieurs demandes identiques.</p>
+  <ul><li><strong>Demande répétée :</strong> vérifier le comportement lors d’un double clic ou d’une nouvelle tentative.</li><li><strong>CRM indisponible :</strong> savoir où retrouver la demande et qui reçoit l’alerte.</li><li><strong>Champ inattendu :</strong> transmettre les informations disponibles et isoler le cas à vérifier.</li><li><strong>Responsable absent :</strong> prévoir une personne ou une file d’attente de remplacement.</li><li><strong>Accès limité :</strong> vérifier que seuls les membres concernés peuvent consulter ou traiter le dossier.</li></ul>
+
+  <h2>Où placer l’IA dans ce parcours ?</h2>
+  <p>L’IA peut proposer un résumé du besoin ou une catégorie à partir d’un texte libre. Elle n’est pas nécessaire pour créer une fiche depuis des champs structurés. Si son classement est incertain, la demande doit rester accessible à l’équipe plutôt que disparaître du suivi.</p>
+  <p>Un brouillon de réponse peut aussi être préparé, à partir de prestations et d’informations validées. La création de ce brouillon ne doit pas déclencher par défaut un envoi. Les modalités d’envoi, les validations et le traitement des demandes de non-contact sont définis séparément avec l’entreprise.</p>
+
+  <h2>Vérifier le parcours sans envoyer de messages réels</h2>
+  <p>Avant la mise en service, utilisez des données de démonstration et un environnement de test lorsque les outils le permettent. Vérifiez une demande complète, une demande incomplète, un contact déjà connu et une interruption. Suivez le résultat depuis le formulaire jusqu’au dossier et à la tâche attendue.</p>
+  <p>Mesurez ensuite les demandes effectivement enregistrées, les erreurs et le délai de prise en charge. Un clic sur « envoyer » ne prouve pas qu’une demande a été enregistrée. Les statistiques de conversion peuvent compter les succès sans recopier le nom, l’adresse mail ou le texte de la demande dans les outils d’audience.</p>
+
+  <h2>Ce qu’il faut préparer pour le devis</h2>
+  <p>Indiquez l’adresse du site, le nom du CRM, les champs du formulaire, les personnes concernées et un exemple fictif de traitement. Précisez si vous voulez seulement centraliser les demandes ou aussi organiser les tâches, les brouillons et les messages. Les connexions disponibles et les frais éventuels sont à vérifier avant de chiffrer.</p>
+  <p>FLEX-WEB propose la <a href="/creation-site-internet/">création de sites internet</a> et des <a href="/automatisation-ia/">projets d’automatisation sur devis</a>. Si vous avez besoin d’un espace de travail spécifique au-delà du CRM, le <a href="/creation-application-mobile/">développement d’une application sur mesure</a> peut faire l’objet d’un cadrage distinct.</p>
+</AutomationGuideLayout>

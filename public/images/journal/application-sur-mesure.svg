@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" fill="none">
+  <rect width="800" height="600" fill="#f0f5fc"/>
+  <text x="71" y="86" fill="#0066cc" font-family="Arial,sans-serif" font-size="16" letter-spacing="3">FLEX-WEB · CHOISIR SON OUTIL</text>
+  <text x="71" y="148" fill="#1d2d3d" font-family="Arial,sans-serif" font-weight="700" font-size="35">Le bon format pour votre besoin.</text>
+  <rect x="71" y="204" width="309" height="303" rx="23" fill="white" stroke="#d4e0ee" stroke-width="2"/>
+  <rect x="419" y="204" width="309" height="303" rx="23" fill="#0066cc"/>
+  <circle cx="151" cy="297" r="27" fill="#e4effe"/>
+  <circle cx="295" cy="297" r="27" fill="#e4effe"/>
+  <path d="M184 297H260M247 284L261 297L247 310" stroke="#0066cc" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="103" y="389" fill="#1d2d3d" font-family="Arial,sans-serif" font-weight="700" font-size="23">Relier vos outils</text>
+  <text x="103" y="429" fill="#53606d" font-family="Arial,sans-serif" font-size="18">Un parcours automatisé</text>
+  <rect x="481" y="251" width="186" height="102" rx="10" fill="white"/>
+  <rect x="494" y="265" width="39" height="75" rx="5" fill="#dcecff"/>
+  <rect x="545" y="265" width="109" height="24" rx="5" fill="#dcecff"/>
+  <rect x="545" y="300" width="49" height="40" rx="5" fill="#edf5ff"/>
+  <rect x="605" y="300" width="49" height="40" rx="5" fill="#edf5ff"/>
+  <text x="452" y="389" fill="white" font-family="Arial,sans-serif" font-weight="700" font-size="23">Créer votre espace</text>
+  <text x="452" y="429" fill="#e0eeff" font-family="Arial,sans-serif" font-size="18">Une application métier</text>
+</svg>

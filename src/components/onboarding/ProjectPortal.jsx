@@ -20,6 +20,8 @@ export default function ProjectPortal() {
     [loading, setLoading] = useState(true),
     [accepted, setAccepted] = useState(false);
   const ticketKey = useRef(null);
+  const isPublicQuote = project?.offer?.publicQuote?.version === "2026-09-11";
+  const quoteOnly = project?.offer?.quoteOnly === true;
   async function refresh(key) {
     try {
       setProject(await api("status", {}, key));
@@ -162,9 +164,9 @@ export default function ProjectPortal() {
               <section className="flow-card">
                 <h2>Votre demande est enregistrée.</h2>
                 <p className="flow-intro">
-                  FLEX-WEB vérifie votre besoin et le périmètre de la
-                  prestation. Vous retrouverez ici votre proposition une fois
-                  validée.
+                  {quoteOnly
+                    ? "FLEX-WEB étudie votre besoin. Nous reprendrons contact pour préciser le périmètre et vous transmettre un devis personnalisé. Aucun prix ni abonnement n’est engagé par cette demande."
+                    : "FLEX-WEB vérifie votre besoin et le périmètre de la prestation. Vous retrouverez ici votre proposition une fois validée."}
                 </p>
                 <p className="flow-note">
                   Référence : {project.id.slice(0, 8).toUpperCase()}
@@ -190,7 +192,7 @@ export default function ProjectPortal() {
                 </div>
                 {project.monthlyCents > 0 && (
                   <div className="flow-detail">
-                    <span>Abonnement mensuel</span>
+                    <span>{isPublicQuote ? "Options mensuelles choisies" : "Abonnement mensuel"}</span>
                     <strong>{money(project.monthlyCents)} HT/mois</strong>
                   </div>
                 )}
@@ -206,10 +208,10 @@ export default function ProjectPortal() {
                   {project.monthlyCents > 0
                     ? "L’abonnement commence à la commande, puis est prélevé chaque mois. Résiliation avec préavis de 30 jours selon les CGV."
                     : "Paiement unique. Hébergement et maintenance en option."}{" "}
-                  Livraison indicative : 24h à 7 jours ouvrés après validation
+                  {isPublicQuote ? "Le calendrier et les limites de chaque prestation sont confirmés au devis." : <>Livraison indicative : 24h à 7 jours ouvrés après validation
                   du brief complet. Deux séries de retours sont incluses avant
                   livraison ; les demandes hors périmètre font l’objet d’un
-                  devis complémentaire.
+                  devis complémentaire.</>}
                 </p>
                 <label className="flow-check">
                   <input
@@ -221,7 +223,7 @@ export default function ProjectPortal() {
                     J’accepte cette proposition pour mon activité
                     professionnelle et les{" "}
                     <a href="/cgv/" target="_blank" rel="noreferrer">
-                      conditions de vente du 9 septembre 2026
+                      conditions de vente du {isPublicQuote ? "11" : "9"} septembre 2026
                     </a>
                     .
                   </span>
@@ -428,9 +430,9 @@ export default function ProjectPortal() {
           <aside className="flow-aside">
             <h2>{project.offer.name}</h2>
             <p className="flow-price">
-              {money(project.monthlyCents || project.setupCents)} HT
-              {project.monthlyCents ? "/mois" : ""}
+              {quoteOnly ? "Sur devis" : <>{money(isPublicQuote ? project.setupCents : (project.monthlyCents || project.setupCents))} HT{!isPublicQuote && project.monthlyCents ? "/mois" : ""}</>}
             </p>
+            {isPublicQuote && !quoteOnly && <p className="flow-note">Création en paiement unique{project.monthlyCents ? ` · Options choisies : ${money(project.monthlyCents)} HT/mois` : " · Aucune option mensuelle choisie"}</p>}
             <p className="flow-note">
               {project.paymentStatus === "PAID"
                 ? "Paiement confirmé"

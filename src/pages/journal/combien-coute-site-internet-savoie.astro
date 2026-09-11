@@ -4,8 +4,8 @@ import StructuredData from "../../components/seo/StructuredData.astro";
 
 const title = "Combien coûte un site internet en Savoie ?";
 const description =
-  "Découvrez les tarifs d'un site internet en Savoie en 2026 : vitrine, professionnel et e-commerce. FLEX-WEB vous donne les fourchettes et les critères de prix.";
-const canonicalUrl = "https://flex-web.fr/journal/combien-coute-site-internet-savoie";
+  "Site simple à 299 € HT, site complet à 990 € HT : les tarifs FLEX-WEB en Savoie, les options de maintenance et CRM, et les éléments à vérifier au devis.";
+const canonicalUrl = "https://flex-web.fr/journal/combien-coute-site-internet-savoie/";
 const published = "2026-07-22";
 
 const webPageSchema = {
@@ -14,7 +14,7 @@ const webPageSchema = {
   url: canonicalUrl,
   name: title,
   description: description,
-  isPartOf: { "@id": "https://flex-web.fr" },
+  isPartOf: { "@id": "https://flex-web.fr/#website" },
 };
 
 const articleSchema = {
@@ -33,20 +33,15 @@ const articleSchema = {
     url: "https://flex-web.fr/creation-site-internet/",
   },
   datePublished: published,
-  dateModified: published,
+  dateModified: "2026-09-11",
   image: "https://flex-web.fr/logo.png",
-  wordCount: 650,
-  speakable: {
-    "@type": "SpeakableSpecification",
-    cssSelector: ["h1", ".mt-8 p"],
-  },
 };
 
 const breadcrumbSchema = {
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Accueil", item: "https://flex-web.fr" },
-    { "@type": "ListItem", position: 2, name: "Journal", item: "https://flex-web.fr/journal" },
+    { "@type": "ListItem", position: 1, name: "Accueil", item: "https://flex-web.fr/" },
+    { "@type": "ListItem", position: 2, name: "Journal", item: "https://flex-web.fr/journal/" },
     { "@type": "ListItem", position: 3, name: title, item: canonicalUrl },
   ],
 };
@@ -69,7 +64,7 @@ const schemas = [webPageSchema, articleSchema, breadcrumbSchema];
     </h1>
 
     <p class="mt-4 text-sm" style="color: var(--color-text-muted)">
-      Publié le {published}
+      Publié le {published} · Mis à jour le 11 septembre 2026
     </p>
 
     <section class="mt-8 rounded-2xl p-6" style="background-color: var(--color-surface)">
@@ -77,40 +72,40 @@ const schemas = [webPageSchema, articleSchema, breadcrumbSchema];
         Réponse rapide
       </h2>
       <p class="mt-3 leading-relaxed" style="color: var(--color-text-muted)">
-        En Savoie, le prix d'un site internet dépend du nombre de pages, des contenus et des fonctionnalités. Un site vitrine peut débuter à quelques centaines d'euros ; les projets plus complets sont établis sur devis selon les besoins.
+        Chez FLEX-WEB, un site vitrine simple coûte 299 € HT et un site vitrine complet 990 € HT, payés une seule fois. Les options sont la maintenance avec modifications à 49 € HT/mois et le CRM, l'automatisation et le référencement à 99 € HT/mois. Le devis précise le périmètre choisi.
       </p>
     </section>
 
     <div class="mt-12 space-y-6 text-lg leading-relaxed" style="color: var(--color-text)">
       <p>
-        Le prix d'un site internet en Savoie varie selon le type de projet, le nombre de pages et les fonctionnalités. Voici un guide clair pour comprendre les tarifs en 2026.
+        Voici comment lire les offres FLEX-WEB pour un projet en Savoie. Ces montants sont nos tarifs publiés ; ils ne représentent pas une moyenne des prix pratiqués par toutes les agences.
       </p>
 
       <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
         Site vitrine : la solution la plus accessible
       </h2>
       <p>
-        Un site vitrine professionnel, avec une page d'accueil, une page de présentation, une page de services et un formulaire de contact, représente souvent le meilleur rapport qualité-prix pour les artisans, commerçants et professions libérales.
+        Un site vitrine simple présente l'entreprise, ses prestations et ses coordonnées. Il convient à une première présence en ligne avec un parcours de contact clair. Les pages et les contenus à intégrer sont confirmés dans le devis.
       </p>
       <p>
-        En Savoie, ce type de site est accessible à partir de quelques centaines d'euros. Avec un paiement en achat définitif ou un abonnement incluant l'hébergement et la maintenance, chaque entreprise peut trouver une formule adaptée.
+        L'offre simple est à 299 € HT, payés une seule fois. Les options de suivi sont facultatives. Consultez le devis pour savoir ce qui est prévu concernant le domaine, l'hébergement et les éventuels outils tiers.
       </p>
 
       <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
         Site professionnel multi-pages
       </h2>
       <p>
-        Pour les PME et les professionnels qui veulent plusieurs pages de services, un blog, des témoignages ou des études de cas, le budget augmente en fonction du volume de contenu.
+        L'offre complète est à 990 € HT, payés une seule fois. Elle permet une présentation plus développée et une personnalisation renforcée dans le périmètre convenu. Les témoignages et exemples publiés doivent correspondre à des références que l'entreprise peut justifier.
       </p>
       <p>
-        Un site professionnel complet, optimisé pour Google et pensé pour convertir, représente généralement un budget plus important que le vitrine, mais il offre une bien plus grande capacité à capter du trafic.
+        Le choix dépend de ce que les visiteurs doivent comprendre et faire : découvrir une prestation, comparer des services ou formuler une demande plus détaillée. Un nombre de pages supérieur ne garantit pas à lui seul davantage de trafic.
       </p>
 
       <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
         Site e-commerce
       </h2>
       <p>
-        Un site e-commerce avec catalogue de produits, panier, paiement en ligne et gestion des commandes demande un travail de développement plus conséquent. C'est le type de projet qui demande le plus de budget, surtout si les produits sont nombreux.
+        Une boutique avec catalogue, panier, paiement et gestion des commandes fait l'objet d'un devis spécifique. Le besoin doit préciser les produits, les livraisons, les paiements et les connexions nécessaires. Le développement d'une application est également sur devis.
       </p>
 
       <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
@@ -125,10 +120,10 @@ const schemas = [webPageSchema, articleSchema, breadcrumbSchema];
       </ul>
 
       <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
-        Acheter ou s'abonner ?
+        Création ponctuelle et options mensuelles
       </h2>
       <p>
-        L'achat définitif vous donne la propriété du site. L'abonnement inclut l'hébergement, les mises à jour et le support dans une mensualité prévisible. Les deux options ont leurs avantages selon votre situation.
+        La création à 299 € HT ou 990 € HT se paie une seule fois. Vous pouvez choisir la maintenance avec modifications à 49 € HT/mois et l'option CRM, automatisation et référencement à 99 € HT/mois, selon le périmètre du devis. Une automatisation métier spécifique est chiffrée séparément.
       </p>
 
       <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
@@ -139,6 +134,11 @@ const schemas = [webPageSchema, articleSchema, breadcrumbSchema];
       </p>
     </div>
 
+    <section class="mt-12 rounded-2xl border p-6" style="border-color: var(--color-border)">
+      <h2 class="text-xl font-semibold">Préparer votre projet avec FLEX-WEB</h2>
+      <p class="mt-3 leading-relaxed">Consultez les <a href="/pricing/" class="underline">tarifs de création et les options</a>, l'accompagnement pour les <a href="/creation-site-internet/" class="underline">sites internet en France</a> et les possibilités d'<a href="/automatisation-ia/" class="underline">automatisation IA du suivi de vos demandes</a>.</p>
+    </section>
+
     <aside class="mt-16 rounded-3xl p-8 text-center" style="background-color: var(--color-surface)">
       <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
         Vous souhaitez un devis pour votre site ?
@@ -147,7 +147,7 @@ const schemas = [webPageSchema, articleSchema, breadcrumbSchema];
         FLEX-WEB accompagne les entreprises de Savoie et de Haute-Savoie.
       </p>
       <a
-        href="/contact/"
+        href="/pricing/"
         class="mt-6 inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-medium text-white transition hover:opacity-90"
         style="background-color: var(--color-accent)"
       >

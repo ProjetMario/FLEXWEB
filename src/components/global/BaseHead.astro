@@ -1,252 +1,39 @@
 ---
 import "../../styles/global.css";
-
-/**
- * BaseHead – SEO, Open Graph, Twitter Cards, favicons and preconnects.
- * @property {string} [title] - Page title suffix.
- * @property {string} [description] - Page description.
- * @property {string} [image] - Absolute or root-relative OG image path.
- * @property {boolean} [noindex] - Disallow indexing for this page.
- */
-const {
-  title,
-  description = "Flex-Web crée des sites internet professionnels, rapides et optimisés pour les artisans, commerçants, indépendants et PME. Demandez votre devis gratuit.",
-  image = "/logo.png",
-  noindex = false,
-  keywords = "création site internet, application mobile, agence web Savoie, agence web Haute-Savoie, site internet professionnel, SEO, Voglans, Chambéry, Annecy",
-} = Astro.props;
-
-const siteName = "Flex-Web";
-const siteUrl = "https://flex-web.fr";
-const pageTitle = title ? `${title} — ${siteName}` : `${siteName} — Création de sites internet professionnels`;
-const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
-const ogImage = new URL(image, siteUrl).toString();
+import StructuredData from "../seo/StructuredData.astro";
+import { business, organizationSchema, canonicalUrlFor } from "../../data/business";
+const { title, description = business.description, image = "/logo.png", noindex = false } = Astro.props;
+const cleanTitle = title?.replace(/\s*[—–|]\s*flex-web\s*$/i, "");
+const pageTitle = cleanTitle ? `${cleanTitle} — Flex-Web` : "Flex-Web — Automatisation IA, sites web et applications";
+const canonicalUrl = canonicalUrlFor(Astro.url.pathname);
+const ogImage = new URL(image, business.url).toString();
+const robots = noindex ? "noindex, follow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";
 ---
-
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<!-- Basic Meta Tags -->
 <title>{pageTitle}</title>
 <meta name="description" content={description} />
-<meta name="keywords" content={keywords} />
 <meta name="author" content="Flex-Web — Fleximmo" />
 <meta name="application-name" content="Flex-Web" />
-<meta name="language" content="fr-FR" />
-
-<!-- Bing Webmaster Tools (remplace XXXXX par le code dès que tu l'as) -->
-<!-- <meta name="msvalidate.01" content="XXXXX" /> -->
-
-<!-- Favicons -->
-<link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
-<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
-<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-<link rel="manifest" href="/manifest.webmanifest" />
-
-<!-- Open Graph / Facebook -->
+<link rel="canonical" href={canonicalUrl} />
+<meta name="robots" content={robots} />
 <meta property="og:type" content="website" />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImage} />
-<meta property="og:site_name" content={siteName} />
+<meta property="og:site_name" content="Flex-Web" />
 <meta property="og:locale" content="fr_FR" />
-
-<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:url" content={canonicalUrl} />
 <meta name="twitter:title" content={pageTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImage} />
-
-<!-- Canonical URL -->
-<link rel="canonical" href={canonicalUrl} />
-
-<!-- Robots -->
-{noindex ? (
-  <meta name="robots" content="noindex, nofollow" />
-  <meta name="googlebot" content="noindex, nofollow" />
-  <meta name="bingbot" content="noindex, nofollow" />
-) : (
-  <>
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-  </>
-)}
-
-<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-<link rel="alternate" type="text/plain" href="/llms.txt" title="Présentation de Flex-Web pour les moteurs IA" />
-<link rel="alternate" type="text/plain" href="/ai-overview.txt" title="Vue d'ensemble IA de Flex-Web" />
-<meta name="ai-search-preference" content="ai-overview:https://flex-web.fr/ai-overview.txt" />
-
-<!-- Apple Touch Icon (backward compatibility) -->
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+<link rel="shortcut icon" href="/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-
-<!-- Theme Color -->
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<link rel="alternate" type="text/plain" href="/llms.txt" title="Présentation factuelle de Flex-Web" />
 <meta name="theme-color" content="#ffffff" />
-<meta name="msapplication-TileColor" content="#ffffff" />
-<meta name="msapplication-TileImage" content="/apple-touch-icon.png" />
-<meta name="msapplication-square150x150logo" content="/apple-touch-icon.png" />
-<meta name="msapplication-wide310x150logo" content="/favicon.png" />
-<meta name="msapplication-square310x310logo" content="/favicon.png" />
-<meta name="msapplication-config" content="/browserconfig.xml" />
-
-<!-- GEO Tags (Local SEO) -->
-<meta name="geo.region" content="FR-73" />
-<meta name="geo.placename" content="Voglans, Savoie" />
-<meta name="geo.position" content="45.6383;5.8803" />
-<meta name="ICBM" content="45.6383, 5.8803" />
-
-<!-- IE compatibility -->
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
-<!-- Preconnect / Fonts -->
-<link rel="preconnect" href="https://rsms.me/" crossorigin />
-<link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
-
-<!-- JSON-LD Organization schema -->
-<script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    "@id": "https://flex-web.fr/#organization",
-    "name": "Flex-Web",
-    "legalName": "Fleximmo",
-    "url": "https://flex-web.fr",
-    "slogan": "La référence pour la création de sites internet et d'applications mobiles en Savoie et Haute-Savoie",
-    "description": "Flex-Web crée des sites internet et des applications mobiles professionnels, rapides et optimisés pour les artisans, commerçants, indépendants et PME de Savoie et Haute-Savoie.",
-    "knowsAbout": [
-      "Création de site internet",
-      "Développement d'application mobile",
-      "Référencement local (SEO)",
-      "Hébergement et maintenance web",
-      "Design web sur mesure"
-    ],
-    "brand": {
-      "@type": "Brand",
-      "name": "Flex-Web",
-      "slogan": "La référence pour la création de sites internet et d'applications mobiles en Savoie et Haute-Savoie"
-    },
-    "sameAs": [
-      "https://twitter.com/flex-web",
-      "https://linkedin.com/company/flex-web",
-      "https://instagram.com/flex-web"
-    ],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "5",
-      "bestRating": "5",
-      "worstRating": "1",
-      "ratingCount": "3",
-      "reviewCount": "3"
-    },
-    "review": [
-      {
-        "@type": "Review",
-        "author": { "@type": "Person", "name": "Claire Dubois" },
-        "reviewBody": "Mon site a été livré en une semaine. Le design est moderne, les pages sont rapides et j'ai déjà reçu plusieurs demandes de devis.",
-        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }
-      },
-      {
-        "@type": "Review",
-        "author": { "@type": "Person", "name": "Marc Lefevre" },
-        "reviewBody": "Enfin une agence qui parle simple et livre vite. L'abonnement tout inclus me rassure : je n'ai plus à me soucier de la technique.",
-        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }
-      },
-      {
-        "@type": "Review",
-        "author": { "@type": "Person", "name": "Sophia Benali" },
-        "reviewBody": "FLEX-WEB a modernisé l'image de notre restaurant. Le site est beau, les réservations augmentent et le référencement local fonctionne très bien.",
-        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" }
-      }
-    ],
-    "foundingDate": "2025-07-17",
-    "telephone": "+33757830262",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "93 chemin de la Combe",
-      "postalCode": "73420",
-      "addressLocality": "Voglans",
-      "addressCountry": "FR"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 45.6383,
-      "longitude": 5.8803
-    },
-    "hasMap": "https://www.google.com/maps?q=93+chemin+de+la+Combe,+73420+Voglans",
-    "identifier": [
-      { "@type": "PropertyValue", "propertyID": "SIREN", "value": "989123633" },
-      { "@type": "PropertyValue", "propertyID": "SIRET", "value": "98912363300012" },
-      { "@type": "PropertyValue", "propertyID": "TVA intracommunautaire", "value": "FR67989123633" }
-    ],
-    "email": "contact@flex-web.fr",
-    "areaServed": [
-      { "@type": "AdministrativeArea", "name": "Savoie" },
-      { "@type": "AdministrativeArea", "name": "Haute-Savoie" },
-      { "@type": "Country", "name": "France" }
-    ],
-    "serviceType": [
-      "Création de site internet",
-      "Développement d'application mobile",
-      "Référencement naturel",
-      "Hébergement et maintenance"
-    ],
-    "logo": "https://flex-web.fr/logo.png",
-    "image": "https://flex-web.fr/logo.png",
-    "priceRange": "€€",
-    "openingHoursSpecification": {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      "opens": "09:00",
-      "closes": "18:00"
-    },
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "Services Flex-Web",
-      "itemListElement": [
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Création de site vitrine",
-            "description": "Site de présentation responsive avec hébergement et maintenance inclus."
-          }
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Site professionnel / blog",
-            "description": "Site complet avec SEO avancé, galerie, blog et modifications incluses."
-          }
-        },
-        {
-          "@type": "Offer",
-          "itemOffered": {
-            "@type": "Service",
-            "name": "Application web & mobile sur mesure",
-            "description": "Développement SaaS, applications web et mobiles personnalisées."
-          }
-        }
-      ]
-    },
-    "parentOrganization": {
-      "@type": "Organization",
-      "name": "Fleximmo"
-    }
-  }
-</script>
-
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-J0F7CERW6J" is:inline></script>
-<script is:inline>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-J0F7CERW6J');
-</script>
+<StructuredData schemas={[organizationSchema]} />

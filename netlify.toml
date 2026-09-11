@@ -2,6 +2,9 @@
   command = "npx astro build"
   publish = "dist"
 
+[build.environment]
+  NODE_VERSION = "24"
+
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
@@ -12,3 +15,17 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Sites vitrines autonomes : le rendu et les données restent sur la plateforme.
+[[redirects]]
+  from = "/sites/*"
+  to = "https://flexweb-gestion.netlify.app/sites/:splat"
+  status = 200
+  force = true
+
+# Ressources Next.js utilisées par les sites autonomes servis ci-dessus.
+[[redirects]]
+  from = "/_next/*"
+  to = "https://flexweb-gestion.netlify.app/_next/:splat"
+  status = 200
+  force = true

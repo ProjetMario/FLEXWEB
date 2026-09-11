@@ -2,28 +2,18 @@
 name: "Allevard"
 slug: "creation-site-internet-allevard"
 type: "city"
-department: "Savoie"
+department: "Isère"
 region: "Auvergne-Rhône-Alpes"
 country: "France"
 introduction: "FLEX-WEB crée des sites internet professionnels pour les artisans, commerçants, hôteliers et indépendants d'Allevard."
-localContext: "Allevard est une ville thermale et touristique située dans le massif de Belledonne. Son économie repose sur le thermalisme, le tourisme, l'artisanat, le commerce et les services."
+localContext: "Allevard est une commune de l'Isère, dans la communauté de communes Le Grésivaudan. Son économie repose sur le thermalisme, le tourisme, l'artisanat, le commerce et les services."
 targetIndustries:
   - "Hôtellerie et restauration"
   - "Thermes et centres de bien-être"
   - "Commerçants de centre-ville"
   - "Artisans du bâtiment"
   - "Professions libérales"
-nearbyCities:
-  - "Saint-Jean-de-Maurienne"
-  - "La Chambre"
-  - "Saint-Michel-de-Maurienne"
-  - "Hermillon"
-  - "Aiton"
-  - "Épierre"
-  - "La Bridoire"
-  - "Villargondran"
-  - "Pierre-Châtel"
-  - "Saint-Julien-Mont-Denis"
+nearbyCities: []
 services:
   - "Création de site vitrine"
   - "Création de site professionnel"
@@ -31,9 +21,9 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel prix pour un site vitrine à Allevard ?"
-    answer: "Un site vitrine professionnel est accessible à partir de quelques centaines d'euros."
+    answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
   - question: "FLEX-WEB travaille-t-il à Allevard ?"
-    answer: "Oui, nous accompagnons les entreprises d'Allevard et des communes de Belledonne et de Maurienne."
+    answer: "Oui, nous accompagnons les entreprises d'Allevard et des alentours, avec des échanges et des validations à distance selon le projet."
   - question: "Le site sera-t-il visible localement ?"
     answer: "Oui, chaque site est optimisé SEO avec un ciblage sur Allevard et ses environs."
 seoTitle: "Création de site internet à Allevard — FLEX-WEB"
@@ -67,7 +57,7 @@ Ajoutez des pages de services, un blog et un formulaire de contact.
 
 ### Référencement local
 
-Optimisez votre présence pour les recherches à Allevard, en Maurienne et à Belledonne.
+Optimisez votre présence pour les recherches liées à votre activité et à la zone d'intervention de votre entreprise.
 
 ### Maintenance et hébergement
 
@@ -77,6 +67,6 @@ Bénéficiez d'un hébergement fiable et d'un support technique.
 
 Nous connaissons les enjeux des destinations thermales et touristiques. Cette expertise nous aide à créer des sites pertinents pour le public local et saisonnier.
 
-## Communes voisines
+## Zone d'intervention
 
-Nous travaillons à Allevard et à **Saint-Jean-de-Maurienne, La Chambre, Saint-Michel-de-Maurienne, Hermillon, Aiton, Épierre, La Bridoire, Villargondran, Saint-Julien-Mont-Denis**.
+Les communes desservies sont définies selon votre activité. FLEX-WEB accompagne le cadrage et les validations du projet à distance.

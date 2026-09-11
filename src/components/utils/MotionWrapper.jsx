@@ -52,8 +52,8 @@ export function MotionWrapper({ type = "fade-up", children, className = "", isCo
       <Component
         ref={ref}
         className={className}
-        initial="hidden"
-        animate={inView ? "visible" : "hidden"}
+        initial={false}
+        animate="visible"
         variants={containerVariants}
       >
         {children}
@@ -67,8 +67,8 @@ export function MotionWrapper({ type = "fade-up", children, className = "", isCo
     <Component
       ref={ref}
       className={className}
-      initial="hidden"
-      animate={inView ? "visible" : "hidden"}
+      initial={false}
+      animate="visible"
       variants={variant}
     >
       {children}

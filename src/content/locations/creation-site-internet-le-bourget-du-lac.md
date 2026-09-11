@@ -32,7 +32,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel prix pour un site vitrine au Bourget-du-Lac ?"
-    answer: "Un site vitrine professionnel est accessible à partir de quelques centaines d'euros. Le prix dépend du nombre de pages et des fonctionnalités."
+    answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
   - question: "FLEX-WEB peut-il créer un site pour un restaurant ?"
     answer: "Oui, nous concevons des sites pour restaurants, hôtels et commerces avec menus, galerie photos et formulaire de contact."
   - question: "Le site sera-t-il bien positionné sur Google ?"

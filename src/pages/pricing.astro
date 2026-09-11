@@ -1,141 +1,132 @@
 ---
 import BaseLayout from "../layout/BaseLayout.astro";
-import PricingCard from "../components/pricing/PricingCard.jsx";
-import ComparisonTable from "../components/pricing/ComparisonTable.jsx";
-import BuyoutSection from "../components/pricing/BuyoutSection.jsx";
 import PricingFAQ from "../components/pricing/PricingFAQ.jsx";
-import PricingCTA from "../components/pricing/PricingCTA.jsx";
 import StructuredData from "../components/seo/StructuredData.astro";
-import offerCatalog from "../../apps/saas-platform/lib/automation/offers.json";
-import { subscriptionPlans, ownershipPlan, ownershipMaintenancePrice, comparisonPlans, comparisonRows, buyoutTiers, pricingFaq } from "../data/pricing.ts";
+import { pricingFaq, websiteOffers, pricingOptions } from "../data/pricing.ts";
 
 const siteUrl = "https://flex-web.fr";
 const canonicalUrl = `${siteUrl}/pricing/`;
-
-const breadcrumbSchema = {
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Accueil", item: siteUrl },
-    { "@type": "ListItem", position: 2, name: "Tarifs", item: canonicalUrl },
-  ],
-};
-
-const faqSchema = {
-  "@type": "FAQPage",
-  "@id": `${canonicalUrl}#faq`,
-  mainEntity: pricingFaq.map((item) => ({
-    "@type": "Question",
-    name: item.question,
-    acceptedAnswer: { "@type": "Answer", text: item.answer },
-  })),
-};
-
-const offerCatalogSchema = {
-  "@type": "OfferCatalog",
-  "@id": `${canonicalUrl}#offers`,
-  name: "Offres de création de site internet — Flex-Web",
-  itemListElement: offerCatalog.map(offer => ({
-    "@type": "Offer",
-    name: offer.name,
-    description: `${offer.features.join(". ")}. Premier paiement : ${(offer.setupCents + offer.monthlyCents) / 100} € HT (${offer.setupCents / 100} € HT de création${offer.monthlyCents ? ` + ${offer.monthlyCents / 100} € HT pour le premier mois` : ""}).${offer.monthlyCents ? ` Puis ${offer.monthlyCents / 100} € HT par mois.` : " Hébergement et maintenance en option."}`,
-    price: String((offer.monthlyCents || offer.setupCents) / 100),
-    priceCurrency: "EUR",
-    url: `${siteUrl}/demarrer/?offre=${offer.id}`,
-    seller: { "@id": `${siteUrl}/#organization` },
-    ...(offer.monthlyCents ? { priceSpecification: {
-      "@type": "UnitPriceSpecification", price: String(offer.monthlyCents / 100),
-      priceCurrency: "EUR", unitText: "mois", valueAddedTaxIncluded: false,
-    } } : {}),
-  })),
-};
-
-const schemas = [breadcrumbSchema, faqSchema, offerCatalogSchema];
+const euros = (cents: number) => new Intl.NumberFormat("fr-FR", {
+  style: "currency", currency: "EUR", maximumFractionDigits: 0,
+}).format(cents / 100);
+const schemas = [
+  {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Accueil", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Tarifs", item: canonicalUrl },
+    ],
+  },
+  {
+    "@type": "FAQPage", "@id": `${canonicalUrl}#faq`,
+    mainEntity: pricingFaq.map((item) => ({
+      "@type": "Question", name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  },
+  {
+    "@type": "OfferCatalog", "@id": `${canonicalUrl}#offers`,
+    name: "Sites internet et options — Flex-Web",
+    itemListElement: [
+      ...websiteOffers.map((offer) => ({
+        "@type": "Offer", name: offer.name,
+        description: `${offer.description} ${offer.features.join(". ")}. Prix HT de création, payé une seule fois. Options mensuelles facultatives. Périmètre confirmé sur devis.`,
+        price: String(offer.setupCents / 100), priceCurrency: "EUR",
+        priceSpecification: { "@type": "PriceSpecification", price: String(offer.setupCents / 100), priceCurrency: "EUR", valueAddedTaxIncluded: false },
+        url: `${siteUrl}${offer.href}`, seller: { "@id": `${siteUrl}/#organization` },
+      })),
+      ...pricingOptions.map((option) => ({
+        "@type": "Offer", name: `Option ${option.name}`, description: option.description,
+        price: String(option.monthlyCents / 100), priceCurrency: "EUR",
+        priceSpecification: { "@type": "UnitPriceSpecification", price: String(option.monthlyCents / 100), priceCurrency: "EUR", unitText: "mois", valueAddedTaxIncluded: false },
+        url: `${canonicalUrl}#options`, seller: { "@id": `${siteUrl}/#organization` },
+      })),
+    ],
+  },
+];
 ---
 
 <BaseLayout
-  title="Tarifs création site internet & application mobile — FLEX-WEB"
-  description="Comprenez le prix de votre site FLEX-WEB : dès 348 € HT au démarrage, puis 49 € HT/mois. Achat définitif à partir de 990 € HT. Détail des frais et services inclus."
-  keywords="tarif site internet, prix site web, abonnement site internet, achat site web, tarif application mobile, devis site internet, devis application mobile"
+  title="Tarifs sites internet : 299 € et 990 € HT | Flex-Web"
+  description="Sites vitrines à 299 € ou 990 € HT. Options facultatives : maintenance 49 € HT/mois, CRM, automatisation et SEO 99 € HT/mois. Applications et IA sur devis."
 >
   <div class="bg-white text-[#1d1d1f]">
     <header class="mx-auto max-w-4xl px-5 pb-12 pt-32 text-center sm:px-6 sm:pt-36">
-      <p class="mb-4 text-sm font-medium text-[#0071e3]">Les tarifs, simplement</p>
-      <h1 class="text-4xl font-semibold leading-[1.12] tracking-[-0.04em] sm:text-6xl">Combien coûte votre site ?</h1>
-      <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-[#52525b] sm:text-lg">Avec un abonnement, vous payez la création une seule fois, puis une mensualité pour l’hébergement, la maintenance et les services de votre formule.</p>
-      <p class="mt-4 text-sm font-medium text-[#52525b]">Tous les montants sont hors taxes (HT) : la TVA n’est pas comprise.</p>
-      <nav aria-label="Choisir un mode de paiement" class="mt-7 flex flex-wrap justify-center gap-3">
-        <a href="#abonnements" class="rounded-full bg-[#1d1d1f] px-5 py-3 text-sm font-medium text-white hover:bg-[#424245]">Voir les abonnements</a>
-        <a href="#achat-definitif" class="rounded-full border border-black/15 px-5 py-3 text-sm font-medium hover:bg-[#f5f5f7]">Acheter sans abonnement</a>
+      <p class="mb-4 text-sm font-medium text-[#0071e3]">Savoie, Haute-Savoie et toute la France</p>
+      <h1 class="text-4xl font-semibold leading-[1.12] tracking-[-0.04em] sm:text-6xl">Un site. Un prix clair.<br />Les options de votre choix.</h1>
+      <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-[#52525b] sm:text-lg">Choisissez votre site à <strong>299 € HT</strong> ou <strong>990 € HT</strong>, payé une seule fois. Ajoutez une option mensuelle si vous en avez besoin. Nous confirmons le périmètre dans votre devis avant tout engagement.</p>
+      <nav aria-label="Choisir une prestation" class="mt-7 flex flex-wrap justify-center gap-3">
+        <a href="#devis" class="rounded-full bg-[#1d1d1f] px-5 py-3 text-sm font-medium text-white hover:bg-[#424245]">Voir les sites</a>
+        <a href="#automatisation" class="rounded-full border border-black/15 px-5 py-3 text-sm font-medium hover:bg-[#f5f5f7]">Devis automatisation IA</a>
+        <a href="#applications" class="rounded-full border border-black/15 px-5 py-3 text-sm font-medium hover:bg-[#f5f5f7]">Devis application</a>
       </nav>
     </header>
 
     <main class="mx-auto max-w-6xl space-y-14 px-5 pb-20 sm:space-y-20 sm:px-6 lg:px-8">
-      <section id="abonnements" aria-labelledby="offers-title" class="scroll-mt-24">
-        <h2 id="offers-title" class="text-2xl font-semibold tracking-tight sm:text-3xl">Un site avec abonnement</h2>
-        <p class="mt-3 max-w-3xl text-sm leading-relaxed text-[#52525b] sm:text-base">Le premier paiement comprend la création du site et le premier mois. Ensuite, vous payez uniquement la mensualité de votre formule, hors options acceptées.</p>
-        <div class="mt-7 grid items-stretch gap-5 lg:grid-cols-3">
-          {subscriptionPlans.map((plan) => <PricingCard plan={plan} />)}
+      <section id="devis" aria-label="Tarifs de création de site" class="rounded-3xl border border-blue-200 bg-blue-50 p-6 md:p-8">
+        <div class="grid gap-5 md:grid-cols-2">
+          {websiteOffers.map((offer) => (
+            <article class="flex flex-col rounded-2xl border border-black/10 bg-white p-5 sm:p-7">
+              <p class="text-xs font-semibold uppercase tracking-widest text-[#0071e3]">Création de site</p>
+              <h2 class="mt-2 text-2xl font-semibold">{offer.name}</h2>
+              <p class="mt-3 text-4xl font-semibold">{euros(offer.setupCents)} <span class="text-base font-normal">HT</span></p>
+              <p class="mt-2 text-sm font-medium">Paiement unique · Options mensuelles facultatives</p>
+              <p class="mt-4 text-sm leading-relaxed text-[#52525b]">{offer.description}</p>
+              <ul class="mb-6 mt-4 flex-1 space-y-2 text-sm text-[#52525b]">
+                {offer.features.map((line) => <li>• {line}</li>)}
+              </ul>
+              <a href={offer.href} class="inline-block self-start rounded-full bg-[#1d1d1f] px-5 py-3 text-sm font-medium text-white hover:bg-[#424245]">Demander un devis {offer.id === "essentielle" ? "site simple" : "site complet"}</a>
+            </article>
+          ))}
         </div>
-        <div class="mt-6 rounded-2xl border border-[#0071e3]/15 bg-[#f2f7fd] p-5 sm:p-6">
-          <p class="text-sm font-semibold text-[#1d1d1f]">Exemple avec Essentielle</p>
-          <p class="mt-2 text-base leading-relaxed"><strong>{subscriptionPlans[0].firstPayment} HT au départ</strong> = {subscriptionPlans[0].setupPrice} pour créer votre site + {subscriptionPlans[0].monthlyPrice} pour le premier mois. Puis <strong>{subscriptionPlans[0].monthlyPrice} HT par mois</strong>.</p>
-          <p class="mt-2 text-sm text-[#52525b]">La création est payée une seule fois. Les taxes applicables et le total à payer sont précisés avant le paiement.</p>
+        <p class="mt-5 text-sm leading-relaxed text-[#52525b]">Demande gratuite. Hébergement, nom de domaine et éventuels besoins supplémentaires sont précisés au devis.</p>
+      </section>
+
+      <section id="options" aria-labelledby="options-title">
+        <h2 id="options-title" class="text-3xl font-semibold tracking-tight">Deux options, selon vos besoins.</h2>
+        <p class="mt-3 text-[#52525b]">Aucune option n’est ajoutée automatiquement. Choisissez l’une, les deux ou aucune.</p>
+        <div class="mt-6 grid gap-5 md:grid-cols-2">
+          {pricingOptions.map((option) => (
+            <article class="rounded-2xl border border-black/10 p-6">
+              <h3 class="text-xl font-semibold">{option.name}</h3>
+              <p class="mt-3 text-3xl font-semibold">+{euros(option.monthlyCents)} <span class="text-sm font-normal">HT / mois</span></p>
+              <p class="mt-4 text-sm leading-relaxed text-[#52525b]">{option.description}</p>
+            </article>
+          ))}
+        </div>
+        <p class="mt-4 text-sm text-[#52525b]">Le devis précise les interventions, les limites, les licences et consommations éventuelles avant votre accord.</p>
+      </section>
+
+      <section id="automatisation" class="rounded-3xl bg-[#1d1d1f] p-6 text-white md:p-8">
+        <p class="text-sm font-medium text-blue-200">Prestation sur mesure · Sur devis</p>
+        <h2 class="mt-3 text-2xl font-semibold">Automatisez les tâches qui prennent votre temps.</h2>
+        <p class="mt-4 max-w-3xl text-sm leading-relaxed text-zinc-300">Qualification des demandes, relances, connexion au CRM ou circulation des informations entre vos outils : nous étudions votre fonctionnement et chiffrons une solution adaptée. Les développements sur mesure font l’objet d’un devis distinct de l’option mensuelle.</p>
+        <div class="mt-6 flex flex-wrap items-center gap-5">
+          <a href="/demarrer/?service=automation" class="inline-block rounded-full bg-white px-5 py-3 text-sm font-medium text-[#1d1d1f] hover:bg-zinc-100">Demander un devis automatisation IA</a>
+          <a href="/automatisation-ia/" class="text-sm text-blue-200 underline underline-offset-4">Découvrir les automatisations IA</a>
         </div>
       </section>
 
-      <section id="achat-definitif" aria-labelledby="ownership-title" class="scroll-mt-24 rounded-3xl border border-black/10 bg-[#fbfbfd] p-6 sm:p-8 lg:p-10">
-        <div class="grid gap-8 lg:grid-cols-2 lg:gap-12">
-          <div>
-            <p class="text-sm font-medium text-[#0071e3]">Un autre mode de paiement</p>
-            <h2 id="ownership-title" class="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">Acheter votre site une seule fois</h2>
-            <p class="mt-4 text-base leading-relaxed text-[#52525b]">Avec l’offre Achat définitif, vous devenez propriétaire du site livré et recevez son code source.</p>
-            <p class="mt-6 text-sm font-medium text-[#52525b]">À régler pour le site vitrine de cette offre</p>
-            <p class="mt-2 flex flex-wrap items-baseline gap-2"><strong class="whitespace-nowrap text-4xl font-semibold tracking-tight">{ownershipPlan.firstPayment}</strong><span class="text-sm">HT · une seule fois</span></p>
-            <p class="mt-3 text-sm font-medium">Aucun abonnement FLEX-WEB obligatoire.</p>
-            <p class="mt-2 text-sm leading-relaxed text-[#52525b]">Ce prix couvre le site vitrine jusqu’à 5 pages. Un besoin supplémentaire fait l’objet d’un devis.</p>
-            <a href={ownershipPlan.href} class="mt-6 inline-flex rounded-full bg-[#1d1d1f] px-6 py-3.5 text-sm font-medium text-white hover:bg-[#424245]">Choisir l’achat définitif</a>
-          </div>
-          <div>
-            <h3 class="text-base font-semibold">Ce qui est inclus dans l’achat</h3>
-            <ul class="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-[#424245]">
-              <li>Un site vitrine jusqu’à 5 pages.</li>
-              <li>La livraison du code source et une formation.</li>
-              <li>La propriété du site livré.</li>
-            </ul>
-            <div class="mt-6 rounded-2xl border border-black/10 bg-white p-5">
-              <h3 class="text-sm font-semibold">L’hébergement et la maintenance se choisissent à part</h3>
-              <p class="mt-3 text-sm leading-relaxed text-[#52525b]">Pour garder le site en ligne, vous pouvez choisir votre hébergeur ou prendre notre option d’hébergement et de maintenance.</p>
-              <p class="mt-4 text-xl font-semibold">Option FLEX-WEB : {ownershipMaintenancePrice}{" "}<span class="ml-1 text-sm font-normal">HT / mois</span></p>
-              <p class="mt-2 text-sm leading-relaxed text-[#52525b]">Hébergement, sauvegardes, sécurité, support et mises à jour. Cette option s’ajoute au prix d’achat si vous la choisissez.</p>
-            </div>
-          </div>
+      <section class="rounded-2xl border border-black/10 p-6 md:p-8">
+        <h2 class="text-2xl font-semibold">Visible dans votre région, accessible partout en France.</h2>
+        <p class="mt-4 text-sm leading-relaxed text-[#52525b]">Le SEO aide les moteurs de recherche à comprendre vos services et vos pages. Le GEO, ou référencement dans les réponses IA, s’appuie notamment sur des contenus clairs et vérifiables. Les actions locales dépendent de votre activité et de votre zone d’intervention ; les positions Google et les citations IA ne sont pas garanties.</p>
+        <div class="mt-5 flex flex-wrap gap-3 text-sm">
+          <a href="/creation-site-internet-savoie/" class="rounded-full border border-black/15 px-4 py-2 hover:bg-[#f8fafc]">Sites internet en Savoie</a>
+          <a href="/creation-site-internet-haute-savoie/" class="rounded-full border border-black/15 px-4 py-2 hover:bg-[#f8fafc]">Sites internet en Haute-Savoie</a>
+          <a href="/automatisation-ia/" class="rounded-full border border-black/15 px-4 py-2 hover:bg-[#f8fafc]">Automatisation IA en France</a>
         </div>
       </section>
 
-      <section aria-label="Détail des offres">
-        <details class="group rounded-2xl border border-black/10">
-          <summary class="cursor-pointer px-5 py-5 text-base font-semibold sm:px-7">Comparer ce qui est inclus dans les 4 offres</summary>
-          <div class="px-3 pb-3 sm:px-5 sm:pb-5"><ComparisonTable rows={comparisonRows} plans={comparisonPlans} /></div>
-        </details>
-      </section>
-
-      <section aria-labelledby="faq-title">
+      <section id="faq" aria-labelledby="faq-title">
         <h2 id="faq-title" class="mb-6 text-center text-2xl font-semibold tracking-tight sm:text-3xl">Les réponses aux questions de prix</h2>
         <PricingFAQ items={pricingFaq} />
       </section>
 
-      <section aria-label="Option de rachat après abonnement">
-        <BuyoutSection tiers={buyoutTiers} />
+      <section id="applications" aria-labelledby="applications-title" class="flex flex-wrap items-center justify-between gap-6 rounded-2xl bg-[#f5f5f7] p-6 sm:p-8">
+        <div class="max-w-2xl"><h2 id="applications-title" class="text-xl font-semibold">Votre application web ou mobile, sur devis.</h2><p class="mt-3 text-sm leading-relaxed text-[#52525b]">Un outil métier, un espace client ou une application mobile : le prix dépend des fonctionnalités, des intégrations et du projet.</p></div>
+        <a href="/demarrer/?service=application" class="inline-flex shrink-0 rounded-full border border-black/15 bg-white px-5 py-3 text-sm font-medium hover:bg-[#fbfbfd]">Demander un devis application</a>
       </section>
-
-      <section aria-labelledby="applications-title" class="flex flex-wrap items-center justify-between gap-6 rounded-2xl bg-[#f5f5f7] p-6 sm:p-8">
-        <div class="max-w-2xl"><h2 id="applications-title" class="text-xl font-semibold">Vous avez besoin d’une application web ou mobile ?</h2><p class="mt-3 text-sm leading-relaxed text-[#52525b]">Les applications sont réalisées sur mesure et sur devis. Leur prix dépend des fonctionnalités et du projet.</p></div>
-        <a href="/creation-application-mobile/#contact" class="inline-flex shrink-0 rounded-full border border-black/15 bg-white px-5 py-3 text-sm font-medium hover:bg-[#fbfbfd]">Demander un devis application</a>
-      </section>
-
-      <PricingCTA client:load />
     </main>
   </div>
-
   <StructuredData schemas={schemas} slot="head" />
 </BaseLayout>

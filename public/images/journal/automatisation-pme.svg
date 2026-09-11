@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" fill="none">
+  <rect width="800" height="600" fill="#eef5fd"/>
+  <circle cx="696" cy="62" r="180" fill="#e0edff"/>
+  <rect x="76" y="92" width="648" height="416" rx="30" fill="white" stroke="#d4e0ee" stroke-width="2"/>
+  <text x="115" y="147" fill="#0066cc" font-family="Arial,sans-serif" font-size="16" letter-spacing="3">FLEX-WEB · GUIDE PRATIQUE</text>
+  <text x="115" y="205" fill="#1d2d3d" font-family="Arial,sans-serif" font-weight="700" font-size="34">Une tâche. Un parcours clair.</text>
+  <path d="M207 322H595" stroke="#9dbfe9" stroke-width="4" stroke-dasharray="8 8"/>
+  <rect x="125" y="275" width="164" height="94" rx="18" fill="#edf5ff"/>
+  <rect x="319" y="275" width="164" height="94" rx="18" fill="#edf5ff"/>
+  <rect x="513" y="275" width="164" height="94" rx="18" fill="#0066cc"/>
+  <text x="207" y="329" text-anchor="middle" fill="#204a75" font-family="Arial,sans-serif" font-size="19">Recevoir</text>
+  <text x="401" y="329" text-anchor="middle" fill="#204a75" font-family="Arial,sans-serif" font-size="19">Préparer</text>
+  <text x="595" y="329" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-size="19">Valider</text>
+  <text x="115" y="444" fill="#53606d" font-family="Arial,sans-serif" font-size="19">Automatisation &amp; IA pour votre entreprise</text>
+</svg>

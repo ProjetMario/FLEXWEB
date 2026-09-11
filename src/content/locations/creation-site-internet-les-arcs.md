@@ -32,7 +32,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel prix pour un site vitrine aux Arcs ?"
-    answer: "Un site vitrine professionnel est accessible à partir de quelques centaines d'euros."
+    answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
   - question: "FLEX-WEB travaille-t-il aux Arcs ?"
     answer: "Oui, nous accompagnons les entreprises des Arcs et des communes de Paradiski."
   - question: "Le site sera-t-il visible localement ?"

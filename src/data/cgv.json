@@ -1,5 +1,5 @@
 {
-  "updated": "9 septembre 2026",
+  "updated": "11 septembre 2026",
   "sections": [
     {
       "title": "1. Préambule",
@@ -41,19 +41,17 @@
     {
       "title": "6. Tarifs des offres",
       "content": [
-        "Les tarifs publics de référence de Flex-Web sont les suivants : Offre Essentielle : 49 € par mois, avec 299 € de frais de mise en service ; Offre Professionnelle : 99 € par mois, avec 299 € de frais de mise en service ; Achat définitif : à partir de 990 € en paiement unique.",
-        "L'offre Essentielle comprend notamment un site jusqu'à 5 pages, l'hébergement, le nom de domaine offert la première année, le certificat SSL, les sauvegardes, la maintenance, les mises à jour de sécurité, un formulaire de contact, le SEO de base et le support par email.",
-        "L'offre Professionnelle comprend les éléments de l'offre Essentielle ainsi que les modifications de contenu, le SEO avancé, une galerie photos, un blog, un tableau de bord client et un support prioritaire.",
-        "L'Achat définitif comprend la création du site, jusqu'à 5 pages, le design personnalisé, le responsive, le SEO de base, la livraison clé en main, la formation, la remise du code source et la propriété du site. L'hébergement, les sauvegardes, la sécurité, le support et les mises à jour sont disponibles en option pour 49 € par mois.",
-        "Les prix sont indiqués en euros hors taxes, sauf mention contraire. Le prix applicable à la commande est celui indiqué dans le devis accepté par le client. Les fonctionnalités, limites et éventuelles options supplémentaires sont précisées dans ce devis.",
-        "Pour les nouvelles commandes à compter du 9 septembre 2026, l’offre Croissance est proposée à 299 € HT par mois, avec 990 € HT de création. Elle comprend un site de cinq pages adapté au métier, un formulaire de demande de devis qualifiant, l’hébergement, les sauvegardes, la maintenance, le suivi des demandes et un bilan trimestriel. Les offres Professionnelle et Croissance incluent 30 minutes de modifications de contenu par mois, non reportables. Deux séries de corrections dans le périmètre accepté sont incluses avant livraison. Les demandes supplémentaires sont chiffrées avant intervention. Les devis et contrats déjà acceptés conservent leurs conditions propres."
+        "Pour les nouvelles demandes à compter du 11 septembre 2026, les tarifs publics sont : site vitrine simple à 299 € HT et site vitrine complet à 990 € HT, en paiement unique. Le périmètre exact est précisé dans le devis.",
+        "Les services récurrents sont facultatifs : maintenance avec modifications à 49 € HT par mois ; CRM, automatisation et référencement à 99 € HT par mois. Les tâches incluses, les limites, les accès nécessaires et les éventuels frais de services tiers sont détaillés au devis avant acceptation.",
+        "Le développement d’applications et les projets d’automatisation IA sur mesure font l’objet d’un devis personnalisé. Les éventuels frais de mise en place et coûts récurrents sont distingués dans ce devis.",
+        "Les prix sont indiqués hors taxes. Les taxes applicables et le total à payer sont présentés avant commande. La demande de devis ne déclenche aucun abonnement.",
+        "Les devis et contrats déjà acceptés conservent leurs tarifs et conditions propres. La nouvelle grille publique ne modifie pas les abonnements existants."
       ]
     },
     {
-      "title": "7. Rachat d'un site sous abonnement",
+      "title": "7. Anciens contrats de sites sous abonnement",
       "content": [
-        "Le client ayant souscrit une offre mensuelle peut racheter son site et recevoir une version autonome selon le barème suivant : 790 € avant 12 mois d'abonnement ; 590 € entre 12 et 24 mois ; 390 € entre 24 et 36 mois ; 190 € après 36 mois.",
-        "Le rachat comprend la remise d'une version autonome du site. Les services d'hébergement, de maintenance, de mises à jour et de support prennent fin lors du rachat, sauf souscription distincte."
+        "Les éventuelles modalités de rachat d’un site souscrit avec une ancienne offre mensuelle restent celles du devis et des conditions acceptés lors de la commande. Elles ne s’appliquent pas automatiquement aux nouvelles offres de création en paiement unique."
       ]
     },
     {

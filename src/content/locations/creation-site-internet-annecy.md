@@ -34,9 +34,9 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel est le prix d'un site vitrine à Annecy ?"
-    answer: "Un site vitrine professionnel à Annecy démarre à partir de quelques centaines d'euros. Le prix final dépend du nombre de pages, des fonctionnalités et de la rédaction du contenu."
+    answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
   - question: "Combien de temps faut-il pour créer un site à Annecy ?"
-    answer: "La plupart des sites vitrines sont en ligne entre 24h et 7 jours ouvrés, après validation du brief et réception des contenus."
+    answer: "Le calendrier est confirmé dans le devis après validation du périmètre et réception des contenus nécessaires. Les étapes de conception, de vérification et de publication sont convenues avec vous."
   - question: "FLEX-WEB intervient-il dans le centre-ville d'Annecy ?"
     answer: "Oui, nous accompagnons les entreprises du centre-ville, du secteur du lac et de l'agglomération annécienne."
   - question: "Le site sera-t-il visible sur Google ?"
