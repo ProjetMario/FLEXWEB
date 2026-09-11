@@ -1,0 +1,22 @@
+---
+import { websiteOffers, pricingOptions } from "../../data/pricing";
+const { id = "offres" } = Astro.props;
+const euros = (cents) => new Intl.NumberFormat("fr-FR", {style: "currency", currency: "EUR", maximumFractionDigits: 0}).format(cents / 100);
+---
+<section id={id} class="mw m-section offers-section" aria-labelledby={`${id}-title`}>
+  <div class="section-heading"><p class="m-eyebrow">VOTRE SITE INTERNET</p><h2 id={`${id}-title`}>Deux offres.<br />Une décision simple.</h2><p>Un prix de création, payé une seule fois.<br />Vous choisissez. Nous confirmons votre projet par un devis.</p></div>
+  <div class="offer-grid">
+    {websiteOffers.map((offer, i) => <article class:list={["offer-card", {"offer-complete": i === 1}]}>
+      <div class="offer-top"><span class="offer-category">{i === 0 ? "L’essentiel pour commencer" : "Pour aller plus loin"}</span><span class="offer-index" aria-hidden="true">0{i + 1}</span></div>
+      <h3>{offer.name}</h3><p class="offer-description">{offer.description}</p>
+      <p class="offer-amount">{euros(offer.setupCents)} <span>TTC</span></p><p class="offer-frequency">Paiement unique</p>
+      <a class="m-button" href={offer.href}>Choisir cette offre <span aria-hidden="true">↗</span></a>
+      <ul class="offer-features">{offer.features.map(feature => <li><span aria-hidden="true">✓</span>{feature}</li>)}</ul>
+      <p class="offer-footnote">Devis gratuit avant tout paiement.</p>
+    </article>)}
+  </div>
+  <p class="pricing-disclosure">Hébergement et nom de domaine précisés au devis. Les besoins supplémentaires sont chiffrés avant votre accord.</p>
+  <div id="options" class="options-heading"><h3>Un peu d’aide au quotidien ?</h3><p>Deux options facultatives. L’une, les deux ou aucune.</p></div>
+  <div class="option-grid">{pricingOptions.map(option => <article class="option-card"><div><h4>{option.name}</h4><p>{option.description}</p></div><p class="option-price">{euros(option.monthlyCents)}<span>TTC / mois</span></p></article>)}</div>
+  <p class="pricing-disclosure">Les limites, licences et consommations éventuelles sont précisées au devis. Le développement d’une automatisation sur mesure fait l’objet d’un devis distinct.</p>
+</section>

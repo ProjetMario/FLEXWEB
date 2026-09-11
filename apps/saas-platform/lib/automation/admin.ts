@@ -1,6 +1,6 @@
 import { prisma } from "../prisma";
 import { queueMessage } from "./service";
-import { stages, tokenHash, newToken } from "./core";
+import { stages, tokenHash, newToken, assertStandardQuote } from "./core";
 import { z } from "zod";
 
 // Only uncommitted requests may be deleted here. Paid projects and any request
@@ -40,6 +40,7 @@ export async function manageProject(
     await tx.$queryRaw`SELECT id FROM "SalesProject" WHERE id = ${id} FOR UPDATE`;
     const project = await tx.salesProject.findUniqueOrThrow({ where: { id } });
     if (action === "qualify") {
+      assertStandardQuote(project.offerSnapshot);
       if (project.stage !== "NEW")
         throw new Error("Cette demande a déjà été traitée.");
       if (form.get("scopeConfirmed") !== "on")

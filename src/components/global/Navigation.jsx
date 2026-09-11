@@ -1,102 +1,35 @@
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Logo } from "./Logo.jsx";
 
-export default function Navigation({ data = {}, transparent = false }) {
+export default function Navigation({ data = {} }) {
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const toggle = useRef(null), menu = useRef(null);
   const { links = [] } = data;
-
   useEffect(() => {
-    if (!transparent) return;
-    const onScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", onScroll);
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [transparent]);
-
-  const navClass = transparent
-    ? `fixed top-0 left-0 right-0 z-40 w-full transition-colors duration-300 ${
-        scrolled
-          ? "bg-[#f5f5f7]/90 md:bg-[#f5f5f7]/85 border-b border-black/[0.08] md:backdrop-blur-2xl"
-          : "bg-white md:bg-[#f5f5f7]/50 border-b border-black/[0.08] md:border-transparent"
-      }`
-    : "sticky top-0 z-40 w-full bg-[#f5f5f7]/90 border-b border-black/[0.08] md:backdrop-blur-2xl";
-
-  return (
-    <nav className={navClass}>
-      <div className="mx-auto flex max-w-6xl flex-row items-center justify-between px-5 py-3.5 md:px-7 relative">
-        <Logo className="h-14 md:h-[5.25rem]" />
-
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden lg:flex items-center gap-6 text-sm font-medium text-[#424245]">
-          {links.map((link) => (
-            <a key={link.href} href={link.href.startsWith("#") ? `/${link.href}` : link.href} className="transition-colors duration-200 hover:text-[#0071e3]">
-              {link.label}
-            </a>
-          ))}
-        </div>
-
-        <div className="hidden lg:flex items-center">
-          <a
-            href="/demarrer/?service=automation"
-            className="inline-flex items-center rounded-full bg-[#0071e3] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0077ed]"
-          >
-            Devis gratuit
-          </a>
-        </div>
-
-        {!open && (
-          <button
-            className="flex flex-col cursor-pointer justify-center items-center space-y-1.5 lg:hidden focus:outline-none"
-            aria-label="Ouvrir le menu"
-            onClick={() => setOpen(true)}
-          >
-            <span className="block w-6 h-0.5 bg-stone-700" />
-            <span className="block w-6 h-0.5 bg-stone-700" />
-          </button>
-        )}
-      </div>
-
-      {open && (
-        <div className="fixed inset-0 z-50 lg:hidden" onClick={() => setOpen(false)}>
-          <div className="absolute inset-0 bg-black/60" />
-          <div
-            className="absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white shadow-2xl flex flex-col px-6 pt-5"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex flex-row justify-between items-center border-b border-stone-100 py-4 mb-6">
-              <div onClick={() => setOpen(false)}>
-                <Logo className="h-14 md:h-[5.25rem]" />
-              </div>
-              <button
-                className="text-2xl cursor-pointer font-light text-stone-500 leading-none"
-                aria-label="Fermer le menu"
-                onClick={() => setOpen(false)}
-              >
-                &times;
-              </button>
-            </div>
-            <nav className="flex flex-col overflow-y-auto">
-              {links.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href.startsWith("#") ? `/${link.href}` : link.href}
-                  onClick={() => setOpen(false)}
-                  className="text-2xl font-medium text-stone-900 py-4 border-b border-stone-100 hover:text-stone-500 transition-colors"
-                >
-                  {link.label}
-                </a>
-              ))}
-              <a
-                href="/demarrer/?service=automation"
-                onClick={() => setOpen(false)}
-                className="mt-8 inline-flex items-center justify-center rounded-full bg-stone-900 px-6 py-3 text-sm font-medium text-white"
-              >
-                Devis gratuit
-              </a>
-            </nav>
-          </div>
-        </div>
-      )}
+    if (!open) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    menu.current?.querySelector("a")?.focus();
+    const onKey = (e) => {
+      if (e.key === "Escape") { setOpen(false); toggle.current?.focus(); }
+      if (e.key !== "Tab") return;
+      const focusables = [toggle.current, ...menu.current.querySelectorAll("a")].filter(Boolean);
+      const first = focusables[0], last = focusables.at(-1);
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    };
+    const wide = matchMedia("(min-width: 1024px)");
+    const onWide = () => { if (wide.matches) setOpen(false); };
+    document.addEventListener("keydown", onKey); wide.addEventListener("change", onWide);
+    return () => { document.body.style.overflow = previous; document.removeEventListener("keydown", onKey); wide.removeEventListener("change", onWide); };
+  }, [open]);
+  const href = (link) => link.href.startsWith("#") ? `/${link.href}` : link.href;
+  return <header className="site-navigation sticky top-0 z-40 border-b border-black/[0.07] bg-white/95 backdrop-blur-xl">
+    <nav aria-label="Navigation principale" className="relative mx-auto flex h-[76px] max-w-[1200px] items-center justify-between gap-4 px-[18px] md:px-7">
+      <Logo className="h-12 shrink-0" />
+      <div className="hidden items-center gap-6 text-[13px] font-medium text-[#424245] lg:flex">{links.map(link => <a key={link.href} href={href(link)} className="py-3 hover:text-[#0071e3]">{link.label}</a>)}</div>
+      <div className="flex items-center gap-3"><a href="/demarrer/" className="inline-flex min-h-11 items-center rounded-full bg-[#0071e3] px-4 py-2.5 text-xs font-medium text-white hover:bg-[#0062c4] sm:px-5 sm:text-[13px]">Demander un devis</a><button ref={toggle} type="button" aria-label={open ? "Fermer le menu" : "Ouvrir le menu"} aria-expanded={open} aria-controls="mobile-navigation" onClick={() => setOpen(!open)} className="flex h-11 w-11 items-center justify-center rounded-full border border-black/10 bg-white lg:hidden"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">{open ? <path d="m5 5 10 10M15 5 5 15" /> : <path d="M3 7h14M3 13h14" />}</svg></button></div>
     </nav>
-  );
+    {open && <div id="mobile-navigation" ref={menu} className="fixed inset-x-0 top-[76px] h-[calc(100dvh-76px)] overflow-y-auto bg-white px-7 pb-10 pt-7 lg:hidden"><div className="mx-auto flex max-w-xl flex-col">{links.map(link => <a key={link.href} href={href(link)} onClick={() => setOpen(false)} className="border-b border-black/[0.07] py-5 text-2xl font-medium tracking-tight">{link.label}</a>)}<p className="mt-10 text-sm text-[#6e6e73]">Un projet en Savoie, Haute-Savoie ou ailleurs en France.</p><a href="/demarrer/" className="mt-5 self-start rounded-full bg-[#0071e3] px-6 py-3.5 text-sm text-white" onClick={() => setOpen(false)}>Demander mon devis ↗</a></div></div>}
+  </header>;
 }

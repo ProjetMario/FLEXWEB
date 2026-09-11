@@ -2,24 +2,24 @@
   "title": "FLEX-WEB",
   "links": [
     {
-      "label": "Automatisation IA",
-      "href": "/automatisation-ia/"
-    },
-    {
       "label": "Sites internet",
       "href": "/creation-site-internet/"
+    },
+    {
+      "label": "Automatisation IA",
+      "href": "/automatisation-ia/"
     },
     {
       "label": "Applications",
       "href": "/creation-application-mobile/"
     },
     {
-      "label": "Tarifs",
-      "href": "/pricing/"
+      "label": "Réalisations",
+      "href": "/#realisations"
     },
     {
-      "label": "Guides",
-      "href": "/journal/"
+      "label": "Tarifs",
+      "href": "/pricing/"
     }
   ]
 }

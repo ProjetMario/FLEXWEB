@@ -64,7 +64,7 @@ export const pricingFaq: PricingFaqItem[] = [
   },
   {
     question: "Les prix comprennent-ils la TVA ?",
-    answer: "Tous les prix affichés sont hors taxes (TTC). Le devis présente les taxes applicables et le montant total à payer avant votre validation.",
+    answer: "Les prix des offres publiques sont toutes taxes comprises (TTC). La TVA applicable est incluse dans les montants affichés. Le devis détaille le total de votre projet avant validation.",
   },
   {
     question: "Intervenez-vous en dehors de la Savoie et de la Haute-Savoie ?",

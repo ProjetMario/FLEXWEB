@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { api, money, readToken, saveToken } from "./api";
+import { isPublicQuote as hasPublicQuote, isInclusiveQuote, quoteTaxLabel } from "../../../apps/saas-platform/lib/automation/public-quote-pricing";
 const labels = {
   NEW: "Nous étudions votre demande",
   AWAITING_PAYMENT: "Votre proposition est prête",
@@ -20,7 +21,9 @@ export default function ProjectPortal() {
     [loading, setLoading] = useState(true),
     [accepted, setAccepted] = useState(false);
   const ticketKey = useRef(null);
-  const isPublicQuote = project?.offer?.publicQuote?.version === "2026-09-11";
+  const isPublicQuote = hasPublicQuote(project?.offer);
+  const taxLabel = quoteTaxLabel(project?.offer);
+  const inclusive = isInclusiveQuote(project?.offer);
   const quoteOnly = project?.offer?.quoteOnly === true;
   async function refresh(key) {
     try {
@@ -188,23 +191,22 @@ export default function ProjectPortal() {
                 </ul>
                 <div className="flow-detail">
                   <span>Création du site</span>
-                  <strong>{money(project.setupCents)} HT</strong>
+                  <strong>{money(project.setupCents)} {taxLabel}</strong>
                 </div>
                 {project.monthlyCents > 0 && (
                   <div className="flow-detail">
                     <span>{isPublicQuote ? "Options mensuelles choisies" : "Abonnement mensuel"}</span>
-                    <strong>{money(project.monthlyCents)} HT/mois</strong>
+                    <strong>{money(project.monthlyCents)} {taxLabel}/mois</strong>
                   </div>
                 )}
                 <div className="flow-detail">
                   <span>Premier paiement</span>
                   <strong>
-                    {money(project.setupCents + project.monthlyCents)} HT
+                    {money(project.setupCents + project.monthlyCents)} {taxLabel}
                   </strong>
                 </div>
                 <p className="flow-note">
-                  Les taxes applicables et le total TTC sont affichés avant
-                  confirmation du paiement.{" "}
+                  {inclusive ? "La TVA applicable est incluse dans les montants affichés." : "Les taxes applicables et le total TTC sont affichés avant confirmation du paiement."}{" "}
                   {project.monthlyCents > 0
                     ? "L’abonnement commence à la commande, puis est prélevé chaque mois. Résiliation avec préavis de 30 jours selon les CGV."
                     : "Paiement unique. Hébergement et maintenance en option."}{" "}
@@ -430,9 +432,9 @@ export default function ProjectPortal() {
           <aside className="flow-aside">
             <h2>{project.offer.name}</h2>
             <p className="flow-price">
-              {quoteOnly ? "Sur devis" : <>{money(isPublicQuote ? project.setupCents : (project.monthlyCents || project.setupCents))} HT{!isPublicQuote && project.monthlyCents ? "/mois" : ""}</>}
+              {quoteOnly ? "Sur devis" : <>{money(isPublicQuote ? project.setupCents : (project.monthlyCents || project.setupCents))} {taxLabel}{!isPublicQuote && project.monthlyCents ? "/mois" : ""}</>}
             </p>
-            {isPublicQuote && !quoteOnly && <p className="flow-note">Création en paiement unique{project.monthlyCents ? ` · Options choisies : ${money(project.monthlyCents)} HT/mois` : " · Aucune option mensuelle choisie"}</p>}
+            {isPublicQuote && !quoteOnly && <p className="flow-note">Création en paiement unique{project.monthlyCents ? ` · Options choisies : ${money(project.monthlyCents)} ${taxLabel}/mois` : " · Aucune option mensuelle choisie"}</p>}
             <p className="flow-note">
               {project.paymentStatus === "PAID"
                 ? "Paiement confirmé"

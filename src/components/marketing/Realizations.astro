@@ -1,0 +1,11 @@
+---
+const sites = [
+ {name: "Foot Nation", category: "Football & contenu", domain: "foot-nation.com", href: "https://www.foot-nation.com/", image: "foot-nation.jpg"},
+ {name: "2 Savoie Immo", category: "Immobilier", domain: "2savoie.immo", href: "https://www.2savoie.immo/", image: "2savoie-immo.jpg"},
+ {name: "Serrurier 73", category: "Artisan & service local", domain: "serrurier73.fr", href: "https://serrurier73.fr/", image: "serrurier73.jpg"},
+];
+---
+<section id="realisations" class="realizations-band"><div class="mw m-section">
+  <div class="section-heading"><p class="m-eyebrow">RÉALISATIONS FLEX-WEB</p><h2>De vraies entreprises.<br />De vrais sites.</h2><p>Trois réalisations à découvrir. Imaginez la vôtre.</p></div>
+  <div class="realizations-grid">{sites.map(site => <article class="realization-card"><a class="realization-preview" href={site.href} target="_blank" rel="noopener noreferrer" aria-label={`Découvrir le site ${site.name} (nouvel onglet)`}><div class="browser-chrome" aria-hidden="true"><span>● ● ●</span><span>{site.domain}</span><span>↗</span></div><img src={`/images/showcase/${site.image}`} alt={`Aperçu de la page d’accueil de ${site.name}`} width="1280" height="960" loading="lazy" decoding="async" /></a><div class="realization-caption"><div><p>{site.category}</p><h3>{site.name}</h3></div><a href={site.href} target="_blank" rel="noopener noreferrer" aria-label={`Visiter ${site.name} (nouvel onglet)`}>Voir le site <span aria-hidden="true">↗</span></a></div></article>)}</div>
+</div></section>

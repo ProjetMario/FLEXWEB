@@ -48,5 +48,5 @@ for(const [route,html] of pages){
 assert.deepEqual([...new Set(errors)],[],'Broken internal links');
 for(const [from,to] of redirects){assert(pages.has(to),`Redirect target: ${to}`);assert(!redirects.has(to),`Redirect chain: ${from}`);assert(!pages.has(from),`Redirect source emitted: ${from}`);assert(!urls.includes(origin+from),`Redirect source in sitemap: ${from}`);}
 for(const route of ['/automatisation-ia/','/automatisation-ia-savoie/','/automatisation-ia-haute-savoie/','/creation-site-internet/','/creation-application-mobile/','/journal/taches-automatiser-pme/','/journal/connecter-demandes-crm/','/journal/automatisation-ou-application-sur-mesure/']) assert(urls.includes(origin+route),`Priority page ${route}`);
-const llms=await readFile(path.join(root,'llms.txt'),'utf8');assert.equal(llms,await readFile(path.join(root,'ai-overview.txt'),'utf8'));for(const amount of ['299 € HT','990 € HT','49 € HT','99 € HT'])assert(llms.includes(amount),amount);
+const llms=await readFile(path.join(root,'llms.txt'),'utf8');assert.equal(llms,await readFile(path.join(root,'ai-overview.txt'),'utf8'));for(const amount of ['299 € TTC','990 € TTC','49 € TTC','99 € TTC'])assert(llms.includes(amount),amount);
 console.log(JSON.stringify({pages:pages.size,sitemapUrls:urls.length,redirectRules:redirects.size,brokenLinks:0,structuredData:'valid',status:'passed'},null,2));

@@ -20,6 +20,7 @@ async function filledQuote(consent = 'accepted') {
   });
   await context.addInitScript(value => localStorage.setItem('flex-web-cookie-consent', value), consent);
   const page = await context.newPage();
+  page.setDefaultTimeout(15000); page.setDefaultNavigationTimeout(20000);
   await page.goto(new URL('/demarrer/?service=site&offre=essentielle', preview).href);
   await page.waitForFunction(() => document.querySelector('fieldset') && !document.querySelector('fieldset').disabled);
   for (const [label, value] of [['Entreprise', 'Entreprise simulation'], ['Votre nom', 'Test local'], ['E-mail professionnel', 'test@example.invalid'], ['Téléphone', '0600000000'], ['Ville', 'Chambéry'], ['Métier / activité', 'Test']]) {
@@ -65,7 +66,7 @@ test('successful double click records one mocked request and one conversion', as
     await page.waitForFunction(() => document.querySelector('form').getAttribute('aria-busy') === 'true');
     assert.equal(attempts, 1);
     assert.equal(records.size, 1);
-    assert.deepEqual(body.publicQuote, {version:'2026-09-11', service:'site', tier:'simple', options:[]});
+    assert.deepEqual(body.publicQuote, {version:'2026-09-11-ttc', service:'site', tier:'simple', options:[]});
     assert.deepEqual(await recordedEvents(page), []);
     release();
     await page.waitForURL('**/espace-projet/**');

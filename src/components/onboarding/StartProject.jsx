@@ -20,6 +20,7 @@ export default function StartProject() {
   const [ready, setReady] = useState(false);
   const [step, setStep] = useState(0), [busy, setBusy] = useState(false), [error, setError] = useState("");
   const [service, setService] = useState("site");
+  const [sitePlan, setSitePlan] = useState("essentielle");
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [data, setData] = useState({
     companyName: "", contactName: "", email: "", phone: "", city: "", businessType: "",
@@ -38,6 +39,7 @@ export default function StartProject() {
       ? "achat" : "essentielle";
     setData((d) => ({ ...d, planId, source: (query.get("utm_source") || "site").slice(0, 160) }));
     setService(requestedService);
+    if (requestedService === "site") setSitePlan(planId);
     try { identity.current = JSON.parse(sessionStorage.getItem("flexweb-intake-v2") || "null"); }
     catch { identity.current = null; }
     setReady(true);
@@ -46,7 +48,12 @@ export default function StartProject() {
   const offerChoices = bespoke ? [bespokeOffers[service]] : websiteOffers;
   const displayedOffer = offerChoices.find((o) => o.id === data.planId) || offerChoices[0];
   const activeOptions = pricingOptions.filter((option) => selectedOptions.includes(option.id));
-  const set = (e) => setData((d) => ({ ...d, [e.target.name]: e.target.type === "checkbox" ? e.target.checked : e.target.value }));
+  const set = (e) => { if (e.target.name === "planId" && service === "site") setSitePlan(e.target.value); setData((d) => ({ ...d, [e.target.name]: e.target.type === "checkbox" ? e.target.checked : e.target.value })); };
+  const changeService = (value) => {
+    setService(value); setError("");
+    setData(d => ({...d, planId: value === "site" ? sitePlan : "achat"}));
+  };
+  useEffect(() => { if (ready) heading.current?.focus(); }, [step]);
   function next(e) {
     e.preventDefault();
     if (!form.current.reportValidity()) return;
@@ -63,7 +70,7 @@ export default function StartProject() {
       try { sessionStorage.setItem("flexweb-intake-v2", JSON.stringify(identity.current)); } catch {}
       const quoteSummary = bespoke
         ? `Demande de devis : ${displayedOffer.name}. Budget et périmètre à chiffrer, aucun forfait site sélectionné.`
-        : `Demande de devis : ${displayedOffer.name}, ${money(displayedOffer.setupCents)} HT en paiement unique. Options demandées : ${activeOptions.length ? activeOptions.map((o) => `${o.name} (${money(o.monthlyCents)} HT/mois)`).join(" ; ") : "aucune mensualité"}.`;
+        : `Demande de devis : ${displayedOffer.name}, ${money(displayedOffer.setupCents)} TTC en paiement unique. Options demandées : ${activeOptions.length ? activeOptions.map((o) => `${o.name} (${money(o.monthlyCents)} TTC/mois)`).join(" ; ") : "aucune mensualité"}.`;
       await api("intake", {
         ...data, ...identity.current,
         publicQuote: bespoke
@@ -89,18 +96,21 @@ export default function StartProject() {
   return (
     <>
       <p className="flow-eyebrow">Votre projet, étape par étape</p>
-      <h1 ref={heading}>{service === "automation" ? "Automatisez vos tâches." : service === "application" ? "Votre application sur mesure." : "Votre site internet."}<br />Commençons par votre besoin.</h1>
+      <h1>{service === "automation" ? "Automatisez vos tâches." : service === "application" ? "Votre application sur mesure." : "Votre site internet."}<br />Commençons par votre besoin.</h1>
       <p className="flow-intro">{bespoke
         ? "Présentez votre activité, vos outils et ce que vous souhaitez améliorer. Nous préparons une proposition personnalisée avant tout engagement."
-        : "Choisissez votre site à 299 € ou 990 € HT en paiement unique, puis vos éventuelles options. Nous confirmons le périmètre dans votre devis avant tout paiement."}</p>
+        : "Choisissez votre site à 299 € ou 990 € TTC en paiement unique, puis vos éventuelles options. Nous confirmons le périmètre dans votre devis avant tout paiement."}</p>
       <ol className="flow-steps" aria-label="Étapes de la demande">
         {["Votre activité", "Votre offre", "Votre projet"].map((s, i) => <li key={s} aria-current={step === i ? "step" : undefined}>{i + 1}. {s}</li>)}
       </ol>
       <div className="flow-columns">
         <form ref={form} onSubmit={step === 2 ? submit : next} className="flow-card" aria-busy={busy}>
           <fieldset className="flow-fieldset" disabled={!ready || busy}>
-            <h2>{["Faisons connaissance", bespoke ? "Votre prestation" : "Choisissez votre formule", "Ce que vous souhaitez accomplir"][step]}</h2>
+            <h2 ref={heading} tabIndex={-1}>{["Faisons connaissance", bespoke ? "Votre prestation" : "Choisissez votre formule", "Ce que vous souhaitez accomplir"][step]}</h2>
             {step === 0 && <>
+              <label htmlFor="quote-service">Votre projet</label><select id="quote-service" name="service" value={service} onChange={e => changeService(e.target.value)}>
+                <option value="site">Créer un site internet</option><option value="automation">Automatiser des tâches avec l’IA</option><option value="application">Développer une application</option>
+              </select>
               <div className="flow-fields">
                 {field("companyName", "Entreprise")}{field("contactName", "Votre nom", "text", 120)}
                 {field("email", "E-mail professionnel", "email", 254)}{field("phone", "Téléphone", "tel", 25)}
@@ -112,7 +122,7 @@ export default function StartProject() {
               {offerChoices.map((o) => <label className="flow-offer" key={o.id}>
                 <input type="radio" name="planId" value={o.id} checked={data.planId === o.id} onChange={set} />
                 {o.name}
-                <span className="flow-price">{bespoke ? "Sur devis" : `${money(o.setupCents)} HT`}</span>
+                <span className="flow-price">{bespoke ? "Sur devis" : `${money(o.setupCents)} TTC`}</span>
                 <span className="flow-note">{bespoke ? "Proposition personnalisée après étude de votre besoin." : "Création payée une seule fois. Options mensuelles facultatives."}</span>
                 <ul className="flow-list">{o.features.map((f) => <li key={f}>{f}</li>)}</ul>
               </label>)}
@@ -121,7 +131,7 @@ export default function StartProject() {
                 <p className="flow-note">Choisissez l’une, les deux ou aucune. Les interventions et limites seront précisées au devis.</p>
                 {pricingOptions.map((option) => <label className="flow-offer" key={option.id}>
                   <input type="checkbox" name={option.id} checked={selectedOptions.includes(option.id)} onChange={(e) => setSelectedOptions((current) => e.target.checked ? [...current, option.id] : current.filter((id) => id !== option.id))} />
-                  {option.name} · +{money(option.monthlyCents)} HT / mois
+                  {option.name} · +{money(option.monthlyCents)} TTC / mois
                   <span className="flow-note">{option.description}</span>
                 </label>)}
               </fieldset>}
@@ -146,12 +156,13 @@ export default function StartProject() {
           </fieldset>
         </form>
         <aside className="flow-aside">
-          <p className="flow-eyebrow">Votre sélection</p>
+          <p className="flow-eyebrow">Votre récapitulatif</p>
           <h2>{displayedOffer.name}</h2>
-          <p className="flow-price">{bespoke ? "Sur devis" : `${money(displayedOffer.setupCents)} HT`}</p>
+          <p className="flow-price">{bespoke ? "Sur devis" : `${money(displayedOffer.setupCents)} TTC`}</p>
           <p className="flow-note">{bespoke ? "Le budget dépend des fonctionnalités, intégrations et outils nécessaires." : "Création en paiement unique. Hébergement et nom de domaine précisés au devis."}</p>
-          {!bespoke && (activeOptions.length ? <ul className="flow-list">{activeOptions.map((o) => <li key={o.id}>{o.name} : +{money(o.monthlyCents)} HT / mois</li>)}</ul> : <p className="flow-note">Aucune option mensuelle sélectionnée.</p>)}
-          <p className="flow-note">Prix hors taxes. Les taxes et le total seront indiqués dans votre proposition avant validation.</p>
+          {!bespoke && (activeOptions.length ? <ul className="flow-list">{activeOptions.map((o) => <li key={o.id}>{o.name} : +{money(o.monthlyCents)} TTC / mois</li>)}</ul> : <p className="flow-note">Aucune option mensuelle sélectionnée.</p>)}
+          {!bespoke && <div className="flow-total"><span>Création du site</span><strong>{money(displayedOffer.setupCents)} TTC</strong><span>Options mensuelles</span><strong>{money(activeOptions.reduce((total, option) => total + option.monthlyCents, 0))} TTC / mois</strong></div>}
+          <p className="flow-note">Prix toutes taxes comprises. Le devis confirme les prestations et le total avant paiement.</p>
           <ul className="flow-list"><li>Un interlocuteur en Savoie</li><li>Un accompagnement partout en France</li><li>Un périmètre validé ensemble</li><li>Un espace privé pour suivre votre projet</li></ul>
           <p className="flow-note">Le calendrier est confirmé dans le devis selon le projet et les contenus disponibles.</p>
           <p className="flow-note"><a href="/pricing/">Revoir les tarifs et les prestations</a></p>
