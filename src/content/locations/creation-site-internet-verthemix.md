@@ -5,8 +5,8 @@ type: "city"
 department: "Savoie"
 region: "Auvergne-Rhône-Alpes"
 country: "France"
-introduction: "FLEX-WEB crée des sites internet professionnels pour les artisans, commerçants et indépendants de Verthemex, en Chautagne."
-localContext: "Verthemex est une commune de Savoie, située en Chautagne. Son économie locale repose sur l'agriculture, l'artisanat, le commerce de proximité et les services."
+introduction: "FLEX-WEB crée des sites internet professionnels pour les artisans, commerçants et indépendants de Verthemex, dans le secteur de Yenne."
+localContext: "Verthemex est une commune de Savoie appartenant à la communauté de communes de Yenne. Le projet de site présente vos prestations et la zone d'intervention réelle de votre entreprise."
 targetIndustries:
   - "Artisans du bâtiment"
   - "Agriculteurs et producteurs locaux"
@@ -14,16 +14,7 @@ targetIndustries:
   - "Professions libérales"
   - "Services à la personne"
 nearbyCities:
-  - "Aix-les-Bains"
-  - "Le Bourget-du-Lac"
-  - "Ruffieux"
-  - "Conjux"
-  - "Marcieux"
-  - "Nances"
-  - "Champagneux"
   - "Yenne"
-  - "Chambéry"
-  - "Brison-Saint-Innocent"
 services:
   - "Création de site vitrine"
   - "Création de site professionnel"
@@ -33,7 +24,7 @@ faq:
   - question: "Quel prix pour un site vitrine à Verthemex ?"
     answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
   - question: "FLEX-WEB travaille-t-il à Verthemex ?"
-    answer: "Oui, nous accompagnons les entreprises de Verthemex et des communes de Chautagne."
+    answer: "Oui, nous accompagnons les entreprises de Verthemex et des communes du secteur de Yenne."
   - question: "Le site sera-t-il visible localement ?"
     answer: "Oui, chaque site est optimisé pour le référencement local avec des données structurées."
 seoTitle: "Création de site internet à Verthemex — FLEX-WEB"
@@ -43,7 +34,7 @@ isDraft: false
 
 ## Création de sites internet à Verthemex
 
-Verthemex est une commune de Chautagne, dans un environnement rural proche du lac du Bourget. Les artisans, agriculteurs, commerçants et professions libérales du village peuvent bénéficier d'un site internet professionnel.
+Verthemex est une commune de Savoie appartenant à la communauté de communes de Yenne. Les artisans, agriculteurs, commerçants et professions libérales du village peuvent bénéficier d'un site internet professionnel.
 
 FLEX-WEB conçoit des sites modernes, rapides et pensés pour le référencement local.
 
@@ -67,7 +58,7 @@ Ajoutez des pages de services, un blog et un formulaire de contact.
 
 ### Référencement local
 
-Optimisez votre présence pour les recherches à Verthemex et en Chautagne.
+Optimisez votre présence pour les recherches liées à vos prestations et à votre zone d'intervention, à Verthemex et dans le secteur de Yenne.
 
 ### Maintenance et hébergement
 
@@ -75,8 +66,8 @@ Bénéficiez d'un hébergement fiable et d'un support technique.
 
 ## Pourquoi choisir FLEX-WEB ?
 
-Nous connaissons les communes de Chautagne. Cette expertise nous permet de créer des sites pertinents et un référencement local efficace.
+Nous cadrons vos prestations, les informations à publier et les demandes que vous souhaitez recevoir. La zone présentée sur le site correspond aux communes dans lesquelles votre entreprise travaille réellement.
 
-## Communes voisines
+## Secteur de Yenne
 
-Nous travaillons à Verthemex et à **Aix-les-Bains, Le Bourget-du-Lac, Ruffieux, Conjux, Marcieux, Nances, Champagneux, Yenne, Chambéry, Brison-Saint-Innocent**.
+Votre site peut présenter vos prestations à Verthemex et dans le secteur de [Yenne](/creation-site-internet-yenne/), selon la zone que vous desservez réellement. Cette zone est définie pendant le cadrage du projet.
