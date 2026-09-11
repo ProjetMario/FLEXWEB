@@ -246,3 +246,26 @@
   padding: 0;
   min-width: 0;
 }
+
+/* Shared visual language of the public offer and private proposal. */
+.project-flow{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f5f7}
+.project-flow .flow-wrap{max-width:1140px;padding-top:60px}
+.project-flow h1{font-size:clamp(35px,4.5vw,56px);max-width:840px;font-weight:650}
+.project-flow .flow-columns{grid-template-columns:minmax(0,1fr) 320px;gap:28px}
+.project-flow .flow-card{padding:34px;border-radius:26px;border-color:#e2e2e7}
+.project-flow .flow-aside{position:sticky;top:28px;background:#fff;border:1px solid #e2e2e7;border-radius:26px;padding:28px}
+.project-flow .flow-steps{gap:0;display:grid;grid-template-columns:repeat(3,1fr);max-width:720px;margin-block:30px}
+.project-flow .flow-steps li{border-bottom:2px solid #dcdce2;padding:12px 8px 15px}
+.project-flow .flow-steps [aria-current=step]{border-color:#0071e3}
+.project-flow .flow-offer{padding:24px;border-radius:18px;border-color:#dcdce2}
+.project-flow .flow-offer .flow-list{font-weight:400}
+.project-flow .flow-button{min-height:48px;padding-inline:24px;transition:background .2s}
+.project-flow .flow-button:not(:disabled):hover{background:#0062c4;color:#fff}
+.project-flow .flow-button.secondary:not(:disabled):hover{background:#f5f5f7;color:#1d1d1f}
+.project-flow input[type=checkbox],.project-flow input[type=radio]{accent-color:#0071e3;width:17px;height:17px;vertical-align:middle}
+.project-flow .flow-total{border-block:1px solid #e2e2e7;display:grid;grid-template-columns:1fr auto;gap:12px;padding-block:20px;margin:20px 0;font-size:12px;line-height:1.6}
+.project-flow .flow-total strong{font-weight:600}
+.project-flow .flow-note{margin-top:10px}
+.project-flow h2[tabindex]:focus{outline:none}
+@media(max-width:900px){.project-flow .flow-columns{grid-template-columns:minmax(0,1fr) 280px;gap:20px}.project-flow .flow-card,.project-flow .flow-aside{padding:24px}}
+@media(max-width:760px){.project-flow .flow-columns{grid-template-columns:1fr}.project-flow .flow-wrap{padding-top:34px}.project-flow .flow-aside{position:static}.project-flow .flow-card{padding:23px}.project-flow .flow-steps{font-size:11px}.project-flow .flow-steps li{padding-inline:4px}.project-flow .flow-offer{padding:19px}}

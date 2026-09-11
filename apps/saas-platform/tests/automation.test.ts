@@ -10,6 +10,8 @@ import {
   tokenHash,
   secretMatches,
   projectedMrr,
+  publicQuoteSchema,
+  offerForIntake,
 } from "../lib/automation/core";
 import {
   createIntake,
@@ -96,6 +98,152 @@ const request = (body: unknown, token?: string) =>
     },
     body: JSON.stringify(body),
   });
+
+test("public quote selection derives prices and rejects caller-defined money", () => {
+  assert.equal(publicQuoteSchema.safeParse({ version: "2026-09-11", service: "site", tier: "simple", options: [], setupCents: 1 }).success, false);
+  assert.equal(publicQuoteSchema.safeParse({ version: "2026-09-11", service: "site", tier: "simple", options: ["crm", "crm"] }).success, false);
+  assert.equal(publicQuoteSchema.safeParse({ version: "unknown", service: "site", tier: "simple", options: [] }).success, false);
+  assert.equal(publicQuoteSchema.safeParse({ version: "2026-09-11", service: "application", tier: "simple" }).success, false);
+  const input = intakeSchema.parse({ ...intake(), setupCents: 1, monthlyCents: 1, publicQuote: { version: "2026-09-11", service: "site", tier: "simple", options: [] } });
+  const offer = offerForIntake(input);
+  assert.equal(publicQuoteSchema.safeParse({ version: "2026-09-11-ttc", service: "site", tier: "simple", options: [], taxBasis: "HT" }).success, false);
+  assert.equal(offer.setupCents, 29900);
+  assert.equal(offer.monthlyCents, 0);
+  assert.equal(offer.id, "essentielle");
+  const legacy = offerForIntake(intakeSchema.parse(intake()));
+  assert.equal(legacy.setupCents, 99000);
+  assert.equal(legacy.monthlyCents, 29900);
+  assert.equal("publicQuote" in legacy, false);
+});
+
+test("versioned quote snapshots and Stripe mock preserve every optional-price combination", async () => {
+  const previousPayments = process.env.AUTOMATION_PAYMENTS_ENABLED;
+  process.env.AUTOMATION_PAYMENTS_ENABLED = "true";
+  try {
+    for (const tier of ["simple", "complete"] as const) {
+      for (const options of [[], ["maintenance"], ["crm"], ["maintenance", "crm"]] as const) {
+        const selection = { version: "2026-09-11", service: "site", tier, options: [...options] };
+        const data = { ...intake(), publicQuote: selection };
+        const project = await createIntake(data);
+        const setupCents = tier === "simple" ? 29900 : 99000;
+        const monthlyCents = (options as readonly string[]).reduce((sum, option) => sum + (option === "maintenance" ? 4900 : 9900), 0);
+        assert.equal(project.setupCents, setupCents);
+        assert.equal(project.monthlyCents, monthlyCents);
+        assert.equal(project.planId, tier === "simple" ? "essentielle" : "achat");
+        const prospect = await prisma.prospect.findUniqueOrThrow({ where: { id: project.prospectId! } });
+        assert.equal(prospect.setupFee, setupCents / 100);
+        assert.equal(prospect.monthlyPrice, monthlyCents / 100);
+        const replay = await createIntake({ ...data, publicQuote: { ...selection, options: [] } });
+        assert.equal(replay.id, project.id);
+        assert.deepEqual(replay.offerSnapshot, project.offerSnapshot);
+        const form = new FormData();
+        form.set("scopeConfirmed", "on");
+        await manageProject(project.id, "qualify", form);
+        const qualified = await getProject(data.accessToken);
+        let calls = 0;
+        let params: Stripe.Checkout.SessionCreateParams | undefined;
+        const session = { id: `cs_public_quote_${randomUUID()}`, status: "open", url: "https://checkout.stripe.com/local-test" };
+        const stripeMock = { checkout: { sessions: {
+          create: async (value: Stripe.Checkout.SessionCreateParams) => { calls++; params = value; return session; },
+          retrieve: async () => session,
+        } } } as unknown as Stripe;
+        await Promise.all([startCheckout(qualified, true, stripeMock), startCheckout(qualified, true, stripeMock)]);
+        assert.equal(calls, 1);
+        assert(params!.line_items!.every(item => item.price_data!.tax_behavior === "exclusive"));
+        assert.equal(params!.mode, monthlyCents ? "subscription" : "payment");
+        assert.equal(params!.line_items![0].price_data!.unit_amount, setupCents);
+        assert.equal(params!.line_items!.length, monthlyCents ? 2 : 1);
+        if (monthlyCents) assert.equal(params!.line_items![1].price_data!.unit_amount, monthlyCents);
+        assert.equal(params!.line_items![0].price_data!.product_data!.name, `${tier === "simple" ? "Site vitrine simple" : "Site vitrine complet"} — création du site`);
+        assert.equal(params!.metadata!.termsVersion, "2026-09-11");
+      }
+    }
+  } finally {
+    if (previousPayments === undefined) delete process.env.AUTOMATION_PAYMENTS_ENABLED;
+    else process.env.AUTOMATION_PAYMENTS_ENABLED = previousPayments;
+  }
+});
+
+test("TTC catalogue uses inclusive prices, validates gross paid total, and preserves snapshots", async () => {
+  const previousPayments = process.env.AUTOMATION_PAYMENTS_ENABLED;
+  process.env.AUTOMATION_PAYMENTS_ENABLED = "true";
+  try {
+    for (const tier of ["simple", "complete"] as const) {
+      for (const options of [[], ["maintenance"], ["crm"], ["maintenance", "crm"]] as const) {
+        const selection = { version: "2026-09-11-ttc", service: "site", tier, options: [...options] };
+        const data = { ...intake(), publicQuote: selection };
+        const project = await createIntake(data);
+        const setupCents = tier === "simple" ? 29900 : 99000;
+        const monthlyCents = (options as readonly string[]).reduce((sum, option) => sum + (option === "maintenance" ? 4900 : 9900), 0);
+        assert.equal(project.setupCents, setupCents);
+        assert.equal(project.monthlyCents, monthlyCents);
+        assert.equal(project.planId, tier === "simple" ? "essentielle" : "achat");
+        const prospect = await prisma.prospect.findUniqueOrThrow({ where: { id: project.prospectId! } });
+        assert.equal(prospect.setupFee, setupCents / 100);
+        assert.equal(prospect.monthlyPrice, monthlyCents / 100);
+        const replay = await createIntake({ ...data, publicQuote: { ...selection, options: [] } });
+        assert.equal(replay.id, project.id);
+        assert.deepEqual(replay.offerSnapshot, project.offerSnapshot);
+        const form = new FormData();
+        form.set("scopeConfirmed", "on");
+        await manageProject(project.id, "qualify", form);
+        const qualified = await getProject(data.accessToken);
+        let calls = 0;
+        let params: Stripe.Checkout.SessionCreateParams | undefined;
+        const session = { currency: "eur", amount_subtotal: Math.round((setupCents + monthlyCents) / 1.2), amount_total: setupCents + monthlyCents, payment_status: "unpaid", metadata: { projectId: project.id }, id: `cs_public_quote_${randomUUID()}`, status: "open", url: "https://checkout.stripe.com/local-test" };
+        const stripeMock = { checkout: { sessions: {
+          create: async (value: Stripe.Checkout.SessionCreateParams) => { calls++; params = value; return session; },
+          retrieve: async () => session,
+        } } } as unknown as Stripe;
+        await Promise.all([startCheckout(qualified, true, stripeMock), startCheckout(qualified, true, stripeMock)]);
+        assert.equal(calls, 1);
+        assert.equal(params!.mode, monthlyCents ? "subscription" : "payment");
+        assert.equal(params!.line_items![0].price_data!.unit_amount, setupCents);
+        assert.equal(params!.line_items!.length, monthlyCents ? 2 : 1);
+        if (monthlyCents) assert.equal(params!.line_items![1].price_data!.unit_amount, monthlyCents);
+        assert.equal(params!.line_items![0].price_data!.product_data!.name, `${tier === "simple" ? "Site vitrine simple" : "Site vitrine complet"} — création du site`);
+        assert.equal(params!.metadata!.termsVersion, "2026-09-11");
+        assert.equal(params!.metadata!.taxBasis, "TTC");
+        assert.equal((project.offerSnapshot as { taxBasis: string }).taxBasis, "TTC");
+        assert(params!.line_items!.every(item => item.price_data!.tax_behavior === "inclusive"));
+        session.status = "complete";
+        session.payment_status = "paid";
+        const paidEvent = { id: `evt_ttc_${randomUUID()}`, type: "checkout.session.completed", created: Math.floor(Date.now()/1000), data: { object: session } } as unknown as Stripe.Event;
+        session.amount_total--;
+        await assert.rejects(applyStripeEvent(stripeMock, paidEvent), /does not match/);
+        assert.equal((await getProject(data.accessToken)).paymentStatus, "UNPAID");
+        session.amount_total++;
+        await applyStripeEvent(stripeMock, paidEvent);
+        await applyStripeEvent(stripeMock, paidEvent);
+        const paid = await getProject(data.accessToken);
+        assert.equal(paid.paymentStatus, "PAID");
+        assert.equal(paid.stage, "BRIEF");
+        assert.equal(await prisma.automationEvent.count({ where: { externalId: paidEvent.id } }), 1);
+      }
+    }
+  } finally {
+    if (previousPayments === undefined) delete process.env.AUTOMATION_PAYMENTS_ENABLED;
+    else process.env.AUTOMATION_PAYMENTS_ENABLED = previousPayments;
+  }
+});
+
+test("bespoke IA and application requests cannot qualify or create a checkout", async () => {
+  for (const service of ["automation", "application"] as const) {
+    const project = await createIntake({ ...intake(), publicQuote: { version: "2026-09-11-ttc", service } });
+    assert.equal(project.setupCents, 0);
+    assert.equal(project.monthlyCents, 0);
+    assert.equal((project.offerSnapshot as { quoteOnly: boolean }).quoteOnly, true);
+    const form = new FormData();
+    form.set("scopeConfirmed", "on");
+    await assert.rejects(manageProject(project.id, "qualify", form), /devis sur mesure/);
+    await assert.rejects(startCheckout(project, true), /devis sur mesure/);
+    assert.equal((await publicProject(project)).checkoutAvailable, false);
+    const saved = await prisma.salesProject.findUniqueOrThrow({ where: { id: project.id } });
+    assert.equal(saved.stage, "NEW");
+    assert.equal(saved.stripeSessionId, null);
+    assert.equal(await prisma.automationMessage.count({ where: { dedupeKey: `quote:${project.id}` } }), 0);
+  }
+});
 
 test("validation, pricing, token security and negative MRR cases", () => {
   assert.equal(
