@@ -1,0 +1,51 @@
+{
+  "version": "2026-09-11",
+  "websiteOffers": [
+    {
+      "tier": "simple",
+      "id": "essentielle",
+      "name": "Site vitrine simple",
+      "description": "Pour présenter votre activité, vos services et vos coordonnées.",
+      "setupCents": 29900,
+      "monthlyCents": 0,
+      "pages": 5,
+      "supportMinutes": 0,
+      "features": [
+        "Site vitrine jusqu’à 5 pages",
+        "Affichage adapté aux téléphones et aux ordinateurs",
+        "Formulaire de contact",
+        "Réglages SEO de base au lancement"
+      ]
+    },
+    {
+      "tier": "complete",
+      "id": "achat",
+      "name": "Site vitrine complet",
+      "description": "Pour présenter une offre plus détaillée et mieux qualifier vos demandes.",
+      "setupCents": 99000,
+      "monthlyCents": 0,
+      "pages": 5,
+      "supportMinutes": 0,
+      "features": [
+        "Personnalisation renforcée des pages et contenus",
+        "Présentation détaillée de vos prestations",
+        "Formulaire de demande de devis qualifiant",
+        "Structure SEO et contenus adaptés à votre zone d’intervention"
+      ]
+    }
+  ],
+  "options": [
+    {
+      "id": "maintenance",
+      "name": "Maintenance et modifications",
+      "monthlyCents": 4900,
+      "description": "Maintenance simple du site et modifications de contenu, selon le périmètre convenu au devis."
+    },
+    {
+      "id": "crm",
+      "name": "CRM, automatisation et référencement",
+      "monthlyCents": 9900,
+      "description": "Suivi des demandes dans le CRM, automatisations et travail de référencement, selon les outils et actions définis au devis."
+    }
+  ]
+}

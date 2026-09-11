@@ -5,7 +5,8 @@ import {
   draftPages,
   HttpError,
   intakeSchema,
-  offerFor,
+  offerForIntake,
+  requiresManualQuote,
   tokenHash,
 } from "./core";
 
@@ -65,7 +66,7 @@ export async function getProject(token: string | null) {
 }
 export async function createIntake(input: unknown) {
   const data = intakeSchema.parse(input);
-  const offer = offerFor(data.planId);
+  const offer = offerForIntake(data);
   const hash = tokenHash(data.accessToken);
   const existing = await prisma.salesProject.findUnique({
     where: { requestKey: data.requestKey },
@@ -389,6 +390,7 @@ export async function publicProject(project: SalesProject) {
     briefSubmitted: !!project.briefSubmittedAt,
     termsAcceptedAt: project.termsAcceptedAt,
     checkoutAvailable:
+      !requiresManualQuote(project.offerSnapshot) &&
       !!process.env.STRIPE_SECRET_KEY &&
       !!process.env.STRIPE_WEBHOOK_SECRET &&
       process.env.AUTOMATION_PAYMENTS_ENABLED === "true",

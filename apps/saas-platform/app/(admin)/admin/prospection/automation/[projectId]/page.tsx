@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/prospection/auth";
-import { stages, briefSchema } from "@/lib/automation/core";
+import { stages, briefSchema, requiresManualQuote } from "@/lib/automation/core";
 import { projectAction, ticketAction, deleteRequest } from "../actions";
 export const dynamic = "force-dynamic";
 const button =
@@ -40,6 +40,7 @@ export default async function ProjectPage({
     }),
   ]);
   const brief = p.brief ? briefSchema.parse(p.brief) : null;
+  const manualQuote = requiresManualQuote(p.offerSnapshot);
   const canEdit = [
     "DRAFT_READY",
     "REVISION_REQUESTED",
@@ -78,10 +79,10 @@ export default async function ProjectPage({
         </p>
         <p className="mt-4 whitespace-pre-wrap">{p.message}</p>
         <p className="mt-4 text-sm">
-          Offre {p.planId} · Création {p.setupCents / 100} € HT · Mensualité{" "}
-          {p.monthlyCents / 100} € HT
+          {manualQuote ? "Prestation sur mesure — montant à chiffrer" : `Offre ${p.planId} · Création ${p.setupCents / 100} € HT · Mensualité ${p.monthlyCents / 100} € HT`}
         </p>
-        {p.stage === "NEW" && (
+        {manualQuote && <p className="mt-4 rounded-lg bg-blue-50 p-4 text-sm">Préparez un devis distinct avec les fonctionnalités, les montants et le calendrier, puis faites-le accepter par le client. Ce projet reste à qualifier : la proposition et le paiement automatiques sont bloqués pour éviter de facturer un forfait site à une prestation sur mesure.</p>}
+        {p.stage === "NEW" && !manualQuote && (
           <form action={projectAction.bind(null, p.id)} className="mt-5">
             <input type="hidden" name="action" value="qualify" />
             <label className="mb-4 flex gap-2 text-sm">

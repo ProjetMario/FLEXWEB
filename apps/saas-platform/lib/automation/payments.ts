@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 import { prisma } from "../prisma";
-import { HttpError, offerFor, TERMS_VERSION } from "./core";
+import { HttpError, offerFor, TERMS_VERSION, assertStandardQuote } from "./core";
 import { marketingUrl } from "./service";
 import type { SalesProject } from "@prisma/client";
 
@@ -20,6 +20,7 @@ export async function startCheckout(
   accepted: boolean,
   provider?: Stripe,
 ) {
+  assertStandardQuote(project.offerSnapshot);
   if (!accepted)
     throw new HttpError(
       400,
@@ -43,6 +44,7 @@ export async function startCheckout(
       const current = await tx.salesProject.findUniqueOrThrow({
         where: { id: project.id },
       });
+      assertStandardQuote(current.offerSnapshot);
       if (
         current.stage !== "AWAITING_PAYMENT" ||
         current.paymentStatus !== "UNPAID"
@@ -60,6 +62,10 @@ export async function startCheckout(
           );
       }
       const offer = offerFor(current.planId);
+      const snapshot = current.offerSnapshot as { name?: string; publicQuote?: { version?: string } };
+      const versionedQuote = snapshot.publicQuote?.version === "2026-09-11";
+      const offerName = versionedQuote && snapshot.name ? snapshot.name : offer.name;
+      const termsVersion = versionedQuote ? "2026-09-11" : TERMS_VERSION;
       const item = (
         amount: number,
         name: string,
@@ -80,17 +86,17 @@ export async function startCheckout(
           mode: current.monthlyCents ? "subscription" : "payment",
           customer_email: current.email,
           client_reference_id: current.id,
-          metadata: { projectId: current.id, termsVersion: TERMS_VERSION },
+          metadata: { projectId: current.id, termsVersion },
           ...(current.monthlyCents
             ? { subscription_data: { metadata: { projectId: current.id } } }
             : { invoice_creation: { enabled: true } }),
           line_items: [
-            item(current.setupCents, `${offer.name} — création du site`),
+            item(current.setupCents, `${offerName} — création du site`),
             ...(current.monthlyCents
               ? [
                   item(
                     current.monthlyCents,
-                    `${offer.name} — abonnement mensuel`,
+                    `${offerName} — ${versionedQuote ? "options mensuelles" : "abonnement mensuel"}`,
                     true,
                   ),
                 ]
@@ -114,14 +120,14 @@ export async function startCheckout(
           stripeSessionId: session.id,
           checkoutAttempt: attempt,
           termsAcceptedAt: new Date(),
-          termsVersion: TERMS_VERSION,
+          termsVersion,
         },
       });
       await tx.automationEvent.create({
         data: {
           projectId: current.id,
           type: "TERMS_ACCEPTED",
-          detail: `Proposition ${current.quoteReference}, conditions ${TERMS_VERSION}, création ${current.setupCents} centimes HT, mensualité ${current.monthlyCents} centimes HT.`,
+          detail: `Proposition ${current.quoteReference}, conditions ${termsVersion}, création ${current.setupCents} centimes HT, mensualité ${current.monthlyCents} centimes HT.`,
         },
       });
       return session.url;
