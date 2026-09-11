@@ -30,15 +30,15 @@ const schemas = [
     itemListElement: [
       ...websiteOffers.map((offer) => ({
         "@type": "Offer", name: offer.name,
-        description: `${offer.description} ${offer.features.join(". ")}. Prix HT de création, payé une seule fois. Options mensuelles facultatives. Périmètre confirmé sur devis.`,
+        description: `${offer.description} ${offer.features.join(". ")}. Prix TTC de création, payé une seule fois. Options mensuelles facultatives. Périmètre confirmé sur devis.`,
         price: String(offer.setupCents / 100), priceCurrency: "EUR",
-        priceSpecification: { "@type": "PriceSpecification", price: String(offer.setupCents / 100), priceCurrency: "EUR", valueAddedTaxIncluded: false },
+        priceSpecification: { "@type": "PriceSpecification", price: String(offer.setupCents / 100), priceCurrency: "EUR", valueAddedTaxIncluded: true },
         url: `${siteUrl}${offer.href}`, seller: { "@id": `${siteUrl}/#organization` },
       })),
       ...pricingOptions.map((option) => ({
         "@type": "Offer", name: `Option ${option.name}`, description: option.description,
         price: String(option.monthlyCents / 100), priceCurrency: "EUR",
-        priceSpecification: { "@type": "UnitPriceSpecification", price: String(option.monthlyCents / 100), priceCurrency: "EUR", unitText: "mois", valueAddedTaxIncluded: false },
+        priceSpecification: { "@type": "UnitPriceSpecification", price: String(option.monthlyCents / 100), priceCurrency: "EUR", unitText: "mois", valueAddedTaxIncluded: true },
         url: `${canonicalUrl}#options`, seller: { "@id": `${siteUrl}/#organization` },
       })),
     ],
@@ -47,14 +47,14 @@ const schemas = [
 ---
 
 <BaseLayout
-  title="Tarifs sites internet : 299 € et 990 € HT | Flex-Web"
-  description="Sites vitrines à 299 € ou 990 € HT. Options facultatives : maintenance 49 € HT/mois, CRM, automatisation et SEO 99 € HT/mois. Applications et IA sur devis."
+  title="Tarifs sites internet : 299 € et 990 € TTC | Flex-Web"
+  description="Sites vitrines à 299 € ou 990 € TTC. Options facultatives : maintenance 49 € TTC/mois, CRM, automatisation et SEO 99 € TTC/mois. Applications et IA sur devis."
 >
   <div class="bg-white text-[#1d1d1f]">
     <header class="mx-auto max-w-4xl px-5 pb-12 pt-32 text-center sm:px-6 sm:pt-36">
       <p class="mb-4 text-sm font-medium text-[#0071e3]">Savoie, Haute-Savoie et toute la France</p>
       <h1 class="text-4xl font-semibold leading-[1.12] tracking-[-0.04em] sm:text-6xl">Un site. Un prix clair.<br />Les options de votre choix.</h1>
-      <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-[#52525b] sm:text-lg">Choisissez votre site à <strong>299 € HT</strong> ou <strong>990 € HT</strong>, payé une seule fois. Ajoutez une option mensuelle si vous en avez besoin. Nous confirmons le périmètre dans votre devis avant tout engagement.</p>
+      <p class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-[#52525b] sm:text-lg">Choisissez votre site à <strong>299 € TTC</strong> ou <strong>990 € TTC</strong>, payé une seule fois. Ajoutez une option mensuelle si vous en avez besoin. Nous confirmons le périmètre dans votre devis avant tout engagement.</p>
       <nav aria-label="Choisir une prestation" class="mt-7 flex flex-wrap justify-center gap-3">
         <a href="#devis" class="rounded-full bg-[#1d1d1f] px-5 py-3 text-sm font-medium text-white hover:bg-[#424245]">Voir les sites</a>
         <a href="#automatisation" class="rounded-full border border-black/15 px-5 py-3 text-sm font-medium hover:bg-[#f5f5f7]">Devis automatisation IA</a>
@@ -69,7 +69,7 @@ const schemas = [
             <article class="flex flex-col rounded-2xl border border-black/10 bg-white p-5 sm:p-7">
               <p class="text-xs font-semibold uppercase tracking-widest text-[#0071e3]">Création de site</p>
               <h2 class="mt-2 text-2xl font-semibold">{offer.name}</h2>
-              <p class="mt-3 text-4xl font-semibold">{euros(offer.setupCents)} <span class="text-base font-normal">HT</span></p>
+              <p class="mt-3 text-4xl font-semibold">{euros(offer.setupCents)} <span class="text-base font-normal">TTC</span></p>
               <p class="mt-2 text-sm font-medium">Paiement unique · Options mensuelles facultatives</p>
               <p class="mt-4 text-sm leading-relaxed text-[#52525b]">{offer.description}</p>
               <ul class="mb-6 mt-4 flex-1 space-y-2 text-sm text-[#52525b]">
@@ -89,7 +89,7 @@ const schemas = [
           {pricingOptions.map((option) => (
             <article class="rounded-2xl border border-black/10 p-6">
               <h3 class="text-xl font-semibold">{option.name}</h3>
-              <p class="mt-3 text-3xl font-semibold">+{euros(option.monthlyCents)} <span class="text-sm font-normal">HT / mois</span></p>
+              <p class="mt-3 text-3xl font-semibold">+{euros(option.monthlyCents)} <span class="text-sm font-normal">TTC / mois</span></p>
               <p class="mt-4 text-sm leading-relaxed text-[#52525b]">{option.description}</p>
             </article>
           ))}

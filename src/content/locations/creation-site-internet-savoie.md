@@ -35,7 +35,7 @@ services:
   - "Création d'application mobile et web"
 faq:
   - question: "Quel est le prix d'un site internet en Savoie ?"
-    answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
+    answer: "Le site vitrine simple est proposé à 299 € TTC et le site vitrine complet à 990 € TTC, payés une seule fois. Maintenance avec modifications : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, selon le périmètre du devis."
   - question: "Combien de temps faut-il pour créer un site vitrine ?"
     answer: "Le calendrier est confirmé dans le devis après validation du périmètre et réception des contenus nécessaires. Les étapes de conception, de vérification et de publication sont convenues avec vous."
   - question: "FLEX-WEB intervient-il à Chambéry et Aix-les-Bains ?"
@@ -59,9 +59,9 @@ Pour un projet en Savoie, nous commençons par les recherches et les questions d
 
 ## Choisir entre un site simple et un site complet
 
-Le **site vitrine simple à 299 € HT** permet de présenter votre entreprise et de faciliter un premier contact. Le **site vitrine complet à 990 € HT** prévoit une présentation et une personnalisation plus développées dans le périmètre du devis. La création est payée une seule fois.
+Le **site vitrine simple à 299 € TTC** permet de présenter votre entreprise et de faciliter un premier contact. Le **site vitrine complet à 990 € TTC** prévoit une présentation et une personnalisation plus développées dans le périmètre du devis. La création est payée une seule fois.
 
-La **maintenance avec modifications à 49 € HT/mois** et l'option **CRM, automatisation et référencement à 99 € HT/mois** sont facultatives. Le devis décrit les pages, les contenus, le domaine, l'hébergement et les éventuels outils tiers. [Voir les tarifs et demander un devis](/pricing/).
+La **maintenance avec modifications à 49 € TTC/mois** et l'option **CRM, automatisation et référencement à 99 € TTC/mois** sont facultatives. Le devis décrit les pages, les contenus, le domaine, l'hébergement et les éventuels outils tiers. [Voir les tarifs et demander un devis](/pricing/).
 
 ## Exemples de parcours pour une entreprise savoyarde
 

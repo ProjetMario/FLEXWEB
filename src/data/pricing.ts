@@ -40,15 +40,15 @@ export type PricingFaqItem = { question: string; answer: string };
 export const pricingFaq: PricingFaqItem[] = [
   {
     question: "Combien coûte la création de mon site ?",
-    answer: "Le site vitrine simple coûte 299 € HT et le site vitrine complet 990 € HT. Ce sont des prix de création payés une seule fois pour le périmètre de la formule. Votre devis précise les pages, les fonctionnalités, les modalités de paiement et les éventuels besoins supplémentaires avant votre engagement.",
+    answer: "Le site vitrine simple coûte 299 € TTC et le site vitrine complet 990 € TTC. Ce sont des prix de création payés une seule fois pour le périmètre de la formule. Votre devis précise les pages, les fonctionnalités, les modalités de paiement et les éventuels besoins supplémentaires avant votre engagement.",
   },
   {
     question: "Un abonnement mensuel est-il obligatoire ?",
-    answer: "Non. Les options mensuelles sont facultatives : 49 € HT par mois pour la maintenance simple avec modifications, et 99 € HT par mois pour le CRM, l’automatisation et le référencement. Vous choisissez les options utiles dans votre devis ; elles ne sont pas ajoutées automatiquement.",
+    answer: "Non. Les options mensuelles sont facultatives : 49 € TTC par mois pour la maintenance simple avec modifications, et 99 € TTC par mois pour le CRM, l’automatisation et le référencement. Vous choisissez les options utiles dans votre devis ; elles ne sont pas ajoutées automatiquement.",
   },
   {
     question: "Que comprennent les options à 49 € et 99 € par mois ?",
-    answer: "L’option à 49 € HT par mois couvre la maintenance simple et des modifications de contenu. L’option à 99 € HT par mois concerne le CRM, l’automatisation et le référencement. Le devis définit les interventions, les outils, les limites et les conditions de chaque option. Les licences, consommations et travaux sur mesure éventuels sont précisés avant accord.",
+    answer: "L’option à 49 € TTC par mois couvre la maintenance simple et des modifications de contenu. L’option à 99 € TTC par mois concerne le CRM, l’automatisation et le référencement. Le devis définit les interventions, les outils, les limites et les conditions de chaque option. Les licences, consommations et travaux sur mesure éventuels sont précisés avant accord.",
   },
   {
     question: "L’hébergement et le nom de domaine sont-ils compris ?",
@@ -64,7 +64,7 @@ export const pricingFaq: PricingFaqItem[] = [
   },
   {
     question: "Les prix comprennent-ils la TVA ?",
-    answer: "Tous les prix affichés sont hors taxes (HT). Le devis présente les taxes applicables et le montant total à payer avant votre validation.",
+    answer: "Tous les prix affichés sont hors taxes (TTC). Le devis présente les taxes applicables et le montant total à payer avant votre validation.",
   },
   {
     question: "Intervenez-vous en dehors de la Savoie et de la Haute-Savoie ?",

@@ -62,7 +62,7 @@ Un utilisateur choisit une prestation, fournit les informations nécessaires et 
 
 Le développement d'une application est **sur devis**. Le chiffrage dépend des parcours, des rôles, des intégrations et de la reprise éventuelle de données. Il distingue le développement initial, l'hébergement, les coûts de services tiers, la maintenance et les évolutions.
 
-Le calendrier est défini après cadrage, avec des étapes de validation. Les offres de sites vitrines à 299 € HT et 990 € HT ne correspondent pas au développement d'une application sur mesure. [Demandez un devis pour votre application](/contact/?service=application).
+Le calendrier est défini après cadrage, avec des étapes de validation. Les offres de sites vitrines à 299 € TTC et 990 € TTC ne correspondent pas au développement d'une application sur mesure. [Demandez un devis pour votre application](/contact/?service=application).
 
 ## Des intégrations et des accès à vérifier
 

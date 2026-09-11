@@ -20,10 +20,10 @@ export const searchSummary = `# Flex-Web
 - Référencement naturel, maintenance et accompagnement selon la prestation choisie.
 
 ## Tarifs publics
-- Site vitrine simple : 299 € HT en paiement unique.
-- Site vitrine complet : 990 € HT en paiement unique.
-- Option maintenance avec modifications : 49 € HT par mois.
-- Option CRM, automatisation et référencement : 99 € HT par mois.
+- Site vitrine simple : 299 € TTC en paiement unique.
+- Site vitrine complet : 990 € TTC en paiement unique.
+- Option maintenance avec modifications : 49 € TTC par mois.
+- Option CRM, automatisation et référencement : 99 € TTC par mois.
 - Automatisation IA sur mesure et applications : devis personnalisé.
 - Le devis précise le périmètre, les limites, les taxes et les éventuels coûts de services tiers. Les options mensuelles ne sont pas obligatoires.
 - Le calendrier dépend du projet et est fixé au devis après étude du besoin.
