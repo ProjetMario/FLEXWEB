@@ -122,8 +122,8 @@ const serviceSchema = {
         availability: "https://schema.org/InStock",
       }
     : [
-        { "@type": "Offer", name: "Site vitrine simple", price: "299", priceCurrency: "EUR", url: `${siteUrl}/pricing/`, priceSpecification: { "@type": "PriceSpecification", price: "299", priceCurrency: "EUR", valueAddedTaxIncluded: false } },
-        { "@type": "Offer", name: "Site vitrine complet", price: "990", priceCurrency: "EUR", url: `${siteUrl}/pricing/`, priceSpecification: { "@type": "PriceSpecification", price: "990", priceCurrency: "EUR", valueAddedTaxIncluded: false } },
+        { "@type": "Offer", name: "Site vitrine simple", price: "299", priceCurrency: "EUR", url: `${siteUrl}/pricing/`, priceSpecification: { "@type": "PriceSpecification", price: "299", priceCurrency: "EUR", valueAddedTaxIncluded: true } },
+        { "@type": "Offer", name: "Site vitrine complet", price: "990", priceCurrency: "EUR", url: `${siteUrl}/pricing/`, priceSpecification: { "@type": "PriceSpecification", price: "990", priceCurrency: "EUR", valueAddedTaxIncluded: true } },
       ],
 };
 
@@ -251,7 +251,7 @@ if (faqSchema) {
     {!isMobile && (
       <section class="mt-12 rounded-2xl p-6" style="background-color: var(--color-surface)">
         <h2 class="text-2xl font-semibold tracking-tight">Prix de création et options de suivi</h2>
-        <p class="mt-4 leading-relaxed">Site vitrine simple : <strong>299 € HT</strong>. Site vitrine complet : <strong>990 € HT</strong>. La création est payée une seule fois. Maintenance avec modifications : <strong>49 € HT/mois en option</strong>. CRM, automatisation et référencement : <strong>99 € HT/mois en option</strong>, selon le périmètre du devis.</p>
+        <p class="mt-4 leading-relaxed">Site vitrine simple : <strong>299 € TTC</strong>. Site vitrine complet : <strong>990 € TTC</strong>. La création est payée une seule fois. Maintenance avec modifications : <strong>49 € TTC/mois en option</strong>. CRM, automatisation et référencement : <strong>99 € TTC/mois en option</strong>, selon le périmètre du devis.</p>
         <p class="mt-3 leading-relaxed">Les applications et les automatisations sur mesure font l'objet d'un devis spécifique. Consultez les <a href="/pricing/" class="underline">offres et leurs conditions</a>.</p>
       </section>
     )}

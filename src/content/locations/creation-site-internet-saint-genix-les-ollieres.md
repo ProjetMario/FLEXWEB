@@ -21,7 +21,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel prix pour un site vitrine à Saint-Genis-les-Ollières ?"
-    answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
+    answer: "Le site vitrine simple est proposé à 299 € TTC et le site vitrine complet à 990 € TTC, payés une seule fois. Maintenance avec modifications : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, selon le périmètre du devis."
   - question: "FLEX-WEB intervient-il à Saint-Genis-les-Ollières ?"
     answer: "Oui. FLEX-WEB accompagne les entreprises de Saint-Genis-les-Ollières à distance. Les échanges, les démonstrations et les validations sont organisés au démarrage du projet."
   - question: "Le site sera-t-il visible localement ?"

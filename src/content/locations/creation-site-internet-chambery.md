@@ -33,7 +33,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel est le prix d'un site vitrine à Chambéry ?"
-    answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
+    answer: "Le site vitrine simple est proposé à 299 € TTC et le site vitrine complet à 990 € TTC, payés une seule fois. Maintenance avec modifications : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, selon le périmètre du devis."
   - question: "Combien de temps dure la création d'un site ?"
     answer: "Le calendrier est confirmé dans le devis après validation du périmètre et réception des contenus nécessaires. Les étapes de conception, de vérification et de publication sont convenues avec vous."
   - question: "FLEX-WEB intervient-il dans le centre de Chambéry ?"

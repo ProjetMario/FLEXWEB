@@ -7,7 +7,7 @@ import faqData from "../data/faq.json";
 import { business } from "../data/business";
 const services = [
   { number: "01", name: "Automatisation IA", description: "Demandes clients, CRM, documents : connectez vos outils et simplifiez les tâches qui se répètent.", price: "Sur devis", href: "/automatisation-ia/", cta: "Explorer les automatisations" },
-  { number: "02", name: "Sites internet", description: "Présentez votre activité avec un site clair, adapté au mobile et pensé pour recevoir des demandes.", price: "299 € ou 990 € HT", href: "/creation-site-internet/", cta: "Choisir mon site" },
+  { number: "02", name: "Sites internet", description: "Présentez votre activité avec un site clair, adapté au mobile et pensé pour recevoir des demandes.", price: "299 € ou 990 € TTC", href: "/creation-site-internet/", cta: "Choisir mon site" },
   { number: "03", name: "Applications", description: "Un espace client, un outil interne ou une application métier construit autour de vos usages.", price: "Sur devis", href: "/creation-application-mobile/", cta: "Parler de mon application" },
 ];
 const steps = [
@@ -55,7 +55,7 @@ const schemas = [
     <div class="service-grid">
       {services.map((service) => <article class:list={["service-card", { featured: service.number === "01" }]}><span class="service-number">{service.number}</span><h3>{service.name}</h3><p>{service.description}</p><strong class="price">{service.price}</strong><a href={service.href}>{service.cta} <span aria-hidden="true">↗</span></a></article>)}
     </div>
-    <p class="small muted">Sites : paiement unique. Maintenance avec modifications : option à 49 € HT/mois. CRM, automatisation et référencement : option à 99 € HT/mois. <a href="/pricing/">Voir les tarifs et les demandes de devis.</a></p>
+    <p class="small muted">Sites : paiement unique. Maintenance avec modifications : option à 49 € TTC/mois. CRM, automatisation et référencement : option à 99 € TTC/mois. <a href="/pricing/">Voir les tarifs et les demandes de devis.</a></p>
   </section>
   <section id="templates" class="tinted"><div class="home-wrap section split">
     <div><p class="eyebrow">DES USAGES CONCRETS</p><h2>Commencez par ce qui vous prend du temps.</h2><p class="section-copy">Une automatisation utile répond à une tâche précise. Voici des exemples à étudier ensemble, sans promesse de résultat chiffré.</p><a class="text-link" href="/automatisation-ia/">Voir les possibilités et les limites ↗</a></div>

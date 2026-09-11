@@ -22,8 +22,8 @@ relatedLocations:
 relatedServices:
   - "automatisation-ia"
   - "creation-application-mobile"
-seoTitle: "Création de site internet en France dès 299 € HT | FLEX-WEB"
-seoDescription: "Site vitrine à 299 € HT ou site complet à 990 € HT. Création de sites pour PME en France, Savoie et Haute-Savoie. Maintenance et CRM en option."
+seoTitle: "Création de site internet en France dès 299 € TTC | FLEX-WEB"
+seoDescription: "Site vitrine à 299 € TTC ou site complet à 990 € TTC. Création de sites pour PME en France, Savoie et Haute-Savoie. Maintenance et CRM en option."
 isDraft: false
 ---
 
@@ -35,14 +35,14 @@ Pour un artisan, ce peut être le type de travaux, la commune et quelques préci
 
 ## Deux tarifs de création, payés une seule fois
 
-- **Site vitrine simple : 299 € HT**, pour présenter votre entreprise, vos services et vos coordonnées dans le périmètre de l'offre.
-- **Site vitrine complet : 990 € HT**, pour une présentation plus développée, une personnalisation renforcée et un parcours de demande plus détaillé.
+- **Site vitrine simple : 299 € TTC**, pour présenter votre entreprise, vos services et vos coordonnées dans le périmètre de l'offre.
+- **Site vitrine complet : 990 € TTC**, pour une présentation plus développée, une personnalisation renforcée et un parcours de demande plus détaillé.
 
 Le devis confirme les pages, les contenus et les fonctionnalités retenus. Les besoins de boutique en ligne, de réservation complexe ou d'application sont étudiés séparément. [Consultez les tarifs et demandez un devis](/pricing/).
 
 ### Options mensuelles
 
-La **maintenance avec modifications est proposée à 49 € HT/mois**. L'option **CRM, automatisation et référencement est proposée à 99 € HT/mois**. Ces options sont facultatives et leur périmètre est précisé dans le devis ; elles ne constituent pas un abonnement obligatoire pour la création du site.
+La **maintenance avec modifications est proposée à 49 € TTC/mois**. L'option **CRM, automatisation et référencement est proposée à 99 € TTC/mois**. Ces options sont facultatives et leur périmètre est précisé dans le devis ; elles ne constituent pas un abonnement obligatoire pour la création du site.
 
 Le domaine, l'hébergement, les éventuels outils tiers et les conditions de suivi sont détaillés dans la proposition avant engagement. Une automatisation métier sur mesure fait l'objet d'un chiffrage spécifique.
 

@@ -6,7 +6,7 @@ import { getEntry, render } from "astro:content";
 const serviceFaq = [
   {
     "question": "Combien coûte la création d'un site internet ?",
-    "answer": "Le site vitrine simple coûte 299 € HT et le site vitrine complet 990 € HT, payés une seule fois. Le devis confirme les pages, les contenus et les fonctions retenus. La maintenance à 49 € HT/mois et l'option CRM, automatisation et référencement à 99 € HT/mois sont facultatives."
+    "answer": "Le site vitrine simple coûte 299 € TTC et le site vitrine complet 990 € TTC, payés une seule fois. Le devis confirme les pages, les contenus et les fonctions retenus. La maintenance à 49 € TTC/mois et l'option CRM, automatisation et référencement à 99 € TTC/mois sont facultatives."
   },
   {
     "question": "Quel est le délai de création ?",
@@ -18,7 +18,7 @@ const serviceFaq = [
   },
   {
     "question": "Un site peut-il être relié à mon CRM ?",
-    "answer": "Oui, selon les capacités de votre CRM et les accès disponibles. L'option à 99 € HT/mois couvre le périmètre convenu au devis. Une intégration ou une automatisation métier spécifique est chiffrée séparément."
+    "answer": "Oui, selon les capacités de votre CRM et les accès disponibles. L'option à 99 € TTC/mois couvre le périmètre convenu au devis. Une intégration ou une automatisation métier spécifique est chiffrée séparément."
   }
 ];
 
@@ -61,8 +61,8 @@ const serviceSchema = {
   },
   serviceType: "Création de site internet",
   offers: [
-    { "@type": "Offer", name: "Site vitrine simple", price: "299", priceCurrency: "EUR", url: `${siteUrl}/pricing/`, priceSpecification: { "@type": "PriceSpecification", price: "299", priceCurrency: "EUR", valueAddedTaxIncluded: false } },
-    { "@type": "Offer", name: "Site vitrine complet", price: "990", priceCurrency: "EUR", url: `${siteUrl}/pricing/`, priceSpecification: { "@type": "PriceSpecification", price: "990", priceCurrency: "EUR", valueAddedTaxIncluded: false } },
+    { "@type": "Offer", name: "Site vitrine simple", price: "299", priceCurrency: "EUR", url: `${siteUrl}/pricing/`, priceSpecification: { "@type": "PriceSpecification", price: "299", priceCurrency: "EUR", valueAddedTaxIncluded: true } },
+    { "@type": "Offer", name: "Site vitrine complet", price: "990", priceCurrency: "EUR", url: `${siteUrl}/pricing/`, priceSpecification: { "@type": "PriceSpecification", price: "990", priceCurrency: "EUR", valueAddedTaxIncluded: true } },
   ],
 };
 

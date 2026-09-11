@@ -35,13 +35,13 @@ services:
   - "Création d'application mobile et web"
 faq:
   - question: "Quel est le prix d'un site internet en Haute-Savoie ?"
-    answer: "Le site vitrine simple est proposé à 299 € HT et le site vitrine complet à 990 € HT, payés une seule fois. Maintenance avec modifications : 49 € HT/mois en option. CRM, automatisation et référencement : 99 € HT/mois en option, selon le périmètre du devis."
+    answer: "Le site vitrine simple est proposé à 299 € TTC et le site vitrine complet à 990 € TTC, payés une seule fois. Maintenance avec modifications : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, selon le périmètre du devis."
   - question: "FLEX-WEB intervient-il à Annecy et Annemasse ?"
     answer: "Oui, nous travaillons dans tout le département, notamment à Annecy, Annemasse, Thonon-les-Bains, Évian-les-Bains, Cluses, Bonneville et Sallanches."
   - question: "Le site peut-il être multilingue ?"
     answer: "Oui, nous pouvons intégrer une version française et une version anglaise selon votre clientèle, notamment utile pour le tourisme et la proximité suisse."
   - question: "Les options mensuelles sont-elles obligatoires ?"
-    answer: "Non. La création du site est payée une seule fois, à 299 € HT ou 990 € HT. La maintenance à 49 € HT/mois et l'option CRM, automatisation et référencement à 99 € HT/mois sont facultatives. Le devis précise les prestations choisies."
+    answer: "Non. La création du site est payée une seule fois, à 299 € TTC ou 990 € TTC. La maintenance à 49 € TTC/mois et l'option CRM, automatisation et référencement à 99 € TTC/mois sont facultatives. Le devis précise les prestations choisies."
   - question: "Le site est-il visible sur Google ?"
     answer: "Oui, chaque site est conçu avec une structure SEO propre, des balises optimisées, des temps de chargement courts et des données structurées pour faciliter l'indexation."
   - question: "FLEX-WEB développe-t-il aussi des applications mobiles en Haute-Savoie ?"
@@ -59,9 +59,9 @@ Nous définissons ensemble les éléments à publier : description de l'entrepri
 
 ## Deux offres et des options facultatives
 
-Le **site vitrine simple est proposé à 299 € HT** et le **site vitrine complet à 990 € HT**, payés une seule fois. Le devis confirme les pages, la personnalisation, les contenus et les fonctionnalités retenus.
+Le **site vitrine simple est proposé à 299 € TTC** et le **site vitrine complet à 990 € TTC**, payés une seule fois. Le devis confirme les pages, la personnalisation, les contenus et les fonctionnalités retenus.
 
-Vous pouvez ajouter une **maintenance avec modifications à 49 € HT/mois** et une option **CRM, automatisation et référencement à 99 € HT/mois**. Leur périmètre, le domaine, l'hébergement et les éventuels outils tiers sont détaillés dans la proposition. Une boutique, une application ou une automatisation spécifique nécessite un cadrage séparé. [Consulter les offres](/pricing/).
+Vous pouvez ajouter une **maintenance avec modifications à 49 € TTC/mois** et une option **CRM, automatisation et référencement à 99 € TTC/mois**. Leur périmètre, le domaine, l'hébergement et les éventuels outils tiers sont détaillés dans la proposition. Une boutique, une application ou une automatisation spécifique nécessite un cadrage séparé. [Consulter les offres](/pricing/).
 
 ## Exemples de besoins à cadrer en Haute-Savoie
 
