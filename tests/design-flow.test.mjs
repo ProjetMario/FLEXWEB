@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { test, before, after } from 'node:test';
 import { chromium } from 'playwright';
-const origin = 'http://127.0.0.1:4321';
+const origin = process.env.FLEXWEB_TEST_URL || 'http://127.0.0.1:4321';
+if (!['127.0.0.1', 'localhost'].includes(new URL(origin).hostname)) throw new Error('Use a local preview only');
 let browser;
 before(async () => { browser = await chromium.launch({headless: true}); });
 after(async () => { await browser?.close(); });

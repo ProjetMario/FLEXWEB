@@ -30,7 +30,8 @@ export const money = (cents) =>
   new Intl.NumberFormat("fr-FR", {
     style: "currency",
     currency: "EUR",
-    maximumFractionDigits: 0,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
   }).format(cents / 100);
 export function createIdentity() {
   return {
