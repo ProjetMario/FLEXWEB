@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from "react";
 import { api, money, readToken, saveToken } from "./api";
-import { isPublicQuote as hasPublicQuote, isInclusiveQuote, quoteTaxLabel } from "../../../apps/saas-platform/lib/automation/public-quote-pricing";
 const labels = {
   NEW: "Nous étudions votre demande",
   AWAITING_PAYMENT: "Votre proposition est prête",
@@ -11,6 +10,8 @@ const labels = {
   APPROVED: "Votre site est validé",
   LIVE: "Votre site est en ligne",
   CANCELED: "Votre projet est arrêté",
+  IN_PROGRESS: "Votre projet est en réalisation",
+  DELIVERED: "Votre prestation est livrée",
 };
 export default function ProjectPortal() {
   const [token, setToken] = useState(""),
@@ -21,10 +22,14 @@ export default function ProjectPortal() {
     [loading, setLoading] = useState(true),
     [accepted, setAccepted] = useState(false);
   const ticketKey = useRef(null);
-  const isPublicQuote = hasPublicQuote(project?.offer);
-  const taxLabel = quoteTaxLabel(project?.offer);
-  const inclusive = isInclusiveQuote(project?.offer);
+  const isPublicQuote = ["2026-09-11", "2026-09-11-ttc"].includes(project?.offer?.publicQuote?.version);
   const quoteOnly = project?.offer?.quoteOnly === true;
+  const quote = project?.quote;
+  const quoteDocument = quote?.document;
+  const historicalTtc = project?.offer?.publicQuote?.version === "2026-09-11-ttc" && project?.offer?.taxBasis === "TTC";
+  const priceBasis = project?.priceBasis === "TTC" || (project?.priceBasis == null && historicalTtc) ? "TTC" : "HT";
+  const isCustom = project?.deliveryKind === "custom";
+  useEffect(() => { setAccepted(false); }, [quote?.contentHash, project?.quoteReference]);
   async function refresh(key) {
     try {
       setProject(await api("status", {}, key));
@@ -184,29 +189,48 @@ export default function ProjectPortal() {
                   <br />
                   93 chemin de la Combe, 73420 Voglans
                 </p>
-                <ul className="flow-list">
+                {quoteDocument ? <>
+                  <p className="flow-note">Version {quote.revision} · Valable jusqu’au {quoteDocument.validUntil}</p>
+                  <h3>{quoteDocument.title}</h3>
+                  <p style={{ whiteSpace: "pre-wrap" }}>{quoteDocument.scope}</p>
+                  <div style={{ overflowX: "auto" }}>
+                    <table style={{ width: "100%", borderCollapse: "collapse", marginBlock: 20 }}>
+                      <thead><tr><th style={{ textAlign: "left" }}>Prestation</th><th>Qté</th><th>Prix unitaire TTC</th><th>Total TTC</th></tr></thead>
+                      <tbody>{quoteDocument.lineItems.map((item, index) => <tr key={index}>
+                        <td style={{ padding: "12px 6px", borderBottom: "1px solid #e5e7eb" }}>{item.description}</td>
+                        <td style={{ textAlign: "center" }}>{item.quantity}</td>
+                        <td style={{ textAlign: "right" }}>{money(item.unitTtcCents)}</td>
+                        <td style={{ textAlign: "right" }}>{money(item.quantity * item.unitTtcCents)}</td>
+                      </tr>)}</tbody>
+                    </table>
+                  </div>
+                  {quoteDocument.monthlyOptions.map(option => <p key={option.id}><strong>{option.name} · {money(option.monthlyCents)} TTC/mois</strong><br />{option.description}</p>)}
+                  <h3>Calendrier de réalisation</h3>
+                  <p style={{ whiteSpace: "pre-wrap" }}>{quoteDocument.delivery}</p>
+                </> : <ul className="flow-list">
                   {project.offer.features.map((f) => (
                     <li key={f}>{f}</li>
                   ))}
-                </ul>
+                </ul>}
                 <div className="flow-detail">
-                  <span>Création du site</span>
-                  <strong>{money(project.setupCents)} {taxLabel}</strong>
+                  <span>{isCustom ? "Prestation sur mesure" : "Création du site"}</span>
+                  <strong>{money(project.setupCents)} {priceBasis}</strong>
                 </div>
                 {project.monthlyCents > 0 && (
                   <div className="flow-detail">
-                    <span>{isPublicQuote ? "Options mensuelles choisies" : "Abonnement mensuel"}</span>
-                    <strong>{money(project.monthlyCents)} {taxLabel}/mois</strong>
+                    <span>{isPublicQuote || quoteDocument ? "Options mensuelles choisies" : "Abonnement mensuel"}</span>
+                    <strong>{money(project.monthlyCents)} {priceBasis}/mois</strong>
                   </div>
                 )}
                 <div className="flow-detail">
                   <span>Premier paiement</span>
                   <strong>
-                    {money(project.setupCents + project.monthlyCents)} {taxLabel}
+                    {money(project.setupCents + project.monthlyCents)} {priceBasis}
                   </strong>
                 </div>
                 <p className="flow-note">
-                  {inclusive ? "La TVA applicable est incluse dans les montants affichés." : "Les taxes applicables et le total TTC sont affichés avant confirmation du paiement."}{" "}
+                  {priceBasis === "TTC" ? "Ces montants comprennent les taxes applicables." : "Les taxes applicables et le total TTC sont affichés avant confirmation du paiement."}{" "}
+                  {quoteDocument ? quoteDocument.paymentTerms : <>
                   {project.monthlyCents > 0
                     ? "L’abonnement commence à la commande, puis est prélevé chaque mois. Résiliation avec préavis de 30 jours selon les CGV."
                     : "Paiement unique. Hébergement et maintenance en option."}{" "}
@@ -214,6 +238,7 @@ export default function ProjectPortal() {
                   du brief complet. Deux séries de retours sont incluses avant
                   livraison ; les demandes hors périmètre font l’objet d’un
                   devis complémentaire.</>}
+                  </>}
                 </p>
                 <label className="flow-check">
                   <input
@@ -225,7 +250,7 @@ export default function ProjectPortal() {
                     J’accepte cette proposition pour mon activité
                     professionnelle et les{" "}
                     <a href="/cgv/" target="_blank" rel="noreferrer">
-                      conditions de vente du {isPublicQuote ? "11" : "9"} septembre 2026
+                      conditions de vente du {project.termsVersion === "2026-09-12" ? "12" : isPublicQuote ? "11" : "9"} septembre 2026
                     </a>
                     .
                   </span>
@@ -234,7 +259,7 @@ export default function ProjectPortal() {
                   <button
                     className="flow-button"
                     disabled={busy || !accepted || !project.checkoutAvailable}
-                    onClick={() => perform("checkout", { accepted })}
+                    onClick={() => perform("checkout", { accepted, ...(quote ? { quoteId: quote.id, revision: quote.revision, contentHash: quote.contentHash } : {}) })}
                   >
                     {busy ? "Ouverture…" : "Accepter et accéder au paiement"}
                   </button>
@@ -253,6 +278,19 @@ export default function ProjectPortal() {
                 )}
               </section>
             )}
+            {["IN_PROGRESS", "DELIVERED"].includes(project.stage) && <section className="flow-card">
+              <h2>{project.stage === "DELIVERED" ? "Votre prestation a été livrée." : "Votre projet est en cours de réalisation."}</h2>
+              <p className="flow-intro">{project.stage === "DELIVERED" ? "Retrouvez ci-dessous les conditions de votre devis. Une question ou une demande complémentaire ? Utilisez le suivi de votre projet." : "FLEX-WEB réalise les prestations prévues dans votre devis. Le calendrier et les livrables convenus restent disponibles dans votre espace."}</p>
+              {quoteDocument && <>
+                <h3>Devis {quoteDocument.reference}</h3>
+                <p style={{ whiteSpace: "pre-wrap" }}>{quoteDocument.scope}</p>
+                <p style={{ whiteSpace: "pre-wrap" }}>{quoteDocument.delivery}</p>
+                {quoteDocument.lineItems.map((item, index) => <div className="flow-detail" key={index}><span>{item.quantity} × {item.description}</span><strong>{money(item.quantity * item.unitTtcCents)} TTC</strong></div>)}
+                <p><strong>Premier paiement : {money(quoteDocument.firstPaymentCents)} TTC</strong>{quoteDocument.monthlyCents > 0 && <> · Puis {money(quoteDocument.monthlyCents)} TTC/mois</>}</p>
+                <p className="flow-note">{quoteDocument.paymentTerms}</p>
+                <button className="flow-button secondary" onClick={() => window.print()}>Imprimer la proposition</button>
+              </>}
+            </section>}
             {project.paymentStatus === "PAST_DUE" && (
               <div className="flow-error">
                 Un paiement nécessite votre attention. Consultez la gestion de
@@ -432,9 +470,9 @@ export default function ProjectPortal() {
           <aside className="flow-aside">
             <h2>{project.offer.name}</h2>
             <p className="flow-price">
-              {quoteOnly ? "Sur devis" : <>{money(isPublicQuote ? project.setupCents : (project.monthlyCents || project.setupCents))} {taxLabel}{!isPublicQuote && project.monthlyCents ? "/mois" : ""}</>}
+              {quoteOnly ? "Sur devis" : <>{money(isPublicQuote || quoteDocument ? project.setupCents : (project.monthlyCents || project.setupCents))} {priceBasis}{!isPublicQuote && !quoteDocument && project.monthlyCents ? "/mois" : ""}</>}
             </p>
-            {isPublicQuote && !quoteOnly && <p className="flow-note">Création en paiement unique{project.monthlyCents ? ` · Options choisies : ${money(project.monthlyCents)} ${taxLabel}/mois` : " · Aucune option mensuelle choisie"}</p>}
+            {(isPublicQuote || quoteDocument) && !quoteOnly && <p className="flow-note">{isCustom ? "Prestation en paiement unique" : "Création en paiement unique"}{project.monthlyCents ? ` · Options choisies : ${money(project.monthlyCents)} ${priceBasis}/mois` : " · Aucune option mensuelle choisie"}</p>}
             <p className="flow-note">
               {project.paymentStatus === "PAID"
                 ? "Paiement confirmé"

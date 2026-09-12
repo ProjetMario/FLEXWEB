@@ -119,3 +119,113 @@ test('successful request without analytics consent records the request but no co
     assert.deepEqual(await recordedEvents(page), []);
   } finally { await context.close(); }
 });
+
+function customProject(overrides = {}) {
+  return {
+    id: '11111111-1111-4111-8111-111111111111', companyName: 'Projet simulation locale',
+    stage: 'AWAITING_PAYMENT', paymentStatus: 'UNPAID', setupCents: 45002, monthlyCents: 4900,
+    priceBasis: 'TTC', termsVersion: '2026-09-12', deliveryKind: 'custom',
+    quoteReference: 'FW-11111111-R1', checkoutAvailable: true, billingAvailable: false,
+    briefSubmitted: false, pages: [], tickets: [], inquiries: [],
+    offer: { name: 'Application sur mesure', features: [], quoteOnly: false },
+    quote: {
+      id: '22222222-2222-4222-8222-222222222222', revision: 1, contentHash: 'b'.repeat(64), status: 'ISSUED',
+      document: {
+        reference: 'FW-11111111-R1', title: 'Application de suivi', validUntil: '2099-12-31',
+        scope: 'Un tableau de suivi et une interface de saisie pour votre équipe.',
+        delivery: 'Livraison après validation des écrans et des contenus.',
+        lineItems: [
+          { description: 'Écran de suivi', quantity: 2, unitTtcCents: 10001 },
+          { description: 'Configuration de l’application', quantity: 1, unitTtcCents: 25000 },
+        ],
+        monthlyOptions: [{ id: 'maintenance', name: 'Maintenance', monthlyCents: 4900, description: 'Maintenance et modifications.' }],
+        oneTimeCents: 45002, monthlyCents: 4900, firstPaymentCents: 49902,
+        paymentTerms: 'Paiement intégral de la prestation à la commande, puis option mensuelle.',
+      },
+    },
+    ...overrides,
+  };
+}
+
+async function openedPortal(project) {
+  const context = await browser.newContext({ viewport: { width: 375, height: 812 } });
+  const requests = [];
+  const state = { project };
+  await context.route('**/*', route => {
+    const url = new URL(route.request().url());
+    if (url.origin !== preview.origin) return route.abort();
+    if (url.pathname.startsWith('/api/')) {
+      const action = url.pathname.split('/').at(-1);
+      requests.push({ action, body: route.request().postDataJSON(), authorization: route.request().headers().authorization });
+      if (action === 'status') return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(state.project) });
+      if (action === 'checkout') return route.fulfill({ status: 200, contentType: 'application/json', body: '{}' });
+      return route.fulfill({ status: 503, contentType: 'application/json', body: '{"error":"Unexpected mocked API"}' });
+    }
+    return route.continue();
+  });
+  const page = await context.newPage();
+  await page.goto(new URL(`/espace-projet/#cle=${'a'.repeat(64)}`, preview).href);
+  await page.getByRole('heading', { name: project.companyName, exact: true }).waitFor();
+  return { context, page, state, requests };
+}
+
+test('custom portal preserves TTC cents, binds acceptance to the shown revision and fits mobile/tablet/desktop', async () => {
+  const { context, page, state, requests } = await openedPortal(customProject());
+  try {
+    assert.equal(new URL(page.url()).hash, '');
+    const proposal = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Votre proposition FW-11111111-R1', exact: true }) });
+    const body = await proposal.innerText();
+    assert.match(body, /100,01\s*€/);
+    assert.match(body, /200,02\s*€/);
+    assert.match(body, /450,02\s*€ TTC/);
+    assert.match(body, /499,02\s*€ TTC/);
+    assert.doesNotMatch(body, /\bHT\b/);
+    const checkout = page.getByRole('button', { name: 'Accepter et accéder au paiement', exact: true });
+    assert.equal(await checkout.isDisabled(), true);
+    for (const width of [375, 768, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true, `No page overflow at ${width}px`);
+    }
+    await page.getByRole('checkbox').check();
+    await checkout.click();
+    await page.getByRole('status').filter({ hasText: 'Votre demande a été enregistrée.' }).waitFor();
+    const payments = requests.filter(request => request.action === 'checkout');
+    assert.equal(payments.length, 1);
+    assert.deepEqual(payments[0].body, { accepted: true, quoteId: state.project.quote.id, revision: 1, contentHash: 'b'.repeat(64) });
+    assert.equal(payments[0].authorization, `Bearer ${'a'.repeat(64)}`);
+    state.project = { ...state.project, quoteReference: 'FW-11111111-R2', quote: { ...state.project.quote, revision: 2, contentHash: 'c'.repeat(64) } };
+    await page.getByRole('button', { name: 'Actualiser', exact: true }).click();
+    await page.getByRole('heading', { name: 'Votre proposition FW-11111111-R2', exact: true }).waitFor();
+    assert.equal(await page.getByRole('checkbox').isChecked(), false);
+    assert.equal(await checkout.isDisabled(), true);
+  } finally { await context.close(); }
+});
+
+test('historical portal preserves the stored HT basis and original checkout contract', async () => {
+  const { context, page, requests } = await openedPortal(customProject({
+    quote: null, quoteReference: 'FW-LEGACY', priceBasis: 'HT', termsVersion: '2026-09-09',
+    deliveryKind: 'site', setupCents: 29900, monthlyCents: 0,
+    offer: { name: 'Site historique', features: ['Création du site selon la proposition initiale.'], quoteOnly: false },
+  }));
+  try {
+    assert.match(await page.locator('main').innerText(), /299\s*€ HT/);
+    await page.getByRole('link', { name: 'conditions de vente du 9 septembre 2026', exact: true }).waitFor();
+    await page.getByRole('checkbox').check();
+    await page.getByRole('button', { name: 'Accepter et accéder au paiement', exact: true }).click();
+    await page.getByRole('status').filter({ hasText: 'Votre demande a été enregistrée.' }).waitFor();
+    assert.deepEqual(requests.find(request => request.action === 'checkout').body, { accepted: true });
+  } finally { await context.close(); }
+});
+
+test('paid custom work keeps the issued quote visible without a website brief or generator', async () => {
+  for (const stage of ['IN_PROGRESS', 'DELIVERED']) {
+    const { context, page, requests } = await openedPortal(customProject({ stage, paymentStatus: 'PAID', checkoutAvailable: false }));
+    try {
+      await page.getByRole('heading', { name: stage === 'IN_PROGRESS' ? 'Votre projet est en cours de réalisation.' : 'Votre prestation a été livrée.', exact: true }).waitFor();
+      assert.match(await page.locator('main').innerText(), /Premier paiement : 499,02\s*€ TTC/);
+      assert.equal(await page.getByRole('heading', { name: 'Le brief de votre site', exact: true }).count(), 0);
+      assert.equal(await page.getByRole('button', { name: 'Accepter et accéder au paiement', exact: true }).count(), 0);
+      assert.deepEqual(requests.map(request => request.action), ['status']);
+    } finally { await context.close(); }
+  }
+});
