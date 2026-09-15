@@ -1,5 +1,5 @@
 {
-  "updated": "11 septembre 2026",
+  "updated": "15 septembre 2026",
   "sections": [
     {
       "title": "1. Responsable du traitement et engagement de confidentialité",
@@ -14,7 +14,8 @@
       "content": [
         "Les informations que vous nous fournissez comprennent : nom, entreprise, activité, ville, e-mail, téléphone, besoin, offre choisie, brief, contenus à publier, validations de proposition et demandes de support. Les liens privés permettent de consulter et suivre votre projet.",
         "Les informations collectées automatiquement incluent : pages visitées, durée de navigation, adresse IP, type de navigateur, système d'exploitation, cookies et source de trafic.",
-        "Pour notre prospection auprès des professionnels, nous consultons l’Annuaire des entreprises, l’annuaire RGE de l’ADEME et les fiches professionnelles publiques trouvées sur Google. Nous retenons les informations publiques utiles : identité de l’entreprise, SIREN/SIRET, activité, commune, site, coordonnées professionnelles et source. Un contrôle technique limité aux pages publiques peut préparer un diagnostic, relu avant contact."
+        "Pour notre prospection auprès des professionnels, nous consultons l’Annuaire des entreprises, l’annuaire RGE de l’ADEME et les fiches professionnelles publiques trouvées sur Google. Nous retenons les informations publiques utiles : identité de l’entreprise, SIREN/SIRET, activité, commune, site, coordonnées professionnelles et source. Un contrôle technique limité aux pages publiques peut préparer un diagnostic, relu avant contact.",
+        "Avec votre accord pour la mesure d’audience, nous conservons pendant la session une catégorie d’origine (moteur de recherche, assistant IA, lien externe, campagne ou accès direct) et la première page publique visitée après cet accord. Ces informations accompagnent une éventuelle demande de devis dans notre outil de gestion. Cette attribution ne contient ni les paramètres de l’URL, ni son fragment, ni le texte de votre recherche. Sans accord, cette attribution détaillée n’est pas enregistrée."
       ]
     },
     {

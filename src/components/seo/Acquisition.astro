@@ -1,0 +1,5 @@
+<script>
+import { captureAcquisition } from '../../lib/acquisition';
+captureAcquisition();
+window.addEventListener('flexweb-consent-change', captureAcquisition);
+</script>

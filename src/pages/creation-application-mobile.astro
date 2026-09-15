@@ -1,4 +1,5 @@
 ---
+import ProjectEvidence from "../components/seo/ProjectEvidence.astro";
 import BaseLayout from "../layout/BaseLayout.astro";
 import StructuredData from "../components/seo/StructuredData.astro";
 import { getEntry, render } from "astro:content";
@@ -203,4 +204,5 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
   </div>
 
   <StructuredData schemas={schemas} slot="head" />
+<ProjectEvidence service="application" />
 </BaseLayout>

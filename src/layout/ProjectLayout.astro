@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import { Logo } from "../components/global/Logo.jsx";
 import "../styles/onboarding.css";
+import Acquisition from "../components/seo/Acquisition.astro";
 import Analytics from "../components/seo/Analytics.astro";
 import CookieConsent from "../components/global/CookieConsent.jsx";
 const { title } = Astro.props;
@@ -16,7 +17,7 @@ const isIntake = Astro.url.pathname.replace(/\/$/, "") === "/demarrer";
     <meta name="referrer" content="no-referrer" />
     <title>{title} — FLEX-WEB</title>
     <link rel="icon" href="/favicon.png" />
-    {isIntake && <Analytics pageView={false} />}
+    {isIntake && <><Analytics pageView={false} /><Acquisition /></>}
   </head>
   <body class="project-flow bg-[#f5f5f7]">
     <header class="border-b border-[#e5e5e7] bg-white"><div class="mx-auto flex max-w-[1080px] flex-wrap items-center justify-between gap-4 px-6 py-3.5"><Logo className="h-12" /><a href="mailto:contact@flex-web.fr" class="text-sm">Besoin d’aide ?</a></div></header>

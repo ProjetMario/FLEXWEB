@@ -1,0 +1,21 @@
+/** Descriptions limitées aux parcours observables ; aucun résultat commercial inventé. */
+export const realizations = [
+  { slug: 'foot-nation', name: 'Foot Nation', category: 'Communauté football', href: 'https://www.foot-nation.com/', domain: 'foot-nation.com', image: 'foot-nation.jpg',
+    title: 'Foot Nation : une plateforme autour du football',
+    intro: 'Une plateforme qui rassemble plusieurs publics du football autour de profils et d’espaces dédiés. Ce projet illustre la différence entre présenter une activité et proposer un service en ligne.',
+    features: ['Des entrées pour les joueurs, clubs, éducateurs, bénévoles et supporters.', 'Un parcours d’inscription par e-mail ou avec Google.', 'Des espaces et profils pour structurer la communauté et une recherche pour explorer la plateforme.'],
+    takeaway: 'Lorsqu’un projet comporte plusieurs types d’utilisateurs, le cadrage doit préciser leurs droits, leurs parcours et les informations visibles. Ces décisions précèdent le choix des écrans.',
+    service: 'application', servicePath: '/creation-application-mobile/', serviceLabel: 'Développer une application web ou mobile' },
+  { slug: '2savoie-immo', name: '2 Savoie Immo', category: 'Immobilier en Savoie et Haute-Savoie', href: 'https://www.2savoie.immo/', domain: '2savoie.immo', image: '2savoie-immo.jpg',
+    title: '2 Savoie Immo : des biens et un parcours d’estimation',
+    intro: 'Un site immobilier destiné aux personnes qui souhaitent acheter, vendre ou investir en Pays de Savoie. Les biens et les demandes d’estimation donnent deux chemins distincts aux visiteurs.',
+    features: ['Un catalogue de biens avec des pages de présentation.', 'Un accès à la demande d’estimation depuis la navigation.', 'Un formulaire avec les coordonnées et le message du visiteur.', 'Une présentation des territoires et de l’agence pour situer son activité.'],
+    takeaway: 'Un site immobilier doit distinguer la recherche d’un bien et le projet de vente. Des appels à l’action adaptés permettent de recueillir une demande plus précise. Un raccordement au suivi commercial peut ensuite faire l’objet d’un cadrage séparé.',
+    service: 'site', servicePath: '/creation-site-internet-haute-savoie/', serviceLabel: 'Créer un site en Haute-Savoie' },
+  { slug: 'serrurier73', name: 'Serrurier 73', category: 'Artisan en Savoie', href: 'https://serrurier73.fr/', domain: 'serrurier73.fr', image: 'serrurier73.jpg',
+    title: 'Serrurier 73 : montrer le savoir-faire et faciliter le contact',
+    intro: 'Le site d’ALP’SERRURERIE MÉTALLERIE présente une activité artisanale à Chambéry. Il permet de découvrir les prestations avant de prendre contact pour un besoin précis.',
+    features: ['Des rubriques pour les portails, escaliers, garde-corps et travaux de serrurerie.', 'Un accès aux réalisations pour découvrir les ouvrages.', 'Des actions pour appeler ou demander un devis.', 'Des pages qui expliquent les prestations et leur contexte local.'],
+    takeaway: 'Pour un artisan, des prestations faciles à identifier et des exemples visuels aident le visiteur à formuler sa demande. Le téléphone et le formulaire répondent à des situations différentes : ils doivent rester faciles à trouver sur mobile.',
+    service: 'site', servicePath: '/creation-site-internet-savoie/', serviceLabel: 'Créer un site en Savoie' },
+] as const;

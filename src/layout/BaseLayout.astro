@@ -3,6 +3,7 @@ import BaseHead from "../components/global/BaseHead.astro";
 import Navbar from "../components/global/Navigation.jsx";
 import Footer from "../components/global/Footer.jsx";
 import CookieConsent from "../components/global/CookieConsent.jsx";
+import Acquisition from "../components/seo/Acquisition.astro";
 import Analytics from "../components/seo/Analytics.astro";
 
 import navigationLinks from "../data/navigation.json";
@@ -19,6 +20,7 @@ const { title, description, image, noindex, keywords, transparentNav = false } =
     <BaseHead title={title} description={description} image={image} noindex={noindex} keywords={keywords} />
 
     <Analytics />
+    <Acquisition />
 
     <slot name="head" />
   </head>
