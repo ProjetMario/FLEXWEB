@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { websiteOffers, pricingOptions, publicQuoteVersion } from "../../data/pricing.ts";
+import { leadSource } from "../../lib/acquisition.ts";
 import { trackLead } from "../../lib/analytics.ts";
 import { api, createIdentity, money, saveToken } from "./api";
 
@@ -37,7 +38,7 @@ export default function StartProject() {
     // keeping existing CRM identifiers and historical contracts intact.
     const planId = requestedService !== "site" || ["achat", "croissance"].includes(query.get("offre"))
       ? "achat" : "essentielle";
-    setData((d) => ({ ...d, planId, source: (query.get("utm_source") || "site").slice(0, 160) }));
+    setData((d) => ({ ...d, planId, source: "site" }));
     setService(requestedService);
     if (requestedService === "site") setSitePlan(planId);
     try { identity.current = JSON.parse(sessionStorage.getItem("flexweb-intake-v2") || "null"); }
@@ -72,7 +73,7 @@ export default function StartProject() {
         ? `Demande de devis : ${displayedOffer.name}. Budget et périmètre à chiffrer, aucun forfait site sélectionné.`
         : `Demande de devis : ${displayedOffer.name}, ${money(displayedOffer.setupCents)} TTC en paiement unique. Options demandées : ${activeOptions.length ? activeOptions.map((o) => `${o.name} (${money(o.monthlyCents)} TTC/mois)`).join(" ; ") : "aucune mensualité"}.`;
       await api("intake", {
-        ...data, ...identity.current,
+        ...data, ...identity.current, source: leadSource(),
         publicQuote: bespoke
           ? { version: publicQuoteVersion, service }
           : { version: publicQuoteVersion, service: "site", tier: displayedOffer.id === "essentielle" ? "simple" : "complete", options: selectedOptions },

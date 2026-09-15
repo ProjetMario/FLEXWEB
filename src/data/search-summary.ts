@@ -31,6 +31,12 @@ export const searchSummary = `# Flex-Web
 ## Nature des exemples
 Les scénarios présentés sont des démonstrations illustratives. Ils ne constituent pas des réalisations ou des résultats clients certifiés. Aucun classement Google, citation dans les réponses IA ou revenu n’est garanti.
 
+## Réalisations documentées
+- [Foot Nation : plateforme football](https://flex-web.fr/realisations/foot-nation/)
+- [2 Savoie Immo : immobilier et estimation](https://flex-web.fr/realisations/2savoie-immo/)
+- [Serrurier 73 : prestations artisanales](https://flex-web.fr/realisations/serrurier73/)
+Les fonctionnalités publiques sont décrites sans attribuer de résultats commerciaux non mesurés.
+
 ## Pages principales
 - [Automatisation IA en France](https://flex-web.fr/automatisation-ia/)
 - [Automatisation IA en Savoie](https://flex-web.fr/automatisation-ia-savoie/)

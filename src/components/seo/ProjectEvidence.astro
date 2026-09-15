@@ -1,0 +1,8 @@
+---
+const { service = 'site' } = Astro.props;
+const application = service === 'application';
+---
+<section class="evidence"><h2>{application ? 'Un exemple de plateforme à explorer' : service === 'automation' ? 'Du site au suivi de votre activité' : 'Des réalisations pour préciser votre projet'}</h2>
+{application ? <p><a href="/realisations/foot-nation/">Foot Nation</a> illustre des parcours d’inscription et des espaces pour différents publics du football. Découvrez les fonctionnalités visibles avant de définir celles de votre propre application.</p> : service === 'automation' ? <p>Une automatisation commence par une entrée bien définie : formulaire, message ou document. Les parcours de <a href="/realisations/2savoie-immo/">2 Savoie Immo</a> et de <a href="/realisations/serrurier73/">Serrurier 73</a> illustrent la prise de contact sur un site. Les connexions internes à leurs outils ne sont pas documentées ici.</p> : <p>Découvrez comment <a href="/realisations/serrurier73/">Serrurier 73 présente ses prestations</a> et comment <a href="/realisations/2savoie-immo/">2 Savoie Immo oriente ses visiteurs vers les biens et l’estimation</a>. Ces exemples aident à choisir les contenus et les actions utiles à votre entreprise.</p>}
+<a href="/realisations/">Voir les trois réalisations →</a></section>
+<style>.evidence{max-width:960px;margin:40px auto;padding:28px 24px;background:#f3f6fb;border-radius:24px;line-height:1.75;color:#172133}.evidence h2{font-size:1.6rem;font-weight:600;line-height:1.3;margin-bottom:16px}.evidence p{margin-bottom:16px}.evidence a{color:#1260d6;text-decoration:underline;text-underline-offset:3px}.evidence a:focus-visible{outline:3px solid #1260d6;outline-offset:4px}@media(max-width:600px){.evidence{margin:24px 16px}}</style>

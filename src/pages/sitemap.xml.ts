@@ -3,6 +3,8 @@ import { getCollection } from "astro:content";
 import journalData from "../data/journalArticles.json";
 import { isIndexableMobileLocation, mobileLocationPath } from "../data/location-indexing";
 
+import { realizations } from "../data/realizations";
+
 const site = "https://flex-web.fr";
 
 export const GET: APIRoute = async () => {
@@ -55,6 +57,8 @@ export const GET: APIRoute = async () => {
 
   const candidates = [
     ...staticPages,
+    {url:"/realisations/",priority:0.8,changefreq:"monthly"},
+    ...realizations.map(p=>({url:`/realisations/${p.slug}/`,priority:0.7,changefreq:"monthly"})),
     ...locationPages,
     ...mobileLocationPages,
     ...servicePages,
@@ -67,7 +71,7 @@ export const GET: APIRoute = async () => {
 ${allPages
   .map(
     ({ url, priority, changefreq }) => `  <url>
-    <loc>${site}${url}</loc>
+    <loc>${site}${url}</loc>${url === "/" || url.startsWith("/realisations/") ? "\n    <lastmod>2026-09-15</lastmod>" : ""}
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
   </url>`
