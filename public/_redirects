@@ -1,3 +1,9 @@
+# Nettoyage d'anciennes pages produits retirées de l'indexation Flex-Web.
+/journal/dyson-microfan /journal/ 301
+/journal/dyson-microfan/ /journal/ 301
+/journal/supersonic-r-hair-dryer /journal/ 301
+/journal/supersonic-r-hair-dryer/ /journal/ 301
+
 # Consolidation of synthetic app location pages.
 # Policy: src/data/location-indexing.ts. Both slash variants are intentional.
 /creation-application-mobile-abondance /creation-application-mobile-haute-savoie/ 301
