@@ -6,6 +6,13 @@ import { isIndexableMobileLocation, mobileLocationPath } from "../data/location-
 import { realizations } from "../data/realizations";
 
 const site = "https://flex-web.fr";
+const updatedPages: Record<string, string> = {
+  "/": "2026-09-15",
+  "/zones-intervention/": "2026-09-20",
+  "/creation-site-internet-saint-alban-leysse/": "2026-09-20",
+  "/creation-site-internet-albertville/": "2026-09-20",
+  "/creation-site-internet-annemasse/": "2026-09-20",
+};
 
 export const GET: APIRoute = async () => {
   const staticPages = [
@@ -19,6 +26,7 @@ export const GET: APIRoute = async () => {
     { url: "/creation-site-internet/", priority: 0.9, changefreq: "monthly" },
     { url: "/creation-application-mobile/", priority: 0.9, changefreq: "monthly" },
     { url: "/journal/", priority: 0.8, changefreq: "weekly" },
+    { url: "/zones-intervention/", priority: 0.7, changefreq: "monthly" },
     { url: "/privacy/", priority: 0.5, changefreq: "yearly" },
     { url: "/mentions-legales/", priority: 0.5, changefreq: "yearly" },
     { url: "/cgv/", priority: 0.5, changefreq: "yearly" },
@@ -71,7 +79,7 @@ export const GET: APIRoute = async () => {
 ${allPages
   .map(
     ({ url, priority, changefreq }) => `  <url>
-    <loc>${site}${url}</loc>${url === "/" || url.startsWith("/realisations/") ? "\n    <lastmod>2026-09-15</lastmod>" : ""}
+    <loc>${site}${url}</loc>${updatedPages[url] || url.startsWith("/realisations/") ? `\n    <lastmod>${updatedPages[url] ?? "2026-09-15"}</lastmod>` : ""}
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
   </url>`
