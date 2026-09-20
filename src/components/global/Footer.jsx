@@ -36,6 +36,8 @@ export default function Footer({ data = {} }) {
               <a href="/#comment" className="hover:text-[#0071e3] transition">Comment ça marche</a>
               <a href="/#templates" className="hover:text-[#0071e3] transition">Exemples de scénarios</a>
               <a href="/journal/" className="hover:text-[#0071e3] transition">Guides pratiques</a>
+              <a href="/realisations/" className="hover:text-[#0071e3] transition">Nos réalisations</a>
+              <a href="/zones-intervention/" className="hover:text-[#0071e3] transition">Zones d’intervention</a>
               <a href="/about/" className="hover:text-[#0071e3] transition">À propos de Flex-Web</a>
               <a href="/#faq" className="hover:text-[#0071e3] transition">FAQ</a>
               <a href="/#contact" className="hover:text-[#0071e3] transition">Contact</a>

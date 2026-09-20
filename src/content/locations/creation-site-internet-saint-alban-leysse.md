@@ -35,48 +35,36 @@ faq:
   - question: "FLEX-WEB intervient-il à Saint-Alban-Leysse ?"
     answer: "Oui, nous accompagnons les entreprises de Saint-Alban-Leysse et de l'agglomération chambérienne."
   - question: "Le site sera-t-il visible localement ?"
-    answer: "Oui, chaque site est optimisé pour le référencement local avec des données structurées."
+    answer: "Le site peut être préparé pour les recherches locales : pages accessibles, titres précis, coordonnées cohérentes et liens entre les services. Google décide de l'indexation et du classement ; aucune position ni aucun nombre de contacts ne sont garantis."
 seoTitle: "Création de site internet à Saint-Alban-Leysse — FLEX-WEB"
 seoDescription: "FLEX-WEB crée des sites web professionnels pour artisans, commerçants et indépendants à Saint-Alban-Leysse. Devis gratuit et référencement local."
 isDraft: false
 ---
 
-## Création de sites internet à Saint-Alban-Leysse
+## Un site qui prépare la demande avant votre rappel
 
-Saint-Alban-Leysse est une commune proche de Chambéry, dans l'agglomération savoyarde. Les artisans, commerçants et professions libérales du village peuvent gagner en visibilité grâce à un site internet professionnel.
+Pour une entreprise de Saint-Alban-Leysse intervenant aussi à Bassens, Barby ou Chambéry, le visiteur doit comprendre deux choses : la prestation proposée et la zone réellement desservie. Le site peut présenter une intervention à domicile, un accueil sur rendez-vous ou une prestation à distance, sans laisser croire que vous disposez d'une adresse dans chaque commune.
 
-FLEX-WEB conçoit des sites modernes, rapides et adaptés aux besoins locaux.
+FLEX-WEB est basé à Voglans. Le projet commence par les informations de votre entreprise : services, horaires, coordonnées, photos que vous êtes autorisé à publier et modalités de prise de contact.
 
-## Pour quels professionnels à Saint-Alban-Leysse ?
+## Exemple de parcours pour un artisan
 
-- Artisans du bâtiment et du second œuvre.
-- Commerçants de proximité.
-- Professions libérales et consultants.
-- Services à la personne.
-- Restaurants et cafés.
+Un visiteur cherche un professionnel pour un chantier à Saint-Alban-Leysse. Il consulte une page qui distingue les travaux proposés, les demandes hors périmètre et les informations nécessaires à un premier échange. Un bouton d'appel et un formulaire court lui permettent de transmettre la commune du chantier, le type de travail et ses disponibilités pour être rappelé.
 
-## Nos services à Saint-Alban-Leysse
+Ce parcours est un exemple de conception, pas une réalisation locale revendiquée. Pour voir une réalisation publiée, la fiche [Serrurier 73](/realisations/serrurier73/) décrit la présentation des prestations et l'accès à la prise de contact. Les formulaires plus détaillés ou l'ajout de pièces jointes sont à définir dans le devis.
 
-### Site vitrine
+## Commerce, cabinet ou activité sur rendez-vous
 
-Présentez votre activité avec un site clair et responsive.
+Pour une activité qui reçoit du public, les informations utiles sont différentes : adresse exacte, accès, horaires à jour et conditions d'accueil. Le site peut orienter vers un téléphone ou un outil de réservation existant. Une demande de rendez-vous ne devient une réservation confirmée qu'après la validation prévue par votre organisation.
 
-### Site professionnel
+Si plusieurs collaborateurs traitent les demandes, une [automatisation en Savoie](/automatisation-ia-savoie/) peut être étudiée : création d'un dossier, notification interne et rappel de la prochaine action. L'intégration à votre agenda ou à votre logiciel est chiffrée selon ses possibilités.
 
-Ajoutez des pages de services, un blog et un formulaire de contact.
+## Choisir le périmètre avant de payer
 
-### Référencement local
+Le site vitrine simple à **299 € TTC** convient à une présentation resserrée. L'offre à **990 € TTC** permet un site plus complet dont les pages et fonctions sont précisées au devis. Ce sont des paiements uniques. La maintenance avec modifications à **49 € TTC/mois** et l'option CRM, automatisation et référencement à **99 € TTC/mois** sont facultatives.
 
-Optimisez votre présence pour les recherches à Saint-Alban-Leysse et à Chambéry.
+Pour préparer le devis, indiquez vos prestations principales, les communes réellement couvertes, vos contenus disponibles et l'action attendue du visiteur. Le périmètre et le calendrier sont validés avant le paiement. [Comparer les offres](/pricing/) ou [décrire votre projet](/demarrer/).
 
-### Maintenance et hébergement
+## Un référencement fondé sur des informations vérifiables
 
-Bénéficiez d'un hébergement fiable et d'un support technique.
-
-## Pourquoi choisir FLEX-WEB ?
-
-Nous connaissons l'agglomération chambérienne et ses communes. Cette expertise nous permet de créer des sites pertinents et bien référencés.
-
-## Communes voisines
-
-Nous travaillons à Saint-Alban-Leysse et à **Chambéry, La Motte-Servolex, Bassens, La Ravoire, Barberaz, Montmélian, Aix-les-Bains, Le Bourget-du-Lac, Sonnaz**.
+La page doit apporter des réponses propres à votre activité : exemples de travaux autorisés, limites d'intervention et modalités de contact. Nous préparons des adresses de pages stables, des titres compréhensibles et un maillage entre vos services. La présence dans Google et les moteurs d'IA dépend ensuite de leurs systèmes ; la création du site ne garantit pas une première position.

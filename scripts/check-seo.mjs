@@ -46,7 +46,32 @@ for(const [route,html] of pages){
  }
 }
 assert.deepEqual([...new Set(errors)],[],'Broken internal links');
+// A sitemap alone must not be the only way to discover a public page. Follow
+// emitted HTML links from the homepage, including canonical slash redirects.
+const adjacency=new Map();
+for(const [route,html] of pages){
+ if(isNoindex(html)||route==='/404.html')continue;
+ const links=new Set();
+ for(const match of html.matchAll(/<a\b([^>]*?)href="([^"]+)"([^>]*)>/g)){
+  if(/\brel="[^"]*\bnofollow\b/.test(match[1]+match[3]))continue;
+  const target=new URL(normalize(match[2]),origin+route);
+  if(target.origin!==origin)continue;
+  let destination=redirects.get(target.pathname)??target.pathname;
+  if(!pages.has(destination)&&pages.has(destination+'/'))destination+='/';
+  if(pages.has(destination)&&!isNoindex(pages.get(destination)))links.add(destination);
+ }
+ adjacency.set(route,links);
+}
+const reached=new Set(['/']);
+const queue=['/'];
+for(let index=0;index<queue.length;index++){
+ for(const destination of adjacency.get(queue[index])??[]){
+  if(!reached.has(destination)){reached.add(destination);queue.push(destination);}
+ }
+}
+const unreachable=urls.map(url=>new URL(url).pathname).filter(route=>!reached.has(route));
+assert.deepEqual(unreachable,[],'Sitemap pages unreachable through HTML links from the homepage');
 for(const [from,to] of redirects){assert(pages.has(to),`Redirect target: ${to}`);assert(!redirects.has(to),`Redirect chain: ${from}`);assert(!pages.has(from),`Redirect source emitted: ${from}`);assert(!urls.includes(origin+from),`Redirect source in sitemap: ${from}`);}
 for(const route of ['/automatisation-ia/','/automatisation-ia-savoie/','/automatisation-ia-haute-savoie/','/creation-site-internet/','/creation-application-mobile/','/journal/taches-automatiser-pme/','/journal/connecter-demandes-crm/','/journal/automatisation-ou-application-sur-mesure/']) assert(urls.includes(origin+route),`Priority page ${route}`);
 const llms=await readFile(path.join(root,'llms.txt'),'utf8');assert.equal(llms,await readFile(path.join(root,'ai-overview.txt'),'utf8'));for(const amount of ['299 € TTC','990 € TTC','49 € TTC','99 € TTC'])assert(llms.includes(amount),amount);
-console.log(JSON.stringify({pages:pages.size,sitemapUrls:urls.length,redirectRules:redirects.size,brokenLinks:0,structuredData:'valid',status:'passed'},null,2));
+console.log(JSON.stringify({pages:pages.size,sitemapUrls:urls.length,reachableSitemapUrls:urls.length-unreachable.length,redirectRules:redirects.size,brokenLinks:0,structuredData:'valid',status:'passed'},null,2));

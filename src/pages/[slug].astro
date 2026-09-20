@@ -213,6 +213,12 @@ if (faqSchema) {
       {localContextText}
     </p>
 
+    {data.type === "department" && ["Savoie", "Haute-Savoie"].includes(data.department ?? data.name) && (
+      <p class="mt-5 leading-relaxed" style="color: var(--color-text-muted)">
+        Retrouvez toutes les communes accompagnées dans notre <a href={`/zones-intervention/#${(data.department ?? data.name) === "Haute-Savoie" ? "haute-savoie" : "savoie"}`} class="underline" style="color: var(--color-accent)">annuaire des zones d’intervention en {data.name}</a>.
+      </p>
+    )}
+
     <section class="mt-8 rounded-2xl p-6" style="background-color: var(--color-surface)">
       <h2 class="text-xl font-semibold tracking-tight" style="color: var(--color-text)">
         En bref

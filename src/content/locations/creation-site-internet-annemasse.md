@@ -36,49 +36,36 @@ faq:
   - question: "FLEX-WEB intervient-il à Annemasse ?"
     answer: "Oui, nous accompagnons les entreprises d'Annemasse et du Grand Genève."
   - question: "Le site sera-t-il visible localement ?"
-    answer: "Oui, chaque site est optimisé pour le référencement local avec des données structurées."
+    answer: "Nous préparons les contenus et la structure pour faciliter leur compréhension par les moteurs : services réels, zone desservie, titres et liens cohérents. L'indexation et le classement restent décidés par Google."
 seoTitle: "Création de site internet à Annemasse — FLEX-WEB"
 seoDescription: "FLEX-WEB crée des sites web professionnels pour commerces, artisans et PME à Annemasse. Devis gratuit et référencement local."
 isDraft: false
 ---
 
-## Création de sites internet à Annemasse
+## Clarifier votre offre pour une clientèle autour d'Annemasse
 
-Annemasse est la ville-centre du Genevois français, dans un environnement transfrontalier dynamique. Les commerçants, artisans, PME et professions libérales de la ville peuvent bénéficier d'un site internet professionnel.
+Un site destiné aux habitants d'Annemasse et aux visiteurs du secteur doit rendre vos conditions de service explicites. Où se trouve votre établissement ? Dans quelles communes intervenez-vous ? Le client doit-il se déplacer ou peut-il demander un devis à distance ? La proximité de Genève ne signifie pas automatiquement que votre entreprise intervient en Suisse : le contenu doit refléter votre périmètre réel.
 
-FLEX-WEB conçoit des sites modernes, rapides et adaptés aux enjeux du Grand Genève.
+FLEX-WEB accompagne votre projet depuis Voglans, en Savoie, avec des échanges et validations à distance. Cette page présente le service proposé aux entreprises d'Annemasse ; elle ne représente pas une agence ou une adresse locale.
 
-## Pour quels professionnels à Annemasse ?
+## Deux parcours à cadrer selon votre activité
 
-- Commerçants de proximité.
-- Artisans du bâtiment et du second œuvre.
-- Services aux entreprises et aux particuliers.
-- Professions libérales et consultants.
-- Industries et PME.
-- Entreprises transfrontalières.
+### Un commerce qui accueille ses clients
 
-## Nos services à Annemasse
+Le visiteur consulte les produits ou prestations disponibles, les horaires et les indications d'accès. L'action principale peut être un appel, une demande de disponibilité ou l'ouverture de votre outil de réservation. Si vos informations changent souvent, le devis précise qui les met à jour et comment. Une boutique avec paiement en ligne demande un périmètre distinct d'un site vitrine.
 
-### Site vitrine
+### Une entreprise de services qui se déplace
 
-Présentez votre activité avec un site clair et responsive.
+Un formulaire peut recueillir le besoin, la commune et un moyen de rappel, puis orienter la demande vers la bonne personne. Si vous intervenez à Annemasse, Gaillard ou Ville-la-Grand, vos pages expliquent les prestations effectivement disponibles dans ces secteurs. Les textes ne doivent pas annoncer des délais ou disponibilités qui ne sont pas validés par votre équipe.
 
-### Site professionnel
+Ces parcours sont des exemples de conception. Pour examiner un site réalisé, découvrez [2 Savoie Immo](/realisations/2savoie-immo/) : sa fiche présente le parcours entre les annonces, l'estimation et la prise de contact. [Foot Nation](/realisations/foot-nation/) illustre un autre besoin, avec des inscriptions et des espaces destinés à plusieurs publics.
 
-Ajoutez des pages de services, un blog et un formulaire de contact.
+## Langues, contenus et outils existants
 
-### Référencement local
+Avant de prévoir une version multilingue, identifiez les langues de vos clients et la personne qui validera les traductions. Le nombre de versions, leurs contenus et leur mise à jour sont à chiffrer au devis. Pour connecter un formulaire à un outil métier, nous vérifions d'abord les possibilités de ce logiciel ; les [automatisations en Haute-Savoie](/automatisation-ia-haute-savoie/) font l'objet d'un cadrage adapté.
 
-Optimisez votre présence pour les recherches à Annemasse, Genève et en Haute-Savoie.
+## Budget et éléments à préparer
 
-### Maintenance et hébergement
+Les offres de site vitrine sont à **299 € TTC** et **990 € TTC**, en paiement unique après validation du devis. La maintenance et les modifications à **49 € TTC/mois** ainsi que le CRM, l'automatisation et le référencement à **99 € TTC/mois** restent des options. Les fonctions particulières, traductions et intégrations doivent figurer dans le périmètre accepté.
 
-Bénéficiez d'un hébergement fiable et d'un support technique.
-
-## Pourquoi choisir FLEX-WEB ?
-
-Nous connaissons les enjeux du Grand Genève : transfrontalier, proximité, référencement local et multilinguisme. Nos sites sont pensés pour performer sur ce marché.
-
-## Communes voisines
-
-Nous travaillons à Annemasse et à **Genève, Saint-Julien-en-Genevois, Thonon-les-Bains, Annecy, Bonneville, Gaillard, Ville-la-Grand, Archamps, Étrembières, La Roche-sur-Foron**.
+Préparez vos coordonnées, les services proposés, votre zone d'intervention, des photos autorisées et les accès aux outils à conserver. [Consulter les tarifs](/pricing/) puis [demander un devis](/demarrer/) permet de préciser le projet avant sa réalisation. Pour le référencement, nous travaillons la clarté et l'accessibilité du contenu sans promettre une position sur Google.

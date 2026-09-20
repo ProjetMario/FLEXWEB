@@ -40,9 +40,9 @@ faq:
   - question: "Le site peut-il être adapté au tourisme hivernal ?"
     answer: "Oui, nous créons des sites pour hébergements, restaurants et activités de montagne avec contenus saisonniers."
   - question: "Le site sera-t-il visible sur Google ?"
-    answer: "Oui, chaque site est optimisé SEO avec balises, données structurées et performances rapides."
+    answer: "Le site est préparé pour être accessible aux moteurs avec des titres précis, des liens entre les pages et des données structurées adaptées. Google décide ensuite de l'indexation et du classement ; aucune position ne peut être garantie."
   - question: "Puis-je modifier le contenu moi-même ?"
-    answer: "Oui, nous fournissons une interface d'administration simple pour gérer vos pages et vos images."
+    answer: "Les modalités de mise à jour sont définies au devis. Vous pouvez prévoir une interface de gestion si elle est adaptée au projet ou l'option maintenance avec modifications à 49 € TTC/mois."
 seoTitle: "Création de site internet à Albertville — FLEX-WEB"
 seoDescription: "FLEX-WEB crée des sites web professionnels pour artisans, hôteliers et commerçants à Albertville et en Tarentaise. Demandez un devis gratuit."
 isDraft: false
@@ -81,9 +81,19 @@ Optimisez votre visibilité pour les recherches locales en Tarentaise et associe
 ### Maintenance et hébergement
 Bénéficiez d'un hébergement fiable, de sauvegardes et d'un support réactif.
 
-## Pourquoi choisir FLEX-WEB à Albertville ?
+## Préparer les demandes selon la saison et le lieu
 
-Nous connaissons les vallées savoyardes et les rythmes saisonniers du territoire. Cette connaissance locale permet de créer des sites pertinents, avec un contenu adapté aux visiteurs comme aux habitants.
+Pour un hébergeur ou une activité de loisirs autour d'Albertville, la page doit distinguer les périodes d'ouverture, les prestations disponibles et la manière de vérifier une disponibilité. Si vous utilisez déjà un logiciel de réservation, le site peut y orienter les visiteurs. Une synchronisation automatique ou un paiement en ligne sont étudiés séparément ; un formulaire de contact ne remplace pas un moteur de réservation.
+
+Pour un artisan qui se déplace vers Ugine, Moûtiers ou les vallées voisines, un autre parcours est utile : préciser le lieu du chantier, le type de prestation et le moment où un rappel est possible. Le devis de création du site définit les informations à demander et le destinataire chargé du suivi. Le site ne doit pas annoncer une intervention immédiate si votre organisation ne le permet pas.
+
+Ces exemples servent à cadrer votre propre projet. Pour voir des réalisations publiées, [Serrurier 73](/realisations/serrurier73/) montre une présentation de services orientée prise de contact et [2 Savoie Immo](/realisations/2savoie-immo/) un parcours entre annonces et estimation. Ces références ne sont pas présentées comme des clients établis à Albertville.
+
+## Choisir les pages et les mises à jour utiles
+
+La formule à **299 € TTC** sert une présentation simple ; celle à **990 € TTC** correspond à un site plus complet, avec un périmètre arrêté au devis. Le paiement est unique après validation. Pour des horaires, photos ou prestations saisonnières qui évoluent, l'option maintenance avec modifications est proposée à **49 € TTC/mois**. Le CRM, l'automatisation et le référencement à **99 € TTC/mois** constituent une autre option, selon le devis.
+
+Si le besoin porte sur des comptes rendus d'intervention ou un espace réservé à l'équipe, consultez plutôt la [création d'application à Albertville](/creation-application-mobile-albertville/). Cela permet de distinguer le budget du site de présentation de celui d'un outil métier. FLEX-WEB est basé à Voglans ; les modalités d'échange et de validation du projet sont convenues ensemble.
 
 ## Comment se déroule un projet ?
 
@@ -91,7 +101,9 @@ Nous connaissons les vallées savoyardes et les rythmes saisonniers du territoir
 2. Conception de l'arborescence et rédaction du contenu.
 3. Développement du site et tests.
 4. Mise en ligne et configuration SEO.
-5. Formation et maintenance.
+5. Prise en main et modalités de maintenance prévues au devis.
+
+Avant le premier échange, réunissez la liste des prestations, les communes desservies, vos contenus autorisés et les outils à conserver. [Comparer les tarifs](/pricing/) ou [décrire votre projet](/demarrer/).
 
 ## Communes proches d'Albertville
 
