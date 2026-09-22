@@ -1,6 +1,6 @@
 ---
 title: "Création de sites internet pour les entreprises en France"
-description: "FLEX-WEB crée des sites vitrines pour les artisans, indépendants et PME en France, avec un accompagnement en Savoie et Haute-Savoie. Présentez votre activité, facilitez les demandes de devis et préparez le suivi de vos contacts."
+description: "Un site vitrine pour présenter votre entreprise et recevoir des demandes utiles. Comparez les formules simple et complète, choisissez vos options et recevez un devis qui précise les pages, les fonctions et le budget. FLEX-WEB vous accompagne en Savoie, en Haute-Savoie et partout en France."
 targetAudience:
   - "Artisans et entreprises du bâtiment"
   - "Commerçants et entreprises de services"
@@ -33,18 +33,15 @@ Votre visiteur doit comprendre ce que vous faites, à qui vous vous adressez et 
 
 Pour un artisan, ce peut être le type de travaux, la commune et quelques précisions sur le chantier. Pour une entreprise de services, ce sera le besoin, le contexte et l'échéance envisagée. Le formulaire doit rester court ; les informations complémentaires peuvent être demandées ensuite.
 
-## Deux tarifs de création, payés une seule fois
+## Choisir selon votre activité, pas seulement selon le nombre de pages
 
-- **Site vitrine simple : 299 € TTC**, pour présenter votre entreprise, vos services et vos coordonnées dans le périmètre de l'offre.
-- **Site vitrine complet : 990 € TTC**, pour une présentation plus développée, une personnalisation renforcée et un parcours de demande plus détaillé.
+**Vous devez surtout être présenté et joignable ?** Pour un artisan qui souhaite expliquer ses interventions, montrer quelques réalisations et recevoir un message, la formule simple peut constituer un point de départ. Préparez vos prestations, vos coordonnées, votre zone de déplacement et les photos que vous pouvez utiliser.
 
-Le devis confirme les pages, les contenus et les fonctionnalités retenus. Les besoins de boutique en ligne, de réservation complexe ou d'application sont étudiés séparément. [Consultez les tarifs et demandez un devis](/pricing/).
+**Vous devez comprendre le besoin avant de rappeler ?** Une entreprise avec plusieurs prestations peut avoir besoin de contenus plus détaillés et d'un formulaire qui distingue le type de projet, la localisation et l'échéance. La formule complète est destinée à ce parcours, avec les champs et les contenus confirmés au devis.
 
-### Options mensuelles
+**Vos visiteurs doivent réserver, payer ou gérer un dossier ?** Décrivez le fonctionnement attendu avant de choisir. Une réservation complexe, une boutique ou un espace privé peut nécessiter des outils supplémentaires ou une [application sur mesure](/creation-application-mobile/). Le devis permet de séparer le site vitrine de ces fonctions et de leurs coûts.
 
-La **maintenance avec modifications est proposée à 49 € TTC/mois**. L'option **CRM, automatisation et référencement est proposée à 99 € TTC/mois**. Ces options sont facultatives et leur périmètre est précisé dans le devis ; elles ne constituent pas un abonnement obligatoire pour la création du site.
-
-Le domaine, l'hébergement, les éventuels outils tiers et les conditions de suivi sont détaillés dans la proposition avant engagement. Une automatisation métier sur mesure fait l'objet d'un chiffrage spécifique.
+Les [réalisations Flex-Web](/realisations/) permettent de voir des sites déjà publiés, notamment pour le bâtiment, l'immobilier et le sport. Elles illustrent des projets distincts : le contenu d'une réalisation ne définit pas automatiquement ce qui est inclus dans votre formule.
 
 ## Le référencement naturel dès la structure du site
 
@@ -52,10 +49,18 @@ Nous organisons les pages autour de questions réelles : prestations, publics co
 
 Pour une activité locale, les coordonnées et les zones de service doivent être exactes. Pour une activité nationale, les pages présentent les besoins métiers et la façon de travailler à distance. Les contenus utiles et vérifiables servent également de base à leur compréhension par les moteurs intégrant de l'IA. Une position Google ou une citation IA ne fait pas partie des résultats garantis.
 
-## De la première demande à la mise en ligne
+## Préparer votre demande de devis
+
+Pour commencer, indiquez votre activité, votre objectif principal et les services à présenter. Vous pouvez ajouter l'adresse de votre site actuel, quelques exemples appréciés et les contenus déjà disponibles. Signalez aussi les outils auxquels le site devra se connecter et la date souhaitée.
+
+Vous n'avez pas encore tous les textes ou toutes les photos ? Précisez-le : la proposition répartit ce que vous fournissez et ce qui doit être préparé dans le projet. Une date souhaitée sert à cadrer la demande ; le calendrier définitif tient compte du périmètre et des éléments nécessaires.
+
+La [demande de devis est gratuite](/demarrer/?service=site). Vous pouvez modifier la formule sélectionnée dans le formulaire. Le projet et ses conditions sont validés avant le paiement.
+
+## De votre accord à la mise en ligne
 
 1. **Cadrage** : activité, objectifs, pages, contenus disponibles et budget.
-2. **Proposition** : devis, périmètre, responsabilités et calendrier après réception des éléments nécessaires.
+2. **Proposition** : devis, périmètre, responsabilités, calendrier et paiement après votre accord.
 3. **Conception** : structure, textes fournis ou prévus au devis et présentation graphique.
 4. **Vérification** : affichage mobile, liens et fonctionnement du parcours de demande.
 5. **Publication et suivi** : mise en ligne après validation, puis accompagnement selon l'option choisie.

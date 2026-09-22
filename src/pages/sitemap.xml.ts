@@ -7,7 +7,8 @@ import { realizations } from "../data/realizations";
 
 const site = "https://flex-web.fr";
 const updatedPages: Record<string, string> = {
-  "/": "2026-09-15",
+  "/": "2026-09-22",
+  "/creation-site-internet/": "2026-09-22",
   "/zones-intervention/": "2026-09-20",
   "/creation-site-internet-saint-alban-leysse/": "2026-09-20",
   "/creation-site-internet-albertville/": "2026-09-20",
