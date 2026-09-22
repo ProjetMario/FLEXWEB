@@ -3,11 +3,45 @@ import ProjectEvidence from "../components/seo/ProjectEvidence.astro";
 import BaseLayout from "../layout/BaseLayout.astro";
 import StructuredData from "../components/seo/StructuredData.astro";
 import { getEntry, render } from "astro:content";
+import { websiteOffers, pricingOptions } from "../data/pricing";
+
+const euros = (cents: number) => new Intl.NumberFormat("fr-FR", {
+  style: "currency", currency: "EUR", maximumFractionDigits: 2, minimumFractionDigits: 0,
+}).format(cents / 100);
+const simpleOffer = websiteOffers.find((offer) => offer.id === "essentielle")!;
+const completeOffer = websiteOffers.find((offer) => offer.id === "achat")!;
+const maintenance = pricingOptions.find((option) => option.id === "maintenance")!;
+const crm = pricingOptions.find((option) => option.id === "crm")!;
+
+const offerGuidance = {
+  essentielle: "Votre priorité : expliquer votre activité, montrer vos services et permettre à un visiteur de vous contacter facilement.",
+  achat: "Votre priorité : détailler vos prestations, personnaliser davantage leur présentation et recueillir les précisions utiles à votre devis.",
+};
+
+const quoteChecklist = [
+  { title: "Les pages et leur contenu", text: "La liste des pages, les services à présenter, les zones couvertes et les textes, photos ou réalisations que vous fournissez. La rédaction et la création de contenus attendues sont précisées." },
+  { title: "Les fonctions et le formulaire", text: "Les champs de contact, les informations nécessaires pour qualifier une demande, ses destinataires et les connexions éventuelles à vos outils." },
+  { title: "Le domaine, l’hébergement et les accès", text: "Les coûts éventuels, les renouvellements, les licences et les accès nécessaires. Le domaine est enregistré à votre nom ; les responsabilités sont définies avant la mise en ligne." },
+  { title: "Le calendrier et la validation", text: "Les éléments à fournir, les étapes de vérification, les corrections prévues, le délai et les conditions de publication. Le paiement intervient après validation du devis." },
+  { title: "Le total TTC et le suivi choisi", text: "Le prix de création, les éventuels besoins supplémentaires et les options mensuelles retenues, avec leurs limites et leurs conditions. Chaque coût récurrent est identifié." },
+];
 
 const serviceFaq = [
   {
     "question": "Combien coûte la création d'un site internet ?",
-    "answer": "Le site vitrine simple coûte 299 € TTC et le site vitrine complet 990 € TTC, payés une seule fois. Le devis confirme les pages, les contenus et les fonctions retenus. La maintenance à 49 € TTC/mois et l'option CRM, automatisation et référencement à 99 € TTC/mois sont facultatives."
+    "answer": `Le site vitrine simple coûte ${euros(simpleOffer.setupCents)} TTC et le site vitrine complet ${euros(completeOffer.setupCents)} TTC, payés une seule fois. Le devis confirme les pages, les contenus et les fonctions retenus. La demande de devis est gratuite et le paiement intervient après sa validation.`
+  },
+  {
+    "question": "Comment choisir entre le site simple et le site complet ?",
+    "answer": `Le site simple comprend : ${simpleOffer.features.join(" ; ")}. Le site complet prévoit : ${completeOffer.features.join(" ; ")}. Choisissez selon le détail de vos prestations et les informations à recueillir. Le devis fixe la liste des pages et le périmètre exact ; le site complet ne signifie pas un nombre de pages illimité.`
+  },
+  {
+    "question": "Dois-je prendre une option mensuelle ?",
+    "answer": `Non. La maintenance avec modifications à ${euros(maintenance.monthlyCents)} TTC/mois et l’option CRM, automatisation et référencement à ${euros(crm.monthlyCents)} TTC/mois sont facultatives. Le devis précise les actions, les outils, les limites et les conditions de chaque option. Aucune n’est ajoutée automatiquement.`
+  },
+  {
+    "question": "Le nom de domaine et l'hébergement sont-ils inclus ?",
+    "answer": "Le domaine et l’hébergement sont précisés séparément dans le devis, avec leurs éventuels coûts récurrents. Le domaine est enregistré à votre nom. Les licences, consommations d’outils tiers et travaux supplémentaires éventuels sont indiqués avant votre accord."
   },
   {
     "question": "Quel est le délai de création ?",
@@ -19,7 +53,7 @@ const serviceFaq = [
   },
   {
     "question": "Un site peut-il être relié à mon CRM ?",
-    "answer": "Oui, selon les capacités de votre CRM et les accès disponibles. L'option à 99 € TTC/mois couvre le périmètre convenu au devis. Une intégration ou une automatisation métier spécifique est chiffrée séparément."
+    "answer": `Oui, selon les capacités de votre CRM et les accès disponibles. L'option à ${euros(crm.monthlyCents)} TTC/mois couvre le périmètre convenu au devis. Une intégration ou une automatisation métier spécifique est chiffrée séparément.`
   }
 ];
 
@@ -61,10 +95,15 @@ const serviceSchema = {
     audienceType: data.targetAudience.join(", "),
   },
   serviceType: "Création de site internet",
-  offers: [
-    { "@type": "Offer", name: "Site vitrine simple", price: "299", priceCurrency: "EUR", url: `${siteUrl}/pricing/`, priceSpecification: { "@type": "PriceSpecification", price: "299", priceCurrency: "EUR", valueAddedTaxIncluded: true } },
-    { "@type": "Offer", name: "Site vitrine complet", price: "990", priceCurrency: "EUR", url: `${siteUrl}/pricing/`, priceSpecification: { "@type": "PriceSpecification", price: "990", priceCurrency: "EUR", valueAddedTaxIncluded: true } },
-  ],
+  offers: websiteOffers.map((offer) => ({
+    "@type": "Offer",
+    name: offer.name,
+    description: `${offer.description} ${offer.features.join(". ")}. Prix TTC de création, payé une seule fois. Périmètre confirmé sur devis. Options mensuelles facultatives.`,
+    price: String(offer.setupCents / 100),
+    priceCurrency: "EUR",
+    url: `${siteUrl}${offer.href}`,
+    priceSpecification: { "@type": "PriceSpecification", price: String(offer.setupCents / 100), priceCurrency: "EUR", valueAddedTaxIncluded: true },
+  })),
 };
 
 const breadcrumbSchema = {
@@ -89,31 +128,88 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
 ---
 
 <BaseLayout title={data.seoTitle} description={data.seoDescription} keywords="création site internet Savoie, création site internet Haute-Savoie, site vitrine professionnel, site internet artisan, SEO local, devis site internet gratuit">
-  <div class="mx-auto max-w-3xl px-6 py-16 lg:py-24">
+  <div class="mx-auto max-w-5xl px-6 py-16 lg:py-24">
     <nav aria-label="Fil d'Ariane" class="mb-8 text-sm" style="color: var(--color-text-muted)">
       <a href="/" class="hover:underline">Accueil</a>
       <span class="mx-2">/</span>
       <span>{data.title}</span>
     </nav>
 
-    <h1 class="text-4xl font-semibold tracking-tight lg:text-5xl" style="color: var(--color-text)">
+    <h1 class="max-w-3xl text-4xl font-semibold tracking-tight lg:text-5xl" style="color: var(--color-text)">
       {data.title}
     </h1>
 
-    <p class="mt-6 text-lg leading-relaxed" style="color: var(--color-text-muted)">
+    <p class="mt-6 max-w-3xl text-lg leading-relaxed" style="color: var(--color-text-muted)">
       {data.description}
     </p>
 
-    <section class="mt-8 rounded-2xl p-6" style="background-color: var(--color-surface)">
+    <div class="mt-8 flex flex-wrap items-center gap-4">
+      <a href="#offres" class="inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3 font-medium text-white transition hover:opacity-90" style="background-color: var(--color-accent)">Comparer les deux offres</a>
+      <a href="/demarrer/?service=site" class="inline-flex min-h-12 items-center underline underline-offset-4" style="color: var(--color-accent)">Demander un devis gratuit</a>
+    </div>
+    <p class="mt-3 text-sm" style="color: var(--color-text-muted)">Savoie · Haute-Savoie · Toute la France à distance. Paiement après validation du devis.</p>
+
+    <section class="mt-10 rounded-2xl p-6" style="background-color: var(--color-surface)">
       <h2 class="text-xl font-semibold tracking-tight" style="color: var(--color-text)">
         En bref
       </h2>
       <p class="mt-3 leading-relaxed" style="color: var(--color-text-muted)">
-        FLEX-WEB conçoit des sites internet pour les artisans, commerçants, indépendants et PME. Chaque projet comprend une structure optimisée pour les moteurs de recherche, un affichage adapté au mobile et un accompagnement pour l'hébergement et la maintenance.
+        Un site simple pour présenter votre activité ; un site complet pour détailler vos prestations et qualifier les demandes. Le choix se fait selon vos contenus et votre parcours de contact. Le devis confirme ce qui sera réalisé, les éléments à fournir et les éventuels coûts récurrents.
       </p>
     </section>
 
-    <div class="mt-12 space-y-6 text-lg leading-relaxed" style="color: var(--color-text)">
+    <section id="offres" class="mt-16 scroll-mt-24" aria-labelledby="offres-title">
+      <p class="text-sm font-semibold uppercase tracking-widest" style="color: var(--color-accent)">Votre site internet</p>
+      <h2 id="offres-title" class="mt-3 text-3xl font-semibold tracking-tight">Deux formules. Un périmètre clair.</h2>
+      <p class="mt-4 max-w-3xl leading-relaxed" style="color: var(--color-text-muted)">Les prix ci-dessous correspondent à la création du site, payée une seule fois. Retrouvez les prestations de chaque formule et choisissez le point de départ adapté à votre entreprise.</p>
+      <div class="mt-8 grid gap-6 md:grid-cols-2">
+        {websiteOffers.map((offer) => (
+          <article class="flex min-w-0 flex-col rounded-3xl border p-6 lg:p-8" style="border-color: var(--color-border); background-color: var(--color-surface)">
+            <h3 class="text-2xl font-semibold tracking-tight">{offer.name}</h3>
+            <p class="mt-3 leading-relaxed" style="color: var(--color-text-muted)">{offer.description}</p>
+            <p class="mt-6"><span class="text-4xl font-semibold tracking-tight">{euros(offer.setupCents)}</span> <span class="font-medium">TTC</span></p>
+            <p class="mt-1 text-sm" style="color: var(--color-text-muted)">Paiement unique après validation du devis</p>
+            <ul class="mt-6 space-y-3">
+              {offer.features.map((feature) => <li class="flex gap-3"><span aria-hidden="true" style="color: var(--color-accent)">✓</span><span>{feature}</span></li>)}
+            </ul>
+            <p class="mt-6 border-t pt-5 text-sm leading-relaxed" style="border-color: var(--color-border); color: var(--color-text-muted)">{offerGuidance[offer.id]}</p>
+            <div class="mt-auto pt-6">
+              <a href={offer.href} class="inline-flex min-h-12 w-full items-center justify-center rounded-full px-4 py-3 text-center font-medium text-white transition hover:opacity-90" style="background-color: var(--color-accent)" aria-label={`Demander un devis pour le ${offer.name.toLowerCase()}`}>Choisir cette offre</a>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="mt-5 max-w-3xl text-sm leading-relaxed" style="color: var(--color-text-muted)">Le site complet apporte une personnalisation et une qualification des demandes renforcées. Sa liste de pages est arrêtée dans le devis. Une boutique en ligne, une réservation complexe ou un développement métier sont étudiés séparément.</p>
+    </section>
+
+    <section id="options" class="mt-12 scroll-mt-24" aria-labelledby="options-title">
+      <h2 id="options-title" class="text-2xl font-semibold tracking-tight">Des options, seulement si elles vous sont utiles</h2>
+      <div class="mt-6 grid gap-5 md:grid-cols-2">
+        {pricingOptions.map((option) => (
+          <article class="rounded-2xl border p-6" style="border-color: var(--color-border)">
+            <h3 class="text-lg font-semibold">{option.name}</h3>
+            <p class="mt-3 text-2xl font-semibold">{euros(option.monthlyCents)} <span class="text-base font-normal">TTC/mois</span></p>
+            <p class="mt-3 leading-relaxed" style="color: var(--color-text-muted)">{option.description}</p>
+          </article>
+        ))}
+      </div>
+      <p class="mt-5 max-w-3xl text-sm leading-relaxed" style="color: var(--color-text-muted)">Vous pouvez choisir aucune, une ou les deux options. Le devis précise les interventions, les limites, les outils et les conditions retenus. Le domaine, l’hébergement, les licences et les consommations éventuelles sont détaillés séparément avant accord. <a href="/pricing/" class="underline underline-offset-4" style="color: var(--color-accent)">Voir tous les tarifs et leurs conditions</a>.</p>
+    </section>
+
+    <section id="contenu-devis" class="mt-16 scroll-mt-24 rounded-3xl p-6 lg:p-8" style="background-color: var(--color-surface)" aria-labelledby="devis-title">
+      <h2 id="devis-title" class="text-2xl font-semibold tracking-tight">Ce que votre devis doit préciser</h2>
+      <p class="mt-4 max-w-3xl leading-relaxed" style="color: var(--color-text-muted)">Avant de commander, vous disposez d’une proposition qui permet de vérifier le contenu du projet et son budget. Ces cinq points servent de base à notre échange.</p>
+      <ol class="mt-6 grid gap-6 md:grid-cols-2">
+        {quoteChecklist.map((item, index) => (
+          <li class="flex gap-4">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white" style="background-color: var(--color-accent)" aria-hidden="true">{index + 1}</span>
+            <div><h3 class="font-semibold">{item.title}</h3><p class="mt-2 text-sm leading-relaxed" style="color: var(--color-text-muted)">{item.text}</p></div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <div class="service-content mx-auto mt-16 max-w-3xl space-y-6 text-lg leading-relaxed" style="color: var(--color-text)">
       <Content />
     </div>
 
@@ -202,3 +298,21 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
   <StructuredData schemas={schemas} slot="head" />
 <ProjectEvidence service="site" />
 </BaseLayout>
+
+<style>
+  .service-content :global(h2) {
+    margin-top: 3rem;
+    font-size: 1.5rem;
+    line-height: 1.3;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+  .service-content :global(h2:first-child) { margin-top: 0; }
+  .service-content :global(a) {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  .service-content :global(ol) { list-style: decimal; padding-left: 1.5rem; }
+  .service-content :global(li + li) { margin-top: 0.75rem; }
+</style>
