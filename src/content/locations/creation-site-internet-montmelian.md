@@ -6,7 +6,7 @@ department: "Savoie"
 region: "Auvergne-Rhône-Alpes"
 country: "France"
 introduction: "FLEX-WEB crée des sites internet professionnels pour les artisans, commerçants et professions libérales de Montmélian, au cœur de la Combe de Savoie."
-localContext: "Montmélian est une commune historique située entre Chambéry et Grenoble. Son économie locale repose sur l'artisanat, le commerce, l'agriculture et les services aux habitants du territoire."
+localContext: "Pour votre entreprise à Montmélian, le site doit distinguer les prestations, les communes réellement desservies et les informations nécessaires avant un premier contact. FLEX-WEB accompagne le projet depuis Voglans ; aucune agence à Montmélian n’est revendiquée."
 targetIndustries:
   - "Artisans du bâtiment"
   - "Commerçants de proximité"
@@ -35,44 +35,61 @@ faq:
   - question: "FLEX-WEB travaille-t-il à Montmélian ?"
     answer: "Oui, nous accompagnons les entreprises de Montmélian et de la Combe de Savoie."
   - question: "Le site sera-t-il bien référencé ?"
-    answer: "Oui, chaque site est optimisé pour le référencement local avec des données structurées."
+    answer: "Nous préparons les titres, les liens internes et les informations propres à votre activité. Google décide ensuite de l’indexation et du classement : aucune première position ni aucun nombre de demandes ne sont garantis."
+  - question: "Que faut-il préparer pour le devis de mon site ?"
+    answer: "Indiquez vos prestations, votre zone d’intervention, vos coordonnées et les contenus disponibles. Précisez si vous attendez des appels, des demandes de devis ou une réservation. Les intégrations, l’hébergement, le domaine et le calendrier sont fixés au devis avant paiement."
+  - question: "Un agenda ou un CRM sont-ils compris dans le site vitrine ?"
+    answer: "Ils ne sont pas ajoutés automatiquement. Le devis distingue le site de présentation, le lien vers un outil existant et une intégration sur mesure. L’option à 99 € TTC/mois ne remplace pas le chiffrage d’un développement spécifique."
 seoTitle: "Création de site internet à Montmélian — FLEX-WEB"
-seoDescription: "FLEX-WEB crée des sites web professionnels pour artisans, commerçants et indépendants à Montmélian. Devis gratuit et référencement local."
+seoDescription: "Site internet à Montmélian : offres à 299 € ou 990 € TTC, exemples de réalisations et préparation du devis pour artisans, commerces et indépendants."
 isDraft: false
 ---
 
-## Création de sites internet à Montmélian
+## Un site qui distingue une demande urgente d’un projet à préparer
 
-Montmélian est un bourg chargé d'histoire, situé au carrefour de la Combe de Savoie. Les entreprises locales, artisans et commerçants y trouvent un environnement propice au développement. Un site internet professionnel aide à se faire connaître au-delà du bourg.
+Pour un artisan intervenant à Montmélian, Arbin ou Saint-Pierre-d’Albigny, toutes les prises de contact n’ont pas le même besoin. Un visiteur veut appeler immédiatement ; un autre souhaite décrire un chantier avant d’être rappelé. Le site peut proposer ces deux parcours sans promettre une disponibilité que votre équipe n’a pas confirmée.
 
-FLEX-WEB accompagne les professionnels de Montmélian avec des sites modernes et performants.
+La page de service précise les travaux réalisés, les limites d’intervention et les communes réellement couvertes. Le formulaire demande les informations utiles au rappel : prestation recherchée, commune du chantier et coordonnées. Les photos ou pièces jointes, si nécessaires, sont prévues au devis. Ce parcours est un exemple de conception, pas une référence client à Montmélian.
 
-## Pour quels professionnels à Montmélian ?
+## Commerce ou producteur : aider le client à préparer sa visite
 
-- Artisans du bâtiment et du second œuvre.
-- Commerçants du centre-ville et artisans.
-- Professions libérales installées dans la commune.
-- Agriculteurs et producteurs locaux.
-- Restaurants, cafés et traiteurs.
+Si vous recevez du public à Montmélian, le visiteur doit trouver l’adresse exacte, les horaires, les conditions d’accueil et un moyen de vérifier une disponibilité. Une présentation de produits peut orienter vers un appel ou vers une boutique déjà en place. Elle ne constitue pas, à elle seule, une boutique en ligne avec stock et paiement.
 
-## Nos services à Montmélian
+Pour une activité sur rendez-vous, le site peut renvoyer vers votre outil habituel. Un formulaire de demande ne confirme pas un créneau : cette distinction doit être visible pour le client. Un catalogue marchand, la synchronisation de stock ou la connexion d’un agenda sont étudiés séparément avant chiffrage.
 
-### Site vitrine
-Présentez votre activité avec un site épuré et responsive.
+## Deux réalisations à regarder pour choisir votre parcours
 
-### Site professionnel
-Ajoutez des pages de services, un blog et un formulaire de contact.
+La fiche [Serrurier 73](/realisations/serrurier73/) présente une réalisation centrée sur les prestations et l’accès à la prise de contact. La fiche [2 Savoie Immo](/realisations/2savoie-immo/) montre un autre contexte : présenter une activité immobilière et orienter les visiteurs vers un échange. Ces sites permettent de discuter de la structure qui convient à votre entreprise ; ils ne prouvent pas un nombre de ventes ni un résultat de référencement.
 
-### Référencement local
-Optimisez votre présence pour les recherches à Montmélian et dans la Combe de Savoie.
+Vous pouvez aussi consulter [les réalisations Flex-Web](/realisations/) avant de choisir les contenus et l’action principale de votre site.
 
-### Maintenance et hébergement
-Bénéficiez d'un hébergement fiable et d'un support technique.
+## Quel périmètre choisir pour votre entreprise ?
 
-## Pourquoi choisir FLEX-WEB ?
+Le **site vitrine simple à 299 € TTC** convient à une présentation resserrée de votre activité. Le **site vitrine complet à 990 € TTC** permet une présentation plus développée, avec des pages et fonctions définies au devis. La création est payée une seule fois, après validation du devis. Le délai dépend des contenus et du périmètre convenus.
 
-Nous connaissons Montmélian et son environnement rural. Cette connaissance nous permet de créer des sites pertinents pour le public local.
+Les options restent facultatives : **49 € TTC/mois** pour la maintenance avec modifications et **99 € TTC/mois** pour le CRM, l’automatisation et le référencement, dans les limites précisées au devis. L’hébergement, le nom de domaine et leurs éventuels frais récurrents y sont également détaillés. Une application ou une automatisation spécifique fait l’objet d’un chiffrage séparé.
 
-## Communes voisines
+[Comparer les formules et leurs conditions](/pricing/) ou [préparer une demande pour un site vitrine](/demarrer/?service=site).
 
-Nous travaillons à Montmélian et à **Chambéry, La Motte-Servolex, Bassens, La Ravoire, Saint-Jean-de-la-Porte, Arbin, Saint-Pierre-d'Albigny, Hauteville**.
+## Les informations à réunir avant le devis
+
+- Votre activité principale et les prestations que vous ne proposez pas.
+- Votre adresse d’accueil, si vous recevez des clients, et les communes réellement desservies.
+- Les coordonnées, horaires et règles de rappel à afficher.
+- Votre logo, des photos autorisées et des exemples de travaux publiables.
+- L’objectif prioritaire : appel, devis, rendez-vous ou visite en magasin.
+- Les outils déjà utilisés : messagerie, agenda, CRM ou logiciel métier.
+
+Nous convenons ensuite du nombre de pages, des contenus à produire, des modalités de validation et du calendrier. Si vous avez déjà un site, indiquez son adresse et les accès disponibles : une refonte doit préserver les pages utiles et préparer les redirections avant le changement.
+
+## Relier le site au traitement des demandes
+
+Lorsque plusieurs personnes suivent les contacts, une [automatisation IA en Savoie](/automatisation-ia-savoie/) peut être étudiée : enregistrer une demande dans le CRM, avertir la bonne personne et préparer une prochaine action. Le devis vérifie les possibilités de vos outils. Les messages engageant votre entreprise et la confirmation d’un rendez-vous peuvent rester soumis à votre validation.
+
+Un besoin de suivi personnalisé, de documents ou de droits d’accès peut plutôt relever d’une [application sur mesure en Savoie](/creation-application-mobile-savoie/). Nous distinguons ce projet du simple site de présentation avant de proposer une solution.
+
+## Une présence locale fondée sur votre activité réelle
+
+Le référencement commence par des informations précises : prestations, coordonnées cohérentes, exemples autorisés et réponses aux questions de vos clients. Les pages doivent être accessibles, reliées entre elles et utiles, au-delà du seul nom de la commune. La présence dans Google ou une réponse générée par une IA ne peut pas être garantie.
+
+Retrouvez notre accompagnement pour la [création de sites en Savoie](/creation-site-internet-savoie/) et les [zones d’intervention](/zones-intervention/). FLEX-WEB est basé à Voglans ; les modalités des échanges sont convenues au démarrage du projet.
