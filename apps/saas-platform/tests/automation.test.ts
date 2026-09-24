@@ -227,6 +227,65 @@ test("TTC catalogue uses inclusive prices, validates gross paid total, and prese
   }
 });
 
+test("new 590 TTC visibility offer survives qualification and pays the exact approved gross amount", async () => {
+  const previousPayments = process.env.AUTOMATION_PAYMENTS_ENABLED;
+  process.env.AUTOMATION_PAYMENTS_ENABLED = "true";
+  try {
+    const data = { ...intake(), planId: "visibilite", publicQuote: { version: "2026-09-24-ttc", service: "site", tier: "visibility", options: ["maintenance", "crm"] } };
+    const project = await createIntake(data);
+    assert.equal(project.planId, "visibilite");
+    assert.equal(project.setupCents, 59000);
+    assert.equal(project.monthlyCents, 14800);
+    const form = new FormData();
+    form.set("scopeConfirmed", "on");
+    await manageProject(project.id, "qualify", form);
+    const qualified = await getProject(data.accessToken);
+    let calls = 0;
+    let params: Stripe.Checkout.SessionCreateParams | undefined;
+    const session = { currency: "eur", amount_subtotal: 61500, amount_total: 73800, payment_status: "unpaid", metadata: { projectId: project.id }, id: `cs_visibility_${randomUUID()}`, status: "open", url: "https://checkout.stripe.com/local-test" };
+    const stripeMock = { checkout: { sessions: {
+      create: async (value: Stripe.Checkout.SessionCreateParams) => { calls++; params = value; return session; },
+      retrieve: async () => session,
+    } } } as unknown as Stripe;
+    await Promise.all([startCheckout(qualified, true, stripeMock), startCheckout(qualified, true, stripeMock)]);
+    assert.equal(calls, 1);
+    assert.equal(params!.metadata!.quoteVersion, "2026-09-24-ttc");
+    assert.equal(params!.metadata!.taxBasis, "TTC");
+    assert.equal(params!.line_items![0].price_data!.unit_amount, 59000);
+    assert.equal(params!.line_items![1].price_data!.unit_amount, 14800);
+    assert(params!.line_items!.every(item => item.price_data!.tax_behavior === "inclusive"));
+    session.status = "complete";
+    session.payment_status = "paid";
+    const paidEvent = { id: `evt_visibility_${randomUUID()}`, type: "checkout.session.completed", created: Math.floor(Date.now()/1000), data: { object: session } } as unknown as Stripe.Event;
+    session.amount_total++;
+    await assert.rejects(applyStripeEvent(stripeMock, paidEvent), /does not match/);
+    session.amount_total--;
+    await applyStripeEvent(stripeMock, paidEvent);
+    await applyStripeEvent(stripeMock, paidEvent);
+    assert.equal((await getProject(data.accessToken)).paymentStatus, "PAID");
+    assert.equal(await prisma.automationEvent.count({ where: { externalId: paidEvent.id } }), 1);
+  } finally {
+    if (previousPayments === undefined) delete process.env.AUTOMATION_PAYMENTS_ENABLED;
+    else process.env.AUTOMATION_PAYMENTS_ENABLED = previousPayments;
+  }
+});
+
+test("new 990 CRM intake stores the fixed price while keeping the custom-proposal workflow", async () => {
+  const project = await createIntake({ ...intake(), planId: "crm-automation", publicQuote: { version: "2026-09-24-ttc", service: "automation", tier: "crm", options: [] } });
+  assert.equal(project.planId, "crm-automation");
+  assert.equal(project.setupCents, 99000);
+  assert.equal(project.monthlyCents, 0);
+  assert.equal((project.offerSnapshot as { quoteOnly: boolean }).quoteOnly, true);
+  const form = new FormData();
+  form.set("scopeConfirmed", "on");
+  await assert.rejects(manageProject(project.id, "qualify", form), /devis sur mesure/);
+  await assert.rejects(startCheckout(project, true), /devis sur mesure/);
+  assert.equal((await publicProject(project)).checkoutAvailable, false);
+  const saved = await prisma.salesProject.findUniqueOrThrow({ where: { id: project.id } });
+  assert.equal(saved.stage, "NEW");
+  assert.equal(saved.stripeSessionId, null);
+});
+
 test("bespoke IA and application requests cannot qualify or create a checkout", async () => {
   for (const service of ["automation", "application"] as const) {
     const project = await createIntake({ ...intake(), publicQuote: { version: "2026-09-11-ttc", service } });
