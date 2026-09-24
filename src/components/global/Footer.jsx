@@ -35,6 +35,7 @@ export default function Footer({ data = {} }) {
               <a href="/#avantages" className="hover:text-[#0071e3] transition">Avantages</a>
               <a href="/#comment" className="hover:text-[#0071e3] transition">Comment ça marche</a>
               <a href="/#templates" className="hover:text-[#0071e3] transition">Exemples de scénarios</a>
+              <a href="/ressources/" className="hover:text-[#0071e3] transition">Sites et automatisation : ressources</a>
               <a href="/journal/" className="hover:text-[#0071e3] transition">Guides pratiques</a>
               <a href="/realisations/" className="hover:text-[#0071e3] transition">Nos réalisations</a>
               <a href="/zones-intervention/" className="hover:text-[#0071e3] transition">Zones d’intervention</a>

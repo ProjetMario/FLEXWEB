@@ -1,0 +1,14 @@
+---
+import ResourceLayout from './ResourceLayout.astro';
+import {axisLabels,articlePath,hubPath} from '../../../lib/seo/national';
+const {group}=Astro.props;
+const title=axisLabels[group.axis]+(group.page>1?` — page ${group.page}`:'');
+---
+<ResourceLayout title={title} description={`Méthodes et scénarios pour votre entreprise : ${title.toLowerCase()}. Préparez votre besoin, les outils et les vérifications avant la mise en place.`}>
+ <nav aria-label="Fil d’Ariane"><a href="/">Accueil</a><a href="/ressources/">Ressources</a><span aria-current="page">{title}</span></nav>
+ <h1>{title}</h1>
+ <p class="lead">{group.axis==='sites'?'Le bon site commence par les questions de vos clients. Choisissez un métier ou un besoin pour préparer votre projet.':'Partez d’une tâche concrète. Chaque scénario précise ce qui peut être automatisé, ce qu’il faut vérifier et où garder une décision humaine.'}</p>
+ <div class="grid">{group.items.map(a=><article class="card"><h2><a href={articlePath(a)}>{a.title}</a></h2><p>{a.description}</p><a href={articlePath(a)}>Lire la méthode →</a></article>)}</div>
+ {group.total>1&&<nav aria-label="Pagination">{group.page>1&&<a rel="prev" href={hubPath(group.axis,group.page-1)}>Page précédente</a>}<span>Page {group.page} sur {group.total}</span>{(group.page < group.total) &&<a rel="next" href={hubPath(group.axis,group.page+1)}>Page suivante</a>}</nav>}
+ <p><a href={hubPath(group.axis==='sites'?'automatisation':'sites')}>Explorer aussi {group.axis==='sites'?'l’automatisation IA':'les sites internet'} →</a></p>
+</ResourceLayout>

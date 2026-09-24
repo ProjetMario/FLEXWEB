@@ -1,0 +1,27 @@
+---
+const {commune:c,enrichment:e}=Astro.props;
+---
+<territory-planner class="note">
+ <h2>Tester votre règle de qualification</h2>
+ <noscript><p>Activez JavaScript pour recalculer cette simulation. Les explications et diagnostics restent lisibles sans JavaScript.</p></noscript>
+ <p>Choisissez un cas et indiquez votre périmètre réel. Cette simulation locale prépare une règle pour votre site ou votre CRM ; elle ne contacte personne et n’enregistre aucune demande.</p>
+ <div class="grid">
+ <label>Commune du cas d’essai<select name="territory"><option value={c.code}>{c.name} ({c.code})</option>{e.nearby.map(n=><option value={n.code}>{n.name} ({n.code})</option>)}<option value="unknown">Commune à confirmer</option></select></label>
+ <label>Type de prestation<select name="channel"><option value="onsite">Intervention sur place</option><option value="remote">Prestation à distance</option></select></label>
+ <label>Cette commune est-elle dans votre zone ?<select name="scope"><option value="unknown">À confirmer</option><option value="yes">Oui, je la couvre</option><option value="no">Non, je ne la couvre pas</option></select></label>
+ </div>
+ <p class="decision" role="status">Périmètre non confirmé : conserver la demande dans la file de qualification.</p>
+</territory-planner>
+<script>
+import {qualificationDecision} from '../../../lib/seo/qualification.mjs';
+class TerritoryPlanner extends HTMLElement{
+ connectedCallback(){if(this.dataset.initialized)return;this.dataset.initialized='1';const select=(name:string)=>this.querySelector<HTMLSelectElement>(`select[name="${name}"]`)!;
+ const update=()=>{this.querySelector('.decision')!.textContent=qualificationDecision({territoryKnown:select('territory').value!=='unknown',channel:select('channel').value,inScope:select('scope').value});};
+ this.addEventListener('change',(event)=>{if((event.target as HTMLSelectElement).name==='territory')select('scope').value='unknown';update();});
+ }
+}
+if(!customElements.get('territory-planner'))customElements.define('territory-planner',TerritoryPlanner);
+</script>
+<style>
+territory-planner{display:block}label{display:grid;gap:10px;font-weight:600;align-content:start}select{background:white;border:1px solid #a7adb8;border-radius:12px;padding:14px;max-width:100%;width:100%;font:inherit}select:focus-visible{outline:3px solid #0066cc;outline-offset:3px}.decision{border-left:4px solid #0066cc;padding:12px 18px;background:white;border-radius:10px}
+</style>

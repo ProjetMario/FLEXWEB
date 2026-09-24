@@ -1,5 +1,5 @@
 [build]
-  command = "npx astro build"
+  command = "npm run build && node scripts/check-seo.mjs && node scripts/seo/quality.mjs --enforce-release"
   publish = "dist"
 
 [build.environment]
@@ -29,3 +29,12 @@
   to = "https://flexweb-gestion.netlify.app/_next/:splat"
   status = 200
   force = true
+
+# Render generated drafts only on the isolated review deployment.
+[context.deploy-preview.environment]
+  FLEXWEB_DRAFT_PREVIEW = "1"
+
+[[headers]]
+  for = "/preparation/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"

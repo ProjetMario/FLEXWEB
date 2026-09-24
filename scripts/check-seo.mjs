@@ -1,3 +1,4 @@
+import {readSitemap} from './seo/read-sitemap.mjs';
 import { readFile, readdir, access } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import path from 'node:path';
@@ -5,18 +6,18 @@ const root = path.resolve('dist');
 async function walk(dir) { const entries = await readdir(dir,{withFileTypes:true}); return (await Promise.all(entries.map(e => e.isDirectory() ? walk(path.join(dir,e.name)) : path.join(dir,e.name)))).flat(); }
 const files = (await walk(root)).filter(f => f.endsWith('.html'));
 const origin='https://flex-web.fr';
-const sitemap=await readFile(path.join(root,'sitemap.xml'),'utf8');
-const urls=[...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m=>m[1]);
+const urls=await readSitemap(origin+'/sitemap.xml',url=>readFile(path.join(root,new URL(url).pathname),'utf8'));
 assert.equal(urls.length,new Set(urls).size,'Duplicate sitemap URL');
 const redirects = new Map((await readFile(path.join(root,'_redirects'),'utf8')).split('\n').filter(l=>l.trim()&&!l.startsWith('#')).map(l=>{const [from,to,status]=l.split(/\s+/);assert.equal(status,'301');return [from,to];}));
+const isNoindex=html=>/<meta\b[^>]*name="robots"[^>]*content="[^"]*noindex/.test(html);
 const pages = new Map();
 for (const file of files) {
  const html=await readFile(file,'utf8');
  const relative=path.relative(root,file).replaceAll(path.sep,'/');
  const route=relative==='index.html'?'/':relative.endsWith('/index.html')?'/'+relative.slice(0,-10):'/'+relative;
- pages.set(route,html);
+ // Keep route/anchor checks for excluded pages without retaining gigabytes of draft bodies.
+ pages.set(route,isNoindex(html)?'<meta name="robots" content="noindex">'+[...html.matchAll(/\bid="[^"]*"/g)].map(m=>m[0]).join(' '):html);
 }
-const isNoindex=html=>/<meta\b[^>]*name="robots"[^>]*content="[^"]*noindex/.test(html);
 const normalize=s=>s.replace(/&amp;/g,'&').replace(/&#(x[0-9a-f]+|[0-9]+);/gi,(_,n)=>String.fromCodePoint(n[0].toLowerCase()==='x'?parseInt(n.slice(1),16):Number(n))).replace(/&quot;/g,'"');
 for(const url of urls){
  const route=new URL(url).pathname;

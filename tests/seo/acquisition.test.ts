@@ -2,8 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { publicLanding, classifySource, captureAcquisition, leadSource } from '../../src/lib/acquisition.ts';
 test('allow only public routes without personal paths or queries',()=>{
- for(const path of ['/','/realisations/2savoie-immo/','/creation-site-internet-savoie/']) assert.equal(publicLanding(path),path);
- for(const path of ['/crm/','/espace-projet/','/journal/a/?email=secret','/journal/a/#token=secret','/demarrer/']) assert.equal(publicLanding(path),null);
+ for(const path of ['/','/realisations/2savoie-immo/','/ressources/','/ressources/sites/site-internet-industrie/','/ressources/automatisation/page/2/','/creation-site-internet-savoie/']) assert.equal(publicLanding(path),path);
+ for(const path of ['/ressources/sites/x/?email=private','/ressources/sites/x/#private','/ressources/crm/client/','/crm/','/espace-projet/','/journal/a/?email=secret','/journal/a/#token=secret','/demarrer/']) assert.equal(publicLanding(path),null);
 });
 test('referrer classification never retains addresses or confuses lookalike domains',()=>{
  assert.equal(classifySource('https://www.google.fr/search?q=private','https://flex-web.fr',''),'Google naturel');
