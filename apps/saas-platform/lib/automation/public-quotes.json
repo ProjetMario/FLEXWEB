@@ -39,15 +39,15 @@
   "options": [
     {
       "id": "maintenance",
-      "name": "Maintenance et modifications",
+      "name": "Maintenance, modifications et référencement",
       "monthlyCents": 4900,
-      "description": "Maintenance simple du site et modifications de contenu, selon le périmètre convenu au devis."
+      "description": "Maintenance simple du site, modifications de contenu et suivi du référencement, selon le périmètre convenu au devis."
     },
     {
       "id": "crm",
       "name": "CRM, automatisation et référencement",
       "monthlyCents": 9900,
-      "description": "Suivi des demandes dans le CRM, automatisations et travail de référencement, selon les outils et actions définis au devis."
+      "description": "Suivi du CRM, des automatisations, du référencement et des dernières technologies, avec veille et recommandations adaptées à votre activité, selon le périmètre convenu au devis."
     }
   ],
   "taxBasis": "TTC",

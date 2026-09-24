@@ -31,7 +31,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel prix pour un site vitrine à Saint-Alban-Leysse ?"
-    answer: "Le site vitrine jusqu’à 5 pages est proposé à 299 € TTC. Le site de 5 pages et plus avec référencement SEO et IA (GEO) pour Google, Bing et les principaux moteurs est à 590 € TTC. L’installation d’un CRM pour les contacts, devis, factures et le suivi client, avec automatisation des tâches répétitives, est à 990 € TTC. Ces offres sont payées une seule fois après validation du devis. Maintenance avec modifications : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, selon le périmètre du devis."
+    answer: "Le site vitrine jusqu’à 5 pages est proposé à 299 € TTC. Le site de 5 pages et plus avec référencement SEO et IA (GEO) pour Google, Bing et les principaux moteurs est à 590 € TTC. L’installation d’un CRM pour les contacts, devis, factures et le suivi client, avec automatisation des tâches répétitives, est à 990 € TTC. Ces offres sont payées une seule fois après validation du devis. Maintenance, modifications et suivi du référencement : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, avec suivi des dernières technologies (veille et recommandations), selon le périmètre du devis."
   - question: "FLEX-WEB intervient-il à Saint-Alban-Leysse ?"
     answer: "Oui, nous accompagnons les entreprises de Saint-Alban-Leysse et de l'agglomération chambérienne."
   - question: "Le site sera-t-il visible localement ?"
@@ -61,7 +61,7 @@ Si plusieurs collaborateurs traitent les demandes, une [automatisation en Savoie
 
 ## Choisir le périmètre avant de payer
 
-Le site vitrine jusqu’à 5 pages à **299 € TTC** présente votre activité. L’offre à **590 € TTC** comprend un site de 5 pages et plus avec référencement SEO et IA pour Google, Bing et les principaux moteurs. L’offre **CRM et automatisation à 990 € TTC** centralise contacts, devis, factures et suivi client avec les tâches répétitives précisées au devis. Ce sont des paiements uniques. La maintenance avec modifications à **49 € TTC/mois** et l'option CRM, automatisation et référencement à **99 € TTC/mois** sont facultatives.
+Le site vitrine jusqu’à 5 pages à **299 € TTC** présente votre activité. L’offre à **590 € TTC** comprend un site de 5 pages et plus avec référencement SEO et IA pour Google, Bing et les principaux moteurs. L’offre **CRM et automatisation à 990 € TTC** centralise contacts, devis, factures et suivi client avec les tâches répétitives précisées au devis. Ce sont des paiements uniques. La maintenance, les modifications et le suivi du référencement à **49 € TTC/mois** ainsi que l’option CRM, automatisation et référencement avec suivi des dernières technologies (veille et recommandations) à **99 € TTC/mois** sont facultatifs.
 
 Pour préparer le devis, indiquez vos prestations principales, les communes réellement couvertes, vos contenus disponibles et l'action attendue du visiteur. Le périmètre et le calendrier sont validés avant le paiement. [Comparer les offres](/pricing/) ou [décrire votre projet](/demarrer/).
 

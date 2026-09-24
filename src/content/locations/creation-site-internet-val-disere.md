@@ -32,7 +32,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel prix pour un site vitrine à Val-d'Isère ?"
-    answer: "Le site vitrine jusqu’à 5 pages est proposé à 299 € TTC. Le site de 5 pages et plus avec référencement SEO et IA (GEO) pour Google, Bing et les principaux moteurs est à 590 € TTC. L’installation d’un CRM pour les contacts, devis, factures et le suivi client, avec automatisation des tâches répétitives, est à 990 € TTC. Ces offres sont payées une seule fois après validation du devis. Maintenance avec modifications : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, selon le périmètre du devis."
+    answer: "Le site vitrine jusqu’à 5 pages est proposé à 299 € TTC. Le site de 5 pages et plus avec référencement SEO et IA (GEO) pour Google, Bing et les principaux moteurs est à 590 € TTC. L’installation d’un CRM pour les contacts, devis, factures et le suivi client, avec automatisation des tâches répétitives, est à 990 € TTC. Ces offres sont payées une seule fois après validation du devis. Maintenance, modifications et suivi du référencement : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, avec suivi des dernières technologies (veille et recommandations), selon le périmètre du devis."
   - question: "FLEX-WEB crée-t-il des sites pour l'immobilier de luxe ?"
     answer: "Oui, nous concevons des sites élégants pour agences, locations saisonnières et services haut de gamme."
   - question: "Le site sera-t-il visible localement ?"

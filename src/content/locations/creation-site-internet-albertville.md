@@ -34,7 +34,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel est le prix d'un site vitrine à Albertville ?"
-    answer: "Le site vitrine jusqu’à 5 pages est proposé à 299 € TTC. Le site de 5 pages et plus avec référencement SEO et IA (GEO) pour Google, Bing et les principaux moteurs est à 590 € TTC. L’installation d’un CRM pour les contacts, devis, factures et le suivi client, avec automatisation des tâches répétitives, est à 990 € TTC. Ces offres sont payées une seule fois après validation du devis. Maintenance avec modifications : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, selon le périmètre du devis."
+    answer: "Le site vitrine jusqu’à 5 pages est proposé à 299 € TTC. Le site de 5 pages et plus avec référencement SEO et IA (GEO) pour Google, Bing et les principaux moteurs est à 590 € TTC. L’installation d’un CRM pour les contacts, devis, factures et le suivi client, avec automatisation des tâches répétitives, est à 990 € TTC. Ces offres sont payées une seule fois après validation du devis. Maintenance, modifications et suivi du référencement : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, avec suivi des dernières technologies (veille et recommandations), selon le périmètre du devis."
   - question: "FLEX-WEB intervient-il en Tarentaise ?"
     answer: "Oui, nous accompagnons les entreprises d'Albertville et des vallées environnantes."
   - question: "Le site peut-il être adapté au tourisme hivernal ?"
@@ -42,7 +42,7 @@ faq:
   - question: "Le site sera-t-il visible sur Google ?"
     answer: "Le site est préparé pour être accessible aux moteurs avec des titres précis, des liens entre les pages et des données structurées adaptées. Google décide ensuite de l'indexation et du classement ; aucune position ne peut être garantie."
   - question: "Puis-je modifier le contenu moi-même ?"
-    answer: "Les modalités de mise à jour sont définies au devis. Vous pouvez prévoir une interface de gestion si elle est adaptée au projet ou l'option maintenance avec modifications à 49 € TTC/mois."
+    answer: "Les modalités de mise à jour sont définies au devis. Vous pouvez prévoir une interface de gestion si elle est adaptée au projet ou l’option maintenance, modifications et suivi du référencement à 49 € TTC/mois."
 seoTitle: "Création de site internet à Albertville — FLEX-WEB"
 seoDescription: "FLEX-WEB crée des sites web professionnels pour artisans, hôteliers et commerçants à Albertville et en Tarentaise. Demandez un devis gratuit."
 isDraft: false
@@ -91,7 +91,7 @@ Ces exemples servent à cadrer votre propre projet. Pour voir des réalisations 
 
 ## Choisir les pages et les mises à jour utiles
 
-La formule à **299 € TTC** comprend un site vitrine jusqu’à 5 pages ; celle à **590 € TTC** comprend 5 pages et plus avec référencement SEO et IA pour Google, Bing et les principaux moteurs. L’offre **CRM et automatisation à 990 € TTC** porte sur la mise en place des contacts, devis, factures, du suivi client et des tâches répétitives, dans le périmètre arrêté au devis. Le paiement est unique après validation. Pour des horaires, photos ou prestations saisonnières qui évoluent, l'option maintenance avec modifications est proposée à **49 € TTC/mois**. Le CRM, l'automatisation et le référencement à **99 € TTC/mois** constituent une autre option, selon le devis.
+La formule à **299 € TTC** comprend un site vitrine jusqu’à 5 pages ; celle à **590 € TTC** comprend 5 pages et plus avec référencement SEO et IA pour Google, Bing et les principaux moteurs. L’offre **CRM et automatisation à 990 € TTC** porte sur la mise en place des contacts, devis, factures, du suivi client et des tâches répétitives, dans le périmètre arrêté au devis. Le paiement est unique après validation. Pour des horaires, photos ou prestations saisonnières qui évoluent, l’option maintenance, modifications et suivi du référencement est proposée à **49 € TTC/mois**. Le CRM, l’automatisation, le référencement et le suivi des dernières technologies (veille et recommandations) à **99 € TTC/mois** constituent une autre option, selon le devis.
 
 Si le besoin porte sur des comptes rendus d'intervention ou un espace réservé à l'équipe, consultez plutôt la [création d'application à Albertville](/creation-application-mobile-albertville/). Cela permet de distinguer le budget du site de présentation de celui d'un outil métier. FLEX-WEB est basé à Voglans ; les modalités d'échange et de validation du projet sont convenues ensemble.
 
