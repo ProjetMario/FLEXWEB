@@ -3,7 +3,9 @@ import publicQuotes from "../../apps/saas-platform/lib/automation/public-quotes.
 // Public quote prices. Existing CRM billing records keep their accepted terms.
 // New requests send an explicit version; legacy billing keeps its snapshot.
 export type WebsiteOffer = {
-  id: "essentielle" | "achat";
+  id: "essentielle" | "visibilite";
+  tier: "simple" | "visibility";
+  service: "site";
   name: string;
   description: string;
   setupCents: number;
@@ -16,9 +18,16 @@ export const publicQuoteVersion = publicQuotes.version;
 export const websiteOffers: WebsiteOffer[] = publicQuotes.websiteOffers.map((offer) => ({
   ...offer,
   id: offer.id as WebsiteOffer["id"],
+  tier: offer.tier as WebsiteOffer["tier"],
+  service: "site",
   monthlyCents: 0,
   href: `/demarrer/?service=site&offre=${offer.id}`,
 }));
+export const automationOffers = publicQuotes.automationOffers.map(offer => ({
+  ...offer,
+  href: `/demarrer/?service=automation&offre=${offer.id}`,
+}));
+export const projectOffers = [...websiteOffers, ...automationOffers];
 export const pricingOptions = publicQuotes.options;
 
 // Keep the two presentational component types compatible without publishing
@@ -39,8 +48,12 @@ export type PricingFaqItem = { question: string; answer: string };
 
 export const pricingFaq: PricingFaqItem[] = [
   {
-    question: "Combien coûte la création de mon site ?",
-    answer: "Le site vitrine simple coûte 299 € TTC et le site vitrine complet 990 € TTC. Ce sont des prix de création payés une seule fois pour le périmètre de la formule. Votre devis précise les pages, les fonctionnalités, les modalités de paiement et les éventuels besoins supplémentaires avant votre engagement.",
+    question: "Que comprennent les trois offres ?",
+    answer: "299 € TTC : un site vitrine jusqu’à 5 pages. 590 € TTC : un site de 5 pages et plus avec référencement naturel (SEO) et optimisation pour la recherche par IA (GEO), notamment sur Google et Bing. 990 € TTC : la mise en place d’un CRM pour les contacts, clients, devis et factures, avec automatisation des tâches répétitives. Chaque forfait est payé une seule fois ; le devis fixe les pages, les outils, les automatisations et le périmètre exact.",
+  },
+  {
+    question: "L’offre à 590 € garantit-elle une position sur Google ou dans les réponses IA ?",
+    answer: "Elle comprend le travail sur la structure, les contenus, les données structurées et la préparation à l’exploration des moteurs, avec soumission à Google et Bing. Ces optimisations servent aussi les autres moteurs compatibles et la recherche par IA. Chaque moteur décide de l’indexation, du classement et des citations : aucune position ni présence dans une réponse IA n’est garantie. Le nombre de pages, à partir de 5, est fixé au devis.",
   },
   {
     question: "Un abonnement mensuel est-il obligatoire ?",
@@ -55,8 +68,8 @@ export const pricingFaq: PricingFaqItem[] = [
     answer: "L’hébergement et le nom de domaine sont précisés séparément dans le devis, avec leurs éventuels coûts récurrents. Le domaine est enregistré à votre nom. Aucun coût supplémentaire ne doit être engagé sans votre accord.",
   },
   {
-    question: "Combien coûte une automatisation IA ou une application ?",
-    answer: "Les automatisations IA sur mesure et les applications web ou mobiles sont sur devis. Le budget dépend des tâches à automatiser, des fonctionnalités, des connexions à vos outils et du niveau d’accompagnement. L’option mensuelle à 99 € ne remplace pas le chiffrage d’un développement sur mesure.",
+    question: "Quelle différence entre le forfait CRM à 990 € et l’option à 99 €/mois ?",
+    answer: "Le forfait à 990 € TTC finance la mise en place du CRM et les automatisations définies au devis. L’option facultative à 99 € TTC/mois sert au suivi du CRM, des automatisations et du référencement. Les outils, interventions, licences et limites sont précisés avant accord. Les automatisations IA avancées et les applications web ou mobiles font l’objet d’un devis sur mesure.",
   },
   {
     question: "Quand dois-je payer et quand le projet est-il livré ?",

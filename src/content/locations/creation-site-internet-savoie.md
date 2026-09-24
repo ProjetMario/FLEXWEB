@@ -35,7 +35,7 @@ services:
   - "Création d'application mobile et web"
 faq:
   - question: "Quel est le prix d'un site internet en Savoie ?"
-    answer: "Le site vitrine simple est proposé à 299 € TTC et le site vitrine complet à 990 € TTC, payés une seule fois. Maintenance avec modifications : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, selon le périmètre du devis."
+    answer: "Le site vitrine jusqu’à 5 pages est proposé à 299 € TTC. Le site de 5 pages et plus avec référencement SEO et IA (GEO) pour Google, Bing et les principaux moteurs est à 590 € TTC. L’installation d’un CRM pour les contacts, devis, factures et le suivi client, avec automatisation des tâches répétitives, est à 990 € TTC. Ces offres sont payées une seule fois après validation du devis. Maintenance avec modifications : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, selon le périmètre du devis."
   - question: "Combien de temps faut-il pour créer un site vitrine ?"
     answer: "Le calendrier est confirmé dans le devis après validation du périmètre et réception des contenus nécessaires. Les étapes de conception, de vérification et de publication sont convenues avec vous."
   - question: "FLEX-WEB intervient-il à Chambéry et Aix-les-Bains ?"
@@ -57,9 +57,9 @@ Un artisan qui travaille dans plusieurs communes n'a pas les mêmes informations
 
 Pour un projet en Savoie, nous commençons par les recherches et les questions de vos clients : type de travaux, disponibilité d'une prestation, modalités d'accueil ou besoin d'un devis. Le nom d'une commune ne remplace pas ces explications.
 
-## Choisir entre un site simple et un site complet
+## Choisir votre site et organiser le suivi client
 
-Le **site vitrine simple à 299 € TTC** permet de présenter votre entreprise et de faciliter un premier contact. Le **site vitrine complet à 990 € TTC** prévoit une présentation et une personnalisation plus développées dans le périmètre du devis. La création est payée une seule fois.
+Le **site vitrine jusqu’à 5 pages à 299 € TTC** présente votre entreprise et facilite un premier contact. Le **site de 5 pages et plus à 590 € TTC** ajoute le référencement SEO et IA pour Google, Bing et les principaux moteurs. L’offre **CRM et automatisation à 990 € TTC** organise les contacts, devis, factures, le suivi client et les tâches répétitives définies au devis. La création est payée une seule fois.
 
 La **maintenance avec modifications à 49 € TTC/mois** et l'option **CRM, automatisation et référencement à 99 € TTC/mois** sont facultatives. Le devis décrit les pages, les contenus, le domaine, l'hébergement et les éventuels outils tiers. [Voir les tarifs et demander un devis](/pricing/).
 

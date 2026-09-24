@@ -31,7 +31,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel prix pour un site vitrine à Bessans ?"
-    answer: "Le site vitrine simple est proposé à 299 € TTC et le site vitrine complet à 990 € TTC, payés une seule fois. Maintenance avec modifications : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, selon le périmètre du devis."
+    answer: "Le site vitrine jusqu’à 5 pages est proposé à 299 € TTC. Le site de 5 pages et plus avec référencement SEO et IA (GEO) pour Google, Bing et les principaux moteurs est à 590 € TTC. L’installation d’un CRM pour les contacts, devis, factures et le suivi client, avec automatisation des tâches répétitives, est à 990 € TTC. Ces offres sont payées une seule fois après validation du devis. Maintenance avec modifications : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, selon le périmètre du devis."
   - question: "FLEX-WEB intervient-il à Bessans ?"
     answer: "Oui, nous accompagnons les entreprises de Bessans et des communes de Haute-Maurienne."
   - question: "Le site sera-t-il visible localement ?"

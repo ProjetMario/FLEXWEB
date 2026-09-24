@@ -31,7 +31,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel prix pour un site vitrine à Montmélian ?"
-    answer: "Le site vitrine simple est proposé à 299 € TTC et le site vitrine complet à 990 € TTC, payés une seule fois. Maintenance avec modifications : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, selon le périmètre du devis."
+    answer: "Le site vitrine jusqu’à 5 pages est proposé à 299 € TTC. Le site de 5 pages et plus avec référencement SEO et IA (GEO) pour Google, Bing et les principaux moteurs est à 590 € TTC. L’installation d’un CRM pour les contacts, devis, factures et le suivi client, avec automatisation des tâches répétitives, est à 990 € TTC. Ces offres sont payées une seule fois après validation du devis. Maintenance avec modifications : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, selon le périmètre du devis."
   - question: "FLEX-WEB travaille-t-il à Montmélian ?"
     answer: "Oui, nous accompagnons les entreprises de Montmélian et de la Combe de Savoie."
   - question: "Le site sera-t-il bien référencé ?"
@@ -41,7 +41,7 @@ faq:
   - question: "Un agenda ou un CRM sont-ils compris dans le site vitrine ?"
     answer: "Ils ne sont pas ajoutés automatiquement. Le devis distingue le site de présentation, le lien vers un outil existant et une intégration sur mesure. L’option à 99 € TTC/mois ne remplace pas le chiffrage d’un développement spécifique."
 seoTitle: "Création de site internet à Montmélian — FLEX-WEB"
-seoDescription: "Site internet à Montmélian : offres à 299 € ou 990 € TTC, exemples de réalisations et préparation du devis pour artisans, commerces et indépendants."
+seoDescription: "Site à Montmélian : vitrine jusqu’à 5 pages à 299 € TTC, SEO et IA dès 5 pages à 590 € TTC. CRM et automatisation à 990 € TTC. Devis gratuit."
 isDraft: false
 ---
 
@@ -65,7 +65,7 @@ Vous pouvez aussi consulter [les réalisations Flex-Web](/realisations/) avant d
 
 ## Quel périmètre choisir pour votre entreprise ?
 
-Le **site vitrine simple à 299 € TTC** convient à une présentation resserrée de votre activité. Le **site vitrine complet à 990 € TTC** permet une présentation plus développée, avec des pages et fonctions définies au devis. La création est payée une seule fois, après validation du devis. Le délai dépend des contenus et du périmètre convenus.
+Le **site vitrine jusqu’à 5 pages à 299 € TTC** présente votre activité. Le **site de 5 pages et plus à 590 € TTC** ajoute un référencement SEO et IA pour Google, Bing et les principaux moteurs. L’offre distincte **CRM et automatisation à 990 € TTC** organise les contacts, devis, factures, le suivi client et les tâches répétitives retenues au devis. La création est payée une seule fois, après validation du devis. Le délai dépend des contenus et du périmètre convenus.
 
 Les options restent facultatives : **49 € TTC/mois** pour la maintenance avec modifications et **99 € TTC/mois** pour le CRM, l’automatisation et le référencement, dans les limites précisées au devis. L’hébergement, le nom de domaine et leurs éventuels frais récurrents y sont également détaillés. Une application ou une automatisation spécifique fait l’objet d’un chiffrage séparé.
 

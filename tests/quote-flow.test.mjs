@@ -9,7 +9,7 @@ let browser;
 before(async () => { browser = await chromium.launch({headless: true}); });
 after(async () => { await browser?.close(); });
 
-async function filledQuote(consent = 'accepted') {
+async function filledQuote(consent = 'accepted', selection = {service:'site', id:'essentielle', options:[]}) {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
   await context.route('**/*', route => {
     const url = new URL(route.request().url());
@@ -21,15 +21,17 @@ async function filledQuote(consent = 'accepted') {
   await context.addInitScript(value => localStorage.setItem('flex-web-cookie-consent', value), consent);
   const page = await context.newPage();
   page.setDefaultTimeout(15000); page.setDefaultNavigationTimeout(20000);
-  await page.goto(new URL('/demarrer/?service=site&offre=essentielle', preview).href);
+  await page.goto(new URL(`/demarrer/?service=${selection.service}&offre=${selection.id}`, preview).href);
   await page.waitForFunction(() => document.querySelector('fieldset') && !document.querySelector('fieldset').disabled);
   for (const [label, value] of [['Entreprise', 'Entreprise simulation'], ['Votre nom', 'Test local'], ['E-mail professionnel', 'test@example.invalid'], ['Téléphone', '0600000000'], ['Ville', 'Chambéry'], ['Métier / activité', 'Test']]) {
     await page.getByLabel(label, {exact: true}).fill(value);
   }
   await page.getByLabel('Je fais cette demande pour mon activité professionnelle.').check();
   await page.getByRole('button', {name:'Continuer', exact:true}).click();
+  assert.equal(await page.locator(`input[name="planId"][value="${selection.id}"]`).isChecked(), true);
   assert.equal(await page.locator('input[name="maintenance"]').isChecked(), false);
   assert.equal(await page.locator('input[name="crm"]').isChecked(), false);
+  for (const option of selection.options) await page.locator(`input[name="${option}"]`).check();
   await page.getByRole('button', {name:'Continuer', exact:true}).click();
   await page.getByLabel('Votre besoin', {exact:true}).fill('Demande locale de vérification sans soumission réelle.');
   await page.locator('input[name="privacyConsent"]').check();
@@ -66,7 +68,7 @@ test('successful double click records one mocked request and one conversion', as
     await page.waitForFunction(() => document.querySelector('form').getAttribute('aria-busy') === 'true');
     assert.equal(attempts, 1);
     assert.equal(records.size, 1);
-    assert.deepEqual(body.publicQuote, {version:'2026-09-11-ttc', service:'site', tier:'simple', options:[]});
+    assert.deepEqual(body.publicQuote, {version:'2026-09-24-ttc', service:'site', tier:'simple', options:[]});
     assert.deepEqual(await recordedEvents(page), []);
     release();
     await page.waitForURL('**/espace-projet/**');
@@ -76,6 +78,36 @@ test('successful double click records one mocked request and one conversion', as
     assert.doesNotMatch(JSON.stringify(events), /example.invalid|requestKey|accessToken|cle=/);
     assert.equal(await page.evaluate(() => sessionStorage.getItem('flexweb-intake-v2')), null);
   } finally { release(); await context.close(); }
+});
+
+test('three advertised offers preserve their selection, TTC budgets and optional charges through mocked intake', async () => {
+  const cases = [
+    {service:'site', id:'essentielle', tier:'simple', euros:299, options:[], monthly:0},
+    {service:'site', id:'visibilite', tier:'visibility', euros:590, options:['maintenance','crm'], monthly:148},
+    {service:'automation', id:'crm-automation', tier:'crm', euros:990, options:['crm'], monthly:99},
+  ];
+  for (const selection of cases) {
+    const {page, context} = await filledQuote('accepted', selection);
+    let submitted;
+    await page.route('**/api/automation/intake', route => {
+      submitted = route.request().postDataJSON();
+      return route.fulfill({status:201,contentType:'application/json',body:'{"projectId":"local-test"}'});
+    });
+    try {
+      const summary = (await page.locator('.flow-aside .flow-total').innerText()).normalize('NFKC');
+      assert.match(summary, new RegExp(`${selection.euros}\\s*€ TTC`));
+      assert.match(summary, new RegExp(`Options mensuelles\\s+${selection.monthly}\\s*€ TTC / mois`));
+      await page.getByRole('button', {name:'Recevoir mon devis'}).click();
+      await page.waitForURL('**/espace-projet/**');
+      assert.equal(submitted.planId, selection.id);
+      assert.deepEqual(submitted.publicQuote, {
+        version:'2026-09-24-ttc', service:selection.service, tier:selection.tier, options:selection.options,
+      });
+      assert.match(submitted.message.normalize('NFKC'), new RegExp(`${selection.euros}\\s*€ TTC en paiement unique`));
+      assert.equal(Object.hasOwn(submitted.publicQuote, 'setupCents'), false);
+      assert.equal(Object.hasOwn(submitted.publicQuote, 'monthlyCents'), false);
+    } finally { await context.close(); }
+  }
 });
 
 test('rejected request emits no conversion; retry reuses its identity and records once', async () => {

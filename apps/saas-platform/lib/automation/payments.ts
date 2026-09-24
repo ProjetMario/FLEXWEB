@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import { isPublicQuote, isInclusiveQuote, quoteTaxLabel, TTC_QUOTE_VERSION, type QuoteSnapshot } from "./public-quote-pricing";
+import { isPublicQuote, isInclusiveQuote, usesInclusiveQuoteVersion, quoteTaxLabel, TTC_QUOTE_VERSION, type QuoteSnapshot } from "./public-quote-pricing";
 import { prisma } from "../prisma";
 import { HttpError, offerFor, TERMS_VERSION, assertStandardQuote } from "./core";
 import { marketingUrl } from "./service";
@@ -62,13 +62,12 @@ export async function startCheckout(
             "Votre paiement est en cours de confirmation.",
           );
       }
-      const offer = offerFor(current.planId);
       const snapshot = current.offerSnapshot as QuoteSnapshot & { name?: string };
-      if (snapshot.publicQuote?.version === TTC_QUOTE_VERSION && !isInclusiveQuote(snapshot))
+      if (usesInclusiveQuoteVersion(snapshot) && !isInclusiveQuote(snapshot))
         throw new HttpError(409, "La base TTC de cette proposition doit être vérifiée avant paiement.");
       const versionedQuote = isPublicQuote(snapshot);
-      const offerName = versionedQuote && snapshot.name ? snapshot.name : offer.name;
-      const termsVersion = versionedQuote ? "2026-09-11" : TERMS_VERSION;
+      const offerName = versionedQuote && snapshot.name ? snapshot.name : offerFor(current.planId).name;
+      const termsVersion = snapshot.publicQuote?.version === TTC_QUOTE_VERSION ? "2026-09-24" : versionedQuote ? "2026-09-11" : TERMS_VERSION;
       const item = (
         amount: number,
         name: string,

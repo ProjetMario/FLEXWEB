@@ -8,8 +8,16 @@ import { realizations } from "../data/realizations";
 const site = "https://flex-web.fr";
 const updatedPages: Record<string, string> = {
   "/creation-site-internet-montmelian/": "2026-09-23",
-  "/": "2026-09-22",
-  "/creation-site-internet/": "2026-09-22",
+  "/": "2026-09-24",
+  "/creation-site-internet/": "2026-09-24",
+  "/pricing/": "2026-09-24",
+  "/automatisation-ia/": "2026-09-24",
+  "/automatisation-ia-savoie/": "2026-09-24",
+  "/automatisation-ia-haute-savoie/": "2026-09-24",
+  "/creation-application-mobile/": "2026-09-24",
+  "/cgv/": "2026-09-24",
+  "/journal/combien-coute-site-internet-savoie/": "2026-09-24",
+  "/journal/site-internet-artisan-haute-savoie/": "2026-09-24",
   "/zones-intervention/": "2026-09-20",
   "/creation-site-internet-saint-alban-leysse/": "2026-09-20",
   "/creation-site-internet-albertville/": "2026-09-20",
@@ -38,6 +46,9 @@ export const GET: APIRoute = async () => {
     getCollection("locations", ({ data }) => !data.isDraft),
     getCollection("services", ({ data }) => !data.isDraft),
   ]);
+
+  // All website location FAQs now describe the revised public catalogue.
+  for (const {data} of locations) updatedPages[`/${data.slug}/`] = "2026-09-24";
 
   const locationPages = locations.map(({ data }) => ({
     url: `/${data.slug}/`,
