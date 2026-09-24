@@ -25,3 +25,9 @@ test('qualification is conservative for missing facts and never confirms a booki
 test('twelve guides provide decisions, examples and recipe checks',()=>{
  for(const axis of ['sites','automatisation']){assert.equal(projectGuides[axis].length,6);assert.equal(new Set(projectGuides[axis].map(g=>g.id)).size,6);for(const g of projectGuides[axis]){assert(g.inputs.length>=2&&g.steps.length>=3&&g.checks.length>=2&&g.limits.length>=1);assert.match(g.example,/illustratif/i);assert(g.metric.length>20);}}
 });
+
+test('similar names disclose accent normalization instead of claiming strict spelling equality',()=>{
+ const c=draftData().communes.find(c=>c.code==='73181'),e=enrichedTerritory(c.code);
+ assert(e.homonyms.some(h=>h.name!==c.name));
+ assert(localInsights('sites',c,e)[1].fact.includes('normalisation des accents'));
+});

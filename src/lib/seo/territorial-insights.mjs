@@ -14,7 +14,7 @@ export function localInsights(axis,c,e){
   check:`Cas de recette : envoyer une demande ${shared.length?'avec le seul code '+shared[0].postalCode:'sans adresse précise'}, puis la compléter avec ${c.name} et ${c.code}. Le dossier initial doit être mis à jour, pas dupliqué.`
  },{
   title:'Éviter les confusions de territoire',
-  fact:h.length?`Le nom ${c.name} existe aussi pour ${h.map(x=>x.name+' ('+x.departmentCode+', code '+x.code+')').join('; ')}. Une recherche sur le nom seul peut donc désigner un autre territoire.`:`Aucune autre commune portant exactement le nom ${c.name} n'a été trouvée dans cette extraction. Les fautes, abréviations et lieux-dits restent des cas à traiter séparément.`,
+  fact:h.length?`Après normalisation des accents et de la typographie, le nom ${c.name} correspond aussi à ${h.map(x=>x.name+' ('+x.departmentCode+', code '+x.code+')').join('; ')}. Une recherche sur le nom seul peut donc désigner un autre territoire.`:`Aucune autre commune portant le même nom normalisé que ${c.name} n'a été trouvée dans cette extraction. Les fautes, abréviations et lieux-dits restent des cas à traiter séparément.`,
   action:axis==='sites'?`Affichez ${c.name}, ${c.department} (${c.departmentCode}) dans le contact et le récapitulatif de demande. Ne créez pas de fausse adresse d'agence pour rendre cette page locale.`:`Dans le CRM, affichez ${c.departmentCode} et ${c.code} à côté du nom. Ne fusionnez jamais deux entreprises sur leur seule commune ou un nom ressemblant.`,
   check:`Cas de recette : saisir « ${c.name} » sans département. Vérifiez le résultat proposé et la possibilité de corriger la sélection avant validation.`
  },{
