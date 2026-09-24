@@ -2,8 +2,9 @@ import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 import { z } from "zod";
 import offers from "./offers.json";
 import publicQuotes from "./public-quotes.json";
+import previousTtcPublicQuotes from "./public-quotes-2026-09-11-ttc.json";
 import legacyPublicQuotes from "./public-quotes-2026-09-11.json";
-import { TTC_QUOTE_VERSION, LEGACY_QUOTE_VERSION } from "./public-quote-pricing";
+import { TTC_QUOTE_VERSION, LEGACY_QUOTE_VERSION, PREVIOUS_TTC_QUOTE_VERSION, PUBLIC_QUOTE_VERSIONS } from "./public-quote-pricing";
 
 export const catalog = offers;
 export const TERMS_VERSION = "2026-09-09";
@@ -45,25 +46,50 @@ export function secretMatches(
   );
 }
 const text = (max: number) => z.string().trim().min(1).max(max);
+const quoteOptions = z.array(z.enum(["maintenance", "crm"])).max(2)
+  .refine((options) => new Set(options).size === options.length, "Option dupliquée.");
 export const publicQuoteSchema = z.discriminatedUnion("service", [
   z.object({
-    version: z.enum([LEGACY_QUOTE_VERSION, TTC_QUOTE_VERSION]),
+    version: z.enum(PUBLIC_QUOTE_VERSIONS),
     service: z.literal("site"),
-    tier: z.enum(["simple", "complete"]),
-    options: z.array(z.enum(["maintenance", "crm"])).max(2)
-      .refine((options) => new Set(options).size === options.length, "Option dupliquée."),
+    tier: z.enum(["simple", "complete", "visibility"]),
+    options: quoteOptions,
   }).strict(),
-  z.object({ version: z.enum([LEGACY_QUOTE_VERSION, TTC_QUOTE_VERSION]), service: z.literal("automation") }).strict(),
-  z.object({ version: z.enum([LEGACY_QUOTE_VERSION, TTC_QUOTE_VERSION]), service: z.literal("application") }).strict(),
-]);
+  z.object({
+    version: z.enum(PUBLIC_QUOTE_VERSIONS), service: z.literal("automation"),
+    tier: z.literal("crm").optional(), options: quoteOptions.optional(),
+  }).strict(),
+  z.object({ version: z.enum(PUBLIC_QUOTE_VERSIONS), service: z.literal("application") }).strict(),
+]).superRefine((selection, context) => {
+  if (selection.service === "site") {
+    const allowed = selection.version === TTC_QUOTE_VERSION
+      ? ["simple", "visibility"] : ["simple", "complete"];
+    if (!allowed.includes(selection.tier)) context.addIssue({ code: "custom", path: ["tier"], message: "Cette offre ne correspond pas à la version du catalogue." });
+  }
+  if (selection.service === "automation" && (selection.tier || selection.options)) {
+    if (selection.version !== TTC_QUOTE_VERSION || selection.tier !== "crm")
+      context.addIssue({ code: "custom", path: ["tier"], message: "Cette offre CRM ne correspond pas à la version du catalogue." });
+  }
+});
 export type PublicQuote = z.infer<typeof publicQuoteSchema>;
 
 /** Prices are derived on the server; the browser selects only a tier/options. */
 export function offerForIntake(data: { planId: string; publicQuote?: PublicQuote }) {
   if (!data.publicQuote) return offerFor(data.planId);
   const selection = publicQuoteSchema.parse(data.publicQuote);
-  const catalogue = selection.version === TTC_QUOTE_VERSION ? publicQuotes : legacyPublicQuotes;
-  const taxBasis = selection.version === TTC_QUOTE_VERSION ? "TTC" : "HT";
+  const catalogue = selection.version === TTC_QUOTE_VERSION ? publicQuotes
+    : selection.version === PREVIOUS_TTC_QUOTE_VERSION ? previousTtcPublicQuotes : legacyPublicQuotes;
+  const taxBasis = selection.version === LEGACY_QUOTE_VERSION ? "HT" : "TTC";
+  if (selection.service === "automation" && selection.tier === "crm") {
+    const automation = publicQuotes.automationOffers.find((offer) => offer.tier === selection.tier)!;
+    const options = publicQuotes.options.filter((option) => selection.options?.includes(option.id as "maintenance" | "crm"));
+    return {
+      ...automation,
+      monthlyCents: options.reduce((sum, option) => sum + option.monthlyCents, 0),
+      features: [...automation.features, ...options.map((option) => `Option ${option.name} : ${option.monthlyCents / 100} € TTC/mois. ${option.description}`)],
+      publicQuote: selection, taxBasis, quoteOnly: true,
+    };
+  }
   if (selection.service !== "site") return {
     id: "achat", name: selection.service === "automation" ? "Automatisation IA sur mesure" : "Application web ou mobile",
     setupCents: 0, monthlyCents: 0, pages: 0, supportMinutes: 0,
@@ -103,7 +129,7 @@ export const intakeSchema = z.object({
     .regex(/^\+?[\d\s().-]{8,25}$/),
   city: text(100),
   businessType: text(100),
-  planId: z.enum(["essentielle", "professionnelle", "croissance", "achat"]),
+  planId: z.enum(["essentielle", "professionnelle", "croissance", "achat", "visibilite", "crm-automation"]),
   publicQuote: publicQuoteSchema.optional(),
   message: z.string().trim().min(15).max(3000),
   timeline: z.enum(["rapidement", "1-3-mois", "a-definir"]),
@@ -111,6 +137,9 @@ export const intakeSchema = z.object({
   professional: z.literal(true),
   websiteTrap: z.string().max(0).default(""),
   source: z.string().max(160).default("site"),
+}).superRefine((data, context) => {
+  if (["visibilite", "crm-automation"].includes(data.planId) && data.publicQuote?.version !== TTC_QUOTE_VERSION)
+    context.addIssue({ code: "custom", path: ["publicQuote"], message: "La sélection du catalogue actuel est requise pour cette offre." });
 });
 export const briefSchema = z.object({
   description: z.string().trim().min(40).max(4000),

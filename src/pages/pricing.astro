@@ -4,7 +4,7 @@ import WebsiteOffers from "../components/marketing/WebsiteOffers.astro";
 import BespokeOffers from "../components/marketing/BespokeOffers.astro";
 import "../styles/marketing.css";
 import StructuredData from "../components/seo/StructuredData.astro";
-import { pricingFaq, websiteOffers, pricingOptions } from "../data/pricing.ts";
+import { pricingFaq, projectOffers, pricingOptions } from "../data/pricing.ts";
 
 const siteUrl = "https://flex-web.fr";
 const canonicalUrl = `${siteUrl}/pricing/`;
@@ -28,9 +28,9 @@ const schemas = [
   },
   {
     "@type": "OfferCatalog", "@id": `${canonicalUrl}#offers`,
-    name: "Sites internet et options — Flex-Web",
+    name: "Sites internet, référencement et CRM — Flex-Web",
     itemListElement: [
-      ...websiteOffers.map((offer) => ({
+      ...projectOffers.map((offer) => ({
         "@type": "Offer", name: offer.name,
         description: `${offer.description} ${offer.features.join(". ")}. Prix TTC de création, payé une seule fois. Options mensuelles facultatives. Périmètre confirmé sur devis.`,
         price: String(offer.setupCents / 100), priceCurrency: "EUR",
@@ -47,9 +47,9 @@ const schemas = [
   },
 ];
 ---
-<BaseLayout title="Tarifs sites internet : 299 € et 990 € TTC | Flex-Web" description="Sites vitrines à 299 € ou 990 € TTC. Options facultatives : maintenance 49 € TTC/mois, CRM, automatisation et SEO 99 € TTC/mois. Applications et IA sur devis.">
+<BaseLayout title="Tarifs : sites, SEO et CRM à 299, 590 et 990 € TTC | Flex-Web" description="Site vitrine 299 € TTC, site avec SEO et IA 590 € TTC, CRM et automatisation 990 € TTC. Options mensuelles facultatives. Applications sur devis.">
   <div class="marketing-page">
-    <header class="m-hero pricing-hero"><div class="mw hero-content"><p class="m-eyebrow">LES TARIFS FLEX-WEB</p><h1>Un prix clair.<br /><span>Le choix vous appartient.</span></h1><p class="hero-intro">Votre site à 299 € ou 990 € TTC, payé une seule fois.<br />Un devis pour confirmer le projet. Des options si vous le souhaitez.</p><nav class="m-actions" aria-label="Choisir une prestation"><a class="m-button" href="#devis">Choisir mon site</a><a class="m-link" href="#automatisation">Automatisation IA ↗</a><a class="m-link" href="#applications">Application ↗</a></nav></div></header>
+    <header class="m-hero pricing-hero"><div class="mw hero-content"><p class="m-eyebrow">LES TARIFS FLEX-WEB</p><h1>Un prix clair.<br /><span>Le choix vous appartient.</span></h1><p class="hero-intro">Site vitrine : 299 €. Site & visibilité : 590 €. CRM & automatisation : 990 € TTC.<br />Trois forfaits TTC en paiement unique. Un devis pour confirmer votre projet.</p><nav class="m-actions" aria-label="Choisir une prestation"><a class="m-button" href="#devis">Choisir mon offre</a><a class="m-link" href="#automatisation">Automatisation IA ↗</a><a class="m-link" href="#applications">Application ↗</a></nav></div></header>
     <WebsiteOffers id="devis" />
     <BespokeOffers />
     <section id="faq" class="mw m-section m-faq"><div class="section-heading"><p class="m-eyebrow">AVANT DE CHOISIR</p><h2>Tout est plus clair.</h2></div>{pricingFaq.map(item => <details><summary>{item.question}</summary><p>{item.answer}</p></details>)}</section>

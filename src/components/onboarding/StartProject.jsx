@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { websiteOffers, pricingOptions, publicQuoteVersion } from "../../data/pricing.ts";
+import { websiteOffers, automationOffers, pricingOptions, publicQuoteVersion } from "../../data/pricing.ts";
 import { leadSource } from "../../lib/acquisition.ts";
 import { trackLead } from "../../lib/analytics.ts";
 import { api, createIdentity, money, saveToken } from "./api";
@@ -22,6 +22,7 @@ export default function StartProject() {
   const [step, setStep] = useState(0), [busy, setBusy] = useState(false), [error, setError] = useState("");
   const [service, setService] = useState("site");
   const [sitePlan, setSitePlan] = useState("essentielle");
+  const [automationPlan, setAutomationPlan] = useState("crm-automation");
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [data, setData] = useState({
     companyName: "", contactName: "", email: "", phone: "", city: "", businessType: "",
@@ -32,27 +33,35 @@ export default function StartProject() {
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     const rawService = (query.get("service") || "").toLowerCase();
-    const requestedService = ["automation", "ia", "seo"].includes(rawService)
+    const requestedService = ["automation", "ia"].includes(rawService) || query.get("offre") === "crm-automation"
       ? "automation" : ["application", "app"].includes(rawService) ? "application" : "site";
     // The versioned quote selection lets the server derive new prices while
     // keeping existing CRM identifiers and historical contracts intact.
-    const planId = requestedService !== "site" || ["achat", "croissance"].includes(query.get("offre"))
-      ? "achat" : "essentielle";
+    const planId = requestedService === "application" ? "achat"
+      : requestedService === "automation" ? (query.get("offre") === "sur-mesure" ? "achat" : "crm-automation")
+      : rawService === "seo" || ["achat", "croissance", "visibilite"].includes(query.get("offre")) ? "visibilite" : "essentielle";
     setData((d) => ({ ...d, planId, source: "site" }));
     setService(requestedService);
     if (requestedService === "site") setSitePlan(planId);
+    if (requestedService === "automation") setAutomationPlan(planId);
     try { identity.current = JSON.parse(sessionStorage.getItem("flexweb-intake-v2") || "null"); }
     catch { identity.current = null; }
     setReady(true);
   }, []);
-  const bespoke = service !== "site";
-  const offerChoices = bespoke ? [bespokeOffers[service]] : websiteOffers;
+  const offerChoices = service === "site" ? websiteOffers : service === "automation" ? [...automationOffers, bespokeOffers.automation] : [bespokeOffers.application];
   const displayedOffer = offerChoices.find((o) => o.id === data.planId) || offerChoices[0];
+  const bespoke = !displayedOffer.setupCents;
   const activeOptions = pricingOptions.filter((option) => selectedOptions.includes(option.id));
-  const set = (e) => { if (e.target.name === "planId" && service === "site") setSitePlan(e.target.value); setData((d) => ({ ...d, [e.target.name]: e.target.type === "checkbox" ? e.target.checked : e.target.value })); };
+  const set = (e) => {
+    if (e.target.name === "planId") {
+      if (service === "site") setSitePlan(e.target.value);
+      if (service === "automation") setAutomationPlan(e.target.value);
+    }
+    setData((d) => ({ ...d, [e.target.name]: e.target.type === "checkbox" ? e.target.checked : e.target.value }));
+  };
   const changeService = (value) => {
     setService(value); setError("");
-    setData(d => ({...d, planId: value === "site" ? sitePlan : "achat"}));
+    setData(d => ({...d, planId: value === "site" ? sitePlan : value === "automation" ? automationPlan : "achat"}));
   };
   useEffect(() => { if (ready) heading.current?.focus(); }, [step]);
   function next(e) {
@@ -76,7 +85,7 @@ export default function StartProject() {
         ...data, ...identity.current, source: leadSource(),
         publicQuote: bespoke
           ? { version: publicQuoteVersion, service }
-          : { version: publicQuoteVersion, service: "site", tier: displayedOffer.id === "essentielle" ? "simple" : "complete", options: selectedOptions },
+          : { version: publicQuoteVersion, service, tier: displayedOffer.tier, options: selectedOptions },
         message: `${quoteSummary}\nConditions à confirmer dans une proposition adaptée avant tout paiement.\n\nBesoin du client :\n${data.message}`,
       });
       saveToken(identity.current.accessToken);
@@ -100,7 +109,8 @@ export default function StartProject() {
       <h1>{service === "automation" ? "Automatisez vos tâches." : service === "application" ? "Votre application sur mesure." : "Votre site internet."}<br />Commençons par votre besoin.</h1>
       <p className="flow-intro">{bespoke
         ? "Présentez votre activité, vos outils et ce que vous souhaitez améliorer. Nous préparons une proposition personnalisée avant tout engagement."
-        : "Choisissez votre site à 299 € ou 990 € TTC en paiement unique, puis vos éventuelles options. Nous confirmons le périmètre dans votre devis avant tout paiement."}</p>
+        : service === "automation" ? "Mettez en place votre CRM et automatisez vos tâches répétitives pour 990 € TTC en paiement unique. Les outils et automatisations sont confirmés au devis."
+        : "Un site vitrine jusqu’à 5 pages à 299 € TTC, ou un site de 5 pages et plus avec SEO et IA à 590 € TTC. Paiement unique après validation du devis."}</p>
       <ol className="flow-steps" aria-label="Étapes de la demande">
         {["Votre activité", "Votre offre", "Votre projet"].map((s, i) => <li key={s} aria-current={step === i ? "step" : undefined}>{i + 1}. {s}</li>)}
       </ol>
@@ -110,7 +120,7 @@ export default function StartProject() {
             <h2 ref={heading} tabIndex={-1}>{["Faisons connaissance", bespoke ? "Votre prestation" : "Choisissez votre formule", "Ce que vous souhaitez accomplir"][step]}</h2>
             {step === 0 && <>
               <label htmlFor="quote-service">Votre projet</label><select id="quote-service" name="service" value={service} onChange={e => changeService(e.target.value)}>
-                <option value="site">Créer un site internet</option><option value="automation">Automatiser des tâches avec l’IA</option><option value="application">Développer une application</option>
+                <option value="site">Créer un site internet et développer sa visibilité</option><option value="automation">Mettre en place un CRM et automatiser des tâches</option><option value="application">Développer une application</option>
               </select>
               <div className="flow-fields">
                 {field("companyName", "Entreprise")}{field("contactName", "Votre nom", "text", 120)}
@@ -123,8 +133,8 @@ export default function StartProject() {
               {offerChoices.map((o) => <label className="flow-offer" key={o.id}>
                 <input type="radio" name="planId" value={o.id} checked={data.planId === o.id} onChange={set} />
                 {o.name}
-                <span className="flow-price">{bespoke ? "Sur devis" : `${money(o.setupCents)} TTC`}</span>
-                <span className="flow-note">{bespoke ? "Proposition personnalisée après étude de votre besoin." : "Création payée une seule fois. Options mensuelles facultatives."}</span>
+                <span className="flow-price">{o.setupCents ? `${money(o.setupCents)} TTC` : "Sur devis"}</span>
+                <span className="flow-note">{o.setupCents ? "Forfait payé une seule fois. Options mensuelles facultatives." : "Proposition personnalisée après étude de votre besoin."}</span>
                 <ul className="flow-list">{o.features.map((f) => <li key={f}>{f}</li>)}</ul>
               </label>)}
               {!bespoke && <fieldset className="flow-fieldset">
@@ -160,9 +170,9 @@ export default function StartProject() {
           <p className="flow-eyebrow">Votre récapitulatif</p>
           <h2>{displayedOffer.name}</h2>
           <p className="flow-price">{bespoke ? "Sur devis" : `${money(displayedOffer.setupCents)} TTC`}</p>
-          <p className="flow-note">{bespoke ? "Le budget dépend des fonctionnalités, intégrations et outils nécessaires." : "Création en paiement unique. Hébergement et nom de domaine précisés au devis."}</p>
+          <p className="flow-note">{bespoke ? "Le budget dépend des fonctionnalités, intégrations et outils nécessaires." : service === "automation" ? "Mise en place en paiement unique. Outils, licences et périmètre des automatisations précisés au devis." : "Création en paiement unique. Hébergement et nom de domaine précisés au devis."}</p>
           {!bespoke && (activeOptions.length ? <ul className="flow-list">{activeOptions.map((o) => <li key={o.id}>{o.name} : +{money(o.monthlyCents)} TTC / mois</li>)}</ul> : <p className="flow-note">Aucune option mensuelle sélectionnée.</p>)}
-          {!bespoke && <div className="flow-total"><span>Création du site</span><strong>{money(displayedOffer.setupCents)} TTC</strong><span>Options mensuelles</span><strong>{money(activeOptions.reduce((total, option) => total + option.monthlyCents, 0))} TTC / mois</strong></div>}
+          {!bespoke && <div className="flow-total"><span>{service === "automation" ? "Mise en place du CRM" : "Création du site"}</span><strong>{money(displayedOffer.setupCents)} TTC</strong><span>Options mensuelles</span><strong>{money(activeOptions.reduce((total, option) => total + option.monthlyCents, 0))} TTC / mois</strong></div>}
           <p className="flow-note">Prix toutes taxes comprises. Le devis confirme les prestations et le total avant paiement.</p>
           <ul className="flow-list"><li>Un interlocuteur en Savoie</li><li>Un accompagnement partout en France</li><li>Un périmètre validé ensemble</li><li>Un espace privé pour suivre votre projet</li></ul>
           <p className="flow-note">Le calendrier est confirmé dans le devis selon le projet et les contenus disponibles.</p>

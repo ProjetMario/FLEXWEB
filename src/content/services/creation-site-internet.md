@@ -1,6 +1,6 @@
 ---
 title: "Création de sites internet pour les entreprises en France"
-description: "Un site vitrine pour présenter votre entreprise et recevoir des demandes utiles. Comparez les formules simple et complète, choisissez vos options et recevez un devis qui précise les pages, les fonctions et le budget. FLEX-WEB vous accompagne en Savoie, en Haute-Savoie et partout en France."
+description: "Un site vitrine pour présenter votre entreprise et recevoir des demandes utiles. Comparez le site vitrine jusqu’à 5 pages et l’offre de 5 pages et plus avec référencement SEO et IA, choisissez vos options et recevez un devis qui précise les pages, les fonctions et le budget. FLEX-WEB vous accompagne en Savoie, en Haute-Savoie et partout en France."
 targetAudience:
   - "Artisans et entreprises du bâtiment"
   - "Commerçants et entreprises de services"
@@ -23,7 +23,7 @@ relatedServices:
   - "automatisation-ia"
   - "creation-application-mobile"
 seoTitle: "Création de site internet en France dès 299 € TTC | FLEX-WEB"
-seoDescription: "Site vitrine à 299 € TTC ou site complet à 990 € TTC. Création de sites pour PME en France, Savoie et Haute-Savoie. Maintenance et CRM en option."
+seoDescription: "Site jusqu’à 5 pages à 299 € TTC, SEO et IA dès 5 pages à 590 € TTC. CRM et automatisation à 990 € TTC. France, Savoie et Haute-Savoie."
 isDraft: false
 ---
 
@@ -35,9 +35,9 @@ Pour un artisan, ce peut être le type de travaux, la commune et quelques préci
 
 ## Choisir selon votre activité, pas seulement selon le nombre de pages
 
-**Vous devez surtout être présenté et joignable ?** Pour un artisan qui souhaite expliquer ses interventions, montrer quelques réalisations et recevoir un message, la formule simple peut constituer un point de départ. Préparez vos prestations, vos coordonnées, votre zone de déplacement et les photos que vous pouvez utiliser.
+**Vous devez surtout être présenté et joignable ?** Pour un artisan qui souhaite expliquer ses interventions, montrer quelques réalisations et recevoir un message, le site vitrine jusqu’à 5 pages à 299 € TTC constitue un point de départ. Préparez vos prestations, vos coordonnées, votre zone de déplacement et les photos que vous pouvez utiliser.
 
-**Vous devez comprendre le besoin avant de rappeler ?** Une entreprise avec plusieurs prestations peut avoir besoin de contenus plus détaillés et d'un formulaire qui distingue le type de projet, la localisation et l'échéance. La formule complète est destinée à ce parcours, avec les champs et les contenus confirmés au devis.
+**Vous devez comprendre le besoin avant de rappeler ?** Une entreprise avec plusieurs prestations peut avoir besoin de contenus plus détaillés et d'un formulaire qui distingue le type de projet, la localisation et l'échéance. L’offre à 590 € TTC associe un site de 5 pages et plus à un travail de référencement SEO et IA pour Google, Bing et les principaux moteurs. Les pages, les champs et les contenus sont confirmés au devis.
 
 **Vos visiteurs doivent réserver, payer ou gérer un dossier ?** Décrivez le fonctionnement attendu avant de choisir. Une réservation complexe, une boutique ou un espace privé peut nécessiter des outils supplémentaires ou une [application sur mesure](/creation-application-mobile/). Le devis permet de séparer le site vitrine de ces fonctions et de leurs coûts.
 
@@ -67,7 +67,7 @@ La [demande de devis est gratuite](/demarrer/?service=site). Vous pouvez modifie
 
 ## Automatiser ce qui se passe après le formulaire
 
-Un site peut faire gagner du temps quand ses demandes sont suivies. Selon vos outils et les accès disponibles, une [automatisation IA](/automatisation-ia/) peut enregistrer un contact dans le CRM, classer une demande, préparer une réponse ou créer une tâche. Une validation humaine reste prévue pour les décisions qui l'exigent.
+L’offre **CRM et automatisation à 990 € TTC**, en paiement unique, met en place le suivi des contacts, devis, factures et clients avec les tâches répétitives définies au devis. Selon vos outils et les accès disponibles, une [automatisation IA](/automatisation-ia/) peut enregistrer un contact, classer une demande, préparer une réponse ou créer une tâche. Une validation humaine reste prévue pour les décisions qui l'exigent. L’accompagnement mensuel à 99 € TTC reste facultatif et distinct de l’installation.
 
 Si vos clients doivent suivre un dossier, déposer des documents ou consulter des informations privées, une [application web sur mesure](/creation-application-mobile/) peut être plus adaptée qu'une nouvelle page vitrine.
 

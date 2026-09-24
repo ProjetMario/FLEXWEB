@@ -22,11 +22,12 @@ export default function ProjectPortal() {
     [loading, setLoading] = useState(true),
     [accepted, setAccepted] = useState(false);
   const ticketKey = useRef(null);
-  const isPublicQuote = ["2026-09-11", "2026-09-11-ttc"].includes(project?.offer?.publicQuote?.version);
+  const isPublicQuote = ["2026-09-11", "2026-09-11-ttc", "2026-09-24-ttc"].includes(project?.offer?.publicQuote?.version);
   const quoteOnly = project?.offer?.quoteOnly === true;
+  const hasCataloguePrice = project?.offer?.publicQuote?.version === "2026-09-24-ttc" && project?.setupCents > 0;
   const quote = project?.quote;
   const quoteDocument = quote?.document;
-  const historicalTtc = project?.offer?.publicQuote?.version === "2026-09-11-ttc" && project?.offer?.taxBasis === "TTC";
+  const historicalTtc = ["2026-09-11-ttc", "2026-09-24-ttc"].includes(project?.offer?.publicQuote?.version) && project?.offer?.taxBasis === "TTC";
   const priceBasis = project?.priceBasis === "TTC" || (project?.priceBasis == null && historicalTtc) ? "TTC" : "HT";
   const isCustom = project?.deliveryKind === "custom";
   useEffect(() => { setAccepted(false); }, [quote?.contentHash, project?.quoteReference]);
@@ -250,7 +251,7 @@ export default function ProjectPortal() {
                     J’accepte cette proposition pour mon activité
                     professionnelle et les{" "}
                     <a href="/cgv/" target="_blank" rel="noreferrer">
-                      conditions de vente du {project.termsVersion === "2026-09-12" ? "12" : isPublicQuote ? "11" : "9"} septembre 2026
+                      conditions de vente du {project.termsVersion === "2026-09-24" ? "24" : project.termsVersion === "2026-09-12" ? "12" : isPublicQuote ? "11" : "9"} septembre 2026
                     </a>
                     .
                   </span>
@@ -470,9 +471,9 @@ export default function ProjectPortal() {
           <aside className="flow-aside">
             <h2>{project.offer.name}</h2>
             <p className="flow-price">
-              {quoteOnly ? "Sur devis" : <>{money(isPublicQuote || quoteDocument ? project.setupCents : (project.monthlyCents || project.setupCents))} {priceBasis}{!isPublicQuote && !quoteDocument && project.monthlyCents ? "/mois" : ""}</>}
+              {quoteOnly && !hasCataloguePrice ? "Sur devis" : <>{money(isPublicQuote || quoteDocument ? project.setupCents : (project.monthlyCents || project.setupCents))} {priceBasis}{!isPublicQuote && !quoteDocument && project.monthlyCents ? "/mois" : ""}</>}
             </p>
-            {(isPublicQuote || quoteDocument) && !quoteOnly && <p className="flow-note">{isCustom ? "Prestation en paiement unique" : "Création en paiement unique"}{project.monthlyCents ? ` · Options choisies : ${money(project.monthlyCents)} ${priceBasis}/mois` : " · Aucune option mensuelle choisie"}</p>}
+            {(isPublicQuote || quoteDocument) && (!quoteOnly || hasCataloguePrice) && <p className="flow-note">{isCustom || project.offer.publicQuote?.service === "automation" ? "Prestation en paiement unique" : "Création en paiement unique"}{project.monthlyCents ? ` · Options choisies : ${money(project.monthlyCents)} ${priceBasis}/mois` : " · Aucune option mensuelle choisie"}{quoteOnly ? " · Périmètre à confirmer au devis" : ""}</p>}
             <p className="flow-note">
               {project.paymentStatus === "PAID"
                 ? "Paiement confirmé"

@@ -1,16 +1,16 @@
 ---
-import { websiteOffers, pricingOptions } from "../../data/pricing";
+import { projectOffers, pricingOptions } from "../../data/pricing";
 const { id = "offres" } = Astro.props;
 const euros = (cents) => new Intl.NumberFormat("fr-FR", {style: "currency", currency: "EUR", maximumFractionDigits: 0}).format(cents / 100);
 ---
 <section id={id} class="mw m-section offers-section" aria-labelledby={`${id}-title`}>
-  <div class="section-heading"><p class="m-eyebrow">VOTRE SITE INTERNET</p><h2 id={`${id}-title`}>Deux offres.<br />Une décision simple.</h2><p>Un prix de création, payé une seule fois.<br />Vous choisissez. Nous confirmons votre projet par un devis.</p></div>
+  <div class="section-heading"><p class="m-eyebrow">VOTRE PROCHAINE ÉTAPE</p><h2 id={`${id}-title`}>Trois offres.<br />Un objectif : avancer.</h2><p>Présenter votre activité. Gagner en visibilité. Simplifier votre gestion.<br />Un forfait payé une seule fois, après validation du devis.</p></div>
   <div class="offer-grid">
-    {websiteOffers.map((offer, i) => <article class:list={["offer-card", {"offer-complete": i === 1}]}>
-      <div class="offer-top"><span class="offer-category">{i === 0 ? "L’essentiel pour commencer" : "Pour aller plus loin"}</span><span class="offer-index" aria-hidden="true">0{i + 1}</span></div>
+    {projectOffers.map((offer, i) => <article id={`offre-${offer.id}`} class:list={["offer-card", {"offer-complete": i === 1}]}>
+      <div class="offer-top"><span class="offer-category">{["Votre présence en ligne", "Votre visibilité", "Votre gestion simplifiée"][i]}</span><span class="offer-index" aria-hidden="true">0{i + 1}</span></div>
       <h3>{offer.name}</h3><p class="offer-description">{offer.description}</p>
       <p class="offer-amount">{euros(offer.setupCents)} <span>TTC</span></p><p class="offer-frequency">Paiement unique</p>
-      <a class="m-button" href={offer.href}>Choisir cette offre <span aria-hidden="true">↗</span></a>
+      <a class="m-button" href={offer.href} aria-label={`Choisir l’offre ${offer.name}`}>Choisir cette offre <span aria-hidden="true">↗</span></a>
       <ul class="offer-features">{offer.features.map(feature => <li><span aria-hidden="true">✓</span>{feature}</li>)}</ul>
       <p class="offer-footnote">Devis gratuit avant tout paiement.</p>
     </article>)}
