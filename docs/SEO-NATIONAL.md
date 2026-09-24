@@ -2,7 +2,9 @@
 
 ## Livraison et limite actuelle
 
-Cette branche prépare l’expansion, mais **n’implémente pas encore 20 000 contenus**. Elle contient 12 articles originaux (6 sites / 6 automatisation), 3 hubs et 259 URL existantes conservées, soit 274 URL dans le sitemap. Le plan accepté impose une préparation complète avant publication. La branche reste en aperçu tant que les contenus manquants ne sont pas rédigés et vérifiés. Ne pas fusionner en production pour contourner le contrôle.
+Le catalogue contient désormais **20 000 articles : 10 000 sites et 10 000 automatisation IA**. Il comprend 12 articles relus et **19 988 brouillons territoriaux générés**, fondés sur 9 994 communes de l’API officielle de découpage administratif. Ces brouillons partagent des modèles : ils ne sont pas 19 988 contenus SEO distinctifs validés. Ils sont disponibles uniquement dans les aperçus sous `/preparation/`, avec `noindex`, et sont exclus des sitemaps. La production reste protégée par le contrôle éditorial.
+
+La compilation réelle du 24 septembre a produit 20 467 pages HTML en 53,18 secondes, navigation et pages historiques comprises. Le sitemap public reste à 274 URL. Le générateur `scripts/seo/generate-territorial-drafts.mjs` conserve la provenance et l’empreinte de la source dans `territorial-drafts.json`. Les communes sont sélectionnées par population disponible, sans prétendre mesurer la demande commerciale. Le rendu des brouillons exige simultanément `CONTEXT=deploy-preview` et `FLEXWEB_DRAFT_PREVIEW=1`.
 
 La cible de 100 000 visites organiques mensuelles à 12 mois est un objectif commercial et non une prévision. Les clics Search Console ne sont pas des sessions Analytics. L’absence de données confirmées de visites, ventes ou demandes qualifiées doit rester explicite.
 

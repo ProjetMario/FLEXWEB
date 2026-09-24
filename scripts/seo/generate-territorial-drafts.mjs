@@ -1,0 +1,17 @@
+import {readFile,writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+const sourcePath=process.argv[2];
+if(!sourcePath)throw new Error('Provide an official geo.api.gouv.fr communes snapshot');
+const bytes=await readFile(sourcePath),raw=JSON.parse(bytes);
+const reviewed=JSON.parse(await readFile('src/data/national/articles.json','utf8')).filter(a=>a.status==='reviewed');
+const target=20000,remaining=target-reviewed.length;
+if(remaining<0||remaining%2)throw new Error('Two balanced axes require an even remaining count');
+const sites=reviewed.filter(a=>a.axis==='sites').length,automation=reviewed.filter(a=>a.axis==='automatisation').length;
+if(sites!==automation)throw new Error('Existing reviewed catalogue is unbalanced');
+const valid=raw.filter(c=>/^[0-9AB]{5}$/.test(c.code)&&c.nom&&c.departement?.nom&&c.region?.nom&&Number.isInteger(c.population)&&c.population>0&&Array.isArray(c.codesPostaux));
+if(new Set(valid.map(c=>c.code)).size!==valid.length)throw new Error('Duplicate official commune code');
+const selected=valid.sort((a,b)=>b.population-a.population||a.code.localeCompare(b.code)).slice(0,remaining/2);
+if(selected.length!==remaining/2)throw new Error('Insufficient official communes');
+const result={version:1,targetArticles:target,reviewedArticles:reviewed.length,generatedDraftArticles:remaining,retrievedAt:new Date().toISOString().slice(0,10),source:'https://geo.api.gouv.fr/communes?fields=nom,code,codesPostaux,codeDepartement,codeRegion,population,departement,region&format=json',sourceSha256:createHash('sha256').update(bytes).digest('hex'),selection:'Communes with complete official metadata, sorted by population descending then INSEE code; not a measure of commercial demand.',publicationStatus:'draft-only',communes:selected.map(c=>({name:c.nom,code:c.code,postalCodes:c.codesPostaux,department:c.departement.nom,departmentCode:c.departement.code,region:c.region.nom,regionCode:c.region.code,population:c.population}))};
+await writeFile('src/data/national/territorial-drafts.json',JSON.stringify(result)+'\n');
+console.log(JSON.stringify({communes:selected.length,reviewed:reviewed.length,draftArticles:remaining,totalArticles:target,sourceSha256:result.sourceSha256},null,2));

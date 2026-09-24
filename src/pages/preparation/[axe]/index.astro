@@ -1,0 +1,7 @@
+---
+import DraftHub from '../../../components/seo/national/DraftHub.astro';
+import {draftGroups} from '../../../lib/seo/territorial-drafts.mjs';
+export function getStaticPaths(){return draftGroups().filter(g=>g.page===1).map(group=>({params:{axe:group.axis},props:{group}}));}
+const {group}=Astro.props;
+---
+<DraftHub group={group}/>

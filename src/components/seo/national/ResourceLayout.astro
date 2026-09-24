@@ -1,8 +1,8 @@
 ---
 import BaseLayout from '../../../layout/BaseLayout.astro';
-const {title,description}=Astro.props;
+const {title,description,noindex=false}=Astro.props;
 ---
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} noindex={noindex}>
  <div class="resource"><slot /></div>
 </BaseLayout>
 <style is:global>

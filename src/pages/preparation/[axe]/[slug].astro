@@ -1,0 +1,21 @@
+---
+import ResourceLayout from '../../../components/seo/national/ResourceLayout.astro';
+import {draftEntries,draftData,draftContent,draftPath,draftHubPath} from '../../../lib/seo/territorial-drafts.mjs';
+import {websiteOffers,automationOffers} from '../../../data/pricing';
+export function getStaticPaths(){return draftEntries().map(({axis,commune,slug})=>({params:{axe:axis,slug},props:{axis,commune}}));}
+const {axis,commune:c}=Astro.props;
+const content=draftContent(axis,c),data=draftData();
+const otherAxis=axis==='sites'?'automatisation':'sites';
+const offers=axis==='sites'?websiteOffers:automationOffers;
+const money=(n:number)=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n/100);
+---
+<ResourceLayout title={content.title} description={`Trame de projet pour ${c.name} : ${axis==='sites'?'site internet et suivi des demandes':'automatisation des tâches et IA'}. Brouillon à personnaliser avant publication.`} noindex={true}>
+ <nav aria-label="Fil d’Ariane"><a href="/preparation/">Catalogue de préparation</a><a href={draftHubPath(axis)}>{axis==='sites'?'Sites internet':'Automatisation IA'}</a></nav>
+ <aside class="note"><strong>Brouillon généré — non validé pour publication SEO.</strong><p>Les repères géographiques sont sourcés. Le texte métier reste à personnaliser et à relire ; il peut recouper une page existante. Ce brouillon est exclu des sitemaps.</p></aside>
+ <h1>{content.title}</h1><p class="lead">{content.introduction}</p>
+ <section class="note"><h2>Repères territoriaux vérifiés</h2><ul><li>Commune : {c.name} · code INSEE {c.code}</li><li>Département : {c.department} ({c.departmentCode})</li><li>Région : {c.region}</li><li>Codes postaux fournis : {c.postalCodes.join(', ')}</li><li>Population fournie par l’API : {c.population.toLocaleString('fr-FR')} habitants</li></ul><p class="meta">Extraction du {data.retrievedAt}. Le millésime de population n’est pas indiqué dans cette réponse API ; ce chiffre ne décrit pas un marché ni un volume de recherches.</p><a href={`https://geo.api.gouv.fr/communes/${c.code}`}>Consulter la fiche officielle</a></section>
+ <div class="article-body">{content.sections.map(([title,text])=><section><h2>{title}</h2><p>{text}</p></section>)}<section><h2>À compléter avant validation</h2><ul>{content.checklist.map(item=><li>{item}</li>)}</ul></section></div>
+ <section class="note"><h2>Cadre tarifaire à reprendre au devis</h2>{offers.map(o=><p><strong>{o.name} : {money(o.setupCents)} TTC.</strong> {o.description}</p>)}<p>Les automatisations IA avancées et applications sont sur devis. Le catalogue des options et les périmètres exacts sont disponibles sur la <a href="/pricing/">page tarifs</a>.</p></section>
+ <p>Flex-Web est basé à Voglans et accompagne les entreprises à distance en France. Cette page ne signale pas une agence implantée à {c.name}.</p>
+ <p><a href={draftPath(otherAxis,c)}>Voir le brouillon {otherAxis==='sites'?'site internet':'automatisation IA'} pour la même commune →</a></p><p><a href={content.related}>Lire une méthode développée →</a></p>
+</ResourceLayout>
