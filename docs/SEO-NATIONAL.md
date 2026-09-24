@@ -46,3 +46,20 @@ Avant la publication coordonnée : comparer avec la production réelle, rebaser 
 Chaque semaine : enrichir des contenus distincts dans cette branche ou sa continuation, auditer, consigner le nombre réellement prêt. Chaque mois : 28 jours complets disponibles, marque/hors marque, local/national, sites/automatisation/applications, clics et impressions d’une part, sessions et conversions confirmées d’autre part. Les requêtes anonymisées ne figurent pas toutes dans les exports et leurs sommes ne remplacent pas les totaux du site.
 
 Après publication, examiner séparément soumission, exploration et indexation, puis les demandes reçues. Réunir ou améliorer les pages redondantes. Ne pas promettre un classement ou une citation IA et ne pas soumettre sans cesse des URL inchangées.
+
+## Enrichissement du 24 septembre
+
+Les 19 988 fiches territoriales disposent d’un second instantané officiel (`territorial-enrichment.json`) : codes postaux partagés, homonymes, intercommunalité, superficie et trois centres de communes proches. `enrich-territories.mjs` utilise toutes les 34 969 communes de l’extraction, conserve les 9 994 identifiants du catalogue et vérifie les voisins par une comparaison exhaustive indépendante sur 18 cas. Les distances sont sphériques, jamais des trajets, et une intercommunalité n’est pas une zone de service.
+
+Chaque fiche expose trois diagnostics (fait, action proposée, cas de recette), une comparaison territoriale sourcée, trois questions/réponses et un simulateur de qualification sans réseau ni enregistrement. Les six guides par axe sont des méthodes partagées chargées dans un composant commun ; ils ne sont pas comptés comme 20 000 textes originaux. Les 12 articles relus reçoivent également un cas de recette spécifique et le composant de guides. Les sources techniques sont ajoutées là où elles étayent le sujet (W3C, Google, OWASP).
+
+Les contrôles `audit-enrichment.mjs` et `enrichment.test.mjs` vérifient couverture, stabilité des codes, provenance, partage postal et décisions prudentes du simulateur. Le rapport compte séparément les données uniques et les familles de méthodes communes. Il reste `readyForProduction:false` : une différenciation factuelle ne prouve pas une intention SEO indépendante. Les pages restent en relecture ; aucune promesse d’indexation ou de 100 000 visites.
+
+Deux défauts du contrôle antérieur sont corrigés : la saturation des fragments fréquents n’autorise plus les copies suivantes ; la cible de publication exige désormais 20 000 articles relus, pas seulement 20 000 URL en incluant navigation et anciennes pages. Un contrôle de 125 quasi-copies assure la régression. L’audit SEO conserve les routes et ancres des pages noindex sans garder tout leur HTML en mémoire.
+
+Références éditoriales consultées :
+- https://developers.google.com/search/docs/fundamentals/creating-helpful-content
+- https://developers.google.com/search/docs/essentials/spam-policies
+- https://developers.google.com/search/docs/fundamentals/using-gen-ai-content
+- https://developers.google.com/search/docs/appearance/ai-features
+- https://geo.api.gouv.fr/decoupage-administratif/communes

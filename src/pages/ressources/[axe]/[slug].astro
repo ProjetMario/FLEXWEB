@@ -1,6 +1,7 @@
 ---
 import {getCollection} from 'astro:content';
 import ResourceLayout from '../../../components/seo/national/ResourceLayout.astro';
+import ProjectGuides from '../../../components/seo/national/ProjectGuides.astro';
 import StructuredData from '../../../components/seo/StructuredData.astro';
 import {articlePath,bySlug,hubPath,axisLabels} from '../../../lib/seo/national';
 import {websiteOffers,automationOffers,pricingOptions} from '../../../data/pricing';
@@ -23,6 +24,7 @@ const schemas=[{'@context':'https://schema.org','@type':'Article',headline:a.tit
  <section><h2>À préparer pour votre projet</h2><ul>{a.checklist.map(item=><li>{item}</li>)}</ul></section>
  <section><h2>Le périmètre à confirmer</h2><p>{a.limits}</p><p>Le devis précise les outils, les accès, le calendrier et les éventuels coûts de licences ou de consommation. Aucun gain chiffré n’est annoncé sans mesure.</p></section>
  </div>
+ <ProjectGuides axis={a.axis}/>
  <section><h2>Quel accompagnement choisir ?</h2><div class="grid">{offers.map(o=><div class="card"><h3>{o.name}</h3><p class="price">{money(o.setupCents)} TTC</p><p>{o.description}</p><a href={o.href}>Définir le périmètre au devis →</a></div>)}</div>{a.axis==='automatisation'&&<p>Une automatisation IA avancée ou une application nécessite un <a href="/demarrer/?service=automation&offre=sur-mesure">devis personnalisé</a>. Le forfait CRM ne couvre pas automatiquement tous les scénarios décrits.</p>}
  <p>{pricingOptions.map((o,i)=><span>{i>0?' · ':''}{money(o.monthlyCents)} TTC/mois : {o.description}</span>)}</p></section>
  <section class="note"><h2>Le site et l’automatisation se complètent</h2>{a.related.map(slug=>{const other=bySlug.get(slug);return other&&<p><a href={articlePath(other)}>{other.title} →</a></p>;})}<p><a href="/realisations/">Voir les réalisations Flex-Web</a></p></section>

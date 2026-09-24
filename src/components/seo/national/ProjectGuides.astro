@@ -1,0 +1,29 @@
+---
+const {axis}=Astro.props;
+---
+<project-guides data-axis={axis} class="note project-guides">
+ <h2>Choisissez le besoin à préparer</h2>
+ <p>Un guide de travail adapté à votre objectif : informations à réunir, étapes, cas de recette et mesure du résultat. Les exemples sont illustratifs, sans gain chiffré promis.</p>
+ <label>Votre besoin <select aria-label="Votre besoin"><option value="">Choisir un scénario</option></select></label>
+ <div class="guide-result" aria-live="polite"></div>
+ <noscript><p>Les méthodes détaillées restent consultables dans les <a href={`/ressources/${axis}/`}>ressources {axis==='sites'?'sites internet':'automatisation IA'}</a>.</p></noscript>
+</project-guides>
+<script>
+import {projectGuides} from '../../../lib/seo/project-guides.mjs';
+class ProjectGuides extends HTMLElement {
+ connectedCallback(){
+  if(this.dataset.initialized)return;this.dataset.initialized='1';
+  const guides=projectGuides[this.dataset.axis as keyof typeof projectGuides]??[],select=this.querySelector('select')!,result=this.querySelector('.guide-result')!;
+  for(const guide of guides){const option=document.createElement('option');option.value=guide.id;option.textContent=guide.title;select.append(option);}
+  select.addEventListener('change',()=>{result.replaceChildren();const g=guides.find(g=>g.id===select.value);if(!g)return;
+   const block=(tag:string,text:string)=>{const n=document.createElement(tag);n.textContent=text;result.append(n);};
+   const list=(title:string,items:string[])=>{block('h3',title);const ul=document.createElement('ul');for(const text of items){const li=document.createElement('li');li.textContent=text;ul.append(li);}result.append(ul);};
+   block('h3',g.title);block('p',g.need);list('À réunir',g.inputs);list('Étapes proposées',g.steps);list('Vérifications avant utilisation',g.checks);block('h3','Exemple illustratif');block('p',g.example);block('h3','Indicateur à mesurer');block('p',g.metric);list('Limites du scénario',g.limits);
+  });
+ }
+}
+if(!customElements.get('project-guides'))customElements.define('project-guides',ProjectGuides);
+</script>
+<style>
+project-guides{display:block}label{display:grid;gap:10px;font-weight:600}select{background:white;border:1px solid #a7adb8;border-radius:12px;padding:14px;max-width:100%;width:100%;font:inherit}select:focus-visible{outline:3px solid #0066cc;outline-offset:3px}.guide-result:empty{display:none}.guide-result{margin-top:32px}
+</style>

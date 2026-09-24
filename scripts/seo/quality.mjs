@@ -19,15 +19,27 @@ export function auditArticles(articles){
   if(!/illustratif|illustrative|fictif|fictive|exemple/i.test(a.example))issues.push(`Unlabelled example: ${a.slug}`);
   checkUnique('body:'+createHash('sha256').update(tokens.join(' ')).digest('hex'),i);
   const shingles=new Set(tokens.slice(0,-4).map((_,k)=>tokens.slice(k,k+5).join(' ')));sets[i]=shingles;
-  // Inverted fingerprints avoid all-pairs comparison at national scale.
+  // Retain representative postings even for very common fingerprints. Dropping
+  // common fingerprints entirely lets the 52nd copy of a template evade review.
+  // Candidate nomination is bounded per fingerprint; similarity is then exact
+  // for each nominated pair, including postings saturated by earlier articles.
   const candidates=new Map();
-  for(const shingle of shingles){const prior=index.get(shingle)||[];if(prior.length>50)continue;for(const j of prior)candidates.set(j,(candidates.get(j)||0)+1);}
-  for(const [j,intersection] of candidates){const similarity=intersection/(shingles.size+sets[j].size-intersection);if(similarity>=.45)issues.push(`Similar bodies: ${articles[j].slug} / ${a.slug} (${similarity.toFixed(2)})`);}
-  for(const shingle of shingles){const list=index.get(shingle)||[];if(list.length<=50)list.push(i);index.set(shingle,list);}
+  for(const shingle of shingles){for(const j of index.get(shingle)||[])candidates.set(j,(candidates.get(j)||0)+1);}
+  for(const j of candidates.keys()){
+   const prior=sets[j],smaller=shingles.size<prior.size?shingles:prior,larger=smaller===shingles?prior:shingles;
+   let intersection=0;for(const shingle of smaller)if(larger.has(shingle))intersection++;
+   const similarity=intersection/(shingles.size+prior.size-intersection);
+   if(similarity>=.45)issues.push(`Similar bodies: ${articles[j].slug} / ${a.slug} (${similarity.toFixed(2)})`);
+  }
+  for(const shingle of shingles){const list=index.get(shingle)||[];if(list.length<50)list.push(i);index.set(shingle,list);}
  });
  return issues;
 }
-export function releaseReadiness(urlCount,issues,counts){return {ready:urlCount>=20000&&issues.length===0&&counts.sites===counts.automatisation,target:20000,urlCount,missing:Math.max(0,20000-urlCount),counts,issues};}
+export function releaseReadiness(urlCount,issues,counts){
+ const target=20000,validCounts=['sites','automatisation'].every(axis=>Number.isInteger(counts[axis])&&counts[axis]>=0);
+ const reviewedArticles=validCounts?counts.sites+counts.automatisation:0;
+ return {ready:validCounts&&urlCount>=target&&reviewedArticles>=target&&issues.length===0&&counts.sites===counts.automatisation,target,urlCount,reviewedArticles,missing:Math.max(0,target-reviewedArticles),missingUrls:Math.max(0,target-urlCount),counts,issues};
+}
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const articles=JSON.parse(await readFile('src/data/national/articles.json','utf8'));
  const urls=await readSitemap('https://flex-web.fr/sitemap.xml',url=>readFile(path.join('dist',new URL(url).pathname),'utf8'));

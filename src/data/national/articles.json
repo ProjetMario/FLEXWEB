@@ -23,6 +23,10 @@
       {
         "title": "Vérifier le parcours avec un cas d’essai",
         "text": "Prenez une demande représentative et faites-la parcourir au responsable commercial puis à la production. Ils doivent retrouver la matière, le volume et les éléments manquants sans relire plusieurs e-mails. Testez aussi une demande hors capacité : le parcours doit permettre de la signaler, sans produire un devis automatique trompeur."
+      },
+      {
+        "title": "Recette : une consultation technique incomplète",
+        "text": "Utilisez un dossier fictif sans plan et sans quantité, puis un dossier complet avec deux versions du même document. La première demande doit indiquer les informations à fournir sans promettre un prix. La seconde doit préserver les versions et désigner celle à examiner. Un nom de fichier identique ne suffit pas à identifier une pièce. Vérifiez qui reçoit le dossier et comment un technicien signale une capacité à confirmer."
       }
     ],
     "example": "Une PME de découpe reçoit une demande pour une petite série sans indication de matière. Le scénario proposé crée une tâche « préciser la matière » ; le prix reste à établir par l’équipe. Cet exemple est illustratif.",
@@ -39,6 +43,11 @@
       {
         "label": "Offres et périmètre Flex-Web",
         "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      },
+      {
+        "label": "W3C — signaler clairement le résultat et les erreurs d’un formulaire",
+        "url": "https://www.w3.org/WAI/tutorials/forms/notifications/",
         "checkedAt": "2026-09-24"
       }
     ]
@@ -67,6 +76,10 @@
       {
         "title": "Relier le site au suivi quotidien",
         "text": "Créez des catégories distinctes pour les dépannages et les demandes de travaux. Une notification doit préciser quel contact rappeler et quelle information manque. Avant la mise en ligne, testez un numéro mal saisi et une double soumission. Vérifiez que le dossier reste unique et que le visiteur voit une confirmation uniquement après enregistrement."
+      },
+      {
+        "title": "Recette : une demande située hors de votre zone",
+        "text": "Préparez deux demandes fictives : une fuite avec une adresse imprécise et un projet de rénovation avec commune, photos et échéance. La première exige une qualification, sans affichage automatique d’un délai d’intervention. La seconde doit conserver ses pièces et son prochain rappel. Testez également une commune non desservie : le formulaire doit expliquer le statut de la demande sans annoncer un rendez-vous accepté."
       }
     ],
     "example": "Un visiteur choisit « rénovation », précise sa commune et souhaite une visite. Le CRM prépare une tâche de rappel, sans annoncer de créneau non disponible. Exemple de parcours, pas de résultat client mesuré.",
@@ -83,6 +96,11 @@
       {
         "label": "Offres et périmètre Flex-Web",
         "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      },
+      {
+        "label": "W3C — signaler clairement le résultat et les erreurs d’un formulaire",
+        "url": "https://www.w3.org/WAI/tutorials/forms/notifications/",
         "checkedAt": "2026-09-24"
       }
     ]
@@ -111,6 +129,10 @@
       {
         "title": "Tester les situations courantes sur téléphone",
         "text": "Consultez le menu avec une connexion lente, lancez l’appel et cherchez les horaires d’un jour de fermeture. Faites ensuite un essai de réservation refusée ou indisponible. La page doit proposer une réponse compréhensible sans promettre une table. Vérifiez que les accès pour modifier la carte ne donnent pas de droits inutiles sur le reste du site."
+      },
+      {
+        "title": "Recette : deux demandes pour le dernier créneau",
+        "text": "Faites arriver deux demandes fictives pour la même heure avec des tailles de groupe différentes. Vérifiez que l’équipe distingue réception et confirmation, puis annulez une demande depuis son dossier. Le créneau ne doit être libéré qu’après enregistrement du changement. Modifiez ensuite le menu dans sa source unique et contrôlez que le téléphone affiche bien la version actualisée, sans ancien PDF encore mis en avant."
       }
     ],
     "example": "Le restaurant ferme exceptionnellement un mardi. Le scénario recommandé actualise l’information visible et bloque les demandes sur ce créneau si l’outil connecté le permet. Situation illustrative à adapter.",
@@ -127,6 +149,11 @@
       {
         "label": "Offres et périmètre Flex-Web",
         "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      },
+      {
+        "label": "W3C — signaler clairement le résultat et les erreurs d’un formulaire",
+        "url": "https://www.w3.org/WAI/tutorials/forms/notifications/",
         "checkedAt": "2026-09-24"
       }
     ]
@@ -155,6 +182,10 @@
       {
         "title": "Organiser la réponse sans perdre les changements",
         "text": "Dans le suivi, conservez les dates demandées puis les dates finalement retenues. Une nouvelle demande du même voyageur ne doit pas effacer un accord existant. Testez un départ avant l’arrivée, un séjour au-delà de la capacité et une modification après réponse. Les cas incohérents restent à traiter par le propriétaire."
+      },
+      {
+        "title": "Recette : modification des dates de séjour",
+        "text": "Créez un dossier fictif, changez les dates puis le nombre de voyageurs. Le récapitulatif doit montrer la dernière demande et permettre de retrouver les changements. Une indisponibilité ne doit pas effacer le message initial : proposez une qualification ou une autre période à confirmer. Si plusieurs agendas sont connectés, testez un retard de synchronisation avant de présenter un créneau comme définitivement réservé."
       }
     ],
     "example": "Un voyageur demande deux semaines mais les dates ne sont pas synchronisées avec les autres canaux. Le système enregistre la demande et prépare un rappel ; le propriétaire confirme la disponibilité. Exemple fictif.",
@@ -171,6 +202,11 @@
       {
         "label": "Offres et périmètre Flex-Web",
         "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      },
+      {
+        "label": "W3C — signaler clairement le résultat et les erreurs d’un formulaire",
+        "url": "https://www.w3.org/WAI/tutorials/forms/notifications/",
         "checkedAt": "2026-09-24"
       }
     ]
@@ -199,6 +235,10 @@
       {
         "title": "Définir la qualification avant le devis",
         "text": "Le CRM peut attribuer la demande selon la compétence requise et demander une précision manquante. La faisabilité, les responsabilités et les engagements restent examinés par l’équipe. Pour la recette, utilisez une mission hors domaine et une demande sans calendrier. Vérifiez qu’aucun message ne donne un accord technique avant cette analyse."
+      },
+      {
+        "title": "Recette : changement de périmètre avant proposition",
+        "text": "Faites évoluer une mission fictive de diagnostic vers une étude complémentaire. Le responsable doit retrouver le besoin initial, la nouvelle version du périmètre et les documents reçus. La page de confirmation indique qu’une qualification reste nécessaire. Vérifiez qu’une ancienne proposition n’est pas réutilisée silencieusement après modification des livrables, et qu’une demande hors de vos compétences peut recevoir un traitement explicite."
       }
     ],
     "example": "Une entreprise demande une étude sans préciser le stade de conception. Un brouillon de réponse demande les pièces nécessaires à un premier échange, sans accepter la mission. Exemple illustratif.",
@@ -215,6 +255,11 @@
       {
         "label": "Offres et périmètre Flex-Web",
         "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      },
+      {
+        "label": "W3C — signaler clairement le résultat et les erreurs d’un formulaire",
+        "url": "https://www.w3.org/WAI/tutorials/forms/notifications/",
         "checkedAt": "2026-09-24"
       }
     ]
@@ -243,6 +288,10 @@
       {
         "title": "Contrôler la publication et les semaines suivantes",
         "text": "Vérifiez les anciennes adresses, les destinations finales et les liens internes. Le sitemap contient les nouvelles URL canoniques, tandis que les liens du site pointent directement vers elles. Comparez ensuite les données sur des périodes complètes et comparables. Une variation de trafic ne permet pas à elle seule d’attribuer un gain ou une perte à la refonte."
+      },
+      {
+        "title": "Recette : contrôler une ancienne adresse complète",
+        "text": "Prenez une ancienne page utile, son image principale et le lien de contact qu’elle contenait. Vérifiez chaque destination après migration, y compris depuis un téléphone. Une page supprimée sans équivalent ne doit pas être redirigée artificiellement vers un contenu sans rapport. Conservez la table des décisions et les résultats des contrôles pour distinguer les changements prévus des erreurs apparues au déploiement."
       }
     ],
     "example": "Une page « prestations » est divisée en deux services distincts. La correspondance se décide selon le contenu historique, puis les liens internes sont corrigés. Exemple de méthode, sans promesse de maintien de position.",
@@ -259,6 +308,11 @@
       {
         "label": "Offres et périmètre Flex-Web",
         "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      },
+      {
+        "label": "Google — préparer et contrôler une migration d’URL",
+        "url": "https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes",
         "checkedAt": "2026-09-24"
       }
     ]
@@ -287,6 +341,10 @@
       {
         "title": "Recetter avec les cas difficiles",
         "text": "Essayez un message vide, une pièce jointe seule, une demande hors sujet et une réponse à une ancienne conversation. Vérifiez aussi une panne du service IA. Les messages restent enregistrés et une personne est avertie si le classement ne peut pas être effectué. Mesurez les corrections nécessaires avant d’autoriser une orientation automatique limitée."
+      },
+      {
+        "title": "Recette : un message qui contredit vos règles",
+        "text": "Dans un jeu de données fictif, ajoutez une demande demandant de supprimer les contrôles ou de transmettre une information confidentielle. Le texte reçu doit rester une donnée à analyser. Il ne peut pas modifier les autorisations du système. Comparez la catégorie proposée à celle qu’une personne aurait choisie, notez les désaccords et gardez une file pour les cas où aucune catégorie fiable ne convient."
       }
     ],
     "example": "Une demande contient « devis » mais concerne la correction d’une proposition existante. Le système suggère le suivi de dossier ; l’équipe vérifie le rattachement avant toute réponse. Exemple fictif.",
@@ -303,6 +361,11 @@
       {
         "label": "Offres et périmètre Flex-Web",
         "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      },
+      {
+        "label": "OWASP — traiter les instructions malveillantes contenues dans les données reçues",
+        "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
         "checkedAt": "2026-09-24"
       }
     ]
@@ -331,6 +394,10 @@
       {
         "title": "Éviter un second envoi après une panne",
         "text": "Attribuez un identifiant au rappel et gardez son état. Si le fournisseur ne confirme pas la transmission, classez le résultat à vérifier plutôt que d’envoyer à nouveau immédiatement. Testez une réponse reçue juste avant l’échéance et un clic répété sur la validation. L’historique doit permettre de comprendre pourquoi un rappel a été envoyé ou annulé."
+      },
+      {
+        "title": "Recette : une réponse reçue entre préparation et envoi",
+        "text": "Préparez une relance fictive, puis enregistrez une réponse du client avant l’étape de transmission. Le nouvel état doit arrêter le message préparé. Rejouez ensuite la même tâche pour simuler une reprise après panne : aucun second envoi ne doit partir. Si le fournisseur n’a pas confirmé son résultat, affichez un état à vérifier et rapprochez les événements avant de décider d’un nouvel essai."
       }
     ],
     "example": "Un devis est prévu pour relance le matin, mais le client répond avant l’exécution. La nouvelle réponse suspend le rappel et crée une tâche pour le commercial. Exemple de recette, pas une campagne activée.",
@@ -375,6 +442,10 @@
       {
         "title": "Recontrôler juste avant la transmission",
         "text": "Une facture peut être payée entre la préparation du rappel et l’envoi. Relisez son état au dernier moment et annulez le rappel si nécessaire. Simulez un paiement partiel, un avoir et deux confirmations de paiement identiques. Une panne de synchronisation laisse le dossier à vérifier afin de ne pas réclamer un montant obsolète."
+      },
+      {
+        "title": "Recette : règlement partiel et pièce contestée",
+        "text": "Testez séparément une facture entièrement réglée, un solde partiel et une pièce contestée. La première sort du parcours ; les deux autres nécessitent une qualification adaptée. Faites évoluer le solde après préparation du brouillon et avant validation. Le texte à envoyer doit être recalculé à partir de la source comptable, avec trace de la version utilisée et de la personne ayant validé le message."
       }
     ],
     "example": "Une facture préparée pour rappel reçoit un paiement partiel. Le scénario proposé suspend le brouillon et demande de confirmer le nouveau solde avant envoi. Cas illustratif.",
@@ -419,6 +490,10 @@
       {
         "title": "Traiter les modifications comme une suite du dossier",
         "text": "Une annulation doit identifier le rendez-vous concerné et libérer le créneau uniquement après confirmation. Un déplacement ne doit pas laisser deux réservations actives par erreur. Testez un double clic, une coupure réseau et une annulation suivie d’une nouvelle réservation. Les rappels déjà programmés doivent correspondre à la dernière date validée."
+      },
+      {
+        "title": "Recette : déplacement et annulation du même rendez-vous",
+        "text": "Créez un rendez-vous fictif, changez son horaire puis annulez-le. Vérifiez que l’agenda, le dossier et les rappels font référence au même identifiant. Un ancien rappel ne doit pas survivre au déplacement. Testez une indisponibilité de l’agenda : le site peut conserver une demande à traiter, mais ne doit pas afficher une confirmation de réservation tant que l’écriture n’a pas effectivement abouti."
       }
     ],
     "example": "Une visite de chantier change de jour. L’ancien rappel est annulé et le nouveau créneau n’est annoncé qu’après confirmation de l’agenda. Exemple de fonctionnement à tester.",
@@ -463,6 +538,10 @@
       {
         "title": "Écrire après validation et garder une trace",
         "text": "Le système prépare une saisie dans le logiciel cible, puis conserve la décision du validateur et l’identifiant du document. Le renvoi d’un même fichier ne doit pas créer une deuxième opération. Testez un document déjà reçu, une référence différente et une panne après validation. La reprise doit pouvoir distinguer ce qui a réellement été enregistré."
+      },
+      {
+        "title": "Recette : document illisible ou contradictoire",
+        "text": "Utilisez des pièces fictives contenant une date peu lisible, deux totaux différents et un champ absent. L’outil doit signaler les valeurs à vérifier plutôt que compléter arbitrairement les manques. L’écran de contrôle associe chaque proposition à son passage source. Après correction manuelle, réimportez le même document : vérifiez que la validation existante reste traçable et qu’une nouvelle écriture ne crée pas de doublon."
       }
     ],
     "example": "Un bon de commande contient une référence peu lisible. Le champ est signalé à vérifier ; aucune référence probable n’est ajoutée au CRM. Exemple illustratif de contrôle.",
@@ -479,6 +558,11 @@
       {
         "label": "Offres et périmètre Flex-Web",
         "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      },
+      {
+        "label": "OWASP — traiter les instructions malveillantes contenues dans les données reçues",
+        "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
         "checkedAt": "2026-09-24"
       }
     ]
@@ -507,6 +591,10 @@
       {
         "title": "Tester les réponses impossibles à déduire",
         "text": "Posez une question dont la réponse ne figure pas dans la base, puis une demande qui contredit les conditions. Le brouillon doit signaler ce qui manque et proposer de vérifier. Mesurez les corrections faites par l’équipe avant tout élargissement de l’autonomie. Si la source n’est plus disponible, le système garde le message à traiter sans réponse inventée."
+      },
+      {
+        "title": "Recette : une question sans réponse dans la base",
+        "text": "Demandez un délai ou une remise qui ne figure dans aucune information validée. Le brouillon doit demander une précision ou proposer une reprise par une personne ; il ne doit pas créer une condition commerciale. Modifiez ensuite une information de la base et contrôlez la version utilisée. Conservez le brouillon, les corrections et le message finalement validé pour comprendre les erreurs et améliorer les prochaines suggestions."
       }
     ],
     "example": "Un prospect demande un délai ferme avant étude du projet. Le brouillon propose un échange de cadrage et laisse le délai à confirmer au devis. Aucun rendez-vous n’est présenté comme réservé. Exemple fictif.",
@@ -523,6 +611,11 @@
       {
         "label": "Offres et périmètre Flex-Web",
         "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      },
+      {
+        "label": "OWASP — traiter les instructions malveillantes contenues dans les données reçues",
+        "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
         "checkedAt": "2026-09-24"
       }
     ]

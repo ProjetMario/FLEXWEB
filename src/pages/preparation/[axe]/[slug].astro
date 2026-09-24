@@ -1,21 +1,41 @@
 ---
 import ResourceLayout from '../../../components/seo/national/ResourceLayout.astro';
 import {draftEntries,draftData,draftContent,draftPath,draftHubPath} from '../../../lib/seo/territorial-drafts.mjs';
+import {enrichedTerritory,enrichmentData,localInsights,localQuestions} from '../../../lib/seo/territorial-insights.mjs';
+import ProjectGuides from '../../../components/seo/national/ProjectGuides.astro';
+import TerritoryPlanner from '../../../components/seo/national/TerritoryPlanner.astro';
 import {websiteOffers,automationOffers} from '../../../data/pricing';
 export function getStaticPaths(){return draftEntries().map(({axis,commune,slug})=>({params:{axe:axis,slug},props:{axis,commune}}));}
 const {axis,commune:c}=Astro.props;
 const content=draftContent(axis,c),data=draftData();
+const enrichment=enrichedTerritory(c.code),source=enrichmentData(),insights=localInsights(axis,c,enrichment),questions=localQuestions(axis,c,enrichment);
 const otherAxis=axis==='sites'?'automatisation':'sites';
 const offers=axis==='sites'?websiteOffers:automationOffers;
 const money=(n:number)=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n/100);
 ---
 <ResourceLayout title={content.title} description={`Trame de projet pour ${c.name} : ${axis==='sites'?'site internet et suivi des demandes':'automatisation des tâches et IA'}. Brouillon à personnaliser avant publication.`} noindex={true}>
  <nav aria-label="Fil d’Ariane"><a href="/preparation/">Catalogue de préparation</a><a href={draftHubPath(axis)}>{axis==='sites'?'Sites internet':'Automatisation IA'}</a></nav>
- <aside class="note"><strong>Brouillon généré — non validé pour publication SEO.</strong><p>Les repères géographiques sont sourcés. Le texte métier reste à personnaliser et à relire ; il peut recouper une page existante. Ce brouillon est exclu des sitemaps.</p></aside>
+ <aside class="note"><strong>Brouillon enrichi — relecture éditoriale encore nécessaire.</strong><p>Cette fiche combine des données officielles, des diagnostics calculés et des recommandations de préparation. Elle reste hors indexation jusqu’à validation de son utilité propre ; des méthodes sont partagées avec les autres fiches.</p></aside>
  <h1>{content.title}</h1><p class="lead">{content.introduction}</p>
  <section class="note"><h2>Repères territoriaux vérifiés</h2><ul><li>Commune : {c.name} · code INSEE {c.code}</li><li>Département : {c.department} ({c.departmentCode})</li><li>Région : {c.region}</li><li>Codes postaux fournis : {c.postalCodes.join(', ')}</li><li>Population fournie par l’API : {c.population.toLocaleString('fr-FR')} habitants</li></ul><p class="meta">Extraction du {data.retrievedAt}. Le millésime de population n’est pas indiqué dans cette réponse API ; ce chiffre ne décrit pas un marché ni un volume de recherches.</p><a href={`https://geo.api.gouv.fr/communes/${c.code}`}>Consulter la fiche officielle</a></section>
+ <section aria-labelledby="local-diagnostic"><h2 id="local-diagnostic">Ce que les données de {c.name} changent dans votre projet</h2>
+ <p>Les faits viennent de l’API de l’État ; les actions proposées sont des recommandations Flex-Web. Elles servent à préparer un formulaire et des règles de suivi, sans déduire une demande commerciale locale.</p>
+ {insights.map(item=><article class="local-insight"><h3>{item.title}</h3><p>{item.fact}</p><p><strong>À mettre en place :</strong> {item.action}</p><p class="note"><strong>Test concret :</strong> {item.check}</p></article>)}
+ </section>
+ <section class="note"><h2>Vérifier les lieux proches avant de définir une zone</h2><p>Les trois centres de communes les plus proches dans la source sont indiqués ci-dessous. Les distances sont calculées à vol d’oiseau, pas par la route. Elles ne prouvent ni une frontière commune, ni une desserte, ni un temps de trajet.</p>
+ <div class="table-scroll"><table><caption>Comparaison géographique autour de {c.name}</caption><thead><tr><th scope="col">Commune et source</th><th scope="col">Département</th><th scope="col">Codes postaux</th><th scope="col">Distance entre centres</th></tr></thead><tbody>{enrichment.nearby.map(n=><tr><th scope="row"><a href={`https://geo.api.gouv.fr/communes/${n.code}`}>{n.name} ({n.code})</a></th><td>{n.departmentCode}</td><td>{n.postalCodes.join(', ')}</td><td>{n.distanceKm.toLocaleString('fr-FR')} km</td></tr>)}</tbody></table></div>
+ {enrichment.surfaceKm2!==null&&<p>Superficie administrative fournie pour {c.name} : {enrichment.surfaceKm2.toLocaleString('fr-FR')} km². Cette surface n’est pas un rayon d’intervention.</p>}
+ </section>
+ <TerritoryPlanner commune={c} enrichment={enrichment}/>
+ <ProjectGuides axis={axis}/>
  <div class="article-body">{content.sections.map(([title,text])=><section><h2>{title}</h2><p>{text}</p></section>)}<section><h2>À compléter avant validation</h2><ul>{content.checklist.map(item=><li>{item}</li>)}</ul></section></div>
  <section class="note"><h2>Cadre tarifaire à reprendre au devis</h2>{offers.map(o=><p><strong>{o.name} : {money(o.setupCents)} TTC.</strong> {o.description}</p>)}<p>Les automatisations IA avancées et applications sont sur devis. Le catalogue des options et les périmètres exacts sont disponibles sur la <a href="/pricing/">page tarifs</a>.</p></section>
+ <section><h2>Questions pour préparer le projet à {c.name}</h2>{questions.map(f=><details><summary>{f.q}</summary><p>{f.a}</p></details>)}</section>
+ <section class="note"><h2>Sources et méthode</h2><p>Données extraites le {source.retrievedAt} : <a href={`https://geo.api.gouv.fr/communes/${c.code}?fields=nom,code,codesPostaux,centre,surface,epci`}>fiche officielle de {c.name}</a> · <a href="https://geo.api.gouv.fr/decoupage-administratif/communes">documentation de l’API</a>.</p><p>Les rapprochements de codes postaux et d’homonymes utilisent toutes les communes présentes dans la même extraction. La proximité est calculée entre les centres fournis avec une distance sur la sphère terrestre. Les codes identifient des communes ; ils ne décrivent pas un fichier clients.</p><p>Le SEO et les réponses IA demandent un contenu utile et accessible. Références : <a href="https://developers.google.com/search/docs/fundamentals/creating-helpful-content">qualité des contenus selon Google</a> et <a href="https://developers.google.com/search/docs/appearance/ai-features">apparition dans les fonctionnalités IA</a>. Aucun moteur ne garantit l’indexation de cette fiche.</p></section>
  <p>Flex-Web est basé à Voglans et accompagne les entreprises à distance en France. Cette page ne signale pas une agence implantée à {c.name}.</p>
  <p><a href={draftPath(otherAxis,c)}>Voir le brouillon {otherAxis==='sites'?'site internet':'automatisation IA'} pour la même commune →</a></p><p><a href={content.related}>Lire une méthode développée →</a></p>
 </ResourceLayout>
+
+<style>
+.local-insight{max-width:840px;margin:32px 0;padding-bottom:24px;border-bottom:1px solid #e1e4eb}.table-scroll{overflow:auto}table{width:100%;border-collapse:collapse;font-size:.95rem}caption{text-align:left;margin-bottom:16px;font-weight:600}th,td{padding:12px;text-align:left;border-bottom:1px solid #dce1e9;vertical-align:top}details{border-bottom:1px solid #dce1e9;padding:20px 0}summary{font-weight:600;cursor:pointer;font-size:1.1rem}summary:focus-visible{outline:3px solid #0066cc;outline-offset:4px}
+</style>
