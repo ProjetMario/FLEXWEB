@@ -20,6 +20,6 @@ for(const c of draft.communes){const e=enrichedTerritory(c.code);assert(e,`Missi
   count++;
  }
 }
-assert.equal(count+reviewed.length,20000);assert.equal(facts.size,9994);
-const report={articles:20000,enrichedTerritorialArticles:count,reviewedEditorialArticles:reviewed.length,reviewRequired:count,uniqueTerritorialRecords:facts.size,uniquePaths:paths.size,sharedMethodFamilies:groups.size,largestSharedMethodFamily:Math.max(...groups.values()),coverage:enrichment.coverage,readyForProduction:false,reason:'Local facts and functional guides improve utility. Shared methods and a lack of individual editorial evidence still require review; geographic differences alone do not prove distinct SEO intent.',source:enrichment.source,sourceSha256:enrichment.sourceSha256};
+assert.equal(count,19988);assert.equal(facts.size,9994);
+const report={articles:count+reviewed.length,enrichedTerritorialArticles:count,reviewedEditorialArticles:reviewed.length,reviewRequired:count,uniqueTerritorialRecords:facts.size,uniquePaths:paths.size,sharedMethodFamilies:groups.size,largestSharedMethodFamily:Math.max(...groups.values()),coverage:enrichment.coverage,readyForProduction:false,reason:'Local facts and functional guides improve utility. Shared methods and a lack of individual editorial evidence still require review; geographic differences alone do not prove distinct SEO intent.',source:enrichment.source,sourceSha256:enrichment.sourceSha256};
 writeFileSync('outputs/seo-national-20260924/enrichment-audit.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));

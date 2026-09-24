@@ -1,3 +1,4 @@
+import {isPublishable} from './editorial.mjs';
 import {readFileSync} from 'node:fs';
 import path from 'node:path';
 // Build-time data, intentionally not a Vite JSON import (large corpora inflate bundles).
@@ -5,7 +6,7 @@ const raw=JSON.parse(readFileSync(path.resolve('src/data/national/articles.json'
 export const axes = ['sites', 'automatisation'] as const;
 export type Axis = typeof axes[number];
 export const axisLabels: Record<Axis,string> = {sites:'Sites internet & visibilité',automatisation:'Automatisation & IA'};
-export const articles = raw.filter(a => a.status === 'reviewed');
+export const articles = raw.filter(isPublishable);
 export const articlePath = (a: {axis:string;slug:string}) => `/ressources/${a.axis}/${a.slug}/`;
 export const bySlug = new Map(articles.map(a => [a.slug,a]));
 export const pageSize = 12;

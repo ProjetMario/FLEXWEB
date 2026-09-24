@@ -50,7 +50,12 @@
         "url": "https://www.w3.org/WAI/tutorials/forms/notifications/",
         "checkedAt": "2026-09-24"
       }
-    ]
+    ],
+    "audience": "Entreprises préparant leur site professionnel",
+    "problem": "Site internet industriel : préparer une demande technique",
+    "outcome": "Présenter capacités, réalisations et contraintes pour recevoir des demandes exploitables dans une entreprise industrielle.",
+    "publicationSelected": true,
+    "reviewHash": "86c07dcdee7e555cbc61d95aff4d1041edd50e7493a6872a86b98470bd3befba"
   },
   {
     "axis": "sites",
@@ -103,7 +108,12 @@
         "url": "https://www.w3.org/WAI/tutorials/forms/notifications/",
         "checkedAt": "2026-09-24"
       }
-    ]
+    ],
+    "audience": "Entreprises préparant leur site professionnel",
+    "problem": "Site de plombier : distinguer dépannage et chantier",
+    "outcome": "Organiser un site de plomberie autour de deux demandes différentes : intervention urgente et projet à chiffrer.",
+    "publicationSelected": true,
+    "reviewHash": "f5442d1f0efa8bceecf286a7aa9622dc9d56aac3c8c968860d8bf3a7304c9911"
   },
   {
     "axis": "sites",
@@ -156,7 +166,12 @@
         "url": "https://www.w3.org/WAI/tutorials/forms/notifications/",
         "checkedAt": "2026-09-24"
       }
-    ]
+    ],
+    "audience": "Entreprises préparant leur site professionnel",
+    "problem": "Site de restaurant : menu et réservation cohérents",
+    "outcome": "Rendre les horaires, le menu et la prise de réservation faciles à consulter et à maintenir.",
+    "publicationSelected": true,
+    "reviewHash": "1edc22c39045f4468b52aabdce160d29be2ccf834c4dbc11416f33149bc7d24c"
   },
   {
     "axis": "sites",
@@ -209,7 +224,12 @@
         "url": "https://www.w3.org/WAI/tutorials/forms/notifications/",
         "checkedAt": "2026-09-24"
       }
-    ]
+    ],
+    "audience": "Entreprises préparant leur site professionnel",
+    "problem": "Site de gîte : présenter le séjour et les disponibilités",
+    "outcome": "Préparer un site de location avec informations pratiques, conditions claires et demandes de séjour bien renseignées.",
+    "publicationSelected": true,
+    "reviewHash": "977ccb9e714184c5f9d23ba01a167072d31ec375e97328f765e190f59e77bd58"
   },
   {
     "axis": "sites",
@@ -262,7 +282,12 @@
         "url": "https://www.w3.org/WAI/tutorials/forms/notifications/",
         "checkedAt": "2026-09-24"
       }
-    ]
+    ],
+    "audience": "Entreprises préparant leur site professionnel",
+    "problem": "Site de bureau d’études : qualifier une mission",
+    "outcome": "Présenter les compétences et recueillir le contexte nécessaire à une première analyse de mission.",
+    "publicationSelected": true,
+    "reviewHash": "ab39584d4fb09d97cd26475baae3140c1aab7303c078d7524a80c7c16e52fd1c"
   },
   {
     "axis": "sites",
@@ -315,7 +340,12 @@
         "url": "https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes",
         "checkedAt": "2026-09-24"
       }
-    ]
+    ],
+    "audience": "Entreprises préparant leur site professionnel",
+    "problem": "Refonte de site : conserver les pages utiles",
+    "outcome": "Préparer une refonte en inventoriant les URL, les demandes reçues et les correspondances entre anciennes et nouvelles pages.",
+    "publicationSelected": true,
+    "reviewHash": "7edf0713228b5adbfe265879b1f20cdf074cebf6563a45ac50782c057dcd94a1"
   },
   {
     "axis": "automatisation",
@@ -368,7 +398,12 @@
         "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
         "checkedAt": "2026-09-24"
       }
-    ]
+    ],
+    "audience": "PME organisant leurs processus clients",
+    "problem": "Qualifier les demandes e-mail avec une IA",
+    "outcome": "Préparer le tri des demandes entrantes et leur orientation vers la bonne personne sans perdre les messages ambigus.",
+    "publicationSelected": true,
+    "reviewHash": "fe57c3a9c8471eb1bcf83dd9fec086cfda7ff82228dc4c88b5b6bc96b68edf8a"
   },
   {
     "axis": "automatisation",
@@ -416,7 +451,12 @@
         "url": "https://flex-web.fr/pricing/",
         "checkedAt": "2026-09-24"
       }
-    ]
+    ],
+    "audience": "PME organisant leurs processus clients",
+    "problem": "Automatiser les rappels sur les devis en attente",
+    "outcome": "Définir des rappels qui tiennent compte des réponses, des refus et du statut réel de chaque proposition.",
+    "publicationSelected": true,
+    "reviewHash": "2e15cb94057a21da3d98ceed04afe4ed9dd3d82c587e99f951a736b57db7e111"
   },
   {
     "axis": "automatisation",
@@ -464,7 +504,12 @@
         "url": "https://flex-web.fr/pricing/",
         "checkedAt": "2026-09-24"
       }
-    ]
+    ],
+    "audience": "PME organisant leurs processus clients",
+    "problem": "Préparer les rappels de factures sans doublons",
+    "outcome": "Relier échéances et paiements confirmés avant de proposer ou envoyer un rappel de facture.",
+    "publicationSelected": true,
+    "reviewHash": "827c186eea906727b0b35ba986b36d510e25854616c5ef80378efa3fc0f3c1ad"
   },
   {
     "axis": "automatisation",
@@ -512,7 +557,12 @@
         "url": "https://flex-web.fr/pricing/",
         "checkedAt": "2026-09-24"
       }
-    ]
+    ],
+    "audience": "PME organisant leurs processus clients",
+    "problem": "Automatiser la prise de rendez-vous et les changements",
+    "outcome": "Relier une demande à un agenda fiable en gérant disponibilités, annulations et confirmations.",
+    "publicationSelected": true,
+    "reviewHash": "04adb0a53f4c89c0af1a7a8690a7ab5417f8bc6a9f4a705aaab7ad35e4d542ae"
   },
   {
     "axis": "automatisation",
@@ -565,7 +615,12 @@
         "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
         "checkedAt": "2026-09-24"
       }
-    ]
+    ],
+    "audience": "PME organisant leurs processus clients",
+    "problem": "Extraire des informations de documents avec une IA",
+    "outcome": "Préparer la saisie de documents en conservant les sources, les champs incertains et la validation avant écriture.",
+    "publicationSelected": true,
+    "reviewHash": "dddd84010de80ac9e406ac20903640811c5eb7863ee4270cd863b9df9a13d129"
   },
   {
     "axis": "automatisation",
@@ -618,6 +673,634 @@
         "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
         "checkedAt": "2026-09-24"
       }
-    ]
+    ],
+    "audience": "PME organisant leurs processus clients",
+    "problem": "Préparer des réponses clients avec une IA",
+    "outcome": "Créer des brouillons à partir d’informations approuvées, avec relecture avant les engagements commerciaux.",
+    "publicationSelected": true,
+    "reviewHash": "18fc9fb1cfc78640e4010fccc7c3ead3276f08c50a3918cd77bdfd2af82b8481"
+  },
+  {
+    "axis": "sites",
+    "slug": "devis-nettoyage-multisites",
+    "title": "Site de nettoyage : qualifier un contrat multisites",
+    "description": "Recevoir des demandes comparables pour plusieurs bâtiments. Préparer une visite et un chiffrage par site.",
+    "intent": "devis-nettoyage-multisites",
+    "audience": "Entreprises de nettoyage",
+    "problem": "Recevoir des demandes comparables pour plusieurs bâtiments",
+    "outcome": "Préparer une visite et un chiffrage par site",
+    "status": "reviewed",
+    "publicationSelected": true,
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Une demande de nettoyage portant sur plusieurs bâtiments ne se résume pas à une surface totale. Les usages, les horaires d’accès et la fréquence peuvent varier d’une adresse à l’autre. Le site doit aider le prospect à décrire cette organisation, tout en réservant le chiffrage final à une qualification réelle.",
+    "sections": [
+      {
+        "title": "Décrire chaque bâtiment séparément",
+        "text": "Construisez un formulaire dans lequel le prospect peut ajouter un site avec son adresse, son usage, une surface indicative et les prestations souhaitées. Proposez une réponse « à confirmer » pour les informations qu’il ne connaît pas. Un champ global regroupant toutes les adresses complique les visites et les échanges ultérieurs. Le récapitulatif doit conserver la correspondance entre chaque bâtiment et ses contraintes, même lorsqu’une adresse est retirée."
+      },
+      {
+        "title": "Distinguer fréquence et conditions d’accès",
+        "text": "Demandez les jours envisagés et les contraintes d’accès utiles à la préparation du contrat, sans recueillir de code de porte ou d’alarme dans le formulaire public. Séparez les tâches régulières des interventions ponctuelles. Une demande de remise en état ne doit pas devenir silencieusement une prestation récurrente. Le visiteur peut expliquer les particularités dans un champ libre, puis les faire préciser pendant la visite."
+      },
+      {
+        "title": "Préparer une visite exploitable",
+        "text": "La réception du formulaire crée une demande de qualification, pas un engagement de prix. Présentez au responsable la liste des bâtiments, les éléments manquants et la personne à contacter. Testez le parcours avec deux bâtiments ayant des fréquences différentes, puis avec une correction de surface : les informations du premier ne doivent pas être écrasées par celles du second. Le suivi peut ensuite conserver une prochaine action par visite."
+      }
+    ],
+    "example": "Exemple illustratif : un gestionnaire décrit des bureaux et un atelier sur deux adresses. Il indique une fréquence hebdomadaire pour les premiers et une remise en état ponctuelle pour le second. Le responsable prépare deux visites et distingue les périmètres dans sa proposition, sans calcul automatique fondé uniquement sur la somme des surfaces.",
+    "checklist": [
+      "Liste des adresses et interlocuteurs",
+      "Prestations régulières et ponctuelles séparées",
+      "Critères de visite à confirmer"
+    ],
+    "limits": "Les surfaces déclarées servent à préparer l’échange. Elles ne prouvent ni le temps nécessaire ni les conditions d’intervention. Aucun tarif au mètre carré n’est annoncé ici ; les accès, équipements et prestations doivent être précisés dans le devis.",
+    "related": [
+      "creation-dossier-formulaire"
+    ],
+    "sources": [
+      {
+        "label": "Flex-Web — périmètres et tarifs TTC",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      },
+      {
+        "label": "W3C — retours explicites après un formulaire",
+        "url": "https://www.w3.org/WAI/tutorials/forms/notifications/",
+        "checkedAt": "2026-09-24"
+      }
+    ],
+    "reviewHash": "4def9e7466079a5a25b123354c6852959d453d3e253d5df190c74733b4362602"
+  },
+  {
+    "axis": "sites",
+    "slug": "menuiserie-projet-sur-mesure",
+    "title": "Site de menuiserie : préparer un projet sur mesure",
+    "description": "Des demandes sans dimensions ni contraintes de pose. Préparer un échange technique avant prise de cotes.",
+    "intent": "menuiserie-projet-sur-mesure",
+    "audience": "Menuisiers réalisant du sur-mesure",
+    "problem": "Des demandes sans dimensions ni contraintes de pose",
+    "outcome": "Préparer un échange technique avant prise de cotes",
+    "status": "reviewed",
+    "publicationSelected": true,
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Pour un meuble, un agencement ou une ouverture sur mesure, le visiteur ne connaît pas toujours les bons termes. Le site doit l’aider à décrire l’usage attendu et le lieu de pose. Des mesures indicatives et des photos préparent le rendez-vous ; elles ne doivent pas être présentées comme une commande techniquement validée.",
+    "sections": [
+      {
+        "title": "Partir de l’usage plutôt que des références",
+        "text": "Présentez des catégories compréhensibles : rangement, agencement, remplacement ou création. Pour chacune, expliquez les décisions à préparer, comme l’espace disponible, les éléments à conserver et l’aspect souhaité. Évitez de faire choisir trop tôt une référence technique lorsque la compatibilité dépend d’une visite. Les réalisations publiées précisent le travail effectué et restent distinctes des possibilités qui doivent encore être étudiées."
+      },
+      {
+        "title": "Identifier les dimensions comme indicatives",
+        "text": "Le formulaire peut recueillir largeur, hauteur et profondeur avec une unité explicite et une option « je ne sais pas ». Les photos sont facultatives, accompagnées d’une explication sur ce qu’elles doivent montrer. Le récapitulatif reprend les unités pour éviter une confusion entre centimètres et millimètres. Aucune donnée saisie par le prospect ne déclenche directement une fabrication ou une commande de matière."
+      },
+      {
+        "title": "Conserver les choix et leurs versions",
+        "text": "Distinguez la demande initiale, les cotes vérifiées et le périmètre finalement proposé. Une modification de finition ou de configuration doit être visible dans le dossier. Pour la recette du site, changez une mesure après ajout de photos et contrôlez le récapitulatif sur téléphone. Le professionnel doit retrouver la version actuelle et comprendre ce qui reste à vérifier avant de remettre une offre ferme."
+      }
+    ],
+    "example": "Exemple illustratif : une personne souhaite un rangement sous pente. Elle décrit son usage, fournit une largeur approximative et photographie l’emplacement. Le menuisier prépare les questions du rendez-vous, puis relève lui-même les contraintes et les cotes nécessaires. Le formulaire n’a pas créé un bon de fabrication.",
+    "checklist": [
+      "Familles de projets et vocabulaire client",
+      "Photos autorisées des réalisations",
+      "Mesures indicatives avec unités"
+    ],
+    "limits": "Ce parcours ne remplace pas les relevés, études de faisabilité ou validations du professionnel. Les possibilités de matériaux et de pose dépendent du projet. Les coûts et délais restent définis après qualification ; aucun configurateur chiffrant automatiquement n’est supposé disponible.",
+    "related": [
+      "collecte-pieces-manquantes"
+    ],
+    "sources": [
+      {
+        "label": "Flex-Web — périmètres et tarifs TTC",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      },
+      {
+        "label": "W3C — retours explicites après un formulaire",
+        "url": "https://www.w3.org/WAI/tutorials/forms/notifications/",
+        "checkedAt": "2026-09-24"
+      }
+    ],
+    "reviewHash": "c31d68bceb5a96b2510043964020c5014bd1f0ae979e59687f0c251a0357b3ec"
+  },
+  {
+    "axis": "sites",
+    "slug": "demande-installation-borne",
+    "title": "Site professionnel : qualifier une demande de borne de recharge",
+    "description": "Recevoir une demande sans contexte du lieu de stationnement. Orienter vers un diagnostic professionnel.",
+    "intent": "demande-installation-borne",
+    "audience": "Professionnels proposant une installation de recharge",
+    "problem": "Recevoir une demande sans contexte du lieu de stationnement",
+    "outcome": "Orienter vers un diagnostic professionnel",
+    "status": "reviewed",
+    "publicationSelected": true,
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Une page consacrée à la recharge doit clarifier ce que le visiteur peut demander et ce qui nécessite une étude. Son rôle est de préparer le contact avec le professionnel, sans calculer la faisabilité d’une installation à partir de quelques réponses. Les informations commerciales doivent refléter les prestations réellement proposées.",
+    "sections": [
+      {
+        "title": "Identifier le contexte de la demande",
+        "text": "Le formulaire distingue le type de lieu, le nombre d’emplacements concernés et la personne chargée du projet. Il peut recueillir une adresse d’intervention et une description des besoins, avec une option permettant de ne pas connaître certains éléments. Évitez une suite de questions techniques que le visiteur remplirait au hasard. Une demande collective ou portant sur plusieurs véhicules doit rester visible comme telle dans le dossier."
+      },
+      {
+        "title": "Expliquer la prochaine étape",
+        "text": "Décrivez le déroulement réel de votre qualification : échange initial, documents éventuellement nécessaires, puis vérification par le professionnel. N’annoncez pas de puissance disponible, de compatibilité ou de conformité sur la seule base du formulaire. Les documents et photos transmis servent à préparer l’étude, pas à la remplacer. La page doit également rendre lisible le périmètre du service, notamment la distinction entre fourniture, installation et accompagnement."
+      },
+      {
+        "title": "Tester les demandes hors périmètre",
+        "text": "Préparez des cas fictifs portant sur une adresse hors zone, un site sans informations techniques et plusieurs emplacements. La confirmation doit annoncer la réception de la demande et la prochaine action réellement prévue. Elle ne doit pas laisser croire qu’un devis a été accepté ou qu’un rendez-vous est fixé. Le responsable retrouve les informations manquantes et peut demander un complément sans créer un deuxième dossier."
+      }
+    ],
+    "example": "Exemple illustratif : un dirigeant demande une solution pour plusieurs places de stationnement. Il précise le lieu et l’usage envisagé, mais ignore les caractéristiques disponibles. Le site enregistre ces limites et prépare un entretien avec le professionnel, au lieu d’afficher une réponse technique ou un prix automatique.",
+    "checklist": [
+      "Périmètre réel des prestations",
+      "Questions de contexte compréhensibles",
+      "Responsable de la qualification"
+    ],
+    "limits": "Ce guide concerne le parcours commercial du site, pas les règles électriques ou les conditions d’installation. Les vérifications techniques et toute affirmation de qualification professionnelle restent à établir avec le prestataire concerné avant publication de sa page.",
+    "related": [
+      "affectation-interventions"
+    ],
+    "sources": [
+      {
+        "label": "Flex-Web — périmètres et tarifs TTC",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      },
+      {
+        "label": "W3C — retours explicites après un formulaire",
+        "url": "https://www.w3.org/WAI/tutorials/forms/notifications/",
+        "checkedAt": "2026-09-24"
+      }
+    ],
+    "reviewHash": "2ebfafdba977f509d95f5c058003cc6b9f584caa4d4b09218e26e7ee85206947"
+  },
+  {
+    "axis": "sites",
+    "slug": "paysagiste-demande-amenagement",
+    "title": "Site de paysagiste : préparer une demande d’aménagement",
+    "description": "Des projets décrits sans usages ni éléments à conserver. Préparer un rendez-vous avec un brief exploitable.",
+    "intent": "paysagiste-demande-amenagement",
+    "audience": "Paysagistes proposant des aménagements",
+    "problem": "Des projets décrits sans usages ni éléments à conserver",
+    "outcome": "Préparer un rendez-vous avec un brief exploitable",
+    "status": "reviewed",
+    "publicationSelected": true,
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Une demande d’aménagement extérieur devient plus utile lorsque le visiteur explique ce qu’il veut faire dans l’espace. Une galerie peut donner des idées, mais elle ne dit pas quels accès, contraintes et éléments existants doivent être préservés. Le site peut organiser ces informations avant le premier rendez-vous.",
+    "sections": [
+      {
+        "title": "Faire décrire les usages attendus",
+        "text": "Invitez le prospect à préciser les activités souhaitées et les éléments qu’il veut conserver. Séparez un projet d’aménagement d’une demande d’entretien récurrent. Les photos de référence expriment une préférence, sans constituer une promesse de reproduction à l’identique. La page explique que l’étude du terrain et les choix définitifs interviennent ensuite avec le professionnel ; elle évite de déduire les conditions d’un terrain à partir de sa commune."
+      },
+      {
+        "title": "Recueillir les documents avec leur contexte",
+        "text": "Un plan ou une photo peut aider à préparer la visite si le visiteur indique ce que le document représente et sa date approximative. Demandez une surface indicative, une adresse et les accès à examiner, avec possibilité de répondre plus tard. N’exigez pas de document sans expliquer son usage. Les références de projets affichées sur le site doivent préciser la mission réellement réalisée, plutôt que suggérer une expérience locale non démontrée."
+      },
+      {
+        "title": "Transformer le brief en ordre du jour",
+        "text": "Le dossier reçu rassemble les usages, les éléments à conserver et les points encore inconnus. Il peut préparer une liste de questions pour la visite. Testez un cas sans plan, un projet en plusieurs phases et une modification du besoin après envoi. Les demandes ne doivent pas être rejetées pour une photo manquante si celle-ci est facultative, ni être présentées comme une étude déjà terminée."
+      }
+    ],
+    "example": "Exemple illustratif : un particulier souhaite modifier les circulations d’un jardin tout en conservant une terrasse. Il joint deux photos et explique les passages qu’il utilise. Le paysagiste prépare une visite centrée sur ces usages, puis vérifie les contraintes sur place avant de proposer un aménagement.",
+    "checklist": [
+      "Usages et éléments à conserver",
+      "Exemples de missions publiables",
+      "Documents facultatifs et prochaine étape"
+    ],
+    "limits": "Le site ne fournit pas un diagnostic du sol, un choix de végétaux ou une faisabilité de travaux à distance. Aucun climat, besoin d’entretien ou résultat local n’est déduit automatiquement des données géographiques. Le devis précise l’étude et les livrables convenus.",
+    "related": [
+      "compte-rendu-intervention"
+    ],
+    "sources": [
+      {
+        "label": "Flex-Web — périmètres et tarifs TTC",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      },
+      {
+        "label": "W3C — retours explicites après un formulaire",
+        "url": "https://www.w3.org/WAI/tutorials/forms/notifications/",
+        "checkedAt": "2026-09-24"
+      }
+    ],
+    "reviewHash": "ec654cc8ea8637f2684fab7e84d94ccd7e35da61ec9b355f14e6504c5f83b290"
+  },
+  {
+    "axis": "sites",
+    "slug": "catalogue-professionnel-sans-vente",
+    "title": "Catalogue professionnel : comparer avant de demander un devis",
+    "description": "Des demandes imprécises sur plusieurs références. Recevoir une sélection contextualisée sans paiement en ligne.",
+    "intent": "catalogue-professionnel-sans-vente",
+    "audience": "Fournisseurs et prestataires techniques",
+    "problem": "Des demandes imprécises sur plusieurs références",
+    "outcome": "Recevoir une sélection contextualisée sans paiement en ligne",
+    "status": "reviewed",
+    "publicationSelected": true,
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Un catalogue professionnel peut être utile sans devenir une boutique. Lorsque le prix, la disponibilité ou la compatibilité demandent une qualification, le site présente les références et prépare une consultation. La sélection du visiteur doit arriver avec son contexte, sans laisser croire qu’elle constitue une commande confirmée.",
+    "sections": [
+      {
+        "title": "Choisir des caractéristiques comparables",
+        "text": "Définissez pour chaque famille les caractéristiques qui aident réellement à choisir. Conservez les unités et la version des documents sources. Une donnée absente doit rester inconnue, plutôt que recevoir une valeur par défaut trompeuse. Les filtres ne sont utiles que si les fiches sont tenues à jour. Prévoyez un état explicite pour une référence retirée afin de ne pas continuer à la proposer dans les sélections."
+      },
+      {
+        "title": "Garder la sélection pendant la consultation",
+        "text": "Le visiteur peut noter les références qui l’intéressent, expliquer son usage et indiquer une quantité indicative. Le récapitulatif reprend les identifiants exacts et permet une correction avant envoi. Distinguez une demande de documentation d’une demande de chiffrage. Le responsable commercial doit recevoir la sélection et le message dans le même dossier, sans chercher les fiches à partir de simples noms parfois semblables."
+      },
+      {
+        "title": "Tester les changements de catalogue",
+        "text": "Retirez une référence après sa sélection, puis envoyez une demande fictive. Le système doit signaler le changement sans perdre les autres éléments du projet. Vérifiez aussi le parcours sans résultat de filtre et la lisibilité des tableaux sur téléphone. Une disponibilité ancienne ne doit pas être reformulée comme un stock actuel. Les validations de compatibilité et les conditions commerciales restent explicitement à confirmer."
+      }
+    ],
+    "example": "Exemple illustratif : un acheteur compare deux références et décrit son équipement existant. Il transmet sa sélection pour avis, sans achat en ligne. Le fournisseur vérifie les documents et propose une réponse contextualisée. Si une référence a changé entre-temps, le dossier conserve la sélection initiale et la correction apportée.",
+    "checklist": [
+      "Référentiel et responsable de mise à jour",
+      "Caractéristiques avec unités",
+      "Distinction documentation et chiffrage"
+    ],
+    "limits": "Ce parcours ne suppose ni une gestion de stock connectée ni un paiement disponible. Les caractéristiques doivent provenir de documents vérifiés. Une fiche de catalogue ne prouve pas la compatibilité avec une installation particulière et ne remplace pas l’avis du professionnel.",
+    "related": [
+      "synchronisation-contacts"
+    ],
+    "sources": [
+      {
+        "label": "Flex-Web — périmètres et tarifs TTC",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      },
+      {
+        "label": "W3C — retours explicites après un formulaire",
+        "url": "https://www.w3.org/WAI/tutorials/forms/notifications/",
+        "checkedAt": "2026-09-24"
+      }
+    ],
+    "reviewHash": "4004778dd433c92c8d38024128b8ac24eac5974c34d7fe19fba18b4ca0e39a8d"
+  },
+  {
+    "axis": "sites",
+    "slug": "consultant-rendez-vous-diagnostic",
+    "title": "Site de consultant : cadrer un rendez-vous de diagnostic",
+    "description": "Des rendez-vous sans objectif ni préparation. Obtenir un entretien cadré sans surpromettre le livrable.",
+    "intent": "consultant-rendez-vous-diagnostic",
+    "audience": "Consultants et PME de services B2B",
+    "problem": "Des rendez-vous sans objectif ni préparation",
+    "outcome": "Obtenir un entretien cadré sans surpromettre le livrable",
+    "status": "reviewed",
+    "publicationSelected": true,
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Un bouton de réservation ne suffit pas à préparer un bon premier échange. Le visiteur doit comprendre à qui s’adresse le rendez-vous, ce qu’il permettra de clarifier et ce qui ne sera pas livré pendant l’appel. Le site peut recueillir un contexte limité pour rendre la conversation plus précise.",
+    "sections": [
+      {
+        "title": "Définir le résultat du premier entretien",
+        "text": "Expliquez le sujet de l’échange et les questions que vous pourrez traiter. Distinguez une prise de contact d’une prestation d’audit complète. Les durées, modalités et éventuelles conditions commerciales doivent correspondre à votre fonctionnement réel. Une promesse générale de transformation ne remplace pas un résultat compréhensible, comme déterminer si une étude plus approfondie est pertinente et quelles informations seraient nécessaires."
+      },
+      {
+        "title": "Demander un contexte utile et limité",
+        "text": "Le formulaire peut demander le rôle de la personne, le problème rencontré et le résultat recherché. Laissez la possibilité de décrire le contexte sans transmettre de données confidentielles ou de documents internes. Une liste courte de questions de préparation aide le prospect à organiser ses idées. Elle ne doit pas devenir une obligation de produire un dossier complet avant un simple premier contact."
+      },
+      {
+        "title": "Distinguer créneau demandé et confirmé",
+        "text": "Si l’agenda est réellement connecté, le parcours doit confirmer seulement après l’enregistrement du rendez-vous. Sinon, il recueille des préférences qui restent à valider. Testez un créneau devenu indisponible, une modification et une demande sans description détaillée. Le message de confirmation reprend les modalités utiles et permet de retrouver le rendez-vous. Une interruption technique ne doit pas produire deux réservations pour la même demande."
+      }
+    ],
+    "example": "Exemple illustratif : une responsable de PME souhaite réduire les ressaisies entre ses outils. Elle décrit les logiciels concernés sans partager ses fichiers clients. Le rendez-vous sert à préciser le problème et les contraintes d’accès ; une proposition ultérieure définit séparément le périmètre d’analyse et de réalisation.",
+    "checklist": [
+      "Public et objectif de l’entretien",
+      "Modalités réelles du rendez-vous",
+      "Questions de préparation non confidentielles"
+    ],
+    "limits": "Le site ne peut pas garantir le résultat d’un diagnostic à partir d’un court formulaire. Les engagements, documents nécessaires et conditions d’une mission sont fixés séparément. La prise de rendez-vous ne constitue pas automatiquement une acceptation commerciale ni un paiement.",
+    "related": [
+      "tableau-activite-crm"
+    ],
+    "sources": [
+      {
+        "label": "Flex-Web — périmètres et tarifs TTC",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      },
+      {
+        "label": "W3C — retours explicites après un formulaire",
+        "url": "https://www.w3.org/WAI/tutorials/forms/notifications/",
+        "checkedAt": "2026-09-24"
+      }
+    ],
+    "reviewHash": "e6f205316a4941dd58a4e03af119e0227cc7546ad47bbea39fa23c6d25a20a26"
+  },
+  {
+    "axis": "automatisation",
+    "slug": "creation-dossier-formulaire",
+    "title": "Créer un dossier CRM après un formulaire sans doublon",
+    "description": "Une demande reçue doit être ressaisie et peut être dupliquée. Créer un dossier traçable avec une prochaine action.",
+    "intent": "creation-dossier-formulaire",
+    "audience": "PME recevant des formulaires de contact",
+    "problem": "Une demande reçue doit être ressaisie et peut être dupliquée",
+    "outcome": "Créer un dossier traçable avec une prochaine action",
+    "status": "reviewed",
+    "publicationSelected": true,
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Un formulaire envoyé doit devenir un dossier exploitable, sans obliger une personne à recopier les informations. L’automatisation relie la demande reçue, le contact éventuel et une tâche de qualification. Elle doit conserver la trace de l’envoi et rester fiable lorsque le navigateur ou un service réessaie la même opération.",
+    "sections": [
+      {
+        "title": "Définir la demande comme événement distinct",
+        "text": "Attribuez une référence stable à chaque demande et conservez les données nécessaires à sa qualification. Distinguez l’entreprise, la personne et le besoin exprimé : un même contact peut avoir plusieurs projets. Une adresse e-mail déjà connue ne justifie pas d’écraser un dossier existant. Le rapprochement doit proposer le bon contact tout en conservant la nouvelle demande comme un événement consultable."
+      },
+      {
+        "title": "Enregistrer avant de confirmer",
+        "text": "La confirmation affichée au visiteur doit correspondre à l’enregistrement effectif. Une notification envoyée à l’équipe ne remplace pas cette preuve. Si la notification échoue alors que le dossier existe, elle peut être reprise séparément. Définissez un responsable et une prochaine action par défaut, puis une file de qualification pour les cas où les informations ne permettent pas une affectation suffisamment sûre."
+      },
+      {
+        "title": "Recetter les reprises et les erreurs",
+        "text": "Simulez un double clic, une coupure après enregistrement et deux demandes différentes du même contact. Une reprise de la même référence doit retrouver le dossier, tandis qu’un nouveau besoin doit rester identifiable. Contrôlez également les champs manquants et les caractères inhabituels dans les noms. L’écran d’administration doit montrer ce qui a été reçu, ce qui a été enregistré et quelle action reste à traiter."
+      }
+    ],
+    "example": "Exemple illustratif : un prospect envoie une demande puis recharge la page après une attente. Le même identifiant retrouve le dossier créé, sans doubler les tâches. Une seconde demande déposée le lendemain pour un autre besoin est rattachée au contact mais reste un dossier distinct avec son propre historique.",
+    "checklist": [
+      "Correspondance des champs",
+      "Référence stable de la demande",
+      "Responsable et file de qualification"
+    ],
+    "limits": "Cette automatisation ne qualifie pas à elle seule la valeur commerciale du dossier. Les informations reçues restent déclaratives. Les droits d’accès, les champs conservés et les notifications doivent être définis pour les outils réellement utilisés, sans supposer qu’un connecteur existe.",
+    "related": [
+      "devis-nettoyage-multisites"
+    ],
+    "sources": [
+      {
+        "label": "Flex-Web — périmètres et tarifs TTC",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ],
+    "reviewHash": "5eb0ef69a9413fce0afd7c0798d36a6afa6d91ae1112c1b3d57eadc679519ee5"
+  },
+  {
+    "axis": "automatisation",
+    "slug": "collecte-pieces-manquantes",
+    "title": "Collecter les pièces manquantes avant de préparer un devis",
+    "description": "Des dossiers bloqués faute de pièces identifiées. Suivre une liste de pièces avec validation et versions.",
+    "intent": "collecte-pieces-manquantes",
+    "audience": "Artisans et services préparant des propositions",
+    "problem": "Des dossiers bloqués faute de pièces identifiées",
+    "outcome": "Suivre une liste de pièces avec validation et versions",
+    "status": "reviewed",
+    "publicationSelected": true,
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "La préparation d’un devis peut s’arrêter sur un document ou une information manquante. Une automatisation utile rend cette attente visible, demande un complément précis et remet le dossier dans le bon circuit après vérification. Elle ne doit pas considérer qu’un fichier reçu est nécessairement la bonne pièce.",
+    "sections": [
+      {
+        "title": "Définir les pièces selon le type de dossier",
+        "text": "Établissez une liste courte des éléments nécessaires pour chaque prestation. Certaines pièces sont obligatoires pour poursuivre, d’autres seulement utiles. Associez à chaque élément une explication et un responsable de vérification. Un dossier simple ne doit pas hériter de toutes les exigences d’un projet complexe. Prévoyez une décision manuelle lorsque le client ne dispose pas du document demandé ou propose une autre forme d’information."
+      },
+      {
+        "title": "Séparer réception et validation",
+        "text": "À l’arrivée d’un fichier, enregistrez sa référence et sa relation avec la demande. Le statut peut passer de manquant à reçu, puis à vérifié après contrôle. Un remplacement conserve la trace de la version antérieure. L’IA peut aider à identifier le type de document, mais un nom de fichier ou une classification probable ne suffit pas à certifier son contenu. Les cas incertains restent à examiner."
+      },
+      {
+        "title": "Suspendre les rappels au bon moment",
+        "text": "Avant de préparer un rappel, relisez les états actuels et les échanges du dossier. Une réponse demandant une précision doit arrêter la répétition du même message. Testez une pièce reçue juste avant le rappel, un document incorrect et un remplacement après validation. Le dossier ne doit pas avancer vers un devis sur la seule base du nombre de fichiers joints ; c’est la liste des éléments vérifiés qui compte."
+      }
+    ],
+    "example": "Exemple illustratif : un projet d’agencement attend une photo de l’emplacement et des mesures indicatives. Le client fournit la photo mais explique qu’il ne peut pas mesurer correctement. Le suivi marque la photo reçue et prépare une décision de visite, au lieu de répéter indéfiniment une demande de dimensions.",
+    "checklist": [
+      "Liste de pièces par prestation",
+      "États reçu et vérifié séparés",
+      "Gestion des versions et exceptions"
+    ],
+    "limits": "Le dispositif organise la préparation du dossier ; il ne certifie pas l’authenticité ou la validité technique d’une pièce. Les modalités de stockage et d’accès dépendent des documents concernés. Les demandes de complément doivent rester proportionnées au besoin réel.",
+    "related": [
+      "menuiserie-projet-sur-mesure"
+    ],
+    "sources": [
+      {
+        "label": "Flex-Web — périmètres et tarifs TTC",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ],
+    "reviewHash": "eaa9bed2bbe1be25178253d523e51d24944b133455f173eab06a7917b42c7bec"
+  },
+  {
+    "axis": "automatisation",
+    "slug": "affectation-interventions",
+    "title": "Affecter les demandes d’intervention avec des règles explicites",
+    "description": "Des demandes sont attribuées sans vérifier zone et disponibilité. Préparer une affectation contrôlable par un responsable.",
+    "intent": "affectation-interventions",
+    "audience": "Entreprises organisant des interventions sur place",
+    "problem": "Des demandes sont attribuées sans vérifier zone et disponibilité",
+    "outcome": "Préparer une affectation contrôlable par un responsable",
+    "status": "reviewed",
+    "publicationSelected": true,
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Attribuer une intervention ne consiste pas seulement à choisir l’équipe la plus proche. La prestation, la zone réellement couverte, les compétences déclarées et les disponibilités doivent être prises en compte. Une automatisation peut proposer une affectation et signaler les demandes qui nécessitent un arbitrage.",
+    "sections": [
+      {
+        "title": "Séparer les critères nécessaires",
+        "text": "Décrivez la prestation demandée, l’adresse à confirmer, les contraintes horaires et les équipes qui peuvent traiter ce type de besoin. Les critères obligatoires doivent être distingués des préférences. Un dossier sans adresse complète ne doit pas obtenir une affectation définitive sur la seule base du code postal. Un référentiel de communes aide à identifier le lieu, sans définir automatiquement votre zone commerciale."
+      },
+      {
+        "title": "Rendre la proposition explicable",
+        "text": "Présentez l’équipe proposée avec les critères qui ont été satisfaits et les informations restant à vérifier. Si plusieurs équipes conviennent, définissez une règle de choix compréhensible par le responsable. Une distance entre centres de communes ne doit pas être transformée en temps de trajet. La confirmation d’un rendez-vous demande un contrôle de disponibilité dans l’outil qui fait réellement autorité pour le planning."
+      },
+      {
+        "title": "Prévoir une file d’arbitrage",
+        "text": "Une absence de candidat, une adresse ambiguë ou un calendrier indisponible doit produire une tâche visible. Testez deux demandes concurrentes pour le même créneau et une modification d’adresse après proposition. L’ancienne affectation ne doit pas subsister silencieusement. Conservez les corrections du responsable pour comprendre les règles mal adaptées, sans laisser l’outil modifier seul les compétences ou les zones d’intervention des équipes."
+      }
+    ],
+    "example": "Exemple illustratif : une demande correspond à une prestation couverte, mais la commune reste incertaine. Le système prépare une tâche de qualification. Après confirmation du lieu, il propose une équipe disponible ; le responsable valide le rendez-vous en tenant compte du planning réel et des contraintes communiquées.",
+    "checklist": [
+      "Prestations et équipes autorisées",
+      "Zone de service explicite",
+      "Agenda de référence et exceptions"
+    ],
+    "limits": "Une proposition d’affectation ne constitue pas une confirmation de déplacement. Les compétences, accès et horaires doivent être entretenus par l’entreprise. Les règles ne garantissent ni un délai d’intervention ni un trajet ; les informations insuffisantes imposent une qualification.",
+    "related": [
+      "demande-installation-borne"
+    ],
+    "sources": [
+      {
+        "label": "Flex-Web — périmètres et tarifs TTC",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ],
+    "reviewHash": "210e3392db765460f60ead370d389c1688b59e3f0c07f3eebe0068e23de10c75"
+  },
+  {
+    "axis": "automatisation",
+    "slug": "compte-rendu-intervention",
+    "title": "Préparer un compte rendu d’intervention à faire valider",
+    "description": "Des notes terrain restent dispersées après la visite. Produire un compte rendu traçable et une prochaine action.",
+    "intent": "compte-rendu-intervention",
+    "audience": "PME dont les équipes interviennent chez les clients",
+    "problem": "Des notes terrain restent dispersées après la visite",
+    "outcome": "Produire un compte rendu traçable et une prochaine action",
+    "status": "reviewed",
+    "publicationSelected": true,
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Après une visite, les informations peuvent rester dans des notes, des photos et des messages séparés. Un outil peut les regrouper et préparer un compte rendu structuré. La personne ayant réalisé l’intervention conserve la validation des faits, des réserves et des actions proposées au client.",
+    "sections": [
+      {
+        "title": "Définir une trame liée à la mission",
+        "text": "La trame distingue ce qui était prévu, ce qui a été observé, ce qui a été réalisé et ce qui reste à faire. Chaque pièce jointe est rattachée au dossier concerné. Une photo ne doit pas devenir la preuve d’un travail non décrit par l’intervenant. Prévoyez des champs permettant de signaler une incertitude ou une information manquante, plutôt que d’imposer un texte complet dans tous les cas."
+      },
+      {
+        "title": "Préparer une synthèse sans compléter les faits",
+        "text": "L’IA peut reformuler les notes et proposer une organisation lisible, mais elle ne doit pas déduire un diagnostic absent ou déclarer une opération terminée. Présentez le brouillon à côté des éléments sources. Les réserves et les actions à confirmer restent visibles. Une phrase ambiguë doit être clarifiée par l’intervenant avant toute transmission, notamment lorsqu’elle pourrait être comprise comme un engagement technique ou commercial."
+      },
+      {
+        "title": "Valider puis organiser la suite",
+        "text": "Après validation, conservez la version transmise et distinguez les tâches internes du compte rendu destiné au client. Testez un brouillon incomplet, une correction après validation et des photos issues d’un autre dossier. Une nouvelle version doit garder sa relation avec la précédente. Le suivi peut créer une action de rappel, mais ne doit pas émettre automatiquement un devis ou une facture à partir d’une note non vérifiée."
+      }
+    ],
+    "example": "Exemple illustratif : après une visite préparatoire, une équipe note un accès à vérifier et ajoute des photos. L’outil propose un compte rendu avec une rubrique « points à confirmer ». Le responsable corrige le texte puis crée une tâche de rappel. Aucune phrase ne présente la prestation comme réalisée.",
+    "checklist": [
+      "Trame de compte rendu",
+      "Notes et pièces rattachées au dossier",
+      "Personne responsable de la validation"
+    ],
+    "limits": "La synthèse ne remplace pas le jugement de l’intervenant ni un document spécialisé exigé pour une prestation. Les exemples sont organisationnels. Aucun diagnostic, attestation de conformité ou résultat technique ne doit être ajouté si les sources ne le permettent pas.",
+    "related": [
+      "paysagiste-demande-amenagement"
+    ],
+    "sources": [
+      {
+        "label": "Flex-Web — périmètres et tarifs TTC",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      },
+      {
+        "label": "OWASP — séparer les données reçues des instructions",
+        "url": "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
+        "checkedAt": "2026-09-24"
+      }
+    ],
+    "reviewHash": "fa6c9427f17436162cb77dd14f08df9223acef9a987057da27a503e0009da42b"
+  },
+  {
+    "axis": "automatisation",
+    "slug": "synchronisation-contacts",
+    "title": "Synchroniser les contacts entre outils sans fusion abusive",
+    "description": "Des fiches divergent ou sont fusionnées à tort. Maintenir des contacts cohérents avec résolution des conflits.",
+    "intent": "synchronisation-contacts",
+    "audience": "PME utilisant plusieurs outils de suivi client",
+    "problem": "Des fiches divergent ou sont fusionnées à tort",
+    "outcome": "Maintenir des contacts cohérents avec résolution des conflits",
+    "status": "reviewed",
+    "publicationSelected": true,
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Un contact peut apparaître dans la messagerie, le CRM et un outil de gestion avec des informations différentes. La synchronisation doit préciser quelle source fait autorité pour chaque champ et comment traiter les conflits. Un nom semblable ou une adresse partagée ne suffit pas à affirmer que deux fiches représentent la même personne.",
+    "sections": [
+      {
+        "title": "Définir des identifiants et des sources de référence",
+        "text": "Conservez les identifiants propres à chaque outil et leur correspondance après un rapprochement validé. Distinguez personne et entreprise, ainsi que les adresses communes utilisées par plusieurs interlocuteurs. Pour le téléphone, le nom ou l’adresse, indiquez la source retenue et la date connue de modification. Une donnée vide ne doit pas effacer une information existante sans règle explicite."
+      },
+      {
+        "title": "Traiter les conflits avant la fusion",
+        "text": "Lorsqu’une correspondance reste incertaine, présentez les fiches et leurs différences dans une file de vérification. Une fusion doit conserver les relations avec les demandes et les messages, sans perdre l’historique. Les oppositions et restrictions de contact ne doivent pas disparaître lors d’une copie de données. Prévoyez une trace de la décision et un moyen de corriger un rapprochement erroné dans les outils concernés."
+      },
+      {
+        "title": "Recetter les boucles et les reprises",
+        "text": "Modifiez un contact dans un outil, puis vérifiez que le retour de synchronisation ne crée pas une boucle de mises à jour. Testez deux personnes portant le même nom, une adresse collective et une interruption après écriture dans un seul système. Une reprise doit retrouver l’opération déjà effectuée. La supervision distingue un champ synchronisé, un conflit à résoudre et un connecteur temporairement indisponible."
+      }
+    ],
+    "example": "Exemple illustratif : deux interlocuteurs d’une entreprise utilisent la même adresse de service. Le système propose un rapprochement d’entreprise, mais ne fusionne pas les personnes automatiquement. Un responsable associe ensuite les bons dossiers et conserve les identifiants des deux contacts pour les échanges suivants.",
+    "checklist": [
+      "Identifiants et correspondances entre outils",
+      "Source de référence par champ",
+      "File de conflits et historique des décisions"
+    ],
+    "limits": "La synchronisation dépend des possibilités réelles des logiciels et des droits accordés. Elle ne garantit pas la qualité des données initiales. Les suppressions, fusions et restrictions de contact nécessitent des règles propres à l’entreprise et ne doivent pas être déduites d’une simple similarité.",
+    "related": [
+      "catalogue-professionnel-sans-vente"
+    ],
+    "sources": [
+      {
+        "label": "Flex-Web — périmètres et tarifs TTC",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ],
+    "reviewHash": "ff0ace2aec75dfeafb64f82f407c1473415ff22d361925b3abdd63fbd21ce3b8"
+  },
+  {
+    "axis": "automatisation",
+    "slug": "tableau-activite-crm",
+    "title": "Construire un tableau d’activité à partir du CRM",
+    "description": "Les indicateurs mélangent demandes devis et ventes. Obtenir des chiffres traçables avec des listes consultables.",
+    "intent": "tableau-activite-crm",
+    "audience": "Dirigeants de PME de services",
+    "problem": "Les indicateurs mélangent demandes devis et ventes",
+    "outcome": "Obtenir des chiffres traçables avec des listes consultables",
+    "status": "reviewed",
+    "publicationSelected": true,
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Un tableau d’activité est utile lorsque chaque chiffre correspond à une définition claire et à des dossiers consultables. Les demandes reçues, les propositions envoyées et les paiements confirmés décrivent des étapes différentes. L’automatisation rassemble ces informations sans transformer une intention commerciale en revenu acquis.",
+    "sections": [
+      {
+        "title": "Définir les indicateurs avant le graphique",
+        "text": "Pour chaque compteur, précisez le statut pris en compte, la date utilisée et les exclusions. Une demande créée pendant la période n’est pas forcément qualifiée pendant cette même période. Les devis révisés ne doivent pas être comptés comme autant de nouveaux clients. Séparez les montants proposés des paiements effectivement confirmés par la source de paiement ou de comptabilité retenue."
+      },
+      {
+        "title": "Rendre les résultats vérifiables",
+        "text": "Chaque indicateur ouvre la liste qui explique sa valeur. Affichez la période et la fraîcheur des données, puis signalez une synchronisation incomplète. Une absence d’information ne doit pas être remplacée par zéro sans explication. Le rapprochement entre demandes et ventes doit conserver ses limites : une vente sans origine connue ne peut pas être attribuée automatiquement au dernier message ou à une visite du site."
+      },
+      {
+        "title": "Tester les changements d’état et les doublons",
+        "text": "Créez des dossiers fictifs traversant plusieurs étapes, puis corrigez un montant et rejouez une notification de paiement. Le tableau doit refléter les définitions retenues sans compter deux fois le même événement. Vérifiez les limites de période, les annulations et les dossiers de test exclus. Un rapport envoyé à l’équipe doit indiquer la date de calcul afin que des chiffres différents obtenus plus tard restent compréhensibles."
+      }
+    ],
+    "example": "Exemple illustratif : une entreprise reçoit plusieurs demandes, en qualifie une partie et transmet des propositions. Le tableau présente ces nombres séparément des règlements confirmés. En ouvrant le compteur des propositions, le dirigeant retrouve chaque dossier et peut vérifier qu’une révision n’a pas été comptée comme une nouvelle vente.",
+    "checklist": [
+      "Définition et source de chaque indicateur",
+      "Périodes et règles de dédoublonnage",
+      "Accès aux listes justificatives"
+    ],
+    "limits": "Un tableau ne démontre pas à lui seul la cause d’une vente ou l’efficacité d’une campagne. Les données manquantes, décalages de synchronisation et changements de définition doivent être visibles. Aucun chiffre de revenu ou de performance n’est inventé pour remplir une vue.",
+    "related": [
+      "consultant-rendez-vous-diagnostic"
+    ],
+    "sources": [
+      {
+        "label": "Flex-Web — périmètres et tarifs TTC",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ],
+    "reviewHash": "d241761790eaeb5221fbedf0f47cd736b236e533c3f070df726214be68b7d75c"
   }
 ]

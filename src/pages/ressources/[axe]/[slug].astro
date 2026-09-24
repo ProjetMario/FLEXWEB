@@ -1,11 +1,12 @@
 ---
+import {isPublishable} from '../../../lib/seo/editorial.mjs';
 import {getCollection} from 'astro:content';
 import ResourceLayout from '../../../components/seo/national/ResourceLayout.astro';
 import ProjectGuides from '../../../components/seo/national/ProjectGuides.astro';
 import StructuredData from '../../../components/seo/StructuredData.astro';
 import {articlePath,bySlug,hubPath,axisLabels} from '../../../lib/seo/national';
 import {websiteOffers,automationOffers,pricingOptions} from '../../../data/pricing';
-export async function getStaticPaths(){return (await getCollection('national',({data})=>data.status==='reviewed')).map(({data:a})=>({params:{axe:a.axis,slug:a.slug},props:{a}}));}
+export async function getStaticPaths(){return (await getCollection('national',({data})=>isPublishable(data))).map(({data:a})=>({params:{axe:a.axis,slug:a.slug},props:{a}}));}
 const {a}=Astro.props;
 const url='https://flex-web.fr'+articlePath(a);
 const offers=a.axis==='sites'?websiteOffers:automationOffers;

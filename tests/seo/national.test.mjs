@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
-import {auditArticles,releaseReadiness} from '../../scripts/seo/quality.mjs';
+import {auditArticles,releaseReadiness,neutralize} from '../../scripts/seo/quality.mjs';
 import {chunks,urlset,sitemapIndex} from '../../src/lib/seo/xml.mjs';
 import {readSitemap} from '../../scripts/seo/read-sitemap.mjs';
 const articles=JSON.parse(await readFile(new URL('../../src/data/national/articles.json',import.meta.url),'utf8'));
@@ -34,35 +34,26 @@ test('draft content is not counted by release readiness caller',()=>{
  const draft={...articles[0],status:'draft',slug:'draft-only',intent:'draft-only',title:'New draft only'};
  const selected=[...articles,draft].filter(a=>a.status==='reviewed');assert.equal(selected.length,articles.length);
 });
-test('20,000 URLs alone cannot release unbalanced or invalid content',()=>{
- assert.equal(releaseReadiness(274,[],{sites:6,automatisation:6}).ready,false);
- const twelveReviewed=releaseReadiness(20000,[],{sites:6,automatisation:6});
- assert.equal(twelveReviewed.ready,false);
- assert.equal(twelveReviewed.reviewedArticles,12);
- assert.equal(twelveReviewed.missing,19988);
- assert.equal(twelveReviewed.missingUrls,0);
- assert.equal(releaseReadiness(25000,[],{sites:0,automatisation:0}).ready,false);
- assert.equal(releaseReadiness(20000,[],{sites:NaN,automatisation:NaN}).ready,false);
- assert.equal(releaseReadiness(20000,[],{sites:10000.5,automatisation:10000.5}).ready,false);
- assert.equal(releaseReadiness(20000,['Duplicate body'],{sites:10000,automatisation:10000}).ready,false);
- assert.equal(releaseReadiness(20000,[],{sites:10000,automatisation:9999}).ready,false);
- assert.equal(releaseReadiness(20000,[],{sites:10000,automatisation:10000}).ready,true);
+test('a reviewed batch can release without filling the catalogue target',()=>{
+ assert.equal(releaseReadiness(286,[],{sites:12,automatisation:12}).ready,true);
+ assert.equal(releaseReadiness(20000,[],{sites:0,automatisation:0}).ready,false);
+ assert.equal(releaseReadiness(286,['Stale review'],{sites:12,automatisation:12}).ready,false);
+ assert.equal(releaseReadiness(5,[],{sites:12,automatisation:12}).ready,false);
 });
-test('a 12-article catalogue with 20,000 sitemap URLs remains previewable but blocks production',async()=>{
- const directory=await mkdtemp(path.join(tmpdir(),'flexweb-quality-gate-'));
- try{
-  await mkdir(path.join(directory,'src/data/national'),{recursive:true});
-  await mkdir(path.join(directory,'dist'),{recursive:true});
-  await writeFile(path.join(directory,'src/data/national/articles.json'),JSON.stringify(articles));
-  await writeFile(path.join(directory,'dist/sitemap.xml'),urlset(Array.from({length:20000},(_,i)=>({url:`/legacy-or-navigation-${i}/`,lastmod:'2026-09-24'}))));
-  const script=fileURLToPath(new URL('../../scripts/seo/quality.mjs',import.meta.url));
-  for(const [context,exitCode] of [['deploy-preview',0],['production',1]]){
-   const result=spawnSync(process.execPath,[script,'--enforce-release'],{cwd:directory,encoding:'utf8',env:{...process.env,CONTEXT:context}});
-   assert.equal(result.status,exitCode,result.stderr);
-   const report=JSON.parse(result.stdout);
-   assert.equal(report.ready,false);assert.equal(report.reviewedArticles,12);assert.equal(report.missing,19988);
-  }
- }finally{await rm(directory,{recursive:true,force:true});}
+test('any meaningful content change invalidates its review',()=>{
+ const a=structuredClone(articles[0]);a.sections[0].text+=' Nouveau périmètre.';
+ assert(auditArticles([a]).some(s=>s.startsWith('Stale review:')));
+});
+test('place names and figures cannot disguise copied content',()=>{
+ assert.equal(neutralize('Intervention à Annecy 74000 pour 3 sites',['Annecy']),neutralize('Intervention à Chambéry 73000 pour 8 sites',['Chambéry']));
+});
+test('a paraphrased title does not create a different declared need',()=>{
+ const copy={...structuredClone(articles[0]),slug:'renamed-guide',title:'Une autre formulation du même problème',intent:'renamed-guide'};
+ assert(auditArticles([...articles,copy]).some(s=>s.startsWith('Duplicate need:')));
+});
+test('selected drafts never count as valid published articles',()=>{
+ const a={...structuredClone(articles[0]),status:'draft'};
+ assert(auditArticles([a]).some(s=>s.startsWith('Selected draft:')));
 });
 test('20,000 synthetic URLs split into exact, complete sitemap segments (not content or a build benchmark)',async()=>{
  const records=Array.from({length:20000},(_,i)=>({url:`/synthetic-test-${i}/`,lastmod:'2026-09-24'}));
