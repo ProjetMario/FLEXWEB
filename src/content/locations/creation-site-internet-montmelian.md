@@ -31,7 +31,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel prix pour un site vitrine à Montmélian ?"
-    answer: "Le site vitrine jusqu’à 5 pages est proposé à 299 € TTC. Le site de 5 pages et plus avec référencement SEO et IA (GEO) pour Google, Bing et les principaux moteurs est à 590 € TTC. L’installation d’un CRM pour les contacts, devis, factures et le suivi client, avec automatisation des tâches répétitives, est à 990 € TTC. Ces offres sont payées une seule fois après validation du devis. Maintenance avec modifications : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, selon le périmètre du devis."
+    answer: "Le site vitrine jusqu’à 5 pages est proposé à 299 € TTC. Le site de 5 pages et plus avec référencement SEO et IA (GEO) pour Google, Bing et les principaux moteurs est à 590 € TTC. L’installation d’un CRM pour les contacts, devis, factures et le suivi client, avec automatisation des tâches répétitives, est à 990 € TTC. Ces offres sont payées une seule fois après validation du devis. Maintenance, modifications et suivi du référencement : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, avec suivi des dernières technologies (veille et recommandations), selon le périmètre du devis."
   - question: "FLEX-WEB travaille-t-il à Montmélian ?"
     answer: "Oui, nous accompagnons les entreprises de Montmélian et de la Combe de Savoie."
   - question: "Le site sera-t-il bien référencé ?"
@@ -67,7 +67,7 @@ Vous pouvez aussi consulter [les réalisations Flex-Web](/realisations/) avant d
 
 Le **site vitrine jusqu’à 5 pages à 299 € TTC** présente votre activité. Le **site de 5 pages et plus à 590 € TTC** ajoute un référencement SEO et IA pour Google, Bing et les principaux moteurs. L’offre distincte **CRM et automatisation à 990 € TTC** organise les contacts, devis, factures, le suivi client et les tâches répétitives retenues au devis. La création est payée une seule fois, après validation du devis. Le délai dépend des contenus et du périmètre convenus.
 
-Les options restent facultatives : **49 € TTC/mois** pour la maintenance avec modifications et **99 € TTC/mois** pour le CRM, l’automatisation et le référencement, dans les limites précisées au devis. L’hébergement, le nom de domaine et leurs éventuels frais récurrents y sont également détaillés. Une application ou une automatisation spécifique fait l’objet d’un chiffrage séparé.
+Les options restent facultatives : **49 € TTC/mois** pour la maintenance, les modifications et le suivi du référencement, et **99 € TTC/mois** pour le CRM, l’automatisation, le référencement et le suivi des dernières technologies (veille et recommandations), dans les limites précisées au devis. L’hébergement, le nom de domaine et leurs éventuels frais récurrents y sont également détaillés. Une application ou une automatisation spécifique fait l’objet d’un chiffrage séparé.
 
 [Comparer les formules et leurs conditions](/pricing/) ou [préparer une demande pour un site vitrine](/demarrer/?service=site).
 

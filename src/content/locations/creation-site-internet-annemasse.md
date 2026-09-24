@@ -32,7 +32,7 @@ services:
   - "Maintenance et hébergement"
 faq:
   - question: "Quel prix pour un site vitrine à Annemasse ?"
-    answer: "Le site vitrine jusqu’à 5 pages est proposé à 299 € TTC. Le site de 5 pages et plus avec référencement SEO et IA (GEO) pour Google, Bing et les principaux moteurs est à 590 € TTC. L’installation d’un CRM pour les contacts, devis, factures et le suivi client, avec automatisation des tâches répétitives, est à 990 € TTC. Ces offres sont payées une seule fois après validation du devis. Maintenance avec modifications : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, selon le périmètre du devis."
+    answer: "Le site vitrine jusqu’à 5 pages est proposé à 299 € TTC. Le site de 5 pages et plus avec référencement SEO et IA (GEO) pour Google, Bing et les principaux moteurs est à 590 € TTC. L’installation d’un CRM pour les contacts, devis, factures et le suivi client, avec automatisation des tâches répétitives, est à 990 € TTC. Ces offres sont payées une seule fois après validation du devis. Maintenance, modifications et suivi du référencement : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, avec suivi des dernières technologies (veille et recommandations), selon le périmètre du devis."
   - question: "FLEX-WEB intervient-il à Annemasse ?"
     answer: "Oui, nous accompagnons les entreprises d'Annemasse et du Grand Genève."
   - question: "Le site sera-t-il visible localement ?"
@@ -66,6 +66,6 @@ Avant de prévoir une version multilingue, identifiez les langues de vos clients
 
 ## Budget et éléments à préparer
 
-Le site vitrine jusqu’à 5 pages est à **299 € TTC**. Le site de 5 pages et plus avec référencement SEO et IA pour Google, Bing et les principaux moteurs est à **590 € TTC**. L’installation du CRM (contacts, devis, factures, suivi client) et l’automatisation des tâches répétitives sont proposées à **990 € TTC**. Ces offres sont en paiement unique après validation du devis. La maintenance et les modifications à **49 € TTC/mois** ainsi que le CRM, l'automatisation et le référencement à **99 € TTC/mois** restent des options. Les fonctions particulières, traductions et intégrations doivent figurer dans le périmètre accepté.
+Le site vitrine jusqu’à 5 pages est à **299 € TTC**. Le site de 5 pages et plus avec référencement SEO et IA pour Google, Bing et les principaux moteurs est à **590 € TTC**. L’installation du CRM (contacts, devis, factures, suivi client) et l’automatisation des tâches répétitives sont proposées à **990 € TTC**. Ces offres sont en paiement unique après validation du devis. La maintenance, les modifications et le suivi du référencement à **49 € TTC/mois** ainsi que le CRM, l’automatisation et le référencement avec suivi des dernières technologies (veille et recommandations) à **99 € TTC/mois** restent des options. Les fonctions particulières, traductions et intégrations doivent figurer dans le périmètre accepté.
 
 Préparez vos coordonnées, les services proposés, votre zone d'intervention, des photos autorisées et les accès aux outils à conserver. [Consulter les tarifs](/pricing/) puis [demander un devis](/demarrer/) permet de préciser le projet avant sa réalisation. Pour le référencement, nous travaillons la clarté et l'accessibilité du contenu sans promettre une position sur Google.

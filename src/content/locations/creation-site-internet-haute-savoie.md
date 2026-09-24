@@ -35,13 +35,13 @@ services:
   - "Création d'application mobile et web"
 faq:
   - question: "Quel est le prix d'un site internet en Haute-Savoie ?"
-    answer: "Le site vitrine jusqu’à 5 pages est proposé à 299 € TTC. Le site de 5 pages et plus avec référencement SEO et IA (GEO) pour Google, Bing et les principaux moteurs est à 590 € TTC. L’installation d’un CRM pour les contacts, devis, factures et le suivi client, avec automatisation des tâches répétitives, est à 990 € TTC. Ces offres sont payées une seule fois après validation du devis. Maintenance avec modifications : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, selon le périmètre du devis."
+    answer: "Le site vitrine jusqu’à 5 pages est proposé à 299 € TTC. Le site de 5 pages et plus avec référencement SEO et IA (GEO) pour Google, Bing et les principaux moteurs est à 590 € TTC. L’installation d’un CRM pour les contacts, devis, factures et le suivi client, avec automatisation des tâches répétitives, est à 990 € TTC. Ces offres sont payées une seule fois après validation du devis. Maintenance, modifications et suivi du référencement : 49 € TTC/mois en option. CRM, automatisation et référencement : 99 € TTC/mois en option, avec suivi des dernières technologies (veille et recommandations), selon le périmètre du devis."
   - question: "FLEX-WEB intervient-il à Annecy et Annemasse ?"
     answer: "Oui, nous travaillons dans tout le département, notamment à Annecy, Annemasse, Thonon-les-Bains, Évian-les-Bains, Cluses, Bonneville et Sallanches."
   - question: "Le site peut-il être multilingue ?"
     answer: "Oui, nous pouvons intégrer une version française et une version anglaise selon votre clientèle, notamment utile pour le tourisme et la proximité suisse."
   - question: "Les options mensuelles sont-elles obligatoires ?"
-    answer: "Non. La création du site est payée une seule fois : 299 € TTC jusqu’à 5 pages, ou 590 € TTC pour 5 pages et plus avec référencement SEO et IA. La mise en place du CRM et des automatisations est une offre distincte à 990 € TTC. La maintenance à 49 € TTC/mois et l'option CRM, automatisation et référencement à 99 € TTC/mois sont facultatives. Le devis précise les prestations choisies."
+    answer: "Non. La création du site est payée une seule fois : 299 € TTC jusqu’à 5 pages, ou 590 € TTC pour 5 pages et plus avec référencement SEO et IA. La mise en place du CRM et des automatisations est une offre distincte à 990 € TTC. La maintenance avec modifications et suivi du référencement à 49 € TTC/mois ainsi que l’option CRM, automatisation et référencement avec suivi des dernières technologies (veille et recommandations) à 99 € TTC/mois sont facultatives. Le devis précise les prestations choisies."
   - question: "Le site est-il visible sur Google ?"
     answer: "Oui, chaque site est conçu avec une structure SEO propre, des balises optimisées, des temps de chargement courts et des données structurées pour faciliter l'indexation."
   - question: "FLEX-WEB développe-t-il aussi des applications mobiles en Haute-Savoie ?"
@@ -61,7 +61,7 @@ Nous définissons ensemble les éléments à publier : description de l'entrepri
 
 Le **site vitrine jusqu’à 5 pages est proposé à 299 € TTC**. Le **site de 5 pages et plus avec référencement SEO et IA est à 590 € TTC**. L’offre **CRM et automatisation à 990 € TTC** couvre la mise en place des contacts, devis, factures et du suivi client ainsi que des tâches répétitives définies au devis. Le paiement est unique après validation du périmètre.
 
-Vous pouvez ajouter une **maintenance avec modifications à 49 € TTC/mois** et une option **CRM, automatisation et référencement à 99 € TTC/mois**. Leur périmètre, le domaine, l'hébergement et les éventuels outils tiers sont détaillés dans la proposition. Une boutique, une application ou une automatisation spécifique nécessite un cadrage séparé. [Consulter les offres](/pricing/).
+Vous pouvez ajouter l’option **maintenance, modifications et suivi du référencement à 49 € TTC/mois** et l’option **CRM, automatisation et référencement avec suivi des dernières technologies (veille et recommandations) à 99 € TTC/mois**. Leur périmètre, le domaine, l'hébergement et les éventuels outils tiers sont détaillés dans la proposition. Une boutique, une application ou une automatisation spécifique nécessite un cadrage séparé. [Consulter les offres](/pricing/).
 
 ## Exemples de besoins à cadrer en Haute-Savoie
 

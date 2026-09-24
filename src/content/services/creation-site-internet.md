@@ -67,7 +67,7 @@ La [demande de devis est gratuite](/demarrer/?service=site). Vous pouvez modifie
 
 ## Automatiser ce qui se passe après le formulaire
 
-L’offre **CRM et automatisation à 990 € TTC**, en paiement unique, met en place le suivi des contacts, devis, factures et clients avec les tâches répétitives définies au devis. Selon vos outils et les accès disponibles, une [automatisation IA](/automatisation-ia/) peut enregistrer un contact, classer une demande, préparer une réponse ou créer une tâche. Une validation humaine reste prévue pour les décisions qui l'exigent. L’accompagnement mensuel à 99 € TTC reste facultatif et distinct de l’installation.
+L’offre **CRM et automatisation à 990 € TTC**, en paiement unique, met en place le suivi des contacts, devis, factures et clients avec les tâches répétitives définies au devis. Selon vos outils et les accès disponibles, une [automatisation IA](/automatisation-ia/) peut enregistrer un contact, classer une demande, préparer une réponse ou créer une tâche. Une validation humaine reste prévue pour les décisions qui l'exigent. L’accompagnement mensuel à 99 € TTC reste facultatif et distinct de l’installation. Il comprend le suivi du CRM, des automatisations et du référencement ainsi que le suivi des dernières technologies : veille et recommandations adaptées à vos outils, selon le devis.
 
 Si vos clients doivent suivre un dossier, déposer des documents ou consulter des informations privées, une [application web sur mesure](/creation-application-mobile/) peut être plus adaptée qu'une nouvelle page vitrine.
 

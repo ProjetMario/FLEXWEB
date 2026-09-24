@@ -57,11 +57,11 @@ export const pricingFaq: PricingFaqItem[] = [
   },
   {
     question: "Un abonnement mensuel est-il obligatoire ?",
-    answer: "Non. Les options mensuelles sont facultatives : 49 € TTC par mois pour la maintenance simple avec modifications, et 99 € TTC par mois pour le CRM, l’automatisation et le référencement. Vous choisissez les options utiles dans votre devis ; elles ne sont pas ajoutées automatiquement.",
+    answer: "Non. Les options mensuelles sont facultatives : 49 € TTC par mois pour la maintenance, les modifications et le suivi du référencement ; 99 € TTC par mois pour le CRM, l’automatisation, le référencement et le suivi des dernières technologies. Vous choisissez les options utiles dans votre devis ; elles ne sont pas ajoutées automatiquement.",
   },
   {
     question: "Que comprennent les options à 49 € et 99 € par mois ?",
-    answer: "L’option à 49 € TTC par mois couvre la maintenance simple et des modifications de contenu. L’option à 99 € TTC par mois concerne le CRM, l’automatisation et le référencement. Le devis définit les interventions, les outils, les limites et les conditions de chaque option. Les licences, consommations et travaux sur mesure éventuels sont précisés avant accord.",
+    answer: "L’option à 49 € TTC par mois couvre la maintenance simple, les modifications de contenu et le suivi du référencement. L’option à 99 € TTC par mois concerne le CRM, l’automatisation, le référencement et le suivi des dernières technologies, avec veille et recommandations adaptées à votre activité. Le devis définit les interventions, les outils, les limites et les conditions de chaque option. Les licences, consommations et travaux sur mesure éventuels sont précisés avant accord.",
   },
   {
     question: "L’hébergement et le nom de domaine sont-ils compris ?",
@@ -69,7 +69,7 @@ export const pricingFaq: PricingFaqItem[] = [
   },
   {
     question: "Quelle différence entre le forfait CRM à 990 € et l’option à 99 €/mois ?",
-    answer: "Le forfait à 990 € TTC finance la mise en place du CRM et les automatisations définies au devis. L’option facultative à 99 € TTC/mois sert au suivi du CRM, des automatisations et du référencement. Les outils, interventions, licences et limites sont précisés avant accord. Les automatisations IA avancées et les applications web ou mobiles font l’objet d’un devis sur mesure.",
+    answer: "Le forfait à 990 € TTC finance la mise en place du CRM et les automatisations définies au devis. L’option facultative à 99 € TTC/mois sert au suivi du CRM, des automatisations, du référencement et des dernières technologies, avec veille et recommandations. Les outils, interventions, licences et limites sont précisés avant accord. Les automatisations IA avancées et les applications web ou mobiles font l’objet d’un devis sur mesure.",
   },
   {
     question: "Quand dois-je payer et quand le projet est-il livré ?",
