@@ -32,3 +32,6 @@ pnpm-debug.log*
 .vscode
 # Local Netlify folder
 .netlify
+
+# Local SEO evidence may contain private Search Console data.
+outputs/seo-national-20260924/

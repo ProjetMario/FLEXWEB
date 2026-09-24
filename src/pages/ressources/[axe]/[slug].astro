@@ -1,0 +1,31 @@
+---
+import {getCollection} from 'astro:content';
+import ResourceLayout from '../../../components/seo/national/ResourceLayout.astro';
+import StructuredData from '../../../components/seo/StructuredData.astro';
+import {articlePath,bySlug,hubPath,axisLabels} from '../../../lib/seo/national';
+import {websiteOffers,automationOffers,pricingOptions} from '../../../data/pricing';
+export async function getStaticPaths(){return (await getCollection('national',({data})=>data.status==='reviewed')).map(({data:a})=>({params:{axe:a.axis,slug:a.slug},props:{a}}));}
+const {a}=Astro.props;
+const url='https://flex-web.fr'+articlePath(a);
+const offers=a.axis==='sites'?websiteOffers:automationOffers;
+const quote=a.axis==='sites'?websiteOffers[0].href:'/demarrer/?service=automation&offre=sur-mesure';
+const money=(c:number)=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(c/100);
+const schemas=[{'@context':'https://schema.org','@type':'Article',headline:a.title,description:a.description,mainEntityOfPage:url,dateModified:a.reviewedAt,author:{'@type':'Organization',name:'Flex-Web',url:'https://flex-web.fr/'},publisher:{'@id':'https://flex-web.fr/#organization'}},{'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:[{name:'Accueil',item:'https://flex-web.fr/'},{name:'Ressources',item:'https://flex-web.fr/ressources/'},{name:axisLabels[a.axis],item:'https://flex-web.fr'+hubPath(a.axis)},{name:a.title,item:url}].map((v,i)=>({'@type':'ListItem',position:i+1,...v}))}];
+---
+<ResourceLayout title={a.title} description={a.description}>
+ <StructuredData schemas={schemas}/>
+ <nav aria-label="Fil d’Ariane"><a href="/">Accueil</a><a href="/ressources/">Ressources</a><a href={hubPath(a.axis)}>{axisLabels[a.axis]}</a></nav>
+ <p class="eyebrow">Une méthode pour votre entreprise</p><h1>{a.title}</h1>
+ <p class="lead">{a.intro}</p><p class="meta">Rédaction Flex-Web · Vérifié le <time datetime={a.reviewedAt}>{new Date(a.reviewedAt+'T12:00:00Z').toLocaleDateString('fr-FR')}</time></p>
+ <a class="action" href={quote}>Demander un devis pour ce besoin</a>
+ <div class="article-body">{a.sections.map(s=><section><h2>{s.title}</h2><p>{s.text}</p></section>)}
+ <aside class="note"><h2>Exemple illustratif</h2><p>{a.example}</p></aside>
+ <section><h2>À préparer pour votre projet</h2><ul>{a.checklist.map(item=><li>{item}</li>)}</ul></section>
+ <section><h2>Le périmètre à confirmer</h2><p>{a.limits}</p><p>Le devis précise les outils, les accès, le calendrier et les éventuels coûts de licences ou de consommation. Aucun gain chiffré n’est annoncé sans mesure.</p></section>
+ </div>
+ <section><h2>Quel accompagnement choisir ?</h2><div class="grid">{offers.map(o=><div class="card"><h3>{o.name}</h3><p class="price">{money(o.setupCents)} TTC</p><p>{o.description}</p><a href={o.href}>Définir le périmètre au devis →</a></div>)}</div>{a.axis==='automatisation'&&<p>Une automatisation IA avancée ou une application nécessite un <a href="/demarrer/?service=automation&offre=sur-mesure">devis personnalisé</a>. Le forfait CRM ne couvre pas automatiquement tous les scénarios décrits.</p>}
+ <p>{pricingOptions.map((o,i)=><span>{i>0?' · ':''}{money(o.monthlyCents)} TTC/mois : {o.description}</span>)}</p></section>
+ <section class="note"><h2>Le site et l’automatisation se complètent</h2>{a.related.map(slug=>{const other=bySlug.get(slug);return other&&<p><a href={articlePath(other)}>{other.title} →</a></p>;})}<p><a href="/realisations/">Voir les réalisations Flex-Web</a></p></section>
+ <section><h2>Repères et références</h2><p>Cette page propose une méthode de préparation, pas un résultat client mesuré.</p><ul>{a.sources.map(s=><li><a href={s.url}>{s.label}</a></li>)}</ul></section>
+ <a class="action" href={quote}>Préparer mon devis</a>
+</ResourceLayout>

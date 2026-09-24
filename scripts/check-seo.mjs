@@ -1,3 +1,4 @@
+import {readSitemap} from './seo/read-sitemap.mjs';
 import { readFile, readdir, access } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import path from 'node:path';
@@ -5,8 +6,7 @@ const root = path.resolve('dist');
 async function walk(dir) { const entries = await readdir(dir,{withFileTypes:true}); return (await Promise.all(entries.map(e => e.isDirectory() ? walk(path.join(dir,e.name)) : path.join(dir,e.name)))).flat(); }
 const files = (await walk(root)).filter(f => f.endsWith('.html'));
 const origin='https://flex-web.fr';
-const sitemap=await readFile(path.join(root,'sitemap.xml'),'utf8');
-const urls=[...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m=>m[1]);
+const urls=await readSitemap(origin+'/sitemap.xml',url=>readFile(path.join(root,new URL(url).pathname),'utf8'));
 assert.equal(urls.length,new Set(urls).size,'Duplicate sitemap URL');
 const redirects = new Map((await readFile(path.join(root,'_redirects'),'utf8')).split('\n').filter(l=>l.trim()&&!l.startsWith('#')).map(l=>{const [from,to,status]=l.split(/\s+/);assert.equal(status,'301');return [from,to];}));
 const pages = new Map();

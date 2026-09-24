@@ -1,0 +1,12 @@
+---
+import ResourceLayout from '../../components/seo/national/ResourceLayout.astro';
+import {axes,axisLabels,hubPath} from '../../lib/seo/national';
+---
+<ResourceLayout title="Sites internet et automatisation IA : ressources entreprises" description="Des méthodes concrètes pour créer un site utile, organiser vos demandes et automatiser les tâches de votre entreprise avec ou sans IA.">
+ <p class="eyebrow">Les ressources Flex-Web</p>
+ <h1>Un site qui attire.<br />Une entreprise qui s’organise.</h1>
+ <p class="lead">Des repères concrets pour choisir votre site internet, mieux suivre vos clients et automatiser les tâches qui se répètent. En Savoie, Haute-Savoie et partout en France à distance.</p>
+ <div class="grid">{axes.map(axis=><section class="card"><h2>{axisLabels[axis]}</h2><p>{axis==='sites'?'Préparer les bonnes pages, présenter votre métier et transformer une visite en demande exploitable.':'Qualifier un e-mail, préparer un devis ou organiser un rendez-vous : choisir les règles et l’IA là où elles sont utiles.'}</p><a href={hubPath(axis)}>Explorer les ressources →</a></section>)}</div>
+ <section class="journey"><h2>De la première visite à la prochaine action</h2><p>Le site présente votre entreprise et recueille une demande. Le CRM conserve le dossier. Une automatisation prépare la suite, avec une validation humaine lorsque la décision l’exige.</p><a href="/demarrer/">Décrire mon projet →</a></section>
+ <p>Les scénarios proposés sont illustratifs. Retrouvez séparément nos <a href="/realisations/">réalisations</a>, nos <a href="/pricing/">offres TTC</a> et nos <a href="/zones-intervention/">zones d’intervention</a>.</p>
+</ResourceLayout>

@@ -4,6 +4,7 @@ const channels = ['Google naturel', 'Autre moteur', 'Assistant IA', 'Lien extern
 // Only public editorial routes may be recorded; never query strings or client URLs.
 export function publicLanding(path: string): string | null {
   if (path === '/') return path;
+  if (/^\/ressources(?:\/(?:sites|automatisation)(?:\/(?:[a-z0-9-]+|page\/[1-9][0-9]*))?)?\/$/.test(path) && path.length < 120) return path;
   return /^\/(?:creation-site-internet(?:-[a-z-]+)?|creation-application-mobile(?:-[a-z-]+)?|automatisation-ia(?:-[a-z-]+)?|pricing|contact|about|journal(?:\/[a-z-]+)?|realisations(?:\/[a-z0-9-]+)?)\/$/.test(path) && path.length < 120 ? path : null;
 }
 export function classifySource(referrer: string, origin: string, search: string): string {

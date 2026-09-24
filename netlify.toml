@@ -1,5 +1,5 @@
 [build]
-  command = "npx astro build"
+  command = "npm run build && node scripts/check-seo.mjs && node scripts/seo/quality.mjs --enforce-release"
   publish = "dist"
 
 [build.environment]

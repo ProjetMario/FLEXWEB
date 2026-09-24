@@ -1,0 +1,7 @@
+---
+import ResourceHub from '../../../components/seo/national/ResourceHub.astro';
+import {hubPages} from '../../../lib/seo/national';
+export function getStaticPaths(){return hubPages().filter(p=>p.page===1).map(group=>({params:{axe:group.axis},props:{group}}));}
+const {group}=Astro.props;
+---
+<ResourceHub group={group}/>

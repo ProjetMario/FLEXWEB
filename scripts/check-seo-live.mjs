@@ -1,3 +1,4 @@
+import {readSitemap} from './seo/read-sitemap.mjs';
 import assert from 'node:assert/strict';
 const origin = process.argv[2] || 'https://flex-web.fr';
 if (!/^https:\/\/(?:flex-web\.fr|[a-z0-9-]+--flex-webb\.netlify\.app)$/.test(origin)) throw new Error('Unexpected deployment origin');
@@ -9,5 +10,5 @@ for(const path of paths){
  if(path==='/'||!path.startsWith('/realisations/'))assert.ok(html.includes('/realisations/'),`evidence link ${path}`);
  console.log('OK',path);
 }
-const sitemap=await fetch(origin+'/sitemap.xml').then(r=>r.text());for(const path of paths.filter(p=>p.startsWith('/realisations/')))assert.ok(sitemap.includes('https://flex-web.fr'+path));
+const sitemap=await readSitemap('https://flex-web.fr/sitemap.xml',url=>fetch(origin+new URL(url).pathname).then(r=>{assert.equal(r.status,200);return r.text()}));for(const path of paths.filter(p=>p.startsWith('/realisations/')))assert.ok(sitemap.includes('https://flex-web.fr'+path));
 console.log('OK sitemap');

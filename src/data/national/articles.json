@@ -1,0 +1,530 @@
+[
+  {
+    "axis": "sites",
+    "slug": "site-internet-industrie",
+    "title": "Site internet industriel : préparer une demande technique",
+    "description": "Présenter capacités, réalisations et contraintes pour recevoir des demandes exploitables dans une entreprise industrielle.",
+    "intent": "site-internet-industrie",
+    "status": "reviewed",
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "gsc-related-query",
+    "intro": "Un acheteur industriel doit pouvoir vérifier votre capacité à réaliser sa pièce ou sa prestation avant de vous contacter. Nous proposons un site organisé autour des procédés, des matières et des informations nécessaires au chiffrage, plutôt qu’une simple galerie de machines.",
+    "sections": [
+      {
+        "title": "Décrire les capacités sans promettre une précision non vérifiée",
+        "text": "Recensez avec votre équipe les procédés réellement disponibles, les matières travaillées, les dimensions et les volumes que vous acceptez. Les tolérances et certifications ne doivent figurer sur le site que si vous pouvez les documenter. Séparez une capacité courante d’une étude de faisabilité. Une fiche procédé peut expliquer les informations attendues pour décider si une demande entre dans votre périmètre."
+      },
+      {
+        "title": "Préparer le formulaire de consultation",
+        "text": "Demandez le type de pièce, la quantité indicative et l’échéance souhaitée. Pour les plans confidentiels, proposez un échange adapté plutôt qu’un dépôt public. Le formulaire accuse réception d’une demande ; il ne confirme ni un prix ni un délai. Dans le CRM, rattachez la consultation à l’entreprise et attribuez une personne à la qualification technique."
+      },
+      {
+        "title": "Vérifier le parcours avec un cas d’essai",
+        "text": "Prenez une demande représentative et faites-la parcourir au responsable commercial puis à la production. Ils doivent retrouver la matière, le volume et les éléments manquants sans relire plusieurs e-mails. Testez aussi une demande hors capacité : le parcours doit permettre de la signaler, sans produire un devis automatique trompeur."
+      }
+    ],
+    "example": "Une PME de découpe reçoit une demande pour une petite série sans indication de matière. Le scénario proposé crée une tâche « préciser la matière » ; le prix reste à établir par l’équipe. Cet exemple est illustratif.",
+    "checklist": [
+      "Liste des procédés vérifiés",
+      "Responsable de la qualification",
+      "Documents publiables avec autorisation"
+    ],
+    "limits": "Le formulaire ne remplace pas la validation technique. Les pièces confidentielles et intégrations métier demandent un cadrage spécifique.",
+    "related": [
+      "qualification-emails"
+    ],
+    "sources": [
+      {
+        "label": "Offres et périmètre Flex-Web",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ]
+  },
+  {
+    "axis": "sites",
+    "slug": "site-internet-plombier",
+    "title": "Site de plombier : distinguer dépannage et chantier",
+    "description": "Organiser un site de plomberie autour de deux demandes différentes : intervention urgente et projet à chiffrer.",
+    "intent": "site-internet-plombier",
+    "status": "reviewed",
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Une fuite et une rénovation de salle de bains ne demandent pas les mêmes renseignements. Le site peut séparer ces deux parcours dès le premier écran, avec vos disponibilités réelles et un contact facile sur téléphone.",
+    "sections": [
+      {
+        "title": "Donner une place claire au dépannage",
+        "text": "Affichez votre numéro, vos plages de réponse et votre zone d’intervention réelle. Ne présentez pas un service permanent si personne n’est disponible pour le prendre en charge. Un bouton d’appel facilite le contact ; un formulaire ne doit pas donner l’impression qu’une intervention est déjà réservée. Les demandes hors horaires doivent recevoir une indication explicite."
+      },
+      {
+        "title": "Recueillir les éléments du chantier",
+        "text": "Pour un projet, demandez le type de travaux, la commune et la période souhaitée. Les photos peuvent aider après un premier échange, mais ne suffisent pas toujours pour chiffrer. Expliquez quand une visite est nécessaire. Présentez des réalisations autorisées avec leur périmètre, sans laisser croire qu’un prix ancien s’applique à tous les logements."
+      },
+      {
+        "title": "Relier le site au suivi quotidien",
+        "text": "Créez des catégories distinctes pour les dépannages et les demandes de travaux. Une notification doit préciser quel contact rappeler et quelle information manque. Avant la mise en ligne, testez un numéro mal saisi et une double soumission. Vérifiez que le dossier reste unique et que le visiteur voit une confirmation uniquement après enregistrement."
+      }
+    ],
+    "example": "Un visiteur choisit « rénovation », précise sa commune et souhaite une visite. Le CRM prépare une tâche de rappel, sans annoncer de créneau non disponible. Exemple de parcours, pas de résultat client mesuré.",
+    "checklist": [
+      "Horaires effectivement assurés",
+      "Communes desservies",
+      "Photos de travaux autorisées"
+    ],
+    "limits": "Les tarifs d’intervention, déplacements et urgences sont à définir par l’entreprise. Le site ne doit pas les inventer.",
+    "related": [
+      "rendez-vous"
+    ],
+    "sources": [
+      {
+        "label": "Offres et périmètre Flex-Web",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ]
+  },
+  {
+    "axis": "sites",
+    "slug": "site-internet-restaurant",
+    "title": "Site de restaurant : menu et réservation cohérents",
+    "description": "Rendre les horaires, le menu et la prise de réservation faciles à consulter et à maintenir.",
+    "intent": "site-internet-restaurant",
+    "status": "reviewed",
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Le site d’un restaurant doit surtout permettre de comprendre ce qui est proposé et de savoir comment venir. Nous conseillons de donner la priorité au menu lisible sur mobile, aux horaires tenus à jour et au bon parcours de réservation.",
+    "sections": [
+      {
+        "title": "Choisir qui tient le menu à jour",
+        "text": "Désignez une personne responsable des prix et des informations du menu. Préférez une version lisible directement sur la page ; un document téléchargeable peut la compléter. Évitez plusieurs menus contradictoires. Prévoyez comment retirer un plat indisponible et comment dater une carte saisonnière, sans modifier les informations à la main dans plusieurs endroits."
+      },
+      {
+        "title": "Distinguer demande et réservation confirmée",
+        "text": "Si vous utilisez déjà un outil de réservation, vérifiez sa connexion avant d’ajouter un formulaire. Sans disponibilité synchronisée, le site recueille une demande que l’équipe confirme ensuite. Le visiteur doit comprendre cette différence. Une annulation ou un changement de nombre de personnes doit retrouver la réservation concernée, plutôt que créer une seconde entrée."
+      },
+      {
+        "title": "Tester les situations courantes sur téléphone",
+        "text": "Consultez le menu avec une connexion lente, lancez l’appel et cherchez les horaires d’un jour de fermeture. Faites ensuite un essai de réservation refusée ou indisponible. La page doit proposer une réponse compréhensible sans promettre une table. Vérifiez que les accès pour modifier la carte ne donnent pas de droits inutiles sur le reste du site."
+      }
+    ],
+    "example": "Le restaurant ferme exceptionnellement un mardi. Le scénario recommandé actualise l’information visible et bloque les demandes sur ce créneau si l’outil connecté le permet. Situation illustrative à adapter.",
+    "checklist": [
+      "Carte et prix validés",
+      "Horaires et fermetures",
+      "Outil de réservation existant"
+    ],
+    "limits": "La disponibilité des tables dépend du système réellement connecté. Les informations alimentaires sont validées par le restaurateur.",
+    "related": [
+      "rendez-vous"
+    ],
+    "sources": [
+      {
+        "label": "Offres et périmètre Flex-Web",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ]
+  },
+  {
+    "axis": "sites",
+    "slug": "site-internet-gite",
+    "title": "Site de gîte : présenter le séjour et les disponibilités",
+    "description": "Préparer un site de location avec informations pratiques, conditions claires et demandes de séjour bien renseignées.",
+    "intent": "site-internet-gite",
+    "status": "reviewed",
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Un voyageur doit pouvoir vérifier que le logement convient à son séjour : capacité, accès, équipements et dates. Le site doit distinguer les informations de présentation d’un moteur de réservation réellement synchronisé.",
+    "sections": [
+      {
+        "title": "Décrire ce qui est effectivement inclus",
+        "text": "Préparez une liste des couchages, équipements et conditions d’accès vérifiées. Donnez des photographies récentes et indiquez les espaces partagés. Expliquez les frais ou prestations supplémentaires avant la demande. Évitez une formule générale comme « tout compris » si des éléments doivent encore être confirmés. Le propriétaire valide le contenu avant publication."
+      },
+      {
+        "title": "Choisir entre demande de séjour et réservation",
+        "text": "Une demande collecte les dates, le nombre de personnes et les coordonnées pour répondre. Une réservation nécessite de connaître la disponibilité et les conditions applicables à ces dates. Si plusieurs plateformes sont utilisées, la synchronisation doit être étudiée avant toute confirmation automatique. Un calendrier informatif ne constitue pas à lui seul une garantie de disponibilité."
+      },
+      {
+        "title": "Organiser la réponse sans perdre les changements",
+        "text": "Dans le suivi, conservez les dates demandées puis les dates finalement retenues. Une nouvelle demande du même voyageur ne doit pas effacer un accord existant. Testez un départ avant l’arrivée, un séjour au-delà de la capacité et une modification après réponse. Les cas incohérents restent à traiter par le propriétaire."
+      }
+    ],
+    "example": "Un voyageur demande deux semaines mais les dates ne sont pas synchronisées avec les autres canaux. Le système enregistre la demande et prépare un rappel ; le propriétaire confirme la disponibilité. Exemple fictif.",
+    "checklist": [
+      "Capacité et équipements vérifiés",
+      "Conditions du séjour",
+      "Liste des canaux de réservation"
+    ],
+    "limits": "Les connexions aux plateformes et le paiement d’une réservation sont à chiffrer séparément selon les outils et le devis.",
+    "related": [
+      "qualification-emails"
+    ],
+    "sources": [
+      {
+        "label": "Offres et périmètre Flex-Web",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ]
+  },
+  {
+    "axis": "sites",
+    "slug": "site-internet-bureau-etudes",
+    "title": "Site de bureau d’études : qualifier une mission",
+    "description": "Présenter les compétences et recueillir le contexte nécessaire à une première analyse de mission.",
+    "intent": "site-internet-bureau-etudes",
+    "status": "reviewed",
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Le site d’un bureau d’études doit aider un donneur d’ordre à comprendre votre périmètre, puis à transmettre une demande suffisamment précise. Les références servent à expliquer une intervention réelle, avec l’autorisation de les présenter.",
+    "sections": [
+      {
+        "title": "Présenter le rôle tenu dans chaque projet",
+        "text": "Pour une référence, précisez la mission confiée, les livrables et les limites de votre intervention. Ne vous attribuez pas l’ensemble d’un chantier si votre travail portait sur une étude particulière. Des visuels autorisés et une description du problème traité peuvent être plus utiles qu’une longue liste de logos sans contexte."
+      },
+      {
+        "title": "Recueillir le stade et les contraintes",
+        "text": "Le formulaire peut demander la nature du projet, son stade, la localisation utile à la mission et l’échéance envisagée. Une mission urgente et une consultation préliminaire ne suivent pas la même organisation. Proposez un premier contact avant l’envoi de documents sensibles. Les champs doivent aider à orienter la demande, sans exiger un cahier des charges complet."
+      },
+      {
+        "title": "Définir la qualification avant le devis",
+        "text": "Le CRM peut attribuer la demande selon la compétence requise et demander une précision manquante. La faisabilité, les responsabilités et les engagements restent examinés par l’équipe. Pour la recette, utilisez une mission hors domaine et une demande sans calendrier. Vérifiez qu’aucun message ne donne un accord technique avant cette analyse."
+      }
+    ],
+    "example": "Une entreprise demande une étude sans préciser le stade de conception. Un brouillon de réponse demande les pièces nécessaires à un premier échange, sans accepter la mission. Exemple illustratif.",
+    "checklist": [
+      "Missions et livrables proposés",
+      "Références publiables",
+      "Critères de qualification"
+    ],
+    "limits": "Les attestations, assurances ou certifications ne sont affichées que sur justificatifs valides fournis par l’entreprise.",
+    "related": [
+      "brouillons-reponses"
+    ],
+    "sources": [
+      {
+        "label": "Offres et périmètre Flex-Web",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ]
+  },
+  {
+    "axis": "sites",
+    "slug": "refonte-conserver-urls",
+    "title": "Refonte de site : conserver les pages utiles",
+    "description": "Préparer une refonte en inventoriant les URL, les demandes reçues et les correspondances entre anciennes et nouvelles pages.",
+    "intent": "refonte-conserver-urls",
+    "status": "reviewed",
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Une refonte change la présentation du site, mais ne doit pas faire disparaître sans raison les pages que vos clients consultent déjà. La préparation commence par un inventaire des URL et de leur rôle commercial.",
+    "sections": [
+      {
+        "title": "Faire une table de correspondance avant de développer",
+        "text": "Récupérez les pages publiées, les liens importants et les données de recherche disponibles. Pour chaque ancienne URL, choisissez de conserver la page, d’améliorer son contenu ou de la réunir avec une autre page réellement équivalente. Évitez de rediriger toutes les anciennes pages vers l’accueil : le visiteur doit retrouver une réponse à son besoin."
+      },
+      {
+        "title": "Préserver les parcours qui apportent des demandes",
+        "text": "Testez les formulaires, boutons d’appel et téléchargements avant puis après la refonte. Documentez les champs envoyés au CRM et le comportement en cas d’erreur. Le changement de design ne doit pas compter une visite comme une demande confirmée. Conservez les paramètres nécessaires aux intégrations, sans exposer d’informations privées dans les URL."
+      },
+      {
+        "title": "Contrôler la publication et les semaines suivantes",
+        "text": "Vérifiez les anciennes adresses, les destinations finales et les liens internes. Le sitemap contient les nouvelles URL canoniques, tandis que les liens du site pointent directement vers elles. Comparez ensuite les données sur des périodes complètes et comparables. Une variation de trafic ne permet pas à elle seule d’attribuer un gain ou une perte à la refonte."
+      }
+    ],
+    "example": "Une page « prestations » est divisée en deux services distincts. La correspondance se décide selon le contenu historique, puis les liens internes sont corrigés. Exemple de méthode, sans promesse de maintien de position.",
+    "checklist": [
+      "Inventaire des anciennes URL",
+      "Accès aux statistiques disponibles",
+      "Formulaires et intégrations à préserver"
+    ],
+    "limits": "Une refonte peut entraîner des fluctuations. L’indexation et le classement restent décidés par chaque moteur.",
+    "related": [
+      "relance-devis"
+    ],
+    "sources": [
+      {
+        "label": "Offres et périmètre Flex-Web",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ]
+  },
+  {
+    "axis": "automatisation",
+    "slug": "qualification-emails",
+    "title": "Qualifier les demandes e-mail avec une IA",
+    "description": "Préparer le tri des demandes entrantes et leur orientation vers la bonne personne sans perdre les messages ambigus.",
+    "intent": "qualification-emails",
+    "status": "reviewed",
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Une IA peut proposer une catégorie et résumer une demande rédigée librement. Une règle classique reste préférable lorsque la destination se déduit déjà d’un champ fiable du formulaire. Le but est de préparer le traitement, pas de décider seule de tous les engagements.",
+    "sections": [
+      {
+        "title": "Définir des catégories utilisables par l’équipe",
+        "text": "Choisissez quelques catégories associées à une action : nouveau projet, question sur un dossier, document manquant ou demande à examiner. Constituez des exemples anonymisés et faites vérifier leur classement par les personnes concernées. Un message mêlant plusieurs sujets doit rester visible dans une file de contrôle plutôt qu’être forcé dans une catégorie unique."
+      },
+      {
+        "title": "Conserver le message original et son contexte",
+        "text": "Le résumé ne remplace pas le texte reçu. Conservez un lien vers le message, l’entreprise concernée et la justification de l’orientation proposée. Une adresse inconnue ne doit pas être automatiquement fusionnée avec un client portant un nom proche. L’équipe doit pouvoir corriger le classement sans perdre l’historique."
+      },
+      {
+        "title": "Recetter avec les cas difficiles",
+        "text": "Essayez un message vide, une pièce jointe seule, une demande hors sujet et une réponse à une ancienne conversation. Vérifiez aussi une panne du service IA. Les messages restent enregistrés et une personne est avertie si le classement ne peut pas être effectué. Mesurez les corrections nécessaires avant d’autoriser une orientation automatique limitée."
+      }
+    ],
+    "example": "Une demande contient « devis » mais concerne la correction d’une proposition existante. Le système suggère le suivi de dossier ; l’équipe vérifie le rattachement avant toute réponse. Exemple fictif.",
+    "checklist": [
+      "Messagerie autorisée",
+      "Catégories et responsables",
+      "Exemples anonymisés à tester"
+    ],
+    "limits": "Les messages reçus sont des données à analyser, pas des instructions autorisant l’IA à envoyer, supprimer ou divulguer des informations.",
+    "related": [
+      "site-internet-industrie"
+    ],
+    "sources": [
+      {
+        "label": "Offres et périmètre Flex-Web",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ]
+  },
+  {
+    "axis": "automatisation",
+    "slug": "relance-devis",
+    "title": "Automatiser les rappels sur les devis en attente",
+    "description": "Définir des rappels qui tiennent compte des réponses, des refus et du statut réel de chaque proposition.",
+    "intent": "relance-devis",
+    "status": "reviewed",
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Une relance de devis peut fonctionner avec des règles simples. L’IA est facultative : elle peut préparer une formulation, tandis que le déclenchement dépend d’un statut, d’une date et des échanges déjà reçus.",
+    "sections": [
+      {
+        "title": "Choisir des états sans ambiguïté",
+        "text": "Distinguez le brouillon, le devis envoyé, la réponse reçue, l’acceptation et le refus. Un devis en préparation ne doit pas déclencher une relance client. Définissez qui peut corriger les statuts et ce qui constitue une réponse. Conservez la version effectivement envoyée pour ne pas rappeler des conditions qui ont changé depuis."
+      },
+      {
+        "title": "Arrêter le parcours au bon moment",
+        "text": "Avant chaque envoi, vérifiez la dernière réponse, le refus éventuel et les restrictions de contact. Un rappel programmé doit être annulé si le dossier évolue. Une opposition bloque les nouveaux messages concernés. Les délais et le nombre de rappels sont fixés avec l’entreprise ; ils ne sont pas choisis librement par le modèle IA."
+      },
+      {
+        "title": "Éviter un second envoi après une panne",
+        "text": "Attribuez un identifiant au rappel et gardez son état. Si le fournisseur ne confirme pas la transmission, classez le résultat à vérifier plutôt que d’envoyer à nouveau immédiatement. Testez une réponse reçue juste avant l’échéance et un clic répété sur la validation. L’historique doit permettre de comprendre pourquoi un rappel a été envoyé ou annulé."
+      }
+    ],
+    "example": "Un devis est prévu pour relance le matin, mais le client répond avant l’exécution. La nouvelle réponse suspend le rappel et crée une tâche pour le commercial. Exemple de recette, pas une campagne activée.",
+    "checklist": [
+      "Statuts fiables des devis",
+      "Accès aux réponses",
+      "Délais de relance approuvés"
+    ],
+    "limits": "Le fournisseur peut confirmer une transmission sans confirmer la lecture. Les messages doivent afficher leur état réel.",
+    "related": [
+      "refonte-conserver-urls"
+    ],
+    "sources": [
+      {
+        "label": "Offres et périmètre Flex-Web",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ]
+  },
+  {
+    "axis": "automatisation",
+    "slug": "rappels-factures",
+    "title": "Préparer les rappels de factures sans doublons",
+    "description": "Relier échéances et paiements confirmés avant de proposer ou envoyer un rappel de facture.",
+    "intent": "rappels-factures",
+    "status": "reviewed",
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Le rappel d’une facture repose d’abord sur des données comptables à jour. Une IA n’est pas nécessaire pour comparer une date et un solde ; elle peut éventuellement préparer un brouillon adapté au contexte, soumis aux règles de l’entreprise.",
+    "sections": [
+      {
+        "title": "Identifier la source du solde",
+        "text": "Choisissez le logiciel qui fait référence pour la facture, son échéance et le montant restant. Ne déduisez pas qu’une facture est impayée parce qu’un e-mail n’a pas reçu de réponse. Les paiements partiels et les avoirs doivent être pris en compte. Une donnée manquante déclenche une vérification interne, pas une relance automatique."
+      },
+      {
+        "title": "Préparer une validation lisible",
+        "text": "Le récapitulatif présente l’entreprise, la référence de facture, l’échéance et le solde connu, avec la date de synchronisation. La personne qui valide doit pouvoir suspendre un dossier en litige. Le message évite d’inventer des pénalités ou des conditions contractuelles. Les pièces et coordonnées utilisées sont celles de la facture validée."
+      },
+      {
+        "title": "Recontrôler juste avant la transmission",
+        "text": "Une facture peut être payée entre la préparation du rappel et l’envoi. Relisez son état au dernier moment et annulez le rappel si nécessaire. Simulez un paiement partiel, un avoir et deux confirmations de paiement identiques. Une panne de synchronisation laisse le dossier à vérifier afin de ne pas réclamer un montant obsolète."
+      }
+    ],
+    "example": "Une facture préparée pour rappel reçoit un paiement partiel. Le scénario proposé suspend le brouillon et demande de confirmer le nouveau solde avant envoi. Cas illustratif.",
+    "checklist": [
+      "Source comptable de référence",
+      "Règles de validation",
+      "Traitement des litiges et avoirs"
+    ],
+    "limits": "Le scénario n’effectue pas de recouvrement juridique et ne remplace pas la vérification comptable. Les connecteurs doivent être disponibles.",
+    "related": [
+      "site-internet-bureau-etudes"
+    ],
+    "sources": [
+      {
+        "label": "Offres et périmètre Flex-Web",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ]
+  },
+  {
+    "axis": "automatisation",
+    "slug": "rendez-vous",
+    "title": "Automatiser la prise de rendez-vous et les changements",
+    "description": "Relier une demande à un agenda fiable en gérant disponibilités, annulations et confirmations.",
+    "intent": "rendez-vous",
+    "status": "reviewed",
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "La réservation peut être automatisée si un agenda de référence permet de vérifier la disponibilité. Sans cette connexion, le bon parcours consiste à recueillir une préférence et à faire confirmer le créneau par l’équipe.",
+    "sections": [
+      {
+        "title": "Définir ce qui peut être réservé",
+        "text": "Distinguez les types de rendez-vous, leur durée et les personnes autorisées à les réaliser. Prévoyez les temps de déplacement ou de préparation lorsque le métier l’exige. Un calendrier partagé n’est utile que si les absences y sont enregistrées. Les fuseaux horaires et les créneaux de fermeture sont définis avant la mise en service."
+      },
+      {
+        "title": "Confirmer après l’enregistrement effectif",
+        "text": "La page ne confirme pas un rendez-vous seulement parce que le visiteur a cliqué. Elle attend la réponse du système de réservation. Si deux personnes choisissent le même créneau, une seule réservation doit être confirmée lorsque la capacité est limitée à une place. L’autre demande reçoit une proposition de nouvelle sélection."
+      },
+      {
+        "title": "Traiter les modifications comme une suite du dossier",
+        "text": "Une annulation doit identifier le rendez-vous concerné et libérer le créneau uniquement après confirmation. Un déplacement ne doit pas laisser deux réservations actives par erreur. Testez un double clic, une coupure réseau et une annulation suivie d’une nouvelle réservation. Les rappels déjà programmés doivent correspondre à la dernière date validée."
+      }
+    ],
+    "example": "Une visite de chantier change de jour. L’ancien rappel est annulé et le nouveau créneau n’est annoncé qu’après confirmation de l’agenda. Exemple de fonctionnement à tester.",
+    "checklist": [
+      "Agenda de référence",
+      "Durées et personnes disponibles",
+      "Règles de modification"
+    ],
+    "limits": "L’IA peut aider à lire une préférence écrite en langage naturel ; la disponibilité doit toujours être vérifiée dans l’agenda.",
+    "related": [
+      "site-internet-plombier"
+    ],
+    "sources": [
+      {
+        "label": "Offres et périmètre Flex-Web",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ]
+  },
+  {
+    "axis": "automatisation",
+    "slug": "extraction-documents",
+    "title": "Extraire des informations de documents avec une IA",
+    "description": "Préparer la saisie de documents en conservant les sources, les champs incertains et la validation avant écriture.",
+    "intent": "extraction-documents",
+    "status": "reviewed",
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Une extraction assistée peut transformer un document reçu en proposition de champs structurés. Le résultat reste une lecture à vérifier : un champ absent ne doit pas être complété par supposition, notamment pour un montant ou une référence.",
+    "sections": [
+      {
+        "title": "Définir un périmètre documentaire précis",
+        "text": "Commencez par une famille de documents et une liste courte de champs utiles. Fournissez des exemples anonymisés avec leur lecture attendue. Les scans flous, pages manquantes et tableaux complexes doivent figurer dans les essais. Déterminez quels documents peuvent être traités par les outils choisis et qui peut consulter les originaux."
+      },
+      {
+        "title": "Présenter les champs avec leur origine",
+        "text": "La personne qui contrôle doit pouvoir rapprocher chaque valeur du document source. Les informations absentes restent explicitement manquantes. Une incohérence entre plusieurs pages bloque l’écriture automatique. N’utilisez pas un score produit par le modèle comme seule preuve de fiabilité : vérifiez les formats et les règles métier connues."
+      },
+      {
+        "title": "Écrire après validation et garder une trace",
+        "text": "Le système prépare une saisie dans le logiciel cible, puis conserve la décision du validateur et l’identifiant du document. Le renvoi d’un même fichier ne doit pas créer une deuxième opération. Testez un document déjà reçu, une référence différente et une panne après validation. La reprise doit pouvoir distinguer ce qui a réellement été enregistré."
+      }
+    ],
+    "example": "Un bon de commande contient une référence peu lisible. Le champ est signalé à vérifier ; aucune référence probable n’est ajoutée au CRM. Exemple illustratif de contrôle.",
+    "checklist": [
+      "Documents anonymisés",
+      "Liste des champs attendus",
+      "Logiciel cible et droits limités"
+    ],
+    "limits": "Le choix du prestataire IA et les données qui lui sont transmises doivent être examinés avec l’entreprise avant connexion.",
+    "related": [
+      "site-internet-industrie"
+    ],
+    "sources": [
+      {
+        "label": "Offres et périmètre Flex-Web",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ]
+  },
+  {
+    "axis": "automatisation",
+    "slug": "brouillons-reponses",
+    "title": "Préparer des réponses clients avec une IA",
+    "description": "Créer des brouillons à partir d’informations approuvées, avec relecture avant les engagements commerciaux.",
+    "intent": "brouillons-reponses",
+    "status": "reviewed",
+    "reviewedAt": "2026-09-24",
+    "reviewer": "Relecture technique Flex-Web / Codex",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "intro": "Un assistant peut préparer une réponse en s’appuyant sur une base documentaire validée. Pour une première mise en place, nous conseillons de conserver l’envoi manuel afin de vérifier le ton, les faits et le contexte de la conversation.",
+    "sections": [
+      {
+        "title": "Constituer une base courte et tenue à jour",
+        "text": "Rassemblez les prestations proposées, les conditions applicables et les réponses réellement approuvées. Chaque document doit avoir un responsable de mise à jour. Une ancienne proposition commerciale ne devient pas automatiquement une règle générale. Les tarifs utilisés dans les brouillons doivent provenir de la version actuelle du catalogue ou du dossier concerné."
+      },
+      {
+        "title": "Séparer aide rédactionnelle et engagement",
+        "text": "Le brouillon peut reformuler une explication ou demander une information manquante. Il ne doit pas promettre une remise, un délai ou une prestation sans élément approuvé. Une réclamation sensible reste adressée à une personne. Le message du client ne peut pas autoriser l’assistant à transmettre des données d’un autre dossier."
+      },
+      {
+        "title": "Tester les réponses impossibles à déduire",
+        "text": "Posez une question dont la réponse ne figure pas dans la base, puis une demande qui contredit les conditions. Le brouillon doit signaler ce qui manque et proposer de vérifier. Mesurez les corrections faites par l’équipe avant tout élargissement de l’autonomie. Si la source n’est plus disponible, le système garde le message à traiter sans réponse inventée."
+      }
+    ],
+    "example": "Un prospect demande un délai ferme avant étude du projet. Le brouillon propose un échange de cadrage et laisse le délai à confirmer au devis. Aucun rendez-vous n’est présenté comme réservé. Exemple fictif.",
+    "checklist": [
+      "Réponses et documents approuvés",
+      "Responsable de relecture",
+      "Règles d’escalade"
+    ],
+    "limits": "La rédaction assistée n’active aucune campagne. L’autorisation d’envoyer et le suivi des oppositions restent séparés.",
+    "related": [
+      "site-internet-bureau-etudes"
+    ],
+    "sources": [
+      {
+        "label": "Offres et périmètre Flex-Web",
+        "url": "https://flex-web.fr/pricing/",
+        "checkedAt": "2026-09-24"
+      }
+    ]
+  }
+]
