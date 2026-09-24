@@ -4,6 +4,7 @@ import {draftEntries,draftData,draftContent,draftPath,draftHubPath} from '../../
 import {enrichedTerritory,enrichmentData,localInsights,localQuestions} from '../../../lib/seo/territorial-insights.mjs';
 import ProjectGuides from '../../../components/seo/national/ProjectGuides.astro';
 import TerritoryPlanner from '../../../components/seo/national/TerritoryPlanner.astro';
+import TerritorialDossier from '../../../components/seo/national/TerritorialDossier.astro';
 import {websiteOffers,automationOffers} from '../../../data/pricing';
 export function getStaticPaths(){return draftEntries().map(({axis,commune,slug})=>({params:{axe:axis,slug},props:{axis,commune}}));}
 const {axis,commune:c}=Astro.props;
@@ -27,8 +28,9 @@ const money=(n:number)=>new Intl.NumberFormat('fr-FR',{style:'currency',currency
  {enrichment.surfaceKm2!==null&&<p>Superficie administrative fournie pour {c.name} : {enrichment.surfaceKm2.toLocaleString('fr-FR')} km². Cette surface n’est pas un rayon d’intervention.</p>}
  </section>
  <TerritoryPlanner commune={c} enrichment={enrichment}/>
+ <TerritorialDossier axis={axis} commune={c} enrichment={enrichment}/>
  <ProjectGuides axis={axis}/>
- <div class="article-body">{content.sections.map(([title,text])=><section><h2>{title}</h2><p>{text}</p></section>)}<section><h2>À compléter avant validation</h2><ul>{content.checklist.map(item=><li>{item}</li>)}</ul></section></div>
+
  <section class="note"><h2>Cadre tarifaire à reprendre au devis</h2>{offers.map(o=><p><strong>{o.name} : {money(o.setupCents)} TTC.</strong> {o.description}</p>)}<p>Les automatisations IA avancées et applications sont sur devis. Le catalogue des options et les périmètres exacts sont disponibles sur la <a href="/pricing/">page tarifs</a>.</p></section>
  <section><h2>Questions pour préparer le projet à {c.name}</h2>{questions.map(f=><details><summary>{f.q}</summary><p>{f.a}</p></details>)}</section>
  <section class="note"><h2>Sources et méthode</h2><p>Données extraites le {source.retrievedAt} : <a href={`https://geo.api.gouv.fr/communes/${c.code}?fields=nom,code,codesPostaux,centre,surface,epci`}>fiche officielle de {c.name}</a> · <a href="https://geo.api.gouv.fr/decoupage-administratif/communes">documentation de l’API</a>.</p><p>Les rapprochements de codes postaux et d’homonymes utilisent toutes les communes présentes dans la même extraction. La proximité est calculée entre les centres fournis avec une distance sur la sphère terrestre. Les codes identifient des communes ; ils ne décrivent pas un fichier clients.</p><p>Le SEO et les réponses IA demandent un contenu utile et accessible. Références : <a href="https://developers.google.com/search/docs/fundamentals/creating-helpful-content">qualité des contenus selon Google</a> et <a href="https://developers.google.com/search/docs/appearance/ai-features">apparition dans les fonctionnalités IA</a>. Aucun moteur ne garantit l’indexation de cette fiche.</p></section>
@@ -37,5 +39,5 @@ const money=(n:number)=>new Intl.NumberFormat('fr-FR',{style:'currency',currency
 </ResourceLayout>
 
 <style>
-.local-insight{max-width:840px;margin:32px 0;padding-bottom:24px;border-bottom:1px solid #e1e4eb}.table-scroll{overflow:auto}table{width:100%;border-collapse:collapse;font-size:.95rem}caption{text-align:left;margin-bottom:16px;font-weight:600}th,td{padding:12px;text-align:left;border-bottom:1px solid #dce1e9;vertical-align:top}details{border-bottom:1px solid #dce1e9;padding:20px 0}summary{font-weight:600;cursor:pointer;font-size:1.1rem}summary:focus-visible{outline:3px solid #0066cc;outline-offset:4px}
+.local-insight{max-width:840px;margin:32px 0;padding-bottom:24px;border-bottom:1px solid #e1e4eb}.table-scroll{overflow:auto}table{min-width:580px;width:100%;border-collapse:collapse;font-size:.95rem}caption{text-align:left;margin-bottom:16px;font-weight:600}th,td{padding:12px;text-align:left;border-bottom:1px solid #dce1e9;vertical-align:top}details{border-bottom:1px solid #dce1e9;padding:20px 0}summary{font-weight:600;cursor:pointer;font-size:1.1rem}summary:focus-visible{outline:3px solid #0066cc;outline-offset:4px}
 </style>

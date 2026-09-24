@@ -67,3 +67,11 @@ Références éditoriales consultées :
 - https://developers.google.com/search/docs/fundamentals/using-gen-ai-content
 - https://developers.google.com/search/docs/appearance/ai-features
 - https://geo.api.gouv.fr/decoupage-administratif/communes
+
+## Dossiers territoriaux du 25 septembre
+
+Les **19 988 fiches** disposent toutes d’un dossier de mise en œuvre reproductible (`territorial-dossier.mjs`) : quatre étapes, six groupes de champs, sept à neuf cas de recette et quatre liens métier. Les cas distinguent lieu inconnu, desserte inconnue, disponibilité, projet à distance, reprise d’un événement, ambiguïtés postales et homonymes. Les prestataires, clients, implantations et couvertures commerciales ne sont jamais déduits de la commune.
+
+`node scripts/seo/prepare-territorial-dossiers.mjs` produit un export JSONL complet et un rapport dans le dossier local ignoré. Il vérifie 158 306 décisions attendues et les 19 988 identifiants. Les adaptations comportent 46 profils conditionnels partagés : un hash différent par commune ne prouve pas une intention SEO originale. Le champ `editoriallyApproved` reste à zéro pour ces dossiers ; leur statut n’est pas promu automatiquement.
+
+Le composant `TerritorialDossier.astro` expose le dossier sans dépendance JavaScript. Toutes les fiches restent dans l’aperçu noindex, hors sitemap. Les 24 guides publics et le CRM ne sont pas modifiés par cet enrichissement. Pour une validation éditoriale ultérieure, documenter un besoin local distinct, ses preuves et l’éventuelle consolidation ; les contrôles de génération ne remplacent pas cette décision.
