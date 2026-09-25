@@ -32,7 +32,7 @@ export function briefIdentity(axis,commune) {
  if(!Object.hasOwn(briefServices,axis)||!commune||typeof commune.code!=='string'||!/^(?:\d{5}|2[AB]\d{3})$/.test(commune.code))throw Error('Identité territoriale invalide');
  const name=normalizeBriefText(commune.name);
  if(!name||name.length>150)throw Error('Nom de commune invalide');
- return {axis,communeCode:commune.code,communeName:name,sourcePath:`/preparation/${axis}/${slugify(name)}-${commune.code.toLowerCase()}/`};
+ return {axis,communeCode:commune.code,communeName:name,sourcePath:`/territoires/${axis}/${slugify(name)}-${commune.code.toLowerCase()}/`};
 }
 export function createTerritorialBrief(axis,commune,input={}) {
  const identity=briefIdentity(axis,commune),raw=input&&typeof input==='object'?input:{},fields={};
@@ -57,7 +57,7 @@ export function territorialBriefText(brief) {
   'FLEX-WEB — BROUILLON DE PROJET TERRITORIAL',
   `Commune de la fiche : ${b.communeName}`,
   `Code commune (texte) : ${b.communeCode}`,
-  `Fiche source (chemin dans l’aperçu) : ${b.sourcePath}`,
+  `Fiche source : ${b.sourcePath}`,
   `Thème : ${b.axis==='sites'?'Site internet et visibilité':'Automatisation et IA'}`,
   `État : ${b.status==='incomplete'?'incomplet':'renseigné, à relire avec le responsable'}`,
   b.missing.length?`Champs à compléter : ${b.missing.map(item=>item.label).join(', ')}`:'Les champs sont remplis ; leur exactitude et leur faisabilité restent à vérifier.',

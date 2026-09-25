@@ -1,10 +1,10 @@
 ---
 const {commune:c,enrichment:e}=Astro.props;
 ---
-<territory-planner class="note">
+<territory-planner id="territory-planner" class="note">
  <h2>Tester votre règle de qualification</h2>
  <noscript><p>Activez JavaScript pour recalculer cette simulation. Les explications et diagnostics restent lisibles sans JavaScript.</p></noscript>
- <p>Choisissez un cas et indiquez votre périmètre réel. Cette simulation locale prépare une règle pour votre site ou votre CRM ; elle ne contacte personne et n’enregistre aucune demande.</p>
+ <p>Choisissez un cas et indiquez votre périmètre réel. Le résultat vous aide à préparer une règle pour votre site ou votre CRM. La simulation reste dans cette page, sans contact ni demande enregistrée.</p>
  <div class="grid">
  <label>Commune du cas d’essai<select name="territory"><option value={c.code}>{c.name} ({c.code})</option>{e.nearby.map(n=><option value={n.code}>{n.name} ({n.code})</option>)}<option value="unknown">Commune à confirmer</option></select></label>
  <label>Type de prestation<select name="channel"><option value="onsite">Intervention sur place</option><option value="remote">Prestation à distance</option></select></label>

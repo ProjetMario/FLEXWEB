@@ -38,6 +38,7 @@ export default function Footer({ data = {} }) {
               <a href="/ressources/" className="hover:text-[#0071e3] transition">Sites et automatisation : ressources</a>
               <a href="/journal/" className="hover:text-[#0071e3] transition">Guides pratiques</a>
               <a href="/realisations/" className="hover:text-[#0071e3] transition">Nos réalisations</a>
+              <a href="/territoires/" className="hover:text-[#0071e3] transition">Projets par commune</a>
               <a href="/zones-intervention/" className="hover:text-[#0071e3] transition">Zones d’intervention</a>
               <a href="/about/" className="hover:text-[#0071e3] transition">À propos de Flex-Web</a>
               <a href="/#faq" className="hover:text-[#0071e3] transition">FAQ</a>

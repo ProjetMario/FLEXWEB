@@ -1,17 +1,16 @@
 import {readFileSync} from 'node:fs';
 import path from 'node:path';
-export const draftPreviewEnabled=()=>process.env.CONTEXT==='deploy-preview'&&process.env.FLEXWEB_DRAFT_PREVIEW==='1';
 export const slugify=name=>name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/œ/g,'oe').replace(/æ/g,'ae').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-export const draftPath=(axis,commune)=>`/preparation/${axis}/${slugify(commune.name)}-${commune.code.toLowerCase()}/`;
-export const draftHubPath=(axis,page=1)=>`/preparation/${axis}/${page>1?`page/${page}/`:''}`;
+export const draftPath=(axis,commune)=>`/territoires/${axis}/${slugify(commune.name)}-${commune.code.toLowerCase()}/`;
+export const draftHubPath=(axis,page=1)=>`/territoires/${axis}/${page>1?`page/${page}/`:''}`;
 let cached;
 export function draftData(){return cached??=JSON.parse(readFileSync(path.resolve('src/data/national/territorial-drafts.json'),'utf8'));}
-export function draftEntries(){if(!draftPreviewEnabled())return [];return ['sites','automatisation'].flatMap(axis=>draftData().communes.map(commune=>({axis,commune,slug:`${slugify(commune.name)}-${commune.code.toLowerCase()}`})));}
-export function draftGroups(){if(!draftPreviewEnabled())return [];const data=draftData(),size=100,total=Math.ceil(data.communes.length/size);return ['sites','automatisation'].flatMap(axis=>Array.from({length:total},(_,i)=>({axis,page:i+1,total,items:data.communes.slice(i*size,(i+1)*size)})));}
+export function draftEntries(){return ['sites','automatisation'].flatMap(axis=>draftData().communes.map(commune=>({axis,commune,slug:`${slugify(commune.name)}-${commune.code.toLowerCase()}`})));}
+export function draftGroups(){const data=draftData(),size=100,total=Math.ceil(data.communes.length/size);return ['sites','automatisation'].flatMap(axis=>Array.from({length:total},(_,i)=>({axis,page:i+1,total,items:data.communes.slice(i*size,(i+1)*size)})));}
 export function draftContent(axis,c){
  const area=`${c.name} (${c.department}), en ${c.region}`;
  return axis==='sites'?{
- title:`Site internet à ${c.name} : préparer votre projet`,
+ title:`Site internet à ${c.name} (${c.departmentCode}) : préparer votre projet`,
  introduction:`Pour préparer un site destiné à une entreprise intervenant à ${area}, commencez par préciser ses prestations et son périmètre réel. Cette trame propose un parcours de travail à personnaliser ; elle ne décrit pas une réalisation locale de Flex-Web.`,
  sections:[
  ['Définir la clientèle et le périmètre','Listez les services proposés, les demandes que vous souhaitez recevoir et les informations nécessaires pour y répondre. Une activité qui reçoit sur place ne présente pas son accès de la même façon qu’une entreprise qui se déplace. La zone administrative ci-dessous sert à identifier le territoire ; elle ne prouve ni une implantation ni un volume de clients potentiels.'],
@@ -22,7 +21,7 @@ export function draftContent(axis,c){
  checklist:['Prestations et zone réellement desservie','Photos et références publiables','Contact chargé de répondre aux demandes','Contenus métier distinctifs à ajouter'],
  related:'/ressources/sites/site-internet-industrie/',
  }:{
- title:`Automatisation IA à ${c.name} : cadrer les tâches`,
+ title:`Automatisation IA à ${c.name} (${c.departmentCode}) : cadrer les tâches`,
  introduction:`Pour une entreprise située à ${area}, l’automatisation commence par l’observation du travail quotidien : quelles données arrivent, qui les traite et quelle décision suit ? Ce document est une trame à enrichir, pas une étude du tissu économique local.`,
  sections:[
  ['Choisir une tâche répétitive précise','Décrivez le déclencheur, les informations disponibles, le résultat attendu et la personne responsable. Une demande de devis reçue par formulaire peut créer un dossier et une tâche. Une réservation exige un agenda fiable. Une relance de facture suppose un solde vérifié. Ces scénarios ne sont pas interchangeables et doivent être testés séparément.'],

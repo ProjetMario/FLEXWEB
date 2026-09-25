@@ -4,9 +4,9 @@ import {draftPath,draftHubPath} from '../../../lib/seo/territorial-drafts.mjs';
 const {group}=Astro.props;
 const label=group.axis==='sites'?'Sites internet':'Automatisation IA';
 ---
-<ResourceLayout title={`Brouillons ${label} — page ${group.page}`} description="Catalogue de relecture : textes territoriaux générés, à enrichir avant toute publication SEO." noindex={true}>
- <nav aria-label="Fil d’Ariane"><a href="/preparation/">Catalogue de préparation</a><span>{label}</span></nav>
- <p class="eyebrow">Brouillons générés · Non validés</p><h1>{label}</h1><p><a href="/preparation/#territory-search-heading">Rechercher une commune ou un département →</a></p><p>Page {group.page} sur {group.total}. Chaque texte nécessite un apport métier ou local distinctif avant publication.</p>
+<ResourceLayout title={`${label} par commune — page ${group.page}`} description="Préparez un projet de site ou d’automatisation : données territoriales, formulaires, CRM et cas de test par commune.">
+ <nav aria-label="Fil d’Ariane"><a href="/territoires/">Projets par commune</a><span>{label}</span></nav>
+ <p class="eyebrow">Projets et données territoriales</p><h1>{label} par commune</h1><p><a href="/territoires/#territory-search-heading">Rechercher une commune ou un département →</a></p><p>Page {group.page} sur {group.total}. Sélectionnez votre commune pour consulter les données officielles et préparer votre projet.</p>
  <div class="grid">{group.items.map(c=><article class="card"><h2><a href={draftPath(group.axis,c)}>{c.name}</a></h2><p>{c.department} · {c.region}<br />Code INSEE : {c.code}</p></article>)}</div>
  <nav aria-label="Pagination">{group.page>1&&<a href={draftHubPath(group.axis,group.page-1)}>Page précédente</a>}{(group.page < group.total)&&<a href={draftHubPath(group.axis,group.page+1)}>Page suivante</a>}</nav>
 </ResourceLayout>

@@ -6,17 +6,17 @@ const dossier=territorialDossier(axis,commune,enrichment);
 <section aria-labelledby="implementation-dossier" class="territorial-dossier">
  <p class="eyebrow">Dossier de mise en œuvre · {commune.code}</p>
  <h2 id="implementation-dossier">De la demande au suivi à {commune.name}</h2>
- <p>Les règles ci-dessous adaptent une méthode commune aux données du territoire. Les cas de recette sont fictifs : ils ne décrivent ni des clients ni une zone de service déjà acceptée.</p>
+ <p>Cette fiche applique une méthode commune aux données publiques de {commune.name}. Utilisez-la pour préparer votre propre site ou votre automatisation. Les cas d’essai sont fictifs : ils ne décrivent ni des clients ni une zone de service déjà acceptée.</p>
  <div class="article-body">{dossier.steps.map((step,i)=><section><h3>{i+1}. {step.title}</h3><p>{step.text}</p><p class="note"><strong>Livrable à préparer :</strong> {step.deliverable}</p></section>)}</div>
  <h3>Les informations à conserver ensemble</h3>
  <div class="dossier-fields">{dossier.fields.map(field=><article><h4>{field.name}</h4><p><strong>{field.example}</strong></p><p>{field.rule}</p></article>)}</div>
- <h3>Recette locale : {dossier.cases.length} cas à vérifier</h3>
+ <h3>Tester le parcours : {dossier.cases.length} cas à vérifier</h3>
  <p>Chaque résultat indique la décision attendue, sans action sur un CRM ni envoi de message. Le code de commune est conservé comme texte.</p>
  {dossier.cases.map(test=><details><summary>{test.label}</summary><p><strong>Commune du test :</strong> {test.communeCode}</p><p>{test.why}</p><p><strong>Résultat attendu :</strong> {test.expectedLabel}</p></details>)}
  <h3 class="dossier-heading">Choisir une méthode selon votre activité</h3>
  <p>Ces exemples s’appliquent si votre entreprise exerce l’activité concernée. Ils ne prétendent pas décrire les entreprises présentes à {commune.name}.</p>
  <ul>{dossier.needs.map(need=><li><a href={need.url}>{need.label}</a></li>)}</ul>
- <aside class="note"><h3>Décisions à prendre avant publication</h3><ul>{dossier.checks.map(check=><li>{check}</li>)}</ul><p class="meta">Dossier {dossier.id} · version {dossier.version}. Préparation technique complète, validation éditoriale individuelle encore nécessaire.</p></aside>
+ <aside class="note"><h3>Décisions à prendre avant la mise en œuvre</h3><ul>{dossier.checks.map(check=><li>{check}</li>)}</ul><p class="meta">Dossier {dossier.id} · version {dossier.version}. Méthode commune adaptée au territoire ; le besoin, les preuves et la faisabilité de votre projet restent à valider.</p></aside>
 </section>
 <style>
 .territorial-dossier{margin:48px 0}#implementation-dossier{scroll-margin-top:100px}.dossier-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:24px 0 40px}.dossier-fields article{border:1px solid #dce1e9;border-radius:18px;padding:20px}.dossier-fields h4{font-size:1.1rem;margin:0}.dossier-heading{margin-top:40px}details{border-bottom:1px solid #dce1e9;padding:18px 0}summary{cursor:pointer;font-weight:600;line-height:1.6}summary:focus-visible{outline:3px solid #0066cc;outline-offset:4px}@media(max-width:600px){.dossier-fields{grid-template-columns:1fr}}

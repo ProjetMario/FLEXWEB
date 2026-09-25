@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build && node scripts/check-seo.mjs && node scripts/seo/quality.mjs --enforce-release"
+  command = "npm run build && node scripts/check-seo.mjs && node scripts/seo/quality.mjs --enforce-release && node scripts/seo/audit-territorial-publication.mjs"
   publish = "dist"
 
 [build.environment]
@@ -30,11 +30,14 @@
   status = 200
   force = true
 
-# Render generated drafts only on the isolated review deployment.
-[context.deploy-preview.environment]
-  FLEXWEB_DRAFT_PREVIEW = "1"
+# Public territorial catalogue: preserve links from the former review space.
+[[redirects]]
+  from = "/preparation/*"
+  to = "/territoires/:splat"
+  status = 301
+  force = true
 
 [[headers]]
-  for = "/preparation/*"
+  for = "/territoires/donnees/*"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"

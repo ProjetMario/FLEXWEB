@@ -1,0 +1,15 @@
+---
+import ResourceLayout from '../../components/seo/national/ResourceLayout.astro';
+import {draftData,draftHubPath} from '../../lib/seo/territorial-drafts.mjs';
+import TerritorySearch from '../../components/seo/national/TerritorySearch.astro';
+const data=draftData();
+---
+<ResourceLayout title="Sites internet et automatisation IA par commune" description="Préparez votre projet dans 9 994 communes : données officielles, diagnostic des adresses, simulation des demandes et brief de site ou d’automatisation IA.">
+ <p class="eyebrow">Sites internet · CRM · Automatisation IA</p>
+ <h1>Votre projet.<br />Dans votre commune.</h1>
+ <p class="lead">Retrouvez les informations utiles à un site internet et au suivi de vos clients : identifier les lieux, préciser votre zone d’intervention et préparer les prochaines actions.</p>
+ <div class="grid">{['sites','automatisation'].map(axis=><section class="card"><h2>{axis==='sites'?'Créer un site internet':'Automatiser les tâches'}</h2><p>{axis==='sites'?'Préparer les bonnes pages, les coordonnées et les formulaires de votre entreprise.':'Qualifier une demande, organiser un dossier client et décider où utiliser des règles ou une IA.'}</p><a href={draftHubPath(axis)}>Parcourir les {data.communes.length.toLocaleString('fr-FR')} communes →</a></section>)}</div>
+ <TerritorySearch/>
+ <section class="note"><h2>Des données locales, des outils concrets</h2><p>Chaque commune possède deux fiches : site internet et automatisation. Elles associent des données officielles, un diagnostic des adresses, un simulateur de qualification et un brief téléchargeable. Les méthodes sont partagées et demandent une adaptation aux prestations, outils et lieux réellement desservis par votre entreprise.</p><p>Source : <a href="https://geo.api.gouv.fr/decoupage-administratif/communes">API officielle de découpage administratif</a>, extraction du {data.retrievedAt}. Cette sélection ne couvre pas toutes les communes françaises. Les chiffres de population ne mesurent ni le marché ni le volume de recherches.</p><p>Flex-Web est basé à Voglans et accompagne les entreprises à distance en France. Une fiche ne signifie pas qu’une agence Flex-Web est implantée dans la commune.</p></section>
+ <p><a class="action" href="/demarrer/">Décrire mon projet</a><a href="/ressources/">Consulter les guides métier →</a></p>
+</ResourceLayout>

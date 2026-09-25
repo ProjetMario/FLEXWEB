@@ -62,7 +62,8 @@ if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.ur
  for(const a of articles.filter(a=>!isPublishable(a)))if(urls.includes('https://flex-web.fr/ressources/'+a.axis+'/'+a.slug+'/'))issues.push('Unselected article in sitemap: '+a.slug);
  if(urls.some(u=>new URL(u).pathname.startsWith('/preparation/')))issues.push('Draft catalogue in sitemap');
  const counts=Object.fromEntries(['sites','automatisation'].map(axis=>[axis,selected.filter(a=>a.axis===axis&&isPublishable(a)).length]));
- const report={...releaseReadiness(urls.length,issues,counts),generatedAt:new Date().toISOString(),newArticles:counts.sites+counts.automatisation,note:'Word count and similarity are screening checks, not proof of editorial value. No claimed traffic forecast.'};
+ const territorialPages=urls.filter(u=>/^\/territoires\/(sites|automatisation)\/[^/]+\/$/.test(new URL(u).pathname)).length;
+ const report={...releaseReadiness(urls.length,issues,counts),territorialPages,publicationMode:'reviewed-guides-and-territorial-catalogue',generatedAt:new Date().toISOString(),newArticles:counts.sites+counts.automatisation,note:'Word count and similarity are screening checks, not proof of editorial value. No claimed traffic forecast.'};
  await mkdir('outputs/seo-national-20260924',{recursive:true});await writeFile('outputs/seo-national-20260924/quality.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
  if(issues.length||(process.argv.includes('--enforce-release')&&process.env.CONTEXT==='production'&&!report.ready))process.exitCode=1;
 }
