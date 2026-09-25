@@ -15,10 +15,17 @@ const {commune:c,enrichment:e}=Astro.props;
 <script>
 import {qualificationDecision} from '../../../lib/seo/qualification.mjs';
 class TerritoryPlanner extends HTMLElement{
+ private cleanup?:()=>void;
  connectedCallback(){if(this.dataset.initialized)return;this.dataset.initialized='1';const select=(name:string)=>this.querySelector<HTMLSelectElement>(`select[name="${name}"]`)!;
  const update=()=>{this.querySelector('.decision')!.textContent=qualificationDecision({territoryKnown:select('territory').value!=='unknown',channel:select('channel').value,inScope:select('scope').value});};
- this.addEventListener('change',(event)=>{if((event.target as HTMLSelectElement).name==='territory')select('scope').value='unknown';update();});
+ const change=(event:Event)=>{if((event.target as HTMLSelectElement).name==='territory')select('scope').value='unknown';update();};
+ let restoreTimer:ReturnType<typeof setTimeout>|undefined;
+ const restored=()=>{clearTimeout(restoreTimer);restoreTimer=setTimeout(update,0);};
+ this.addEventListener('change',change);window.addEventListener('pageshow',restored);
+ update();
+ this.cleanup=()=>{this.removeEventListener('change',change);window.removeEventListener('pageshow',restored);clearTimeout(restoreTimer);};
  }
+ disconnectedCallback(){this.cleanup?.();this.cleanup=undefined;delete this.dataset.initialized;}
 }
 if(!customElements.get('territory-planner'))customElements.define('territory-planner',TerritoryPlanner);
 </script>

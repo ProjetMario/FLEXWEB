@@ -1,0 +1,87 @@
+---
+import {briefIdentity,briefServices,briefModes} from '../../../lib/seo/territorial-brief.mjs';
+const {axis,commune}=Astro.props;
+const identity=briefIdentity(axis,commune);
+const id=`brief-${axis}-${commune.code}`;
+---
+<territorial-brief data-axis={axis} data-code={identity.communeCode} data-commune={identity.communeName} aria-labelledby={`${id}-title`}>
+ <p class="eyebrow">Votre projet · {commune.name}</p>
+ <h2 id={`${id}-title`}>Repartez avec un brief concret.</h2>
+ <p>Précisez votre besoin et téléchargez votre brouillon. Les réponses restent dans cette page : elles ne sont pas envoyées ni enregistrées sur le site. Téléchargez le fichier avant de fermer ou d’actualiser la page.</p>
+ <noscript><p class="brief-notice">JavaScript est nécessaire pour préparer et télécharger le brief. Vous pouvez toujours copier les questions ci-dessous dans votre propre document.</p></noscript>
+ <fieldset aria-describedby={`${id}-help`}>
+  <legend>Les décisions de votre entreprise</legend>
+  <p id={`${id}-help`} class="brief-help">Tous les champs sauf « Observations » servent à compléter le brief. Indiquez un rôle, comme « chargé des demandes », sans ajouter de mot de passe ni d’informations confidentielles.</p>
+  <div class="brief-grid">
+   <label for={`${id}-service`}>Prestation à préparer
+    <select id={`${id}-service`} name="service" autocomplete="off"><option value="">À préciser</option>{briefServices[axis].map(item=><option value={item.value}>{item.label}</option>)}</select>
+   </label>
+   <label for={`${id}-mode`}>Mode de travail
+    <select id={`${id}-mode`} name="mode" autocomplete="off"><option value="">À préciser</option>{briefModes.map(item=><option value={item.value}>{item.label}</option>)}</select>
+   </label>
+   <label for={`${id}-coverage`} class="brief-wide">Communes effectivement couvertes
+    <textarea id={`${id}-coverage`} name="coveredCommunes" rows="3" maxlength="800" autocomplete="off" placeholder="Listez votre périmètre réel ; pour le travail à distance, précisez le territoire accepté."></textarea>
+    <span class="brief-hint">La commune de cette fiche n’est pas ajoutée automatiquement à votre zone.</span>
+   </label>
+   <label for={`${id}-owner`}>Rôle responsable du suivi
+    <input id={`${id}-owner`} name="ownerRole" maxlength="120" autocomplete="off" placeholder="Ex. : chargé des demandes" />
+   </label>
+   <label for={`${id}-next`}>Prochaine action
+    <textarea id={`${id}-next`} name="nextAction" rows="3" maxlength="600" autocomplete="off" placeholder="Ex. : vérifier les communes couvertes avec le responsable"></textarea>
+   </label>
+   <label for={`${id}-notes`} class="brief-wide">Observations <span class="brief-hint">Facultatif</span>
+    <textarea id={`${id}-notes`} name="observations" rows="3" maxlength="1800" autocomplete="off" placeholder="Outils à raccorder, contraintes, informations à confirmer…"></textarea>
+   </label>
+  </div>
+ </fieldset>
+ <p class="brief-state" role="status" aria-live="polite">Brouillon incomplet : 5 champs restent à renseigner.</p>
+ <p class="brief-scenario"><strong>Scénario proposé :</strong> <span>Aucun scénario choisi.</span></p>
+ <p class="brief-help">Le scénario est une piste à adapter. Remplir ce brief ne confirme ni une intervention, ni un devis, ni une automatisation.</p>
+ <button type="button" class="brief-download" disabled>Télécharger mon brouillon (.txt)</button>
+ <p class="brief-download-state" role="status" aria-live="polite"></p>
+</territorial-brief>
+<script>
+import {createTerritorialBrief,territorialBriefText,territorialBriefFilename} from '../../../lib/seo/territorial-brief.mjs';
+class TerritorialBrief extends HTMLElement {
+ connectedCallback() {
+  if(this.dataset.initialized)return;
+  this.dataset.initialized='1';
+  const button=this.querySelector<HTMLButtonElement>('.brief-download')!;
+  const status=this.querySelector<HTMLElement>('.brief-state')!;
+  const downloadStatus=this.querySelector<HTMLElement>('.brief-download-state')!;
+  const read=()=>{
+   const fields=Object.fromEntries(Array.from(this.querySelectorAll<HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement>('input[name],select[name],textarea[name]')).map(field=>[field.name,field.value]));
+   return createTerritorialBrief(this.dataset.axis,{code:this.dataset.code,name:this.dataset.commune},fields);
+  };
+  const update=()=>{
+   const brief=read();
+   status.textContent=brief.errors.length?'Brouillon à corriger : un champ dépasse sa limite ou contient un choix inconnu.':brief.missing.length?`Brouillon incomplet : à renseigner — ${brief.missing.map(item=>item.label.toLowerCase()).join(', ')}.`:'Brouillon renseigné, à relire avec le responsable. Les informations restent à vérifier.';
+   this.querySelector('.brief-scenario span')!.textContent=brief.scenario;
+   button.disabled=brief.errors.length>0;
+   downloadStatus.textContent='';
+  };
+  this.addEventListener('change',update);
+  button.addEventListener('click',()=>{
+   update();
+   let fileUrl:string|undefined;
+   try {
+    const brief=read(),text=territorialBriefText(brief);
+    fileUrl=URL.createObjectURL(new Blob(['\uFEFF',text],{type:'text/plain;charset=utf-8'}));
+    const link=document.createElement('a');
+    link.href=fileUrl;link.download=territorialBriefFilename(brief);link.hidden=true;
+    this.append(link);link.click();link.remove();
+    downloadStatus.textContent=brief.missing.length?'Téléchargement demandé. Le fichier signale les champs encore manquants.':'Téléchargement demandé. Relisez le fichier avant de l’utiliser.';
+   } catch {
+    downloadStatus.textContent='Le fichier n’a pas pu être préparé. Vérifiez les champs puis réessayez ; vos saisies restent dans la page.';
+   } finally {
+    if(fileUrl){const url=fileUrl;window.setTimeout(()=>URL.revokeObjectURL(url),1000);}
+   }
+  });
+  update();
+ }
+}
+if(!customElements.get('territorial-brief'))customElements.define('territorial-brief',TerritorialBrief);
+</script>
+<style>
+territorial-brief{display:block;padding:32px;margin:48px 0;border:1px solid #ccd8e7;border-radius:24px;background:#f4f8ff}fieldset{border:0;padding:0;margin:24px 0;min-width:0}legend{font-size:1.15rem;font-weight:650;padding:0}.brief-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:24px}.brief-wide{grid-column:1/-1}label{display:flex;flex-direction:column;gap:9px;min-width:0;font-weight:600}input,select,textarea{box-sizing:border-box;width:100%;min-width:0;border:1px solid #8b99ac;border-radius:12px;padding:13px;background:white;color:#1d1d1f;font:inherit;font-weight:400}textarea{resize:vertical}::placeholder{color:#596578;opacity:1}.brief-hint,.brief-help{font-weight:400;color:#475569;font-size:.95rem;line-height:1.6}.brief-notice,.brief-state{background:#fff;border-left:4px solid #0066cc;padding:16px;border-radius:10px}.brief-download{min-height:48px;border:0;background:#0066cc;color:#fff;border-radius:999px;padding:14px 22px;font:inherit;font-weight:650;cursor:pointer}.brief-download:disabled{background:#66748a;cursor:not-allowed}input:focus-visible,select:focus-visible,textarea:focus-visible,.brief-download:focus-visible{outline:3px solid #0066cc;outline-offset:4px}.brief-download-state:empty{display:none}.brief-scenario{margin-top:28px}.brief-scenario span{display:block;margin-top:6px}@media(max-width:600px){territorial-brief{padding:22px}.brief-grid{grid-template-columns:1fr}.brief-wide{grid-column:auto}.brief-download{width:100%}}
+</style>

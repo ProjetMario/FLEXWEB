@@ -38,3 +38,35 @@ test('missing EPCI remains explicitly missing and does not block the dossier',()
  assert(d.checks.some(x=>x.includes('laisser ce champ vide')));
  assert(!JSON.stringify(d).includes('undefined'));
 });
+
+test('a covered location with availability cannot skip confirmation of the service mode',()=>{
+ for(const mode of [undefined,null,'','unknown','REMOTE']){
+  assert.equal(dossierDecision({communeConfirmed:true,mode,scope:'covered',available:true}),'confirm-service-mode');
+ }
+ // The earlier identity checks retain precedence over later qualification.
+ assert.equal(dossierDecision({communeConfirmed:false,scope:'covered',available:true}),'confirm-commune');
+ assert.equal(dossierDecision({duplicateEvent:true,communeConfirmed:true}),'reuse-existing-request');
+});
+
+test('every dossier includes the missing service mode as a conservative recipe case',()=>{
+ let total=0;
+ for(const c of communes)for(const axis of ['sites','automatisation']){
+  const dossier=territorialDossier(axis,c,enrichedTerritory(c.code));
+  const mode=dossier.cases.find(c=>c.id.endsWith(':mode'));
+  assert(mode);assert.equal(mode.expected,'confirm-service-mode');
+  for(const recipe of dossier.cases){assert.equal(dossierDecision(recipe.input),recipe.expected);total++;}
+ }
+ assert.equal(total,178294);
+});
+
+test('missing postal data is counted and disclosed without borrowing a neighbouring code',()=>{
+ const source=communes[0],c={...source,postalCodes:[]},e={...enrichedTerritory(c.code),postalGroups:[]};
+ for(const axis of ['sites','automatisation']){
+  const dossier=territorialDossier(axis,c,e);
+  assert.equal(dossier.assessment.missingPostal,true);
+  assert.equal(dossier.assessment.sharedPostal,false);
+  assert.equal(dossier.fields.find(field=>field.name==='Code postal').example,'Non renseigné dans la source');
+  if(axis==='sites')assert.match(dossier.steps[1].text,/Ne proposez pas un code voisin/);
+ }
+ assert.equal(communes.filter(c=>!c.postalCodes.length).length,0);
+});

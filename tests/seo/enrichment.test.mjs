@@ -31,3 +31,29 @@ test('similar names disclose accent normalization instead of claiming strict spe
  assert(e.homonyms.some(h=>h.name!==c.name));
  assert(localInsights('sites',c,e)[1].fact.includes('normalisation des accents'));
 });
+
+test('an absent postal code remains unknown in both the diagnosis and FAQ',()=>{
+ const source=draftData().communes[0],c={...source,postalCodes:[]},e={...enrichedTerritory(c.code),postalGroups:[]};
+ for(const axis of ['sites','automatisation']){
+  const fact=localInsights(axis,c,e)[0].fact,answer=localQuestions(axis,c,e)[0].a;
+  assert.match(fact,/Aucun code postal n’est renseigné/);
+  assert.match(answer,/ne reconstituez pas le code postal/);
+  assert(!fact.includes('la seule commune'));
+  assert(!answer.includes('indique pas de partage'));
+ }
+});
+
+test('an incomplete postal comparison does not become evidence of exclusivity',()=>{
+ const c=draftData().communes[0],e={...enrichedTerritory(c.code),postalGroups:[]};
+ for(const axis of ['sites','automatisation']){
+  assert.match(localInsights(axis,c,e)[0].fact,/rapprochement.*incomplet/);
+  assert.match(localQuestions(axis,c,e)[0].a,/Ne concluez pas à un code exclusif/);
+  assert(!localInsights(axis,c,e)[0].fact.includes('la seule commune'));
+ }
+});
+
+test('qualification asks for the service mode when absent or invalid',()=>{
+ for(const channel of [undefined,null,'','unknown','REMOTE']){
+  assert.match(qualificationDecision({territoryKnown:true,inScope:'yes',channel}),/Mode de prestation à confirmer/);
+ }
+});

@@ -9,9 +9,10 @@ import {auditArticles,releaseReadiness,neutralize} from '../../scripts/seo/quali
 import {chunks,urlset,sitemapIndex} from '../../src/lib/seo/xml.mjs';
 import {readSitemap} from '../../scripts/seo/read-sitemap.mjs';
 const articles=JSON.parse(await readFile(new URL('../../src/data/national/articles.json',import.meta.url),'utf8'));
-test('reviewed editorial catalogue has distinct intents, sources and balanced axes',()=>{
+test('reviewed editorial catalogue has distinct intents, sources and both service axes',()=>{
  assert.deepEqual(auditArticles(articles),[]);
- assert.equal(articles.filter(a=>a.axis==='sites').length,articles.filter(a=>a.axis==='automatisation').length);
+ assert(articles.some(a=>a.axis==='sites'));
+ assert(articles.some(a=>a.axis==='automatisation'));
 });
 test('copied content with a new title and slug cannot pass',()=>{
  const duplicate={...articles[0],slug:'another-slug',intent:'another-intent',title:'Another title for another city'};

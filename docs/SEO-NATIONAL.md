@@ -2,11 +2,11 @@
 
 ## Livraison et limite actuelle
 
-Le catalogue conserve les **19 988 brouillons territoriaux** et comprend désormais **24 guides relus**, répartis entre sites internet et automatisation. Douze nouveaux guides développent des besoins distincts de PME et artisans : nettoyage multisites, menuiserie, installation de borne, aménagement paysager, catalogue professionnel, rendez-vous de diagnostic, dossiers CRM, pièces manquantes, affectation, comptes rendus, synchronisation et suivi d’activité.
+Le catalogue conserve les **19 988 brouillons territoriaux** et comprend désormais **27 guides relus**, répartis entre sites internet et automatisation. Douze nouveaux guides développent des besoins distincts de PME et artisans : nettoyage multisites, menuiserie, installation de borne, aménagement paysager, catalogue professionnel, rendez-vous de diagnostic, dossiers CRM, pièces manquantes, affectation, comptes rendus, synchronisation et suivi d’activité.
 
-La publication se fait par lots vérifiés, sans attendre 20 000 articles. Le build production du 24 septembre produit 291 pages HTML et 286 URL de sitemap. Les brouillons territoriaux restent réservés aux aperçus sous `/preparation/`, avec `noindex`, hors sitemap. Leur rendu exige simultanément `CONTEXT=deploy-preview` et `FLEXWEB_DRAFT_PREVIEW=1`.
+La publication se fait par lots vérifiés, sans attendre 20 000 articles. Le build production du 25 septembre produit 296 pages HTML et 291 URL de sitemap. Les brouillons territoriaux restent réservés aux aperçus sous `/preparation/`, avec `noindex`, hors sitemap. Leur rendu exige simultanément `CONTEXT=deploy-preview` et `FLEXWEB_DRAFT_PREVIEW=1`.
 
-`node scripts/seo/editorial-inventory.mjs` reconstruit le registre local : 24 prêts, 516 à développer, 16 446 à documenter et 3 026 candidats à consolidation. Ce classement est un tri de travail, pas une validation des intentions locales. Les 20 012 identifiants sont conservés ; aucun regroupement ni aucune redirection n’est appliqué automatiquement.
+`node scripts/seo/editorial-inventory.mjs` reconstruit le registre local : 27 prêts, 516 à développer, 16 446 à documenter et 3 026 candidats à consolidation. Ce classement est un tri de travail, pas une validation des intentions locales. Les 20 015 identifiants sont conservés ; aucun regroupement ni aucune redirection n’est appliqué automatiquement.
 
 La cible de 100 000 visites organiques mensuelles à 12 mois est un objectif commercial et non une prévision. Les clics Search Console ne sont pas des sessions Analytics. L’absence de données confirmées de visites, ventes ou demandes qualifiées doit rester explicite.
 
@@ -75,3 +75,16 @@ Les **19 988 fiches** disposent toutes d’un dossier de mise en œuvre reproduc
 `node scripts/seo/prepare-territorial-dossiers.mjs` produit un export JSONL complet et un rapport dans le dossier local ignoré. Il vérifie 158 306 décisions attendues et les 19 988 identifiants. Les adaptations comportent 46 profils conditionnels partagés : un hash différent par commune ne prouve pas une intention SEO originale. Le champ `editoriallyApproved` reste à zéro pour ces dossiers ; leur statut n’est pas promu automatiquement.
 
 Le composant `TerritorialDossier.astro` expose le dossier sans dépendance JavaScript. Toutes les fiches restent dans l’aperçu noindex, hors sitemap. Les 24 guides publics et le CRM ne sont pas modifiés par cet enrichissement. Pour une validation éditoriale ultérieure, documenter un besoin local distinct, ses preuves et l’éventuelle consolidation ; les contrôles de génération ne remplacent pas cette décision.
+
+
+## Navigation, brief et guides locaux — 25 septembre 2026
+
+Le catalogue de relecture possède une recherche par commune, code postal ou INSEE, avec filtres département et difficultés de qualification. Les noms exacts sont classés avant les correspondances du département. La pagination conserve les filtres dans l’URL. Les 107 pages départementales donnent une voie de navigation en HTML, y compris sans JavaScript. Le JSON public du catalogue contient seulement des données géographiques ; comme les fiches, il n’est généré qu’en aperçu et reste sous l’en-tête noindex.
+
+Les 19 988 fiches comportent un brief interactif : prestation, mode de travail, périmètre déclaré, rôle responsable, prochaine action et observations. Le téléchargement `.txt` est réalisé localement, sans stockage ou API, avec champs manquants et statut à relire explicites. Le code INSEE reste une chaîne ; les notes libres ne peuvent pas falsifier l’en-tête de l’export. Aucun CRM, devis, envoi ou scénario d’automatisation n’est créé par ce formulaire.
+
+Trois guides relus et sourcés rejoignent le lot public : présentation des adresses à Annecy, qualification du code postal partagé 74210, migration historique du CRM autour de Valgelon-La Rochette. Les faits proviennent de Légifrance, Insee et de l’API publique de découpage administratif ; les méthodes proposées et cas fictifs sont identifiés. Ils ne sont pas dupliqués par commune. Des liens sont ajoutés seulement depuis les fiches correspondant aux cas cités.
+
+Les dossiers passent en version 2 : un mode de prestation absent ou invalide bloque la proposition de rendez-vous ; un code postal absent reste inconnu. Le simulateur recalcule à l’ouverture et après retour navigateur, puis réinitialise le périmètre lorsqu’on change de commune. L’export vérifie **178 294 décisions** et les **19 988 dossiers**, répartis en 46 profils partagés.
+
+Vérifications : 52 tests ciblés réussis ; compilation complète d’aperçu de 20 591 HTML en 85,18 s ; 799 527 liens territoriaux contrôlés ; compilation de production 296 HTML en 16,91 s ; 291 URL de sitemap, zéro lien cassé, données structurées valides. Dans le navigateur : recherche mobile, homonymes, filtres, état vide, remise à zéro, pagination et focus clavier, retour navigateur du simulateur, téléchargement puis lecture du fichier texte. Pas de débordement sur les rendus vérifiés à 375, 768 et 1440 px ; aucun journal navigateur en erreur.

@@ -1302,5 +1302,231 @@
       }
     ],
     "reviewHash": "d241761790eaeb5221fbedf0f47cd736b236e533c3f070df726214be68b7d75c"
+  },
+  {
+    "axis": "sites",
+    "slug": "annecy-adresse-communes-deleguees",
+    "title": "À Annecy, présenter une adresse et un secteur sans les confondre",
+    "description": "Annecy, Seynod, Meythet : organiser la page contact, les lieux d’intervention et le formulaire sans inventer plusieurs établissements.",
+    "intent": "annecy-adresse-et-secteur-site-professionnel",
+    "audience": "Entreprises dont le site présente un établissement ou des interventions dans la commune nouvelle d’Annecy",
+    "problem": "Le site mélange nom de commune déléguée, adresse d’établissement et secteurs desservis",
+    "outcome": "Un visiteur distingue le lieu où il peut venir du lieu où une intervention peut être demandée",
+    "locationTerms": [
+      "Annecy-le-Vieux",
+      "Cran-Gevrier",
+      "Annecy",
+      "Meythet",
+      "Pringy",
+      "Seynod",
+      "Haute-Savoie"
+    ],
+    "status": "reviewed",
+    "reviewedAt": "2026-09-25",
+    "reviewer": "Flex-Web — relecture éditoriale et contrôle des sources",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "publicationSelected": true,
+    "intro": "Une entreprise peut être installée à Seynod, recevoir des demandes de Meythet et travailler ailleurs dans Annecy sans posséder trois agences. Sur son site, ces trois informations doivent garder des rôles distincts. Le besoin est concret : permettre au client de trouver le bon lieu de rendez-vous et de décrire son chantier sans déduire une implantation à partir d’un nom de secteur.",
+    "sections": [
+      {
+        "title": "Le fait local à prendre en compte",
+        "text": "L’arrêté de création réunit Annecy, Annecy-le-Vieux, Cran-Gevrier, Meythet, Pringy et Seynod dans la commune nouvelle d’Annecy à compter du 1er janvier 2017. L’Insee identifie aujourd’hui cette commune par le code 74010. Ces noms historiques restent utiles pour comprendre un lieu indiqué par le client ; ils ne constituent pas, à eux seuls, la preuve d’un établissement de votre entreprise. Une page intitulée « nos agences » doit donc être construite à partir de vos locaux réels, pas à partir de cette liste administrative."
+      },
+      {
+        "title": "Constituer une fiche par lieu réellement utilisé",
+        "text": "Pour chaque établissement, réunissez une adresse vérifiée par l’entreprise, un point d’entrée, un téléphone et les conditions d’accueil. Précisez si le public peut venir, si un rendez-vous est nécessaire ou si l’adresse correspond uniquement au siège. Une indication de commune déléguée peut aider le visiteur à reconnaître son secteur, mais ne doit pas remplacer le numéro, la voie et le code postal de l’adresse réelle. Si l’activité se déroule seulement chez le client, expliquez ce fonctionnement au lieu d’afficher un faux point d’accueil."
+      },
+      {
+        "title": "Séparer l’adresse de contact et le lieu du chantier",
+        "text": "Le formulaire peut demander d’abord la commune ou le secteur du projet, puis l’adresse précise lorsqu’elle est nécessaire à sa qualification. Conservez aussi le libellé écrit par la personne. Si elle indique « Meythet », le dossier peut afficher ce repère avec la commune administrative Annecy, après vérification de l’adresse. Le contact qui commande et le site où travailler ne sont pas forcément au même endroit : une société peut demander des travaux pour un local différent de son siège. Affichez ces deux adresses sous des libellés explicites."
+      },
+      {
+        "title": "Donner une destination utile aux liens locaux",
+        "text": "Une entreprise avec un seul lieu d’accueil peut conserver une page contact principale, accompagnée d’une rubrique qui précise son périmètre d’intervention réel. Un lien « intervention à Seynod » doit aboutir à une information utile sur la demande et les conditions de prise en charge, pas à la copie d’une page dont seul le nom change. Si plusieurs pages existantes décrivent le même lieu et le même service, préparez leur consolidation en conservant les informations utiles. Le choix des URL et des redirections relève ensuite d’un chantier de refonte distinct."
+      },
+      {
+        "title": "Recette : trois lieux, trois intentions de visite",
+        "text": "Faites tester le parcours par une personne qui ne connaît pas votre organisation. Elle doit d’abord trouver où se rendre pour un rendez-vous, puis demander une intervention dans un autre secteur, enfin signaler un chantier dont l’adresse reste incomplète. Le premier cas doit montrer le point d’accueil exact. Le deuxième doit enregistrer le lieu du chantier sans déplacer l’adresse de l’entreprise. Le troisième doit rester à préciser, sans confirmation automatique de déplacement. Vérifiez aussi que le bouton d’itinéraire part de l’adresse du lieu d’accueil, et non du centre de la commune."
+      }
+    ],
+    "example": "Cas fictif : un artisan dispose d’un atelier à Seynod, accessible uniquement sur rendez-vous. Un client domicilié à Meythet demande des travaux pour un local à Annecy-le-Vieux. Le site présente un atelier, le CRM conserve un contact et le dossier de travaux possède son propre lieu. Aucune agence supplémentaire n’est créée à partir des deux secteurs cités.",
+    "checklist": [
+      "Liste des établissements réels et de leurs conditions d’accueil",
+      "Adresse de chaque lieu vérifiée par l’entreprise",
+      "Champs distincts pour le contact et le chantier",
+      "Test du bouton d’itinéraire sur le bon point d’entrée",
+      "Liste des pages qui décrivent le même établissement"
+    ],
+    "limits": "Ce guide propose une organisation du site ; il ne valide pas une adresse postale ni une inscription administrative. La desserte et l’accueil doivent être confirmés par l’entreprise. Aucune implantation Flex-Web dans ces secteurs n’est revendiquée, et aucune position dans les moteurs de recherche n’est garantie.",
+    "related": [
+      "refonte-conserver-urls",
+      "site-internet-plombier"
+    ],
+    "sources": [
+      {
+        "label": "Légifrance — création de la commune nouvelle d’Annecy",
+        "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000033313064",
+        "checkedAt": "2026-09-25"
+      },
+      {
+        "label": "Insee — commune d’Annecy, Code officiel géographique 2026",
+        "url": "https://www.insee.fr/fr/metadonnees/geographie/commune/74010-annecy",
+        "checkedAt": "2026-09-25"
+      }
+    ],
+    "reviewHash": "3c6503c890cad2f6a422c5628047ce263c6a684db9badcdb0447636120407515"
+  },
+  {
+    "axis": "automatisation",
+    "slug": "zone-intervention-code-postal-74210",
+    "title": "Code postal 74210 : qualifier une zone avant de confirmer une intervention",
+    "description": "Doussard, Faverges-Seythenex et d’autres communes partagent 74210. Préparer un formulaire qui identifie le lieu sans accepter une intervention à tort.",
+    "intent": "qualification-lieu-code-postal-plusieurs-communes",
+    "audience": "Artisans et entreprises de services qui déterminent leur desserte à partir d’un formulaire",
+    "problem": "Un code postal partagé déclenche une acceptation ou un refus sans commune de chantier vérifiée",
+    "outcome": "La règle de desserte attend un lieu identifié et laisse les cas ambigus à qualifier",
+    "locationTerms": [
+      "Faverges-Seythenex",
+      "Talloires-Montmin",
+      "Saint-Ferréol",
+      "Val de Chaise",
+      "Chevaline",
+      "Doussard",
+      "Lathuile",
+      "Giez",
+      "Haute-Savoie"
+    ],
+    "status": "reviewed",
+    "reviewedAt": "2026-09-25",
+    "reviewer": "Flex-Web — relecture éditoriale et contrôle des sources",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "publicationSelected": true,
+    "intro": "Le code postal est pratique pour commencer une recherche, mais il ne suffit pas toujours à identifier une commune. Pour un service à domicile, une règle comme « 74210 = intervention acceptée » peut donc être trop large. L’automatisation utile consiste à lever l’ambiguïté, puis à appliquer le périmètre décidé par l’entreprise, sans confondre la réception d’une demande avec un déplacement confirmé.",
+    "sections": [
+      {
+        "title": "Un exemple vérifiable au sud du lac d’Annecy",
+        "text": "La consultation de l’API publique de découpage administratif du 25 septembre 2026 associe 74210 à huit communes : Chevaline, Doussard, Faverges-Seythenex, Giez, Lathuile, Val de Chaise, Saint-Ferréol et Talloires-Montmin. Le même résultat fournit deux codes postaux pour Talloires-Montmin : 74210 et 74290. Cette réponse montre pourquoi le système doit conserver la commune choisie avec le code postal saisi. Elle ne décrit ni une tournée commerciale, ni une durée de trajet, ni les secteurs qu’une entreprise accepte réellement de desservir."
+      },
+      {
+        "title": "Faire choisir la commune sans perdre la saisie",
+        "text": "Après la saisie du code postal, proposez les communes correspondantes dans une liste lisible. Si plusieurs résultats existent, ne choisissez pas automatiquement le premier. Le client doit pouvoir préciser sa commune ou signaler que son lieu n’apparaît pas. Enregistrez le texte initial, la commune retenue et son identifiant administratif comme des informations distinctes. Une modification ultérieure du code postal doit déclencher une nouvelle vérification du couple commune-code postal, plutôt que conserver silencieusement l’ancien choix."
+      },
+      {
+        "title": "Définir trois issues opérationnelles",
+        "text": "Préparez une règle validée par l’entreprise avec trois issues : secteur habituellement desservi, secteur à étudier, secteur non desservi. La première peut ouvrir la qualification du besoin, mais ne promet pas un créneau disponible. La deuxième crée une tâche de vérification avec l’adresse manquante ou le motif d’exception. La troisième affiche une explication cohérente avec votre politique d’intervention. Une commune entière peut rester trop grossière si votre périmètre dépend de l’accès ou du lieu précis : dans ce cas, gardez une validation humaine."
+      },
+      {
+        "title": "Prévoir l’indisponibilité du service de recherche",
+        "text": "Si la recherche de communes échoue, le formulaire doit conserver les informations déjà remplies et permettre une demande à qualifier. Un service externe indisponible ne signifie pas que le client habite hors secteur. Évitez également de calculer un délai de déplacement à partir d’un simple point central de commune. Si votre organisation utilise un calcul d’itinéraire, il doit disposer du lieu nécessaire et d’une règle de validation adaptée ; ce calcul reste séparé du contrôle administratif de la commune."
+      },
+      {
+        "title": "Recette : une acceptation qui exige un vrai choix",
+        "text": "Dans un jeu d’essai fictif, paramétrez Doussard comme secteur habituel et Giez comme secteur à étudier. Soumettez deux demandes avec 74210 : leurs résultats doivent différer selon la commune sélectionnée. Soumettez ensuite le code seul ; le dossier doit rester incomplet. Changez le code après avoir choisi une commune et simulez une panne de recherche. Le système doit demander une vérification sans effacer la demande ni confirmer le déplacement. Enfin, contrôlez qu’un renvoi du formulaire ne crée pas une seconde intervention."
+      }
+    ],
+    "example": "Exemple illustratif : une société reçoit deux demandes portant le code 74210, l’une à Doussard et l’autre à Giez. Son périmètre fictif classe la première en qualification habituelle et la seconde en étude préalable. Le code commun n’entraîne aucune affectation automatique à un technicien ; la commune et la règle de desserte expliquent chaque décision.",
+    "checklist": [
+      "Périmètre réel approuvé par l’entreprise, avec cas à étudier",
+      "Choix explicite lorsque plusieurs communes partagent un code postal",
+      "Conservation de la saisie et de la commune sélectionnée",
+      "Comportement prévu en cas d’indisponibilité de la recherche",
+      "Jeu d’essai avec lieu ambigu, modification et double soumission"
+    ],
+    "limits": "Le référentiel public doit être actualisé ; la liste citée correspond au contrôle daté dans les sources. Elle ne prouve pas qu’un trajet est possible ou qu’un créneau est libre. Le paramétrage de desserte de l’exemple est fictif et ne décrit aucune entreprise réelle.",
+    "related": [
+      "affectation-interventions",
+      "creation-dossier-formulaire"
+    ],
+    "sources": [
+      {
+        "label": "API Découpage administratif — recherche de communes par code postal",
+        "url": "https://geo.api.gouv.fr/decoupage-administratif/communes",
+        "checkedAt": "2026-09-25"
+      },
+      {
+        "label": "Réponse du référentiel public pour le code postal 74210",
+        "url": "https://geo.api.gouv.fr/communes?codePostal=74210&fields=nom,code,codesPostaux",
+        "checkedAt": "2026-09-25"
+      }
+    ],
+    "reviewHash": "074bd5d9c7f6ae85f8010ef5ac9554c17bac5359d70b1a1f0971f9b169dc3c2c"
+  },
+  {
+    "axis": "automatisation",
+    "slug": "crm-commune-nouvelle-valgelon-la-rochette",
+    "title": "Commune nouvelle : actualiser les lieux du CRM sans réécrire l’historique",
+    "description": "À partir de Valgelon-La Rochette et d’Étable, préparer une migration des lieux qui conserve les dossiers, les anciens libellés et leur traçabilité.",
+    "intent": "migration-referentiel-communes-crm-historique",
+    "audience": "PME qui reprennent un ancien fichier de clients ou de chantiers après un changement de commune",
+    "problem": "Une normalisation géographique remplace les anciens lieux, fusionne des clients ou modifie des documents historiques",
+    "outcome": "Un référentiel actuel facilite les recherches tout en conservant les valeurs et documents d’origine",
+    "locationTerms": [
+      "Valgelon-La Rochette",
+      "La Rochette",
+      "Étable",
+      "Savoie"
+    ],
+    "status": "reviewed",
+    "reviewedAt": "2026-09-25",
+    "reviewer": "Flex-Web — relecture éditoriale et contrôle des sources",
+    "evidenceKind": "editorial-recommendation",
+    "demandEvidence": "hypothesis",
+    "publicationSelected": true,
+    "intro": "Un ancien fichier peut contenir des chantiers à Étable et à La Rochette tandis que le référentiel actuel utilise Valgelon-La Rochette. Remplacer partout l’ancien texte par le nouveau nom semble simple, mais risque d’effacer ce qui figurait réellement dans les dossiers. Le chantier à réaliser est une migration de référentiel datée, avec possibilité de contrôle et de retour arrière, pas une fusion générale des clients.",
+    "sections": [
+      {
+        "title": "Le changement local qui justifie la migration",
+        "text": "L’Insee indique la création de Valgelon-La Rochette le 1er janvier 2019, à la place d’Étable et de La Rochette devenues communes déléguées. La commune actuelle porte le code 73215 ; Étable conserve le code 73111 en tant que commune déléguée. Le dossier Insee décrit aussi La Rochette avec le code 73215 avant cette création. Cet exemple demande donc d’examiner le nom, le type de commune et la date du référentiel : une comparaison du seul code ne suffit pas à raconter correctement le changement."
+      },
+      {
+        "title": "Séparer la valeur importée de la valeur de recherche",
+        "text": "Conservez le nom et le code présents dans le fichier d’origine, avec la date de l’import. Ajoutez séparément la commune actuelle proposée, sa source et la date de vérification. Le dossier peut ainsi être retrouvé en recherchant le nom actuel tout en montrant ce qui avait été saisi auparavant. Une adresse de chantier mérite son propre identifiant ; elle ne doit pas être déduite uniquement de la commune du contact. Les anciennes valeurs restent consultables pour comprendre les échanges, y compris lorsqu’elles étaient incomplètes."
+      },
+      {
+        "title": "Construire une correspondance contrôlée",
+        "text": "Commencez par un export de travail et une table de correspondance qui précise la source, le code d’origine, son contexte et la destination proposée. Présentez les modifications avant de les appliquer. Une ligne limitée à « La Rochette » sans département ni autre indice ne doit pas être rattachée automatiquement au cas savoyard. Les lignes identifiées peuvent recevoir une commune actuelle de recherche ; les autres rejoignent une liste à vérifier. Un changement de commune ne prouve jamais que deux entreprises ou deux adresses désignent le même client."
+      },
+      {
+        "title": "Préserver les dossiers existants et organiser le retour arrière",
+        "text": "Attribuez un identifiant à l’opération de migration et enregistrez les valeurs avant et après pour chaque fiche modifiée. Les devis envoyés, comptes rendus et autres documents déjà figés restent associés à leur version d’origine : l’affichage d’une commune actuelle dans la fiche ne doit pas les régénérer automatiquement. Préparez une restauration limitée aux champs de référentiel concernés. Une seconde exécution du même import doit reconnaître les modifications déjà traitées et produire le même état, sans nouvelles fiches ni nouvelle réécriture."
+      },
+      {
+        "title": "Recette : rechercher aujourd’hui, comprendre hier",
+        "text": "Créez un petit fichier fictif avec un chantier ancien à Étable, un dossier récent à Valgelon-La Rochette, une ligne « La Rochette » sans département et deux clients distincts à la même adresse. Après migration, la recherche par commune actuelle doit retrouver les dossiers reconnus. Le lieu d’origine du chantier ancien doit rester visible, la ligne ambiguë doit attendre une décision et les deux clients doivent rester distincts. Comparez les documents avant et après, rejouez l’import, puis testez la restauration des seuls champs géographiques."
+      }
+    ],
+    "example": "Scénario fictif : un fichier de 2018 contient un chantier à Étable, avec le code 73111. La migration ajoute une référence de recherche vers Valgelon-La Rochette, vérifiée dans le référentiel actuel. Le dossier conserve son ancien libellé et son document d’origine ; aucun nouveau client n’est créé et aucune relance n’est envoyée par cette opération.",
+    "checklist": [
+      "Export de travail conservant les identifiants et les valeurs d’origine",
+      "Table de correspondance sourcée et datée",
+      "Liste des lieux ambigus à vérifier manuellement",
+      "Historique des champs modifiés et procédure de restauration",
+      "Contrôle des documents figés et du second passage de l’import"
+    ],
+    "limits": "La correspondance décrite concerne un changement administratif vérifié ; elle ne permet pas de déduire l’identité d’un client à partir de sa seule commune. Toute migration dépend de la qualité des données disponibles et doit être testée sur une copie avant d’être appliquée aux dossiers réels.",
+    "related": [
+      "synchronisation-contacts",
+      "tableau-activite-crm"
+    ],
+    "sources": [
+      {
+        "label": "Insee — historique géographique de Valgelon-La Rochette",
+        "url": "https://www.insee.fr/fr/statistiques/2011101?geo=COM-73215",
+        "checkedAt": "2026-09-25"
+      },
+      {
+        "label": "Insee — commune de Valgelon-La Rochette, Code officiel géographique 2026",
+        "url": "https://www.insee.fr/fr/metadonnees/geographie/commune/73215-valgelon-la-rochette",
+        "checkedAt": "2026-09-25"
+      },
+      {
+        "label": "Insee — commune déléguée d’Étable",
+        "url": "https://www.insee.fr/fr/metadonnees/geographie/commune-deleguee/73111-etable",
+        "checkedAt": "2026-09-25"
+      }
+    ],
+    "reviewHash": "96294f184a48de054a24bea401ccb1ba6899484f20c4d3f229b8a8310c82358f"
   }
 ]

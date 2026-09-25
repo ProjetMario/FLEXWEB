@@ -9,11 +9,13 @@ export function territoryAssessment(c,e){
   crossDepartment:e.nearby.some(n=>n.departmentCode!==c.departmentCode),
   missingEpci:!e.epci,
   missingCoordinates:!e.coordinates,
+  missingPostal:!c.postalCodes.length,
  };
 }
 export function dossierDecision(input){
  if(input.duplicateEvent)return 'reuse-existing-request';
  if(!input.communeConfirmed)return 'confirm-commune';
+ if(!['remote','onsite'].includes(input.mode))return 'confirm-service-mode';
  if(input.mode==='remote')return 'qualify-remote-project';
  if(input.scope==='outside')return 'review-outside-scope';
  if(input.scope!=='covered')return 'confirm-service-area';
@@ -23,6 +25,7 @@ export function dossierDecision(input){
 export const decisionLabels={
  'reuse-existing-request':'Retrouver la demande existante, sans créer de doublon.',
  'confirm-commune':'Faire confirmer la commune ; aucune affectation automatique.',
+ 'confirm-service-mode':'Faire préciser le mode de prestation avant de vérifier la desserte ou un créneau.',
  'qualify-remote-project':'Qualifier le projet à distance, ses outils et son responsable.',
  'review-outside-scope':'Préparer une réponse hors périmètre à valider humainement.',
  'confirm-service-area':'Vérifier la zone de service déclarée par l’entreprise.',
@@ -34,7 +37,7 @@ export function territorialDossier(axis,c,e){
  const a=territoryAssessment(c,e),near=e.nearby[0],shared=e.postalGroups.find(p=>p.totalCommunes>1),homonym=e.homonyms[0],cross=e.nearby.find(n=>n.departmentCode!==c.departmentCode);
  const steps=axis==='sites'?[
  {title:'Présenter le service avant la zone',text:`Pour une entreprise qui sert ${c.name}, la première décision du visiteur est de reconnaître la prestation proposée. Préparez une description du résultat attendu, des exclusions et du mode de travail : à distance, sur rendez-vous dans un établissement réel ou en déplacement. Le nom de la commune sert ensuite à vérifier la faisabilité géographique. Une adresse administrative de commune ne doit jamais remplacer celle de l’entreprise.`,deliverable:'Un bloc prestation et un contact réel, avec une formulation différente pour chaque mode de service.'},
- {title:'Construire un formulaire qui sait demander une précision',text:a.sharedPostal?`La saisie de ${shared.postalCode} laisse ${shared.totalCommunes} communes possibles dans le référentiel. Affichez la commune retenue avec son département et demandez sa confirmation. Si le visiteur ne sait pas choisir, conservez son message et proposez une qualification humaine. Ne remplacez pas silencieusement sa saisie par ${c.name}.`:`Même si aucun code postal partagé n’est relevé pour ${c.name} dans cet instantané, une adresse incomplète reste une demande exploitable. Présentez ${c.name} (${c.departmentCode}) pour confirmation et permettez de corriger le lieu. Une valeur absente doit rester absente : ne déduisez pas l’adresse du navigateur ou du nom de l’entreprise.`,deliverable:'Un récapitulatif corrigeable affichant la prestation, le lieu confirmé et les données encore manquantes.'},
+ {title:'Construire un formulaire qui sait demander une précision',text:a.missingPostal?`Aucun code postal n’est renseigné pour ${c.name} dans cet instantané. Conservez la demande et demandez une confirmation de l’adresse et de la commune. Ne proposez pas un code voisin par défaut et ne bloquez pas le suivi commercial parce que ce champ est absent de la source.`:a.sharedPostal?`La saisie de ${shared.postalCode} laisse ${shared.totalCommunes} communes possibles dans le référentiel. Affichez la commune retenue avec son département et demandez sa confirmation. Si le visiteur ne sait pas choisir, conservez son message et proposez une qualification humaine. Ne remplacez pas silencieusement sa saisie par ${c.name}.`:`Même si aucun code postal partagé n’est relevé pour ${c.name} dans cet instantané, une adresse incomplète reste une demande exploitable. Présentez ${c.name} (${c.departmentCode}) pour confirmation et permettez de corriger le lieu. Une valeur absente doit rester absente : ne déduisez pas l’adresse du navigateur ou du nom de l’entreprise.`,deliverable:'Un récapitulatif corrigeable affichant la prestation, le lieu confirmé et les données encore manquantes.'},
  {title:'Transmettre la demande avec une référence stable',text:`Le formulaire remet au suivi commercial le code commune ${c.code}, le nom affiché et une référence de demande distincte. La référence sert à retrouver le même envoi lors d’une nouvelle tentative réseau ; elle ne doit pas fusionner deux demandes différentes faites au même endroit. Le message de confirmation annonce une réception uniquement après l’enregistrement réussi.`,deliverable:'Une demande retrouvable et une prochaine action nommée, sans devis ni réservation créés implicitement.'},
  {title:'Publier des preuves qui correspondent au périmètre',text:`Réunissez des réalisations autorisées et indiquez ce qu’elles démontrent : service fourni, périmètre et limites. Une réalisation extérieure à ${c.name} peut expliquer une méthode, mais doit conserver sa localisation réelle. Si aucune preuve locale n’existe, dites que l’accompagnement est proposé à distance et expliquez la procédure de qualification au lieu d’inventer une référence.`,deliverable:'Des exemples sourcés, un responsable de réponse et une mesure des demandes effectivement qualifiées.'},
  ]:[
@@ -54,6 +57,7 @@ export function territorialDossier(axis,c,e){
  const cases=[];
  function add(id,label,communeCode,input,expected,why){cases.push({id:`${axis}:${c.code}:${id}`,label,communeCode,input,expected,expectedLabel:decisionLabels[expected],why});}
  add('unknown','Lieu non confirmé',c.code,{communeConfirmed:false,mode:'onsite'},'confirm-commune',`Le nom ${c.name} saisi en texte libre ne constitue pas une sélection confirmée.`);
+ add('mode','Mode de prestation non précisé',c.code,{communeConfirmed:true,scope:'covered',available:true},'confirm-service-mode','Une zone couverte et un créneau disponible ne permettent pas de choisir entre déplacement et prestation à distance.');
  add('scope','Commune confirmée, desserte inconnue',c.code,{communeConfirmed:true,mode:'onsite',scope:'unknown'},'confirm-service-area','L’identification du lieu ne prouve pas sa couverture par le prestataire.');
  add('availability','Zone couverte, aucun créneau vérifié',c.code,{communeConfirmed:true,mode:'onsite',scope:'covered',available:false},'confirm-availability','Une règle géographique ne crée pas de disponibilité.');
  add('approved','Préparation après contrôles',c.code,{communeConfirmed:true,mode:'onsite',scope:'covered',available:true},'prepare-appointment-for-approval','Le résultat prépare une proposition, sans message envoyé automatiquement.');
@@ -80,6 +84,6 @@ export function territorialDossier(axis,c,e){
  'Fournir au moins un besoin propre et des preuves autorisées avant une validation éditoriale locale.',
  'Décider si cette fiche apporte une réponse distincte ou doit être regroupée dans une page de zone.',
  ];
- const dossier={id:`territory:${axis}:${c.code}`,version:1,status:'prepared-not-editorially-approved',axis,communeCode:c.code,url:draftPath(axis,c),assessment:a,steps,fields,cases,needs:needs.map(([slug,label])=>({url:`/ressources/${axis}/${slug}/`,label})),checks};
+ const dossier={id:`territory:${axis}:${c.code}`,version:2,status:'prepared-not-editorially-approved',axis,communeCode:c.code,url:draftPath(axis,c),assessment:a,steps,fields,cases,needs:needs.map(([slug,label])=>({url:`/ressources/${axis}/${slug}/`,label})),checks};
  return {...dossier,contentHash:createHash('sha256').update(JSON.stringify(dossier)).digest('hex')};
 }
