@@ -1,0 +1,62 @@
+---
+import {territoryDepartments} from '../../../lib/seo/territorial-directory.mjs';
+import {issueLabels} from '../../../lib/seo/territorial-search.mjs';
+const departments=territoryDepartments();
+---
+<section class="territory-search" aria-labelledby="territory-search-heading">
+ <h2 id="territory-search-heading">Retrouver une fiche.</h2>
+ <p>Recherchez parmi 9 994 communes. Chaque résultat donne accès aux deux dossiers : site internet et automatisation IA.</p>
+ <form id="territory-search-form" role="search">
+  <div class="search-controls">
+   <label>Commune, code postal ou code INSEE<input type="search" name="q" autocomplete="off" maxlength="100" placeholder="Ex. Chambéry, 73000, 2A004" /></label>
+   <label>Département<select name="department"><option value="">Tous les départements</option>{departments.map(d=><option value={d.code}>{d.code} — {d.name}</option>)}</select></label>
+   <label>Point à vérifier<select name="issue"><option value="">Tous les profils</option>{Object.entries(issueLabels).map(([key,label])=><option value={key}>{label}</option>)}</select></label>
+  </div>
+  <button class="action" type="submit">Rechercher les fiches</button><button class="clear" type="reset">Effacer les filtres</button>
+ </form>
+ <p id="territory-search-status" tabindex="-1" role="status" aria-live="polite">Le catalogue se charge au lancement de la recherche.</p>
+ <div id="territory-search-results" aria-busy="false"></div>
+ <nav aria-label="Pages des résultats" id="territory-search-pagination" hidden>
+  <button type="button" data-page="previous">Précédent</button><span id="territory-page-label"></span><button type="button" data-page="next">Suivant</button>
+ </nav>
+ <noscript><p>La recherche nécessite JavaScript. Les liens par département ci-dessous donnent accès aux mêmes fiches sans JavaScript.</p></noscript>
+ <details class="departments"><summary>Parcourir les fiches par département, sans recherche</summary><ul>{departments.map(d=><li><a href={`/preparation/departements/${d.code.toLowerCase()}/`}>{d.code} — {d.name} ({d.items.length} communes)</a></li>)}</ul></details>
+</section>
+<script>
+ import {issueLabels,prepareSearchRecords,searchTerritories} from '../../../lib/seo/territorial-search.mjs';
+ const form=document.querySelector<HTMLFormElement>('#territory-search-form');
+ if(form){
+  const results=document.querySelector<HTMLDivElement>('#territory-search-results')!,status=document.querySelector<HTMLParagraphElement>('#territory-search-status')!,pagination=document.querySelector<HTMLElement>('#territory-search-pagination')!,label=document.querySelector<HTMLElement>('#territory-page-label')!;
+  const previous=pagination.querySelector<HTMLButtonElement>('[data-page="previous"]')!,next=pagination.querySelector<HTMLButtonElement>('[data-page="next"]')!;
+  const submit=form.querySelector<HTMLButtonElement>('[type="submit"]')!;
+  let records:any[]|null=null,pending:Promise<any[]>|null=null,page=1,revision=0;
+  const field=(name:string)=>form.elements.namedItem(name) as HTMLInputElement;
+  const setQuery=()=>{const params=new URLSearchParams();for(const name of ['q','department','issue']){const value=field(name).value.trim();if(value)params.set(name,value);}if(page>1)params.set('page',String(page));history.replaceState(null,'',location.pathname+(params.size?'?'+params.toString():'')+'#territory-search-heading');};
+  const el=(tag:string,text:string)=>{const e=document.createElement(tag);e.textContent=text;return e;};
+  async function load(){if(records)return records;if(!pending)pending=fetch('/preparation/donnees/catalogue.json').then(async response=>{if(!response.ok)throw Error('catalogue');const body=await response.json();if(body.version!==1||!Array.isArray(body.records))throw Error('format');return records=prepareSearchRecords(body.records);}).finally(()=>pending=null);return pending;}
+  async function render(requestedPage=1,moveFocus=false){
+   const current=++revision;results.setAttribute('aria-busy','true');submit.disabled=true;status.textContent='Chargement du catalogue…';
+   try{
+    const data=await load();if(current!==revision)return;
+    const result=searchTerritories(data,{q:field('q').value,department:field('department').value,issue:field('issue').value,page:requestedPage});page=result.page;results.replaceChildren();
+    status.textContent=result.total?`${result.total.toLocaleString('fr-FR')} commune${result.total>1?'s':''} trouvée${result.total>1?'s':''} · ${result.items.length} affichée${result.items.length>1?'s':''}.`:'Aucune commune trouvée. Essayez un nom plus court, un code INSEE ou retirez un filtre.';
+    for(const record of result.items){
+     const card=el('article',''),heading=el('h3',`${record.name} (${record.departmentCode})`);card.append(heading,el('p',`Code INSEE ${record.code} · ${record.postalCodes.join(', ')||'Code postal non renseigné'}`));
+     const flags=Object.entries(issueLabels).filter(([key])=>record.flags[key]).map(([,value])=>value);if(flags.length)card.append(el('p',flags.join(' · ')));
+     const links=el('div','');for(const [axis,name] of [['sites','Fiche site internet'],['automatisation','Fiche automatisation IA']]){const link=el('a',name) as HTMLAnchorElement;link.href=`/preparation/${axis}/${encodeURIComponent(record.slug)}/`;link.setAttribute('aria-label',`${name} — ${record.name} (${record.departmentCode})`);links.append(link);}card.append(links);results.append(card);
+    }
+    pagination.hidden=result.pages<=1;label.textContent=`Page ${page} sur ${result.pages}`;previous.disabled=page===1;next.disabled=page===result.pages;setQuery();
+    if(moveFocus){const first=results.querySelector('a');if(first instanceof HTMLElement)first.focus();else status.focus();}
+   }catch{if(current===revision){results.replaceChildren();pagination.hidden=true;status.textContent='Le catalogue n’a pas pu être chargé. Réessayez ou utilisez les liens par département ci-dessous.';}}
+   finally{if(current===revision){results.setAttribute('aria-busy','false');submit.disabled=false;}}
+  }
+  form.addEventListener('submit',event=>{event.preventDefault();render(1);});
+  form.addEventListener('reset',()=>{revision++;page=1;results.replaceChildren();pagination.hidden=true;results.setAttribute('aria-busy','false');submit.disabled=false;status.textContent='Filtres effacés. Lancez une nouvelle recherche.';history.replaceState(null,'',location.pathname+'#territory-search-heading');});
+  previous.addEventListener('click',()=>render(page-1,true));next.addEventListener('click',()=>render(page+1,true));
+  const params=new URLSearchParams(location.search);for(const name of ['q','department','issue'])if(params.has(name))field(name).value=params.get(name)!;
+  if(['q','department','issue','page'].some(name=>params.has(name)))render(Number(params.get('page')||1));
+ }
+</script>
+<style>
+.territory-search{margin:40px 0;padding:28px;border:1px solid #dce1e9;border-radius:24px;background:#fff}.search-controls{display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px}.search-controls label{display:flex;flex-direction:column;gap:8px;font-size:.9rem;font-weight:600;min-width:0}.search-controls input,.search-controls select{font:inherit;font-weight:400;width:100%;min-width:0;border:1px solid #abb4c2;border-radius:12px;padding:12px;background:#fff;min-height:48px}button{cursor:pointer;font:inherit}button:disabled{opacity:.5;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #0066cc;outline-offset:3px}.clear,#territory-search-pagination button{background:#f5f5f7;border:1px solid #dce1e9;border-radius:999px;padding:12px 20px}#territory-search-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}#territory-search-results :global(article){border-top:1px solid #dce1e9;padding:20px 0}#territory-search-results :global(h3){font-size:1.15rem}#territory-search-results :global(p){font-size:.9rem;margin:8px 0}#territory-search-results :global(article div){display:flex;gap:12px;flex-wrap:wrap}#territory-search-results :global(a){font-size:.95rem}#territory-search-pagination{margin:24px 0;align-items:center;justify-content:space-between;gap:12px}#territory-search-pagination[hidden]{display:none}#territory-search-pagination:not([hidden]){display:flex}.departments{margin-top:32px}.departments summary{cursor:pointer;font-weight:600}.departments ul{columns:2;column-gap:30px}.departments li{break-inside:avoid;font-size:.95rem;margin:8px 0}@media(max-width:900px){.search-controls{grid-template-columns:1fr}}@media(max-width:600px){.territory-search{padding:20px}#territory-search-results{grid-template-columns:1fr}.departments ul{columns:1}#territory-search-pagination{flex-wrap:wrap}}
+</style>
