@@ -12,8 +12,8 @@ test('shared postal codes drive an explicit useful diagnosis, not an invented ma
  const c=draftData().communes.find(c=>c.code==='73065'),e=enrichedTerritory(c.code);assert(e.postalGroups.some(p=>p.postalCode==='73000'&&p.totalCommunes>1));
  for(const axis of ['sites','automatisation']){const insights=localInsights(axis,c,e);assert(insights[0].fact.includes('ne suffit pas'));assert(insights[0].action.includes('73065'));assert(insights[2].fact.includes('vol d\'oiseau'));assert(localQuestions(axis,c,e)[2].a.includes('ne mesurent'));}
 });
-test('territorial enrichment never promotes a page into production',()=>{
- const old=process.env.CONTEXT,flag=process.env.FLEXWEB_DRAFT_PREVIEW;process.env.CONTEXT='production';process.env.FLEXWEB_DRAFT_PREVIEW='1';assert.equal(draftEntries().length,0);if(old===undefined)delete process.env.CONTEXT;else process.env.CONTEXT=old;if(flag===undefined)delete process.env.FLEXWEB_DRAFT_PREVIEW;else process.env.FLEXWEB_DRAFT_PREVIEW=flag;
+test('territorial catalogue publishes the same complete routes in production and preview',()=>{
+ const old=process.env.CONTEXT,flag=process.env.FLEXWEB_DRAFT_PREVIEW;process.env.CONTEXT='production';delete process.env.FLEXWEB_DRAFT_PREVIEW;const production=draftEntries();assert.equal(production.length,19988);process.env.CONTEXT='deploy-preview';assert.deepEqual(draftEntries(),production);if(old===undefined)delete process.env.CONTEXT;else process.env.CONTEXT=old;if(flag===undefined)delete process.env.FLEXWEB_DRAFT_PREVIEW;else process.env.FLEXWEB_DRAFT_PREVIEW=flag;
 });
 test('qualification is conservative for missing facts and never confirms a booking',()=>{
  assert.match(qualificationDecision({territoryKnown:false,inScope:'yes',channel:'remote'}),/À qualifier/);

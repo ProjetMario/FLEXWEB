@@ -20,7 +20,7 @@ const departments=territoryDepartments();
   <button type="button" data-page="previous">Précédent</button><span id="territory-page-label"></span><button type="button" data-page="next">Suivant</button>
  </nav>
  <noscript><p>La recherche nécessite JavaScript. Les liens par département ci-dessous donnent accès aux mêmes fiches sans JavaScript.</p></noscript>
- <details class="departments"><summary>Parcourir les fiches par département, sans recherche</summary><ul>{departments.map(d=><li><a href={`/preparation/departements/${d.code.toLowerCase()}/`}>{d.code} — {d.name} ({d.items.length} communes)</a></li>)}</ul></details>
+ <details class="departments"><summary>Parcourir les fiches par département, sans recherche</summary><ul>{departments.map(d=><li><a href={`/territoires/departements/${d.code.toLowerCase()}/`}>{d.code} — {d.name} ({d.items.length} communes)</a></li>)}</ul></details>
 </section>
 <script>
  import {issueLabels,prepareSearchRecords,searchTerritories} from '../../../lib/seo/territorial-search.mjs';
@@ -33,7 +33,7 @@ const departments=territoryDepartments();
   const field=(name:string)=>form.elements.namedItem(name) as HTMLInputElement;
   const setQuery=()=>{const params=new URLSearchParams();for(const name of ['q','department','issue']){const value=field(name).value.trim();if(value)params.set(name,value);}if(page>1)params.set('page',String(page));history.replaceState(null,'',location.pathname+(params.size?'?'+params.toString():'')+'#territory-search-heading');};
   const el=(tag:string,text:string)=>{const e=document.createElement(tag);e.textContent=text;return e;};
-  async function load(){if(records)return records;if(!pending)pending=fetch('/preparation/donnees/catalogue.json').then(async response=>{if(!response.ok)throw Error('catalogue');const body=await response.json();if(body.version!==1||!Array.isArray(body.records))throw Error('format');return records=prepareSearchRecords(body.records);}).finally(()=>pending=null);return pending;}
+  async function load(){if(records)return records;if(!pending)pending=fetch('/territoires/donnees/catalogue.json').then(async response=>{if(!response.ok)throw Error('catalogue');const body=await response.json();if(body.version!==1||!Array.isArray(body.records))throw Error('format');return records=prepareSearchRecords(body.records);}).finally(()=>pending=null);return pending;}
   async function render(requestedPage=1,moveFocus=false){
    const current=++revision;results.setAttribute('aria-busy','true');submit.disabled=true;status.textContent='Chargement du catalogue…';
    try{
@@ -43,7 +43,7 @@ const departments=territoryDepartments();
     for(const record of result.items){
      const card=el('article',''),heading=el('h3',`${record.name} (${record.departmentCode})`);card.append(heading,el('p',`Code INSEE ${record.code} · ${record.postalCodes.join(', ')||'Code postal non renseigné'}`));
      const flags=Object.entries(issueLabels).filter(([key])=>record.flags[key]).map(([,value])=>value);if(flags.length)card.append(el('p',flags.join(' · ')));
-     const links=el('div','');for(const [axis,name] of [['sites','Fiche site internet'],['automatisation','Fiche automatisation IA']]){const link=el('a',name) as HTMLAnchorElement;link.href=`/preparation/${axis}/${encodeURIComponent(record.slug)}/`;link.setAttribute('aria-label',`${name} — ${record.name} (${record.departmentCode})`);links.append(link);}card.append(links);results.append(card);
+     const links=el('div','');for(const [axis,name] of [['sites','Fiche site internet'],['automatisation','Fiche automatisation IA']]){const link=el('a',name) as HTMLAnchorElement;link.href=`/territoires/${axis}/${encodeURIComponent(record.slug)}/`;link.setAttribute('aria-label',`${name} — ${record.name} (${record.departmentCode})`);links.append(link);}card.append(links);results.append(card);
     }
     pagination.hidden=result.pages<=1;label.textContent=`Page ${page} sur ${result.pages}`;previous.disabled=page===1;next.disabled=page===result.pages;setQuery();
     if(moveFocus){const first=results.querySelector('a');if(first instanceof HTMLElement)first.focus();else status.focus();}

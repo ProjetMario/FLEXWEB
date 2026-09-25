@@ -1,0 +1,14 @@
+---
+import ResourceLayout from '../../../components/seo/national/ResourceLayout.astro';
+import {territoryDepartments} from '../../../lib/seo/territorial-directory.mjs';
+export function getStaticPaths(){return territoryDepartments().map(group=>({params:{code:group.code.toLowerCase()},props:{group}}));}
+const {group}=Astro.props;
+---
+<ResourceLayout title={`Fiches territoriales : ${group.name} (${group.code})`} description={`Sites internet et automatisation IA : données de commune, formulaires et cadrage des projets dans ${group.name}.`}>
+ <nav aria-label="Fil d’Ariane"><a href="/territoires/">Projets par commune</a></nav>
+ <p class="eyebrow">Consultation par département</p><h1>{group.name} · {group.code}</h1>
+ <p class="lead">{group.items.length} communes du catalogue, chacune avec une fiche site internet et une fiche automatisation. Cette sélection ne représente pas toutes les communes du département et ne mesure pas la demande commerciale.</p>
+ <p class="note">Utilisez les données de votre commune pour préparer les adresses, la zone réellement desservie et le suivi des demandes. Les méthodes sont communes ; chaque projet demande une adaptation à votre activité.</p>
+ <ul class="directory-list">{group.items.map(c=><li><h2>{c.name}</h2><p>Code INSEE {c.code} · Codes postaux : {c.postalCodes.join(', ')||'non renseignés'}</p><div><a aria-label={`Fiche site internet — ${c.name} (${c.code})`} href={`/territoires/sites/${c.slug}/`}>Fiche site internet</a><a aria-label={`Fiche automatisation IA — ${c.name} (${c.code})`} href={`/territoires/automatisation/${c.slug}/`}>Fiche automatisation IA</a></div></li>)}</ul>
+</ResourceLayout>
+<style>.directory-list{list-style:none!important;padding:0!important}.directory-list li{padding:24px 0;border-bottom:1px solid #dce1e9}.directory-list h2{font-size:1.3rem;margin:0}.directory-list div{display:flex;gap:14px 28px;flex-wrap:wrap}</style>

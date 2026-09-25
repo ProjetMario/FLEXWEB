@@ -10,7 +10,7 @@ test('missing fields remain explicit, including in a downloadable incomplete bri
  assert.equal(b.fields.coveredCommunes,'');
  const text=territorialBriefText(b);
  assert.match(text,/État : incomplet/);assert.match(text,/Non renseigné/);assert.match(text,/Aucun scénario choisi/);
- assert.match(text,/Code commune \(texte\) : 01004/);assert.match(text,/\/preparation\/sites\/amberieu-en-bugey-01004\//);
+ assert.match(text,/Code commune \(texte\) : 01004/);assert.match(text,/Fiche source : \/territoires\/sites\/amberieu-en-bugey-01004\//);
 });
 test('completed brief only becomes ready for review; optional notes remain optional',()=>{
  const b=createTerritorialBrief('sites',commune,complete);
@@ -62,7 +62,7 @@ test('unknown choices and forged status, source or scenario cannot pass through 
  assert.match(text,/État : incomplet/);assert(!text.includes('evil.example'));assert(!text.includes('Envoyer maintenant'));
 });
 
-test('every territorial fiche retains its exact existing source URL and identifier',()=>{
+test('every territorial brief links to its public source URL and retains its identifier',()=>{
  let count=0;
  for(const c of draftData().communes)for(const axis of ['sites','automatisation']){
   const b=briefIdentity(axis,c);assert.equal(b.communeCode,c.code);assert.equal(b.sourcePath,draftPath(axis,c));count++;

@@ -1,12 +1,14 @@
 # Catalogue national : sites internet et automatisation IA
 
-## Livraison et limite actuelle
+## Publication du catalogue territorial — 25 septembre 2026
 
-Le catalogue conserve les **19 988 brouillons territoriaux** et comprend désormais **27 guides relus**, répartis entre sites internet et automatisation. Douze nouveaux guides développent des besoins distincts de PME et artisans : nettoyage multisites, menuiserie, installation de borne, aménagement paysager, catalogue professionnel, rendez-vous de diagnostic, dossiers CRM, pièces manquantes, affectation, comptes rendus, synchronisation et suivi d’activité.
+À la demande explicite de l’utilisateur, les **19 988 fiches territoriales** deviennent publiques et indexables sous `/territoires/{sites|automatisation}/{commune-code}/`. Ce choix remplace la restriction précédente aux aperçus. Les **27 guides relus** sous `/ressources/` conservent leur contrôle individuel de relecture ; la publication du catalogue ne transforme pas les fiches en guides relus individuellement.
 
-La publication se fait par lots vérifiés, sans attendre 20 000 articles. Le build production du 25 septembre produit 296 pages HTML et 291 URL de sitemap. Les brouillons territoriaux restent réservés aux aperçus sous `/preparation/`, avec `noindex`, hors sitemap. Leur rendu exige simultanément `CONTEXT=deploy-preview` et `FLEXWEB_DRAFT_PREVIEW=1`.
+Les 9 994 communes possèdent deux fiches, avec données officielles, diagnostics, comparaison géographique, simulateur, dossier et brief téléchargeable. Les méthodes sont partagées ; aucune agence locale, référence client ni résultat commercial n’est déduit des données. La relecture éditoriale reste une tâche d’amélioration, distincte de l’autorisation de publier.
 
-`node scripts/seo/editorial-inventory.mjs` reconstruit le registre local : 27 prêts, 516 à développer, 16 446 à documenter et 3 026 candidats à consolidation. Ce classement est un tri de travail, pas une validation des intentions locales. Les 20 015 identifiants sont conservés ; aucun regroupement ni aucune redirection n’est appliqué automatiquement.
+Le sitemap émet **20 587 URL** : 291 URL publiques antérieures + 19 988 fiches + 308 pages de navigation (accueil territorial, 107 départements et 200 pages de listes). Les segments contiennent au maximum 2 000 URL, avec une date de publication fixe. Les 228 anciennes pages locales conservent leurs URL. Les anciennes routes `/preparation/*` redirigent en 301 vers `/territoires/*` ; elles ne sont pas émises en double. Seul le JSON de recherche, qui n’est pas une page de contenu, reste `noindex`.
+
+`node scripts/seo/audit-territorial-publication.mjs` contrôle toutes les fiches, leur sitemap, les canonicals, les sources, les outils, les offres TTC, les CTA et le maillage HTML. `check-seo.mjs` contrôle désormais tous les fichiers un par un et ne garde qu’un graphe léger en mémoire. Le registre éditorial conserve ses priorités d’approfondissement et ajoute une destination publique et une date de publication. La génération ne fabrique pas d’empreinte de relecture.
 
 La cible de 100 000 visites organiques mensuelles à 12 mois est un objectif commercial et non une prévision. Les clics Search Console ne sont pas des sessions Analytics. L’absence de données confirmées de visites, ventes ou demandes qualifiées doit rester explicite.
 
@@ -88,3 +90,9 @@ Trois guides relus et sourcés rejoignent le lot public : présentation des adre
 Les dossiers passent en version 2 : un mode de prestation absent ou invalide bloque la proposition de rendez-vous ; un code postal absent reste inconnu. Le simulateur recalcule à l’ouverture et après retour navigateur, puis réinitialise le périmètre lorsqu’on change de commune. L’export vérifie **178 294 décisions** et les **19 988 dossiers**, répartis en 46 profils partagés.
 
 Vérifications : 52 tests ciblés réussis ; compilation complète d’aperçu de 20 591 HTML en 85,18 s ; 799 527 liens territoriaux contrôlés ; compilation de production 296 HTML en 16,91 s ; 291 URL de sitemap, zéro lien cassé, données structurées valides. Dans le navigateur : recherche mobile, homonymes, filtres, état vide, remise à zéro, pagination et focus clavier, retour navigateur du simulateur, téléchargement puis lecture du fichier texte. Pas de débordement sur les rendus vérifiés à 375, 768 et 1440 px ; aucun journal navigateur en erreur.
+
+## Historique et suivi après mise en ligne du catalogue
+
+Les sections datées ci-dessus décrivent les étapes antérieures ; leurs indications « aperçu uniquement » et « hors sitemap » sont remplacées par la décision explicite du 25 septembre. Les nouvelles routes sont produites dans tous les contextes de compilation. Le suivi hebdomadaire doit désormais mesurer la découverte, l’exploration et l’indexation du catalogue, améliorer les fiches selon les besoins observés et conserver les contrôles des guides relus. Ne pas resoumettre les mêmes URL sans modification substantielle.
+
+Contrôles de cette publication : `node --import tsx --test tests/seo/national.test.mjs tests/seo/enrichment.test.mjs tests/seo/acquisition.test.ts tests/seo/pricing.test.ts tests/seo/territorial-dossier.test.mjs tests/seo/territorial-search.test.mjs tests/seo/territorial-brief.test.mjs`, compilation, `node scripts/check-seo.mjs`, `node scripts/seo/quality.mjs --enforce-release` et `node scripts/seo/audit-territorial-publication.mjs`. Preuves finales, déploiements et soumission Google dans `PUBLICATION-2026-09-25/` du dossier de suivi SEO.
