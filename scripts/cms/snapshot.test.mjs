@@ -151,7 +151,7 @@ test('report uses compare-and-swap current state and safe metadata', async () =>
   const mock = httpMock(), value = snapshot();
   assert.equal((await reportSnapshot({ client: mock.client, snapshot: value, status: 'checking' })).state, 'checking');
   assert.equal((await reportSnapshot({ client: mock.client, snapshot: value, status: 'checking', report: { previewVerified: true, previewDeployId: 'preview', previewUrl: 'https://preview--flex-webb.netlify.app' } })).state, 'preview_ready');
-  assert.equal((await reportSnapshot({ client: mock.client, snapshot: value, status: 'deployed', deployId: 'candidate-deploy-123' })).state, 'deployed');
+  assert.equal((await reportSnapshot({ client: mock.client, snapshot: value, status: 'deployed', deployId: 'candidate-deploy-123', report: { productionVerified: true } })).state, 'deployed');
   const posted = mock.calls.filter(c => c.method === 'POST').map(c => JSON.parse(c.body));
   assert.deepEqual(posted.map(c => c.expectedState), ['draft', 'checking', 'preview_ready']);
 });
@@ -162,10 +162,26 @@ test('creating a preview does not report it as verified, unchanged deployed repo
   const pending = await reportSnapshot({ client: mock.client, snapshot: value, status: 'checking', report: { previewDeployId: 'candidate', previewUrl: 'https://candidate--flex-webb.netlify.app' } });
   assert.equal(pending.state, 'checking');
   await reportSnapshot({ client: mock.client, snapshot: value, status: 'checking', report: { previewVerified: true, previewUrl: 'https://candidate--flex-webb.netlify.app' } });
-  await reportSnapshot({ client: mock.client, snapshot: value, status: 'deployed', deployId: 'candidate-deploy-123', report: { previewUrl: 'https://candidate--flex-webb.netlify.app' } });
+  await reportSnapshot({ client: mock.client, snapshot: value, status: 'deployed', deployId: 'candidate-deploy-123', report: { productionVerified: true, previewUrl: 'https://candidate--flex-webb.netlify.app' } });
   const postCount = mock.calls.filter(c => c.method === 'POST').length;
-  const same = await reportSnapshot({ client: mock.client, snapshot: value, status: 'deployed', deployId: 'candidate-deploy-123' });
+  const same = await reportSnapshot({ client: mock.client, snapshot: value, status: 'deployed', deployId: 'candidate-deploy-123', report: { productionVerified: true } });
   assert.equal(same.state, 'deployed'); assert.equal(mock.calls.filter(c => c.method === 'POST').length, postCount);
+});
+
+test('a deployed report requires explicit live-production verification before any CMS request', async () => {
+  const mock = httpMock();
+  await assert.rejects(reportSnapshot({ client: mock.client, snapshot: snapshot(), status: 'deployed', deployId: 'candidate-deploy-123', report: { previewVerified: true } }), /PRODUCTION_NOT_VERIFIED/);
+  assert.equal(mock.calls.length, 0);
+});
+
+test('confirmed production reconciles an older deploy ID through the existing CAS state graph', async () => {
+  const mock = httpMock(), value = snapshot();
+  await reportSnapshot({ client: mock.client, snapshot: value, status: 'deployed', deployId: 'original-deploy-123', report: { productionVerified: true } });
+  const before = mock.calls.length;
+  const result = await reportSnapshot({ client: mock.client, snapshot: value, status: 'deployed', deployId: 'current-deploy-1234', report: { productionVerified: true } });
+  assert.equal(result.state, 'deployed'); assert.equal(result.deployId, 'current-deploy-1234');
+  const writes = mock.calls.slice(before).filter(call => call.method === 'POST').map(call => JSON.parse(call.body));
+  assert.deepEqual(writes.map(body => [body.expectedState, body.state]), [['deployed', 'review_failed'], ['review_failed', 'checking'], ['checking', 'preview_ready'], ['preview_ready', 'deployed']]);
 });
 
 test('archive left without status by an interrupted write is repaired without replacing snapshot', async () => {

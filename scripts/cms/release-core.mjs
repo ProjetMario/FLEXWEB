@@ -65,6 +65,7 @@ export async function executeRelease({ snapshotPath, artifactDir, codeCommit, pr
     requireRelease(snapshot.schemaVersion === 1 && typeof snapshot.id === 'string' && /^[a-f0-9]{40}$/.test(codeCommit), 'INVALID_RELEASE_INPUT');
     requireRelease(snapshot.sourceCommit === codeCommit, 'SNAPSHOT_SOURCE_MISMATCH');
     result.snapshotId = snapshot.id; result.snapshotSha256 = await fileDigest(snapshotPath);
+    const marker = { schemaVersion: 1, snapshotId: snapshot.id, snapshotSha256: result.snapshotSha256, codeCommit };
     await record('checking');
     await providers.validateSnapshot(snapshotPath);
     baseline = await providers.currentProduction();
@@ -73,7 +74,12 @@ export async function executeRelease({ snapshotPath, artifactDir, codeCommit, pr
     result.previousDeployId = baseline.id;
     requireRelease(await providers.currentSourceCommit() === codeCommit, 'SOURCE_ADVANCED');
     if (baseline.snapshotSha256 === result.snapshotSha256 && baseline.codeCommit === codeCommit) {
-      await record('deployed', { deployId: baseline.id, unchanged: true });
+      // A matching immutable deploy is insufficient to acknowledge the public
+      // site after an interrupted status callback: verify its live marker too.
+      await providers.verifyProduction({ siteId: baseline.siteId, id: baseline.id }, marker);
+      const confirmed = await providers.currentProduction();
+      requireRelease(confirmed.siteId === PUBLIC_SITE_ID && confirmed.id === baseline.id && confirmed.ready && confirmed.gitBuildsStopped === true, 'PRODUCTION_CHANGED');
+      await record('deployed', { deployId: baseline.id, unchanged: true, productionVerified: true });
       return result;
     }
     await providers.archiveSnapshot(snapshotPath, result.snapshotSha256);
@@ -81,7 +87,6 @@ export async function executeRelease({ snapshotPath, artifactDir, codeCommit, pr
     await checkSnapshot();
     await providers.buildAndTest();
     await checkSnapshot();
-    const marker = { schemaVersion: 1, snapshotId: snapshot.id, snapshotSha256: result.snapshotSha256, codeCommit };
     await mkdir(path.join(artifactDir, '.well-known'), { recursive: true });
     await writeFile(path.join(artifactDir, '.well-known', 'flexweb-release.json'), JSON.stringify(marker) + '\n');
     const manifest = await artifactManifest(artifactDir);
@@ -107,7 +112,7 @@ export async function executeRelease({ snapshotPath, artifactDir, codeCommit, pr
     const confirmed = await providers.currentProduction();
     requireRelease(confirmed.siteId === PUBLIC_SITE_ID && confirmed.id === candidate.id, 'PROMOTION_NOT_CURRENT');
     await providers.verifyProduction(candidate, marker);
-    await record('deployed', { deployId: candidate.id, publishedAt: now() });
+    await record('deployed', { deployId: candidate.id, publishedAt: now(), productionVerified: true });
     return result;
   } catch (error) {
     const code = error instanceof ReleaseError ? error.code : 'RELEASE_FAILED';

@@ -4,6 +4,8 @@ import { mkdtemp, mkdir, writeFile, rm, readFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { executeRelease, PUBLIC_SITE_ID, sha256 } from './release-core.mjs';
+import { reportSnapshot } from './snapshot.mjs';
+import { nextStatus } from '../../apps/content-cms/src/lib/contracts.mjs';
 
 const commit = 'a'.repeat(40);
 async function fixture(t, overrides = {}) {
@@ -45,6 +47,69 @@ test('same revision and code already deployed do not build again', async t => {
   options.providers.currentProduction = async () => ({ siteId: PUBLIC_SITE_ID, id: 'previous', ready: true, gitBuildsStopped: true, codeCommit: commit, snapshotSha256: sha256(await readFile(options.snapshotPath)) });
   const r = await executeRelease(options);
   assert.equal(r.status, 'deployed'); assert.equal(r.unchanged, true); assert.ok(!options.calls.includes('build'));
+  assert.equal(r.productionVerified, true); assert.ok(options.calls.includes('verify-production'));
+});
+
+test('an unchanged release cannot be acknowledged when the live production marker fails verification', async t => {
+  const options = await fixture(t, { verifyProduction: async () => { throw new Error('live marker mismatch'); } });
+  options.providers.currentProduction = async () => ({ siteId: PUBLIC_SITE_ID, id: 'previous', ready: true, gitBuildsStopped: true, codeCommit: commit, snapshotSha256: sha256(await readFile(options.snapshotPath)) });
+  const result = await executeRelease(options);
+  assert.equal(result.status, 'blocked'); assert.equal(result.productionVerified, undefined);
+  assert.ok(!options.calls.includes('report:deployed')); assert.ok(!options.calls.includes('build'));
+  assert.ok(!options.calls.some(call => call.startsWith('promote:')));
+});
+
+test('an unchanged release cannot acknowledge a deployment replaced during its live verification', async t => {
+  const options = await fixture(t); let reads = 0;
+  options.providers.currentProduction = async () => ({ siteId: PUBLIC_SITE_ID, id: ++reads === 1 ? 'previous' : 'newer', ready: true, gitBuildsStopped: true, codeCommit: commit, snapshotSha256: sha256(await readFile(options.snapshotPath)) });
+  const result = await executeRelease(options);
+  assert.equal(result.status, 'blocked'); assert.equal(result.errorCode, 'PRODUCTION_CHANGED');
+  assert.equal(result.productionVerified, undefined); assert.ok(options.calls.includes('verify-production'));
+  assert.ok(!options.calls.includes('report:deployed')); assert.ok(!options.calls.includes('build'));
+  assert.ok(!options.calls.some(call => call.startsWith('promote:')));
+});
+
+for (const savedBeforeResponseLoss of [false, true]) test(`an unchanged release recovers a lost CMS status response (saved=${savedBeforeResponseLoss}) without another build or promotion`, async t => {
+  const candidateId = 'candidate-deploy-123', previousId = 'previous-deploy-123';
+  let live = previousId, lost = false, cmsState = { state: 'draft' }, verifiedProduction = 0;
+  const transitions = [];
+  const client = { request: async (method, _route, input) => {
+    if (method === 'GET') return structuredClone(cmsState);
+    assert.equal(method, 'POST');
+    transitions.push([cmsState.state, input.state]);
+    if (input.state === 'deployed' && !lost) {
+      lost = true;
+      if (savedBeforeResponseLoss) cmsState = nextStatus(cmsState, input);
+      throw new Error('response lost; the caller cannot know whether the state was saved');
+    }
+    cmsState = nextStatus(cmsState, input);
+    return structuredClone(cmsState);
+  } };
+  const options = await fixture(t);
+  const expectedSha = sha256(await readFile(options.snapshotPath));
+  options.providers.currentProduction = async () => ({ siteId: PUBLIC_SITE_ID, id: live, ready: true, gitBuildsStopped: true,
+    ...(live === candidateId ? { codeCommit: commit, snapshotSha256: expectedSha } : {}) });
+  options.providers.createPreview = async () => { options.calls.push('preview'); return { siteId: PUBLIC_SITE_ID, id: candidateId, url: `https://${candidateId}--flex-webb.netlify.app`, ready: true, draft: true }; };
+  options.providers.promote = async id => { options.calls.push(`promote:${id}`); live = id; };
+  options.providers.verifyProduction = async (candidate, expected) => {
+    verifiedProduction++; options.calls.push('verify-production');
+    assert.equal(live, candidateId); assert.equal(candidate.id, candidateId);
+    assert.deepEqual(JSON.parse(await readFile(path.join(options.artifactDir, '.well-known/flexweb-release.json'))), expected);
+  };
+  options.providers.report = (snapshot, report) => reportSnapshot({ client, snapshot, status: report.status, report, deployId: report.deployId });
+  const first = await executeRelease(options);
+  assert.equal(first.status, 'deployed'); assert.equal(first.statusSyncPending, true);
+  assert.equal(cmsState.state, savedBeforeResponseLoss ? 'deployed' : 'preview_ready');
+  assert.equal(verifiedProduction, 1);
+  const second = await executeRelease(options);
+  assert.equal(second.status, 'deployed'); assert.equal(second.unchanged, true);
+  assert.equal(second.productionVerified, true); assert.equal(second.statusSyncPending, undefined);
+  assert.equal(cmsState.state, 'deployed'); assert.equal(cmsState.deployId, candidateId);
+  assert.equal(verifiedProduction, 2);
+  assert.equal(options.calls.filter(call => call === 'build').length, 1);
+  assert.equal(options.calls.filter(call => call === 'preview').length, 1);
+  assert.deepEqual(options.calls.filter(call => call.startsWith('promote:')), [`promote:${candidateId}`]);
+  if (!savedBeforeResponseLoss) assert.deepEqual(transitions.slice(-3), [['preview_ready', 'checking'], ['checking', 'preview_ready'], ['preview_ready', 'deployed']]);
 });
 
 test('concurrent invocation cannot run two builds', async t => {
