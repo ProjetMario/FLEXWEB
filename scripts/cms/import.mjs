@@ -212,9 +212,10 @@ async function assertUnchanged(filename, scan) {
   must(stat.isFile() && !stat.isSymbolicLink() && stat.size === scan.size && stat.mtimeMs === scan.mtimeMs, 'INPUT_CHANGED_DURING_IMPORT');
 }
 
-export async function runImport({ input = '.cms/import.ndjson', origin, token, execute = false, publishBaseline = false, batchSize = 100, concurrency = 2, checkpoint = '.cms/import-checkpoint.json', fetchImpl = fetch, sleep = pause, maxAttempts = 4 } = {}) {
+export async function runImport({ input = '.cms/import.ndjson', origin, token, execute = false, publishBaseline = false, batchSize = 100, concurrency = 2, checkpoint = '.cms/import-checkpoint.json', fetchImpl = fetch, sleep = pause, maxAttempts = 4, shouldPause } = {}) {
   must(Number.isInteger(batchSize) && batchSize >= 1 && batchSize <= 100, 'INVALID_BATCH_SIZE');
-  must(Number.isInteger(concurrency) && concurrency >= 1 && concurrency <= 2, 'INVALID_CONCURRENCY');
+  must(Number.isInteger(concurrency) && concurrency >= 1 && concurrency <= 8, 'INVALID_CONCURRENCY');
+  must(shouldPause === undefined || typeof shouldPause === 'function', 'INVALID_PAUSE_CALLBACK');
   must(!publishBaseline || execute, 'PUBLISH_REQUIRES_EXECUTE');
   input = path.resolve(input); checkpoint = path.resolve(checkpoint);
   const scan = await scanInput(input);
@@ -253,11 +254,14 @@ export async function runImport({ input = '.cms/import.ndjson', origin, token, e
       must(found.sourceId === record.sourceId && found.path === record.path, 'SOURCE_ID_PATH_COLLISION');
       return matches[0];
     };
-    async function publishOwned(record, pending) {
+    async function publishOwned(record, pending, created) {
       const key = keyOf(record), suffix = `/content/${record.collection}/${encodeURIComponent(pending.id)}`;
       for (let attempt = 0; attempt < api.maxAttempts; attempt++) {
-        const current = await api.request('GET', suffix);
-        must(current.item?.data?.source_id === record.sourceId && current.item?.data?.path === record.path, 'SOURCE_ID_PATH_COLLISION');
+        // A complete native CREATE response already describes this exact draft.
+        // Native publication fences the same _rev atomically against concurrent
+        // edits. Resumed drafts and every uncertain retry must reload instead.
+        const current = attempt === 0 && created ? created : await api.request('GET', suffix);
+        must(current.item?.id === pending.id && current.item?.data?.source_id === record.sourceId && current.item?.data?.path === record.path, 'SOURCE_ID_PATH_COLLISION');
         const expected = mapRecord(record).data;
         const observed = Object.fromEntries(Object.keys(expected).map(field => [field, current.item.data[field]]));
         if (hash(expected) !== hash(observed) || current.item.draftRevisionId) return complete(key, contribution({ created: 1, preservedEdited: 1 }));
@@ -283,11 +287,14 @@ export async function runImport({ input = '.cms/import.ndjson', origin, token, e
       if (existing) return complete(key, contribution({ preserved: 1, preservedEdited: existing.contentHash !== record.baselineHash ? 1 : 0, uncertain: pending?.stage === 'creating' ? 1 : 0 }));
       if (!execute) return contribution({ planned: 1 });
       state.pending[key] = { stage: 'creating' }; await save();
+      const mapped = mapRecord(record);
       let created;
       for (let attempt = 0; attempt < api.maxAttempts; attempt++) {
         try {
-          created = await api.request('POST', `/content/${record.collection}`, mapRecord(record));
-          must(created.item?.id && created.item?.data?.source_id === record.sourceId && created.item?.data?.path === record.path && created.item?.status === 'draft' && typeof created._rev === 'string', 'CREATE_NOT_CONFIRMED');
+          created = await api.request('POST', `/content/${record.collection}`, mapped);
+          must(typeof created.item?.id === 'string' && created.item.id.length > 0 && created.item?.data?.source_id === record.sourceId && created.item?.data?.path === record.path && created.item?.status === 'draft' && !created.item.draftRevisionId && typeof created._rev === 'string' && created._rev.length > 0, 'CREATE_NOT_CONFIRMED');
+          const observed = Object.fromEntries(Object.keys(mapped.data).map(field => [field, created.item.data[field]]));
+          must(hash(mapped.data) === hash(observed), 'CREATE_NOT_CONFIRMED');
           break;
         } catch (error) {
           // An uncertain POST is reconciled by the unique source_id before it can be repeated.
@@ -301,7 +308,7 @@ export async function runImport({ input = '.cms/import.ndjson', origin, token, e
       }
       const owned = { stage: 'created', id: created.item.id, rev: created._rev };
       state.pending[key] = owned; await save();
-      return publishBaseline ? publishOwned(record, owned) : complete(key, contribution({ created: 1 }));
+      return publishBaseline ? publishOwned(record, owned, created) : complete(key, contribution({ created: 1 }));
     }
     async function batch(entries) {
       await assertUnchanged(input, scan);
@@ -318,16 +325,37 @@ export async function runImport({ input = '.cms/import.ndjson', origin, token, e
       state.completedLine = entries.at(-1).line;
       state.pending = {}; await save();
     }
+    function result(paused = false) {
+      // Each record contributes exactly once to created, preserved or planned;
+      // pending successes from a previous interrupted batch are not yet folded
+      // into those totals. A paused run leaves that pending state untouched.
+      const completed = state.counts.created + state.counts.preserved + state.counts.planned + Object.values(state.pending).filter(entry => entry.stage === 'complete').length;
+      const needsReview = state.counts.uncertain > 0 || publishBaseline && state.counts.published < state.counts.created;
+      return { mode: execute ? 'execute' : 'dry-run', inputRecords: scan.count, inputHash: scan.inputHash, baseManifestHash: scan.baseManifestHash, counts: state.counts, completedLine: state.completedLine, remaining: Math.max(0, scan.count - completed), needsReview, ...(paused ? { paused: true } : {}) };
+    }
+    async function pauseAtBoundary() {
+      if (!shouldPause || !await shouldPause()) return null;
+      await assertUnchanged(input, scan); await save();
+      const paused = result(true);
+      return paused.remaining > 0 ? paused : null;
+    }
     let entries = [];
     for await (const entry of inputLines(input)) {
       if (entry.line <= state.completedLine) continue;
       entries.push(entry);
-      if (entries.length === batchSize) { await batch(entries); entries = []; }
+      if (entries.length === batchSize) {
+        const before = await pauseAtBoundary(); if (before) return before;
+        await batch(entries); entries = [];
+        const after = await pauseAtBoundary(); if (after) return after;
+      }
     }
-    if (entries.length) await batch(entries);
+    if (entries.length) {
+      const before = await pauseAtBoundary(); if (before) return before;
+      await batch(entries);
+      const after = await pauseAtBoundary(); if (after) return after;
+    }
     await assertUnchanged(input, scan);
-    const needsReview = state.counts.uncertain > 0 || publishBaseline && state.counts.published < state.counts.created;
-    return { mode: execute ? 'execute' : 'dry-run', inputRecords: scan.count, inputHash: scan.inputHash, baseManifestHash: scan.baseManifestHash, counts: state.counts, completedLine: state.completedLine, remaining: 0, needsReview };
+    return result();
   } finally { if (lock) { await lock.close(); await unlink(lockPath); } }
 }
 

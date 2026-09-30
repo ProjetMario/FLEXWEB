@@ -105,6 +105,82 @@ test('execute creates and publishes only new records; rerun does not duplicate',
   assert.ok(!(await readFile(options.checkpoint, 'utf8')).includes(token));
 });
 
+test('a complete native create is published with its original revision without an initial item GET', async t => {
+  const options = await fixture(t, [record()]); const api = mockApi();
+  const result = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl });
+  assert.equal(result.counts.published, 1);
+  assert.equal(api.calls.filter(call => call.method === 'GET' && /\/content\/pages\/[^/]+$/.test(call.url.pathname)).length, 0);
+  assert.deepEqual(api.calls.filter(call => call.method === 'POST').map(call => [call.url.pathname, call.body._rev]), [
+    ['/_emdash/api/content/pages', undefined], ['/_emdash/api/content/pages/created-1/publish', 'rev-1'],
+  ]);
+});
+
+test('an incomplete create response is reconciled without publishing unverified mapping', async t => {
+  const options = await fixture(t, [record()]);
+  const api = mockApi([], ({ method, body, records }) => {
+    if (method === 'POST' && body?.data) {
+      const row = { id: 'created', type: 'pages', status: 'draft', data: body.data, version: 1 };
+      records.set('pages:created', row);
+      const incomplete = structuredClone(row); delete incomplete.data.source_payload_hash;
+      return response({ item: incomplete, _rev: 'rev-1' });
+    }
+  });
+  const result = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl });
+  assert.equal(result.counts.uncertain, 1); assert.equal(result.counts.published, 0);
+  assert.equal(result.needsReview, true);
+  assert.ok(api.calls.some(call => call.url.searchParams.has('fieldFilters')));
+  assert.ok(!api.calls.some(call => call.url.pathname.endsWith('/publish')));
+});
+
+test('a concurrent edit after create is preserved when native publication rejects the original revision', async t => {
+  const options = await fixture(t, [record()]);
+  const api = mockApi([], ({ url, method, body, records }) => {
+    if (method === 'POST' && url.pathname.endsWith('/publish')) {
+      const row = records.get('pages:created-1');
+      row.data.title = 'Edition pendant la publication'; row.version++;
+      assert.equal(body._rev, 'rev-1');
+      // The native endpoint below returns 409 for the stale revision.
+    }
+  });
+  const result = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl });
+  assert.equal(result.counts.created, 1); assert.equal(result.counts.published, 0);
+  assert.equal(result.counts.preservedEdited, 1); assert.equal(result.needsReview, true);
+  assert.equal(api.records.get('pages:created-1').status, 'draft');
+  assert.equal(api.records.get('pages:created-1').data.title, 'Edition pendant la publication');
+  assert.equal(api.calls.filter(call => call.url.pathname.endsWith('/publish')).length, 1);
+});
+
+test('an uncertain publication reloads the item before recognizing success without publishing twice', async t => {
+  const options = await fixture(t, [record()]);
+  const api = mockApi([], ({ url, method, records }) => {
+    if (method === 'POST' && url.pathname.endsWith('/publish')) {
+      const row = records.get('pages:created-1'); row.status = 'published'; row.version++;
+      throw Error('publication succeeded but response lost');
+    }
+  });
+  const result = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl });
+  assert.equal(result.counts.published, 1); assert.equal(result.needsReview, false);
+  const calls = api.calls.filter(call => call.url.pathname.startsWith('/_emdash/api/content/pages/'));
+  assert.deepEqual(calls.map(call => [call.method, call.url.pathname]), [
+    ['POST', '/_emdash/api/content/pages/created-1/publish'], ['GET', '/_emdash/api/content/pages/created-1'],
+  ]);
+});
+
+test('an uncertain publication reloads and stops if a concurrent edit changes the revision', async t => {
+  const options = await fixture(t, [record()]);
+  const api = mockApi([], ({ url, method, records }) => {
+    if (method === 'POST' && url.pathname.endsWith('/publish')) {
+      // A revision-only change is enough to forbid retrying the old publication.
+      const row = records.get('pages:created-1'); row.version++;
+      return response({}, 503);
+    }
+  });
+  const result = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl });
+  assert.equal(result.counts.published, 0); assert.equal(result.counts.preservedEdited, 1);
+  assert.equal(api.calls.filter(call => call.url.pathname.endsWith('/publish')).length, 1);
+  assert.equal(api.calls.filter(call => call.method === 'GET' && call.url.pathname.endsWith('/created-1')).length, 1);
+});
+
 test('native datetime normalization does not falsely mark newly imported drafts as edited', async t => {
   const sources = [
     record('date-no-milliseconds', { sourceUpdatedAt: '2026-09-25T00:00:00Z' }),
@@ -190,10 +266,13 @@ test('checkpoint resumes a created draft after a failed publication', async t =>
   await assert.rejects(runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl, maxAttempts: 1 }), { code: 'CMS_HTTP_503' });
   const saved = JSON.parse(await readFile(options.checkpoint, 'utf8'));
   assert.equal(saved.pending['pages:first'].stage, 'created'); assert.equal(saved.completedLine, 0);
+  const callsBeforeResume = api.calls.length;
   failPublish = false;
   const result = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl });
   assert.equal(result.counts.created, 1); assert.equal(result.counts.published, 1);
   assert.equal(api.calls.filter(call => call.method === 'POST' && call.body?.data).length, 1);
+  const resumed = api.calls.slice(callsBeforeResume).filter(call => call.url.pathname.startsWith('/_emdash/api/content/pages/'));
+  assert.deepEqual(resumed.map(call => call.method), ['GET', 'POST']);
 });
 
 test('a resumed draft edited by a person is preserved, never published', async t => {
@@ -242,9 +321,63 @@ test('concurrency is at most two, batch guard holds and repeated cursors stop', 
   const result = await runImport({ ...options, execute: true, fetchImpl: api.fetchImpl, batchSize: 3 });
   assert.equal(result.counts.created, 7); assert.ok(api.maxActive() <= 2);
   await assert.rejects(runImport({ ...options, batchSize: 101 }), { code: 'INVALID_BATCH_SIZE' });
-  await assert.rejects(runImport({ ...options, concurrency: 3 }), { code: 'INVALID_CONCURRENCY' });
+  for (const concurrency of [0, 9, 1.5, '4']) await assert.rejects(runImport({ ...options, concurrency }), { code: 'INVALID_CONCURRENCY' });
+  await assert.rejects(runImport({ ...options, shouldPause: true }), { code: 'INVALID_PAUSE_CALLBACK' });
   const client = createApi({ origin, token, fetchImpl: async () => response({ items: [], nextCursor: 'loop' }) });
   await assert.rejects(client.list('pages'), { code: 'REPEATED_PAGE_CURSOR' });
+});
+
+for (const concurrency of [4, 8]) test(`explicit concurrency ${concurrency} permits exactly that many in-flight requests and preserves all checkpoints`, async t => {
+  const options = await fixture(t, Array.from({ length: concurrency * 2 + 1 }, (_, i) => record(`parallel-${i}`)));
+  let entered = 0, release;
+  const firstWave = new Promise(resolve => { release = resolve; });
+  const api = mockApi([], async ({ method, body }) => {
+    if (method === 'POST' && body?.data && ++entered <= concurrency) {
+      if (entered === concurrency) release();
+      await firstWave;
+    }
+  });
+  const result = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl, concurrency, batchSize: concurrency });
+  assert.equal(api.maxActive(), concurrency);
+  assert.equal(result.counts.created, concurrency * 2 + 1);
+  assert.equal(result.counts.published, concurrency * 2 + 1);
+  assert.equal(result.remaining, 0);
+  const checkpoint = JSON.parse(await readFile(options.checkpoint, 'utf8'));
+  assert.equal(checkpoint.completedLine, concurrency * 2 + 1);
+  assert.deepEqual(checkpoint.pending, {});
+  const writes = api.calls.filter(call => call.method === 'POST').length;
+  await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl, concurrency });
+  assert.equal(api.calls.filter(call => call.method === 'POST').length, writes);
+});
+
+test('a requested pause completes one batch, releases the lock and resumes without duplicate writes', async t => {
+  const options = await fixture(t, [record('one'), record('two'), record('three'), record('four'), record('five')]);
+  const api = mockApi(); let boundaries = 0;
+  const paused = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl, concurrency: 4, batchSize: 2, shouldPause: () => ++boundaries === 2 });
+  assert.equal(boundaries, 2); assert.equal(paused.paused, true);
+  assert.equal(paused.counts.published, 2); assert.equal(paused.completedLine, 2); assert.equal(paused.remaining, 3);
+  const saved = JSON.parse(await readFile(options.checkpoint, 'utf8'));
+  assert.deepEqual(saved.pending, {}); assert.equal(saved.counts.published, 2);
+  await assert.rejects(lstat(path.join(path.dirname(options.checkpoint), 'import.lock')), { code: 'ENOENT' });
+  const resumed = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl, concurrency: 8, batchSize: 2 });
+  assert.equal(resumed.paused, undefined); assert.equal(resumed.remaining, 0); assert.equal(resumed.counts.published, 5);
+  for (const sourceId of ['one', 'two', 'three', 'four', 'five']) assert.equal(api.calls.filter(call => call.method === 'POST' && call.body?.data?.source_id === sourceId).length, 1);
+});
+
+test('pausing before a resumed batch preserves pending successes and reports the actual unfinished records', async t => {
+  const options = await fixture(t, [record('one'), record('two'), record('three')]); let fail = true;
+  const api = mockApi([], ({ method, body }) => { if (fail && method === 'POST' && body?.data?.source_id === 'two') return response({}, 503); });
+  await assert.rejects(runImport({ ...options, execute: true, fetchImpl: api.fetchImpl, concurrency: 1, maxAttempts: 1 }));
+  const before = JSON.parse(await readFile(options.checkpoint, 'utf8'));
+  const writes = api.calls.filter(call => call.method === 'POST').length;
+  const paused = await runImport({ ...options, execute: true, fetchImpl: api.fetchImpl, shouldPause: async () => true });
+  assert.equal(paused.paused, true); assert.equal(paused.remaining, 2);
+  assert.deepEqual(JSON.parse(await readFile(options.checkpoint, 'utf8')), before);
+  assert.equal(api.calls.filter(call => call.method === 'POST').length, writes);
+  fail = false;
+  const resumed = await runImport({ ...options, execute: true, fetchImpl: api.fetchImpl });
+  assert.equal(resumed.counts.created, 3); assert.equal(resumed.remaining, 0);
+  assert.equal(api.calls.filter(call => call.method === 'POST' && call.body?.data?.source_id === 'one').length, 1);
 });
 
 test('CLI keeps credentials in environment and requires explicit execution for baseline publication', async t => {
