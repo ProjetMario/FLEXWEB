@@ -8,6 +8,17 @@ import { flexwebBrevo } from './src/email-plugin.mjs';
 
 export default defineConfig({
   output: 'server',
+  vite: {
+    environments: {
+      ssr: {
+        build: {
+          // Kysely has order-sensitive circular imports. Preserve initialization
+          // order across Rolldown chunks in the deployed Worker as well as dev.
+          rolldownOptions: { output: { strictExecutionOrder: true } },
+        },
+      },
+    },
+  },
   adapter: cloudflare({ imageService: 'passthrough' }),
   integrations: [
     react(),
