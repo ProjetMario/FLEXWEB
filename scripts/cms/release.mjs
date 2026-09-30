@@ -5,6 +5,7 @@ import { constants } from 'node:fs';
 import path from 'node:path';
 import { acquireLock, executeRelease, getNetlifyProductionState, PUBLIC_SITE_ID, requireRelease, ReleaseError } from './release-core.mjs';
 import { fileDigest } from './snapshot-io.mjs';
+import { verifyAutomationProxy } from './automation-probe.mjs';
 
 const exec = promisify(execFile);
 const root = process.cwd();
@@ -48,6 +49,7 @@ async function verifyRemote(candidate, expected, production = false) {
     requireRelease(response.status === 200, 'REMOTE_PAGE_UNAVAILABLE');
     if (production) requireRelease(!/noindex/i.test(response.headers.get('x-robots-tag') || ''), 'PRODUCTION_NOINDEX');
   }
+  await verifyAutomationProxy(origin);
 }
 async function localTests() {
   const server = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', '4321'], { cwd: root, env, stdio: 'ignore' });
