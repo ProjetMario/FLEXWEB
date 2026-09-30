@@ -57,7 +57,7 @@ export const localApplicationContent: Record<string, ApplicationEditorial> = {
     faq: { question: "L'application peut-elle reprendre notre suivi actuel sur tableur ?", answer: "Oui, après examen de la structure et de la qualité des données. Nous définissons les identifiants, les statuts et les correspondances avant un import de test. Les doublons et les informations manquantes sont examinés avec vous. Le devis précise les données reprises, la vérification et les conditions de passage au nouvel outil." },
   },
   "creation-site-internet-savoie": {
-    intro: "FLEX-WEB conçoit des applications web et mobiles pour les entreprises de Savoie : outils de gestion, portails clients et suivi d'interventions. Le projet commence par les tâches à simplifier et les personnes qui utiliseront l'application, avant de choisir les fonctionnalités.",
+    intro: "Donnez à vos équipes et à vos clients un espace où agir : consulter un dossier, préparer une intervention ou partager un document. FLEX-WEB développe votre application en Savoie avec un premier lot, des écrans et un budget définis sur devis avant paiement.",
     heading: "Relier le bureau, les clients et les équipes sur le terrain",
     context: "Un projet en Savoie peut concerner une équipe autour de Chambéry, des interventions dans plusieurs vallées ou un service touristique saisonnier. Les déplacements, la qualité de la connexion et les pics d'activité sont des contraintes à décrire dans le cahier des charges ; ils ne justifient pas tous la même application.",
     scenarios: [
@@ -69,7 +69,7 @@ export const localApplicationContent: Record<string, ApplicationEditorial> = {
     faq: { question: "Faut-il une application sur les stores pour les équipes en Savoie ?", answer: "Pas systématiquement. Une application web accessible depuis le navigateur peut suffire pour un portail ou un outil interne. Une application mobile est à étudier si les usages exigent des fonctions du téléphone ou une expérience hors connexion. Ce choix est validé pendant le cadrage." },
   },
   "creation-site-internet-haute-savoie": {
-    intro: "FLEX-WEB développe des applications web et mobiles sur mesure pour les PME, les professionnels du tourisme et les entreprises de services en Haute-Savoie. L'objectif est de réunir les informations utiles et de rendre le suivi des opérations plus simple pour vos équipes et vos clients.",
+    intro: "Réunissez les informations et les actions de votre activité dans un outil adapté à vos utilisateurs. FLEX-WEB développe des applications web et mobiles en Haute-Savoie : suivi de dossiers, espace client ou outil d’équipe, avec une première version définie et chiffrée sur devis.",
     heading: "Un outil adapté aux demandes, aux réservations et aux échanges entre équipes",
     context: "Pour un projet entre le bassin annécien, le Genevois et les vallées, le périmètre doit préciser les lieux d'utilisation, les langues nécessaires et les systèmes déjà en place. Les besoins d'un atelier, d'un cabinet et d'un hébergeur touristique ne se traitent pas avec le même parcours.",
     scenarios: [

@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createArchive, updateArchiveStatus, readLimited } from '../src/lib/archive.mjs';
+import { snapshotId } from '../src/lib/contracts.mjs';
+class Bucket {
+  values = new Map(); serial = 0; failStatus = false;
+  async get(key) { const item = this.values.get(key); return item ? { etag: item.etag, json: async () => JSON.parse(item.body) } : null; }
+  async put(key, body, options = {}) { if (this.failStatus && key.includes('release-status')) { this.failStatus = false; throw new Error('simulated interruption'); } const previous = this.values.get(key); if (options.onlyIf?.etagDoesNotMatch === '*' && previous) return null; if (options.onlyIf?.etagMatches && previous?.etag !== options.onlyIf.etagMatches) return null; const stored = { body, etag: String(++this.serial) }; this.values.set(key, stored); return stored; }
+}
+const snapshot = () => { const value = { schemaVersion: 1, createdAt: '2026-09-30T08:00:00.000Z', sourceCommit: 'a'.repeat(40), entries: [], pricingFingerprint: 'b'.repeat(64), baseManifestHash: 'c'.repeat(64) }; return { ...value, id: snapshotId(value) }; };
+test('repeated archive keeps initial timestamp and cannot overwrite an immutable object', async () => { const bucket = new Bucket(); const original = snapshot(); assert.equal((await createArchive(bucket, original)).created, true); const retry = await createArchive(bucket, { ...original, createdAt: '2026-10-01T00:00:00.000Z' }); assert.equal(retry.created, false); assert.equal(retry.snapshot.createdAt, original.createdAt); });
+test('archive retry repairs status after an interrupted write', async () => { const bucket = new Bucket(); bucket.failStatus = true; const value = snapshot(); await assert.rejects(createArchive(bucket, value), /interruption/); await createArchive(bucket, value); const state = await (await bucket.get(`flexweb/release-status/${value.id}.json`)).json(); assert.equal(state.state, 'draft'); });
+test('status protects concurrent mutations and repeat callbacks', async () => { const bucket = new Bucket(); const value = snapshot(); await createArchive(bucket, value); const result = await updateArchiveStatus(bucket, value.id, { expectedState: 'draft', state: 'checking' }); assert.equal(result.state, 'checking'); await assert.rejects(updateArchiveStatus(bucket, value.id, { expectedState: 'draft', state: 'review_failed' }), /STATE_CONFLICT/); assert.equal((await updateArchiveStatus(bucket, value.id, { expectedState: 'draft', state: 'checking' })).updatedAt, result.updatedAt); });
+test('body limit applies even without Content-Length', async () => { await assert.rejects(readLimited(new Request('https://cms.example.test', { method: 'POST', body: 'abcdef' }), 3), /BODY_TOO_LARGE/); assert.equal(await readLimited(new Request('https://cms.example.test', { method: 'POST', body: 'abc' }), 3), 'abc'); });

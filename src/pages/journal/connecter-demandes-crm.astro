@@ -7,7 +7,8 @@ import AutomationGuideLayout from "../../layout/AutomationGuideLayout.astro";
   description="Du formulaire au suivi commercial : les informations à recueillir, les étapes à connecter et les contrôles à prévoir pour retrouver chaque demande dans votre CRM."
   slug="connecter-demandes-crm"
   answer="Le parcours relie le formulaire à une fiche de demande dans le CRM, puis à une personne et une prochaine action. Pour qu’il soit utile, prévoyez les doublons, les informations manquantes et les échecs de connexion. Une notification interne et l’envoi d’un message au client sont deux actions différentes."
-  readingTime="5 min"
+  readingTime="7 min"
+  updatedOn="2026-09-30"
 >
   <p>Un site peut recueillir des demandes sans que le suivi commercial soit bien organisé. Si les coordonnées restent dans une boîte mail, l’équipe doit ensuite les recopier, se répartir les dossiers et décider quoi faire. Relier le formulaire au CRM permet de structurer ces étapes, sous réserve des possibilités de connexion des outils.</p>
 
@@ -36,4 +37,17 @@ import AutomationGuideLayout from "../../layout/AutomationGuideLayout.astro";
   <h2>Ce qu’il faut préparer pour le devis</h2>
   <p>Indiquez l’adresse du site, le nom du CRM, les champs du formulaire, les personnes concernées et un exemple fictif de traitement. Précisez si vous voulez seulement centraliser les demandes ou aussi organiser les tâches, les brouillons et les messages. Les connexions disponibles et les frais éventuels sont à vérifier avant de chiffrer.</p>
   <p>FLEX-WEB propose la <a href="/creation-site-internet/">création de sites internet</a> et des <a href="/automatisation-ia/">projets d’automatisation sur devis</a>. Si vous avez besoin d’un espace de travail spécifique au-delà du CRM, le <a href="/creation-application-mobile/">développement d’une application sur mesure</a> peut faire l’objet d’un cadrage distinct.</p>
+  <h2>Une relance de devis utile commence par un état fiable</h2>
+  <p>Le suivi d’un devis peut être simple : « à préparer », « transmis », « réponse reçue », « accepté » ou « clôturé ». Une relance se prépare seulement si le devis a réellement été transmis, si la date prévue est atteinte et si aucune réponse n’est arrivée entre-temps. Une réponse doit suspendre la séquence pour laisser la place à un échange.</p>
+  <div class="table-scroll"><table><caption>Exemple de règles à adapter à votre équipe, sans calendrier d’envoi imposé</caption><thead><tr><th scope="col">Situation observée</th><th scope="col">Prochaine action</th><th scope="col">Ce qui doit rester visible</th></tr></thead><tbody>
+    <tr><th scope="row">Devis transmis, sans réponse</th><td>Préparer un rappel à la date convenue.</td><td>Le devis concerné et le dernier échange.</td></tr>
+    <tr><th scope="row">Le prospect répond</th><td>Suspendre la relance et attribuer la réponse.</td><td>Le contenu du message et le responsable.</td></tr>
+    <tr><th scope="row">L’envoi échoue</th><td>Vérifier l’adresse ou la connexion.</td><td>Le statut d’erreur ; le devis n’est pas marqué comme reçu.</td></tr>
+    <tr><th scope="row">Le prospect refuse les contacts</th><td>Bloquer les nouveaux envois de la séquence.</td><td>L’opposition, conservée lors des prochains imports.</td></tr>
+  </tbody></table></div>
+  <p>Avant de mettre ce parcours en service, testez une réponse reçue juste avant l’envoi prévu et un double clic sur la validation. Un rappel déjà transmis ne doit pas repartir. Le tableau de bord doit permettre de retrouver les messages en attente, les erreurs et les dossiers qui exigent une décision.</p>
+
+  <h2>Quel premier lot demander à FLEX-WEB ?</h2>
+  <p>Pour une entreprise de services en <a href="/automatisation-ia-savoie/">Savoie</a> ou en <a href="/automatisation-ia-haute-savoie/">Haute-Savoie</a>, le premier lot peut réunir le formulaire, une fiche de demande, un responsable et une tâche de rappel. Le devis confirme ensuite les connexions possibles et les automatisations retenues. Le forfait CRM et automatisation est présenté dans les <a href="/pricing/">offres TTC</a>.</p>
+  <p><a href="/demarrer/?service=automation&offre=crm-automation">Demander mon devis CRM et automatisation</a> en décrivant vos outils actuels, un exemple de demande et l’étape qui vous fait perdre du temps. N’envoyez pas de mot de passe ni de dossier client contenant des données personnelles dans ce premier message.</p>
 </AutomationGuideLayout>

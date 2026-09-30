@@ -1,0 +1,595 @@
+{
+  "version": "1",
+  "defaultLocale": "fr",
+  "meta": {
+    "name": "Flex-Web — contenus",
+    "description": "Contenus publics du site Flex-Web. Les demandes et devis restent dans le CRM.",
+    "author": "Flex-Web"
+  },
+  "settings": {
+    "title": "Flex-Web — contenus",
+    "timezone": "Europe/Paris",
+    "postsPerPage": 25
+  },
+  "collections": [
+    {
+      "slug": "pages",
+      "label": "Pages du site",
+      "routable": false,
+      "sortOrder": 0,
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "search",
+        "seo"
+      ],
+      "commentsEnabled": false,
+      "editLocking": true,
+      "titleField": "title",
+      "admin": {
+        "listColumns": [
+          "path",
+          "source_id"
+        ]
+      },
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Titre",
+          "type": "string",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "source_id",
+          "label": "Identifiant source stable — ne pas modifier",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "indexed": true
+        },
+        {
+          "slug": "path",
+          "label": "URL publique stable — ne pas modifier",
+          "type": "string",
+          "indexed": true
+        },
+        {
+          "slug": "seo_title",
+          "label": "Titre SEO",
+          "type": "string"
+        },
+        {
+          "slug": "seo_description",
+          "label": "Description SEO",
+          "type": "text"
+        },
+        {
+          "slug": "content",
+          "label": "Contenu",
+          "type": "portableText"
+        },
+        {
+          "slug": "data",
+          "label": "Données structurées — enrichissements locaux dans localOverrides",
+          "type": "json"
+        },
+        {
+          "slug": "baseline_hash",
+          "label": "Empreinte du contenu importé — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "source_payload_hash",
+          "label": "Empreinte de la source — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "base_manifest_hash",
+          "label": "Empreinte du lot initial — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "source_updated_at",
+          "label": "Date de mise à jour source",
+          "type": "datetime"
+        }
+      ]
+    },
+    {
+      "slug": "pages_commerciales",
+      "label": "Pages commerciales",
+      "routable": false,
+      "sortOrder": 1,
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "search",
+        "seo"
+      ],
+      "commentsEnabled": false,
+      "editLocking": true,
+      "titleField": "title",
+      "admin": {
+        "listColumns": [
+          "path",
+          "source_id"
+        ]
+      },
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Titre",
+          "type": "string",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "source_id",
+          "label": "Identifiant source stable — ne pas modifier",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "indexed": true
+        },
+        {
+          "slug": "path",
+          "label": "URL publique stable — ne pas modifier",
+          "type": "string",
+          "indexed": true
+        },
+        {
+          "slug": "seo_title",
+          "label": "Titre SEO",
+          "type": "string"
+        },
+        {
+          "slug": "seo_description",
+          "label": "Description SEO",
+          "type": "text"
+        },
+        {
+          "slug": "content",
+          "label": "Contenu",
+          "type": "portableText"
+        },
+        {
+          "slug": "data",
+          "label": "Données structurées — enrichissements locaux dans localOverrides",
+          "type": "json"
+        },
+        {
+          "slug": "baseline_hash",
+          "label": "Empreinte du contenu importé — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "source_payload_hash",
+          "label": "Empreinte de la source — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "base_manifest_hash",
+          "label": "Empreinte du lot initial — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "source_updated_at",
+          "label": "Date de mise à jour source",
+          "type": "datetime"
+        },
+        {
+          "slug": "service",
+          "label": "Prestation",
+          "type": "select",
+          "validation": {
+            "options": [
+              "site",
+              "automation",
+              "application"
+            ]
+          },
+          "indexed": true
+        },
+        {
+          "slug": "department_code",
+          "label": "Département",
+          "type": "string",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "slug": "realisations",
+      "label": "Réalisations",
+      "routable": false,
+      "sortOrder": 2,
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "search",
+        "seo"
+      ],
+      "commentsEnabled": false,
+      "editLocking": true,
+      "titleField": "title",
+      "admin": {
+        "listColumns": [
+          "path",
+          "source_id"
+        ]
+      },
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Titre",
+          "type": "string",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "source_id",
+          "label": "Identifiant source stable — ne pas modifier",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "indexed": true
+        },
+        {
+          "slug": "path",
+          "label": "URL publique stable — ne pas modifier",
+          "type": "string",
+          "indexed": true
+        },
+        {
+          "slug": "seo_title",
+          "label": "Titre SEO",
+          "type": "string"
+        },
+        {
+          "slug": "seo_description",
+          "label": "Description SEO",
+          "type": "text"
+        },
+        {
+          "slug": "content",
+          "label": "Contenu",
+          "type": "portableText"
+        },
+        {
+          "slug": "data",
+          "label": "Données structurées — enrichissements locaux dans localOverrides",
+          "type": "json"
+        },
+        {
+          "slug": "baseline_hash",
+          "label": "Empreinte du contenu importé — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "source_payload_hash",
+          "label": "Empreinte de la source — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "base_manifest_hash",
+          "label": "Empreinte du lot initial — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "source_updated_at",
+          "label": "Date de mise à jour source",
+          "type": "datetime"
+        }
+      ]
+    },
+    {
+      "slug": "guides",
+      "label": "Guides métier",
+      "routable": false,
+      "sortOrder": 3,
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "search",
+        "seo"
+      ],
+      "commentsEnabled": false,
+      "editLocking": true,
+      "titleField": "title",
+      "admin": {
+        "listColumns": [
+          "path",
+          "source_id"
+        ]
+      },
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Titre",
+          "type": "string",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "source_id",
+          "label": "Identifiant source stable — ne pas modifier",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "indexed": true
+        },
+        {
+          "slug": "path",
+          "label": "URL publique stable — ne pas modifier",
+          "type": "string",
+          "indexed": true
+        },
+        {
+          "slug": "seo_title",
+          "label": "Titre SEO",
+          "type": "string"
+        },
+        {
+          "slug": "seo_description",
+          "label": "Description SEO",
+          "type": "text"
+        },
+        {
+          "slug": "content",
+          "label": "Contenu",
+          "type": "portableText"
+        },
+        {
+          "slug": "data",
+          "label": "Données structurées — enrichissements locaux dans localOverrides",
+          "type": "json"
+        },
+        {
+          "slug": "baseline_hash",
+          "label": "Empreinte du contenu importé — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "source_payload_hash",
+          "label": "Empreinte de la source — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "base_manifest_hash",
+          "label": "Empreinte du lot initial — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "source_updated_at",
+          "label": "Date de mise à jour source",
+          "type": "datetime"
+        }
+      ]
+    },
+    {
+      "slug": "communes",
+      "label": "Communes",
+      "routable": false,
+      "sortOrder": 4,
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "search",
+        "seo"
+      ],
+      "commentsEnabled": false,
+      "editLocking": true,
+      "titleField": "title",
+      "admin": {
+        "listColumns": [
+          "path",
+          "source_id"
+        ]
+      },
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Titre",
+          "type": "string",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "source_id",
+          "label": "Identifiant source stable — ne pas modifier",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "indexed": true
+        },
+        {
+          "slug": "path",
+          "label": "URL publique stable — ne pas modifier",
+          "type": "string",
+          "indexed": true
+        },
+        {
+          "slug": "seo_title",
+          "label": "Titre SEO",
+          "type": "string"
+        },
+        {
+          "slug": "seo_description",
+          "label": "Description SEO",
+          "type": "text"
+        },
+        {
+          "slug": "content",
+          "label": "Contenu",
+          "type": "portableText"
+        },
+        {
+          "slug": "data",
+          "label": "Données structurées — enrichissements locaux dans localOverrides",
+          "type": "json"
+        },
+        {
+          "slug": "baseline_hash",
+          "label": "Empreinte du contenu importé — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "source_payload_hash",
+          "label": "Empreinte de la source — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "base_manifest_hash",
+          "label": "Empreinte du lot initial — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "source_updated_at",
+          "label": "Date de mise à jour source",
+          "type": "datetime"
+        },
+        {
+          "slug": "commune_code",
+          "label": "Code INSEE",
+          "type": "string",
+          "indexed": true
+        },
+        {
+          "slug": "department_code",
+          "label": "Département",
+          "type": "string",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "slug": "fiches_territoriales",
+      "label": "Fiches territoriales",
+      "routable": false,
+      "sortOrder": 5,
+      "supports": [
+        "drafts",
+        "revisions",
+        "preview",
+        "search",
+        "seo"
+      ],
+      "commentsEnabled": false,
+      "editLocking": true,
+      "titleField": "title",
+      "admin": {
+        "listColumns": [
+          "department_code",
+          "axis",
+          "source_id"
+        ]
+      },
+      "fields": [
+        {
+          "slug": "title",
+          "label": "Titre",
+          "type": "string",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "source_id",
+          "label": "Identifiant source stable — ne pas modifier",
+          "type": "string",
+          "required": true,
+          "unique": true,
+          "indexed": true
+        },
+        {
+          "slug": "path",
+          "label": "URL publique stable — ne pas modifier",
+          "type": "string",
+          "indexed": true
+        },
+        {
+          "slug": "seo_title",
+          "label": "Titre SEO",
+          "type": "string"
+        },
+        {
+          "slug": "seo_description",
+          "label": "Description SEO",
+          "type": "text"
+        },
+        {
+          "slug": "content",
+          "label": "Contenu",
+          "type": "portableText"
+        },
+        {
+          "slug": "data",
+          "label": "Données structurées — enrichissements locaux dans localOverrides",
+          "type": "json"
+        },
+        {
+          "slug": "baseline_hash",
+          "label": "Empreinte du contenu importé — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "source_payload_hash",
+          "label": "Empreinte de la source — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "base_manifest_hash",
+          "label": "Empreinte du lot initial — ne pas modifier",
+          "type": "string"
+        },
+        {
+          "slug": "source_updated_at",
+          "label": "Date de mise à jour source",
+          "type": "datetime"
+        },
+        {
+          "slug": "commune_code",
+          "label": "Code INSEE",
+          "type": "string",
+          "indexed": true
+        },
+        {
+          "slug": "department_code",
+          "label": "Département",
+          "type": "string",
+          "indexed": true
+        },
+        {
+          "slug": "axis",
+          "label": "Prestation",
+          "type": "select",
+          "validation": {
+            "options": [
+              "sites",
+              "automatisation"
+            ]
+          },
+          "indexed": true
+        },
+        {
+          "slug": "editorial_status",
+          "label": "État de relecture",
+          "type": "select",
+          "validation": {
+            "options": [
+              "prepared-not-editorially-approved",
+              "reviewed"
+            ]
+          },
+          "defaultValue": "prepared-not-editorially-approved"
+        }
+      ]
+    }
+  ],
+  "content": {}
+}

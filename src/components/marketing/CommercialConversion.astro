@@ -1,0 +1,30 @@
+---
+import { commercialConversion, localCommercialNeeds, type CommercialArea, type CommercialService } from '../../data/commercialConversion';
+import { websiteOffers, automationOffers, pricingOptions } from '../../data/pricing';
+interface Props { service: CommercialService; area: CommercialArea }
+const { service, area } = Astro.props;
+const content = commercialConversion[service];
+const offers = service === 'site' ? websiteOffers : service === 'automation' ? automationOffers : [];
+const euros = (cents: number) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(cents / 100);
+---
+<section id="votre-projet" class="commercial-conversion" aria-labelledby="commercial-heading">
+  <p class="eyebrow">Votre projet en {area}</p>
+  <h2 id="commercial-heading">{content.heading}</h2>
+  <p class="lead">{content.promise}</p>
+  <p>{localCommercialNeeds[area][service]}</p>
+  <div class="project-grid">
+    <div><h3>Ce que nous cadrons ensemble</h3><ul>{content.deliverables.map(item => <li>{item}</li>)}</ul></div>
+    <div><h3>Pour préparer votre devis</h3><ul>{content.prepare.map(item => <li>{item}</li>)}</ul><p class="note">Vous n’avez pas encore toutes les réponses ? Décrivez simplement votre besoin dans le formulaire.</p></div>
+  </div>
+  <div class="offer-grid">
+    {offers.map(offer => <article class="offer"><h3>{offer.name}</h3><p class="price">{euros(offer.setupCents)} <span>TTC</span></p><p class="payment">Paiement unique après validation du devis</p><p>{offer.description}</p><a class="primary" href={offer.href}>Demander mon devis <span class="visually-hidden"> — {offer.name}</span> →</a></article>)}
+    {service === 'application' && <article class="offer"><h3>Application web ou mobile</h3><p class="price">Sur devis</p><p>Le chiffrage distingue le premier lot, les intégrations, la reprise de données et le fonctionnement récurrent. Aucun forfait site n’est appliqué à votre application.</p><a class="primary" href="/demarrer/?service=application">Demander mon devis →</a></article>}
+    {service === 'automation' && <article class="offer"><h3>Automatisation IA sur mesure</h3><p class="price">Sur devis</p><p>Pour un traitement de documents, un assistant ou des connexions spécifiques, décrivez le parcours à étudier. Les accès et les possibilités des outils sont vérifiés avant engagement.</p><a class="secondary" href="/demarrer/?service=automation&offre=sur-mesure">Décrire mon besoin sur mesure →</a></article>}
+  </div>
+  {service !== 'application' && <details class="options"><summary>Et après la mise en ligne ? Deux options facultatives</summary>{pricingOptions.map(option => <p><strong>{euros(option.monthlyCents)} TTC/mois — {option.name}.</strong> {option.description}</p>)}<p>Vous pouvez choisir l’une, les deux ou aucune. Hébergement, domaine et éventuelles licences tierces sont précisés au devis. L’indexation, le classement et les citations IA restent décidés par les moteurs.</p></details>}
+  <p class="proof"><a href={`/realisations/${content.proofSlug}/`}>{content.proofLabel} →</a>{service === 'automation' && <span> Le cas présente les fonctions publiques du site ; ses connexions internes ne sont pas revendiquées.</span>}</p>
+  <ol class="steps"><li><strong>1. Votre demande</strong><span>Vous décrivez le besoin et les outils.</span></li><li><strong>2. Votre devis</strong><span>Nous précisons les livrables, le calendrier et les coûts.</span></li><li><strong>3. Votre validation</strong><span>Après accord et paiement, le projet commence selon les étapes convenues.</span></li></ol>
+</section>
+<style>
+.commercial-conversion{margin-block:44px;padding:clamp(22px,4vw,40px);border:1px solid #dce5ef;border-radius:26px;background:#f5f8fc;color:#172133;scroll-margin-top:100px;overflow-wrap:anywhere}.eyebrow{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#075bbb;font-weight:600}.commercial-conversion h2{font-size:clamp(1.65rem,3vw,2.3rem);font-weight:600;line-height:1.15;letter-spacing:-.035em;margin:14px 0 20px}.commercial-conversion h3{font-size:1.1rem;font-weight:600;line-height:1.4;margin-bottom:14px}.commercial-conversion p,.commercial-conversion li{font-size:15px;line-height:1.75;color:#425466}.commercial-conversion .lead{font-size:18px;margin-bottom:16px}.project-grid,.offer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px;margin-top:32px}.project-grid ul{list-style:disc;padding-left:20px}.project-grid li+li{margin-top:10px}.note{font-size:13px!important;margin-top:15px}.offer{display:flex;flex-direction:column;padding:24px;border:1px solid #dce5ef;background:#fff;border-radius:18px}.offer .price{font-size:32px;font-weight:600;line-height:1.2;color:#172133;margin-bottom:8px}.price span{font-size:13px;font-weight:500}.offer .payment{font-size:12px;margin-bottom:16px}.offer>a{margin-top:22px;min-height:48px;display:flex;align-items:center;justify-content:center;border-radius:12px;padding:12px 18px;font-size:14px;font-weight:600;text-align:center;line-height:1.5}.primary{background:#006cda;color:#fff}.secondary{background:#edf5ff;color:#075bbb}.options{margin-top:26px;border-block:1px solid #dce5ef;padding-block:20px}.options summary{font-weight:600;cursor:pointer;min-height:28px}.options p{margin-top:15px;font-size:13px}.proof{margin-top:24px}.proof a{color:#075bbb;text-decoration:underline;text-underline-offset:4px}.proof span{display:block;font-size:12px;margin-top:8px}.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:30px;padding-top:24px;border-top:1px solid #dce5ef;list-style:none}.steps strong,.steps span{display:block}.steps strong{font-size:14px;color:#172133}.steps span{font-size:13px;margin-top:7px}.commercial-conversion a:focus-visible,.options summary:focus-visible{outline:3px solid #1260d6;outline-offset:5px}.visually-hidden{position:absolute;clip-path:inset(50%);height:1px;width:1px;overflow:hidden;white-space:nowrap}@media(max-width:700px){.project-grid,.offer-grid,.steps{grid-template-columns:1fr}.project-grid,.offer-grid{gap:20px}.commercial-conversion{margin-block:30px}.steps{gap:18px}}
+</style>

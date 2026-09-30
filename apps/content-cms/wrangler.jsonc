@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "flexweb-content-cms-local",
+  "main": "./src/worker.ts",
+  "compatibility_date": "2026-09-29",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "d1_databases": [{ "binding": "DB", "database_name": "flexweb-content-cms-local" }],
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "flexweb-content-cms-media-local" }],
+  "env": {
+    "preview": {
+      "name": "flexweb-content-cms-preview",
+      "d1_databases": [{ "binding": "DB", "database_name": "flexweb-content-cms-preview" }],
+      "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "flexweb-content-cms-media-preview" }],
+      "vars": { "FLEXWEB_ENVIRONMENT": "preview" }
+    },
+    "production": {
+      "name": "flexweb-content-cms",
+      "d1_databases": [{ "binding": "DB", "database_name": "flexweb-content-cms" }],
+      "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "flexweb-content-cms-media" }],
+      "vars": { "FLEXWEB_ENVIRONMENT": "production" }
+    }
+  }
+}

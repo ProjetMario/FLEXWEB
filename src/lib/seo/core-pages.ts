@@ -7,12 +7,22 @@ import { realizations } from "../../data/realizations";
 const site = "https://flex-web.fr";
 const updatedPages: Record<string, string> = {
   "/creation-site-internet-montmelian/": "2026-09-23",
-  "/": "2026-09-24",
+  "/": "2026-09-30",
   "/creation-site-internet/": "2026-09-24",
   "/pricing/": "2026-09-24",
   "/automatisation-ia/": "2026-09-24",
-  "/automatisation-ia-savoie/": "2026-09-24",
-  "/automatisation-ia-haute-savoie/": "2026-09-24",
+  "/automatisation-ia-savoie/": "2026-09-30",
+  "/automatisation-ia-haute-savoie/": "2026-09-30",
+  "/creation-site-internet-savoie/": "2026-09-30",
+  "/creation-site-internet-haute-savoie/": "2026-09-30",
+  "/creation-application-mobile-savoie/": "2026-09-30",
+  "/creation-application-mobile-haute-savoie/": "2026-09-30",
+  "/realisations/foot-nation/": "2026-09-30",
+  "/realisations/2savoie-immo/": "2026-09-30",
+  "/realisations/serrurier73/": "2026-09-30",
+  "/journal/taches-automatiser-pme/": "2026-09-30",
+  "/journal/connecter-demandes-crm/": "2026-09-30",
+  "/journal/automatisation-ou-application-sur-mesure/": "2026-09-30",
   "/creation-application-mobile/": "2026-09-24",
   "/cgv/": "2026-09-24",
   "/journal/combien-coute-site-internet-savoie/": "2026-09-24",
@@ -47,7 +57,10 @@ export const corePages = async () => {
   ]);
 
   // All website location FAQs now describe the revised public catalogue.
-  for (const {data} of locations) updatedPages[`/${data.slug}/`] = "2026-09-24";
+  for (const {data} of locations) {
+    const route = `/${data.slug}/`;
+    if (!updatedPages[route] || updatedPages[route] < "2026-09-24") updatedPages[route] = "2026-09-24";
+  }
 
   const locationPages = locations.map(({ data }) => ({
     url: `/${data.slug}/`,

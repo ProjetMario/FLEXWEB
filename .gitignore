@@ -5,6 +5,12 @@ dist/
 
 # dependencies
 node_modules/
+node_modules
+
+# EmDash import checkpoints, private snapshots and local publication reports
+.cms/
+apps/content-cms/.wrangler/
+apps/content-cms/.dev.vars
 
 # logs
 npm-debug.log*

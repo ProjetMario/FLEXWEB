@@ -46,7 +46,7 @@ export const automationPages: Record<string, AutomationPage> = {
     description: "Automatisation des demandes, du suivi client et des tâches administratives en Savoie : Chambéry, Aix-les-Bains, Albertville. Projet IA sur devis avec FLEX-WEB.",
     label: "Automatisation IA · Savoie (73)",
     heading: "Automatisation IA en Savoie : simplifiez votre quotidien.",
-    intro: "Une demande à rappeler, un devis à préparer, une information à recopier : FLEX-WEB vous aide à définir un parcours d’automatisation adapté à votre entreprise en Savoie. Un site, un CRM et des règles de suivi peuvent travailler ensemble.",
+    intro: "Moins de ressaisie, des demandes à traiter visibles et des devis plus faciles à suivre : FLEX-WEB organise un premier parcours adapté à votre entreprise en Savoie. La mise en place CRM et automatisation est proposée à 990 € TTC ; les besoins IA spécifiques sont étudiés sur devis.",
     area: "Savoie",
     contextTitle: "Des parcours adaptés aux entreprises de Savoie",
     context: [
@@ -72,7 +72,7 @@ export const automationPages: Record<string, AutomationPage> = {
     description: "Structurez vos demandes et automatisez le suivi avec un CRM en Haute-Savoie : Annecy, Annemasse, Thonon-les-Bains, Cluses. Automatisation IA sur devis.",
     label: "Automatisation IA · Haute-Savoie (74)",
     heading: "Automatisation IA en Haute-Savoie : un suivi client plus simple.",
-    intro: "FLEX-WEB accompagne les projets d’automatisation de tâches en Haute-Savoie : centralisation des demandes, préparation de réponses et circulation des informations entre vos outils. L’objectif est de réduire les recopies et de rendre les prochaines actions visibles.",
+    intro: "Votre accueil, votre équipe et vos clients doivent retrouver la bonne information au bon moment. FLEX-WEB structure le suivi des demandes en Haute-Savoie : CRM et tâches répétitives à 990 € TTC selon le périmètre convenu, ou automatisation IA spécifique sur devis.",
     area: "Haute-Savoie",
     contextTitle: "Partir du terrain, du formulaire jusqu’au suivi d’équipe",
     context: [

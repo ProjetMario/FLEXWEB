@@ -1,0 +1,43 @@
+{
+  "name": "@flexweb/content-cms",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
+  },
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "build": "astro build",
+    "check": "astro check",
+    "test": "node --test tests/*.test.mjs",
+    "preview": "wrangler dev",
+    "deploy:preview": "CLOUDFLARE_ENV=preview astro build && wrangler deploy --env preview",
+    "deploy:production": "CLOUDFLARE_ENV=production astro build && wrangler deploy --env production"
+  },
+  "emdash": {
+    "seed": "seed/seed.json"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "14.3.3",
+    "@astrojs/react": "7.0.0",
+    "@emdash-cms/cloudflare": "1.0.1",
+    "astro": "7.3.5",
+    "emdash": "1.0.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.9",
+    "@cloudflare/workers-types": "5.20260930.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "typescript": "5.9.3",
+    "wrangler": "4.144.0"
+  },
+  "exports": {
+    "./plugin": "./src/plugin.mjs",
+    "./admin": "./src/admin.tsx",
+    "./email": "./src/email-plugin.mjs"
+  }
+}

@@ -5,8 +5,8 @@ type: "department"
 department: "Savoie"
 region: "Auvergne-Rhône-Alpes"
 country: "France"
-introduction: "FLEX-WEB accompagne les entreprises, artisans et indépendants de la Savoie dans la création de sites internet professionnels, rapides, accessibles et structurés pour Google et compréhensibles pour leurs visiteurs."
-localContext: "La Savoie est un département au tissu économique diversifié : tourisme, artisanat, commerce de proximité, PME industrielles et professions libérales. Une présence en ligne pertinente permet à chacun de ces acteurs de capter les recherches locales et de convertir les visiteurs en clients."
+introduction: "Présentez vos prestations, montrez votre travail et facilitez les demandes de devis. FLEX-WEB crée votre site en Savoie, avec des offres à 299 € TTC ou 590 € TTC et un périmètre validé avant paiement."
+localContext: "Basé à Voglans, FLEX-WEB accompagne les artisans, indépendants et PME de Savoie. Le site met en avant votre activité et votre zone réelle d’intervention, avec une lecture claire sur téléphone et un formulaire adapté à vos demandes."
 targetIndustries:
   - "Artisans et entreprises du bâtiment"
   - "Commerçants de proximité"
@@ -41,7 +41,7 @@ faq:
   - question: "FLEX-WEB intervient-il à Chambéry et Aix-les-Bains ?"
     answer: "Oui, nous travaillons dans toute la Savoie, notamment à Chambéry, Aix-les-Bains, Albertville, Saint-Jean-de-Maurienne et dans les communes environnantes."
   - question: "Le site est-il optimisé pour Google ?"
-    answer: "Chaque site est construit avec une structure SEO solide, des balises optimisées, des temps de chargement rapides et des données structurées pour améliorer l'indexation."
+    answer: "Le site vitrine comprend les réglages SEO de base. L’offre à 590 € TTC ajoute le travail sur la structure, les contenus et les données structurées pour Google, Bing et la recherche par IA, avec le périmètre prévu au devis. Ces optimisations facilitent la compréhension du site ; les moteurs décident de l’indexation et du classement."
   - question: "Puis-je modifier moi-même mon site ?"
     answer: "Oui, nous proposons des sites avec une interface d'administration simple pour modifier le contenu, ajouter des pages et gérer les images en autonomie."
   - question: "FLEX-WEB développe-t-il aussi des applications mobiles en Savoie ?"
@@ -52,6 +52,10 @@ isDraft: false
 ---
 
 ## Un site pour expliquer vos prestations et qualifier les demandes
+
+Votre futur client cherche d’abord à savoir si vous pouvez l’aider. Le premier écran présente votre métier, les prestations prioritaires et l’action à effectuer. Les réalisations puis les informations pratiques l’aident à préciser son besoin avant de vous écrire.
+
+Le site de [Serrurier 73](/realisations/serrurier73/) donne un exemple de ce parcours : découvrir un type d’ouvrage, consulter les réalisations, puis appeler ou demander un devis. Nous partons de vos propres contenus pour construire un parcours adapté ; aucun résultat commercial n’est déduit de cet exemple.
 
 Un artisan qui travaille dans plusieurs communes n'a pas les mêmes informations à recueillir qu'une entreprise de services ou un hébergeur. Le site doit présenter votre activité, les prestations proposées, votre zone réelle d'intervention et la manière de vous contacter. Des photos et des exemples dont vous possédez les droits peuvent compléter cette présentation.
 
