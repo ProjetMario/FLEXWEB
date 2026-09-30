@@ -62,6 +62,10 @@ async function localTests() {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
     requireRelease(ready, 'LOCAL_PREVIEW_TIMEOUT');
+    // The SEO suite includes Playwright pages: it must run while this preview
+    // is listening, before the finally block tears the server down.
+    const seoTests = (await readdir(path.join(root, 'tests/seo'))).filter(file => /\.test\.(mjs|ts)$/.test(file)).map(file => `tests/seo/${file}`);
+    await command(node, ['--import', 'tsx', '--test', ...seoTests]);
     await command(node, ['--test', 'tests/quote-flow.test.mjs'], { FLEXWEB_TEST_URL: 'http://127.0.0.1:4321' });
     await command(node, ['scripts/cms/release-smoke.mjs', 'http://127.0.0.1:4321']);
   } finally { server.kill('SIGTERM'); }
@@ -101,8 +105,6 @@ if (env.ENABLE_EMDASH_PUBLICATION !== 'true') {
         await command(node, ['scripts/check-seo.mjs']);
         await command(node, ['scripts/seo/quality.mjs', '--enforce-release']);
         await command(node, ['scripts/seo/audit-territorial-publication.mjs']);
-        const seoTests = (await readdir('tests/seo')).filter(file => /\.test\.(mjs|ts)$/.test(file)).map(file => `tests/seo/${file}`);
-        await command(node, ['--import', 'tsx', '--test', ...seoTests]);
         await localTests();
       },
       createPreview: async ({ artifactDir, marker }) => {
