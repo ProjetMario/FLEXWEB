@@ -214,7 +214,7 @@ async function assertUnchanged(filename, scan) {
 
 export async function runImport({ input = '.cms/import.ndjson', origin, token, execute = false, publishBaseline = false, batchSize = 100, concurrency = 2, checkpoint = '.cms/import-checkpoint.json', fetchImpl = fetch, sleep = pause, maxAttempts = 4, shouldPause } = {}) {
   must(Number.isInteger(batchSize) && batchSize >= 1 && batchSize <= 100, 'INVALID_BATCH_SIZE');
-  must(Number.isInteger(concurrency) && concurrency >= 1 && concurrency <= 8, 'INVALID_CONCURRENCY');
+  must(Number.isInteger(concurrency) && concurrency >= 1 && concurrency <= 32, 'INVALID_CONCURRENCY');
   must(shouldPause === undefined || typeof shouldPause === 'function', 'INVALID_PAUSE_CALLBACK');
   must(!publishBaseline || execute, 'PUBLISH_REQUIRES_EXECUTE');
   input = path.resolve(input); checkpoint = path.resolve(checkpoint);

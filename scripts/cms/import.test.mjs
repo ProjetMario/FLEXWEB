@@ -321,13 +321,13 @@ test('concurrency is at most two, batch guard holds and repeated cursors stop', 
   const result = await runImport({ ...options, execute: true, fetchImpl: api.fetchImpl, batchSize: 3 });
   assert.equal(result.counts.created, 7); assert.ok(api.maxActive() <= 2);
   await assert.rejects(runImport({ ...options, batchSize: 101 }), { code: 'INVALID_BATCH_SIZE' });
-  for (const concurrency of [0, 9, 1.5, '4']) await assert.rejects(runImport({ ...options, concurrency }), { code: 'INVALID_CONCURRENCY' });
+  for (const concurrency of [0, 33, 1.5, '4', Number.NaN, Number.POSITIVE_INFINITY]) await assert.rejects(runImport({ ...options, concurrency }), { code: 'INVALID_CONCURRENCY' });
   await assert.rejects(runImport({ ...options, shouldPause: true }), { code: 'INVALID_PAUSE_CALLBACK' });
   const client = createApi({ origin, token, fetchImpl: async () => response({ items: [], nextCursor: 'loop' }) });
   await assert.rejects(client.list('pages'), { code: 'REPEATED_PAGE_CURSOR' });
 });
 
-for (const concurrency of [4, 8]) test(`explicit concurrency ${concurrency} permits exactly that many in-flight requests and preserves all checkpoints`, async t => {
+for (const concurrency of [4, 8, 16, 32]) test(`explicit concurrency ${concurrency} permits exactly that many in-flight requests and preserves all checkpoints`, async t => {
   const options = await fixture(t, Array.from({ length: concurrency * 2 + 1 }, (_, i) => record(`parallel-${i}`)));
   let entered = 0, release;
   const firstWave = new Promise(resolve => { release = resolve; });
@@ -348,6 +348,83 @@ for (const concurrency of [4, 8]) test(`explicit concurrency ${concurrency} perm
   const writes = api.calls.filter(call => call.method === 'POST').length;
   await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl, concurrency });
   assert.equal(api.calls.filter(call => call.method === 'POST').length, writes);
+});
+
+for (const concurrency of [8, 16, 32]) test(`a terminal failure with ${concurrency} active requests drains the first wave before unlocking and resumes exactly once`, { timeout: 30000 }, async t => {
+  const total = concurrency * 2 + 1;
+  const sources = Array.from({ length: total }, (_, i) => record(`drain-${i}`));
+  const options = await fixture(t, sources), lockPath = path.join(path.dirname(options.checkpoint), 'import.lock');
+  const deferred = () => { let resolve; const promise = new Promise(done => { resolve = done; }); return { promise, resolve }; };
+  const firstWaveEntered = deferred(), otherWorkersPublished = deferred();
+  const gates = Array.from({ length: concurrency }, deferred);
+  let failingRun = true, entered = 0, held = 0, publications = 0, settled = false;
+  const api = mockApi([], async ({ method, body, url }) => {
+    if (!failingRun || method !== 'POST') return;
+    if (body?.data) {
+      const position = sources.findIndex(source => source.sourceId === body.data.source_id);
+      assert.ok(position < concurrency, 'no second wave may start after the terminal failure');
+      entered++; held++;
+      if (entered === concurrency) firstWaveEntered.resolve();
+      try { await gates[position].promise; }
+      finally { held--; }
+      // A known terminal rejection: no remote record is created for this source.
+      if (position === 0) return response({}, 401);
+    } else if (url.pathname.endsWith('/publish') && ++publications === concurrency - 2) otherWorkersPublished.resolve();
+  });
+  const outcome = runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl, concurrency, batchSize: concurrency * 2 })
+    .then(value => { settled = true; return { value }; }, error => { settled = true; return { error }; });
+  try {
+    await firstWaveEntered.promise;
+    assert.equal(api.maxActive(), concurrency); assert.equal(held, concurrency);
+    gates[0].resolve();
+    // Flush the rejected request's microtasks before releasing any other worker.
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(held, concurrency - 1); assert.equal(settled, false);
+    assert.ok((await lstat(lockPath)).isFile());
+
+    for (let position = 1; position < concurrency - 1; position++) gates[position].resolve();
+    await otherWorkersPublished.promise;
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(held, 1); assert.equal(settled, false);
+    assert.ok((await lstat(lockPath)).isFile(), 'the final in-flight request still owns the import lock');
+    assert.equal(api.calls.filter(call => call.method === 'POST' && call.body?.data).length, concurrency);
+
+    gates[concurrency - 1].resolve();
+    const failed = await outcome;
+    assert.equal(failed.error?.code, 'CMS_HTTP_401'); assert.equal(held, 0);
+    await assert.rejects(lstat(lockPath), { code: 'ENOENT' });
+    assert.equal(api.records.size, concurrency - 1);
+    assert.equal(api.calls.filter(call => call.method === 'POST' && call.body?.data).length, concurrency);
+    const saved = JSON.parse(await readFile(options.checkpoint, 'utf8'));
+    assert.equal(saved.completedLine, 0);
+    assert.deepEqual(saved.counts, { created: 0, published: 0, preserved: 0, preservedEdited: 0, uncertain: 0, planned: 0 });
+    assert.deepEqual(Object.keys(saved.pending).sort(), sources.slice(0, concurrency).map(source => `pages:${source.sourceId}`).sort());
+    assert.equal(saved.pending['pages:drain-0'].stage, 'creating');
+    for (const source of sources.slice(1, concurrency)) {
+      assert.equal(saved.pending[`pages:${source.sourceId}`].stage, 'complete');
+      assert.deepEqual(saved.pending[`pages:${source.sourceId}`].counts, { created: 1, published: 1, preserved: 0, preservedEdited: 0, uncertain: 0, planned: 0 });
+    }
+
+    failingRun = false;
+    const resumed = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl, concurrency, batchSize: concurrency * 2 });
+    assert.deepEqual(resumed.counts, { created: total, published: total, preserved: 0, preservedEdited: 0, uncertain: 0, planned: 0 });
+    assert.equal(resumed.remaining, 0); assert.equal(resumed.needsReview, false);
+    assert.equal(api.records.size, total);
+    assert.equal(new Set([...api.records.values()].map(row => row.data.source_id)).size, total);
+    for (const [position, source] of sources.entries()) {
+      const creates = api.calls.filter(call => call.method === 'POST' && call.body?.data?.source_id === source.sourceId);
+      assert.equal(creates.length, position === 0 ? 2 : 1, source.sourceId);
+      const stored = [...api.records.values()].find(row => row.data.source_id === source.sourceId);
+      assert.equal(stored.status, 'published'); assert.equal(stored.version, 2);
+    }
+    assert.equal(api.calls.filter(call => call.method === 'POST' && call.url.pathname.endsWith('/publish')).length, total);
+    const final = JSON.parse(await readFile(options.checkpoint, 'utf8'));
+    assert.equal(final.completedLine, total); assert.deepEqual(final.pending, {}); assert.deepEqual(final.counts, resumed.counts);
+    await assert.rejects(lstat(lockPath), { code: 'ENOENT' });
+  } finally {
+    for (const gate of gates) gate.resolve();
+    await outcome;
+  }
 });
 
 test('a requested pause completes one batch, releases the lock and resumes without duplicate writes', async t => {
