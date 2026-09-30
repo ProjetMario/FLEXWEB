@@ -4,19 +4,30 @@ import { verifyAutomationProxy } from './automation-probe.mjs';
 
 const headers = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' };
 const body = JSON.stringify({ error: 'Méthode non acceptée.' });
+const previewOrigin = 'https://verified-candidate--flex-webb.netlify.app';
+const previewBody = JSON.stringify({ error: 'Les demandes sont désactivées dans cet aperçu. Utilisez flex-web.fr pour envoyer votre projet.' });
 const reply = (changes = {}) => new Response(changes.body ?? body, { status: changes.status ?? 405, headers: { ...headers, ...changes.headers } });
 
-test('production and immutable preview use only a credential-free GET with no payload', async () => {
-  for (const origin of ['https://flex-web.fr', 'https://verified-candidate--flex-webb.netlify.app']) {
+test('production 405 and immutable preview 503 use only a credential-free GET with no payload', async () => {
+  for (const origin of ['https://flex-web.fr', previewOrigin]) {
     const calls = [];
-    const result = await verifyAutomationProxy(origin, { fetchImpl: async (url, options) => { calls.push({ url, options }); return reply(); } });
-    assert.equal(result.status, 405); assert.equal(calls.length, 1);
+    const expected = origin === previewOrigin ? { status: 503, body: previewBody } : { status: 405, body };
+    const result = await verifyAutomationProxy(origin, { fetchImpl: async (url, options) => { calls.push({ url, options }); return reply(expected); } });
+    assert.equal(result.status, expected.status); assert.equal(calls.length, 1);
     assert.equal(calls[0].url, `${origin}/api/automation/intake`);
     assert.deepEqual(Object.keys(calls[0].options.headers), ['accept']);
     assert.equal(calls[0].options.method, 'GET'); assert.equal(calls[0].options.body, undefined);
     assert.equal(calls[0].options.redirect, 'error'); assert.equal(calls[0].options.credentials, 'omit');
     assert.equal(calls[0].options.cache, 'no-store');
   }
+});
+
+test('preview must return its precise refusal, not a generic service outage or production method response', async () => {
+  for (const value of [body, JSON.stringify({ error: 'Service unavailable' }), JSON.stringify({ error: 'Connexion interrompue.' })]) {
+    await assert.rejects(() => verifyAutomationProxy(previewOrigin, { fetchImpl: async () => reply({ status: 503, body: value }) }), { code: 'AUTOMATION_PROXY_RESPONSE_INVALID' });
+  }
+  await assert.rejects(() => verifyAutomationProxy(previewOrigin, { fetchImpl: async () => reply() }), { code: 'AUTOMATION_PROXY_STATUS_INVALID' });
+  await assert.rejects(() => verifyAutomationProxy(previewOrigin, { fetchImpl: async () => reply({ status: 503, body: previewBody, headers: { 'content-type': 'text/html' } }) }), { code: 'AUTOMATION_PROXY_CONTENT_TYPE_INVALID' });
 });
 
 for (const status of [200, 301, 404, 500, 503]) test(`HTTP ${status} cannot validate the quote function`, async () => {
