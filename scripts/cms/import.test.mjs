@@ -105,6 +105,34 @@ test('execute creates and publishes only new records; rerun does not duplicate',
   assert.ok(!(await readFile(options.checkpoint, 'utf8')).includes(token));
 });
 
+test('native datetime normalization does not falsely mark newly imported drafts as edited', async t => {
+  const sources = [
+    record('date-no-milliseconds', { sourceUpdatedAt: '2026-09-25T00:00:00Z' }),
+    record('date-offset', { sourceUpdatedAt: '2026-09-25T02:00:00+02:00' }),
+    record('date-canonical', { sourceUpdatedAt: '2026-09-25T00:00:00.000Z' }),
+  ];
+  const options = await fixture(t, sources);
+  const api = mockApi([], ({ method, body }) => {
+    if (method === 'POST' && body?.data) {
+      // EmDash 1.0.1 ContentDatetimeNormalizer -> normalizeDatetime stores
+      // explicit-offset datetime fields using Date.toISOString().
+      body.data.source_updated_at = new Date(body.data.source_updated_at).toISOString();
+    }
+  });
+  const result = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl });
+  assert.equal(result.counts.created, 3);
+  assert.equal(result.counts.published, 3);
+  assert.equal(result.counts.preservedEdited, 0);
+  assert.equal(result.needsReview, false);
+  for (const source of sources) {
+    const stored = [...api.records.values()].find(value => value.data.source_id === source.sourceId);
+    assert.equal(stored.data.source_updated_at, '2026-09-25T00:00:00.000Z');
+    assert.equal(stored.data.baseline_hash, source.baselineHash);
+    assert.equal(stored.data.source_payload_hash, source.sourcePayloadHash);
+    assert.equal(stored.status, 'published');
+  }
+});
+
 test('all local and remote collisions fail before any write', async t => {
   const original = record('same');
   const duplicates = await fixture(t, [original, original]);

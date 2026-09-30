@@ -55,7 +55,9 @@ export function mapRecord(record) {
     seo_title: record.seoTitle, seo_description: record.seoDescription,
     content: record.content, data: record.data, baseline_hash: record.baselineHash,
     source_payload_hash: record.sourcePayloadHash, base_manifest_hash: record.baseManifestHash,
-    source_updated_at: record.sourceUpdatedAt,
+    // Native datetime fields are stored as UTC ISO with milliseconds. Compare
+    // that canonical form on publication so normalization is not an editor change.
+    source_updated_at: new Date(record.sourceUpdatedAt).toISOString(),
   };
   // Optional list filters mirror source metadata; their absence never invents a review.
   const metadata = record.data;
