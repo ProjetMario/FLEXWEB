@@ -393,19 +393,19 @@ test('input hash changes, insecure checkpoints, non-admin and remote HTTP fail c
   assert.ok(userApi.calls.every(call => call.method === 'GET'));
 });
 
-test('concurrency is at most two, batch guard holds and repeated cursors stop', async t => {
+test('default concurrency is at most two, batch guard holds and repeated cursors stop', async t => {
   const options = await fixture(t, Array.from({ length: 7 }, (_, i) => record(`page-${i}`)));
   const api = mockApi([], async ({ method }) => { if (method === 'POST') await new Promise(resolve => setTimeout(resolve, 5)); });
   const result = await runImport({ ...options, execute: true, fetchImpl: api.fetchImpl, batchSize: 3 });
   assert.equal(result.counts.created, 7); assert.ok(api.maxActive() <= 2);
   await assert.rejects(runImport({ ...options, batchSize: 101 }), { code: 'INVALID_BATCH_SIZE' });
-  for (const concurrency of [0, 33, 1.5, '4', Number.NaN, Number.POSITIVE_INFINITY]) await assert.rejects(runImport({ ...options, concurrency }), { code: 'INVALID_CONCURRENCY' });
+  for (const concurrency of [0, 65, 1.5, '4', Number.NaN, Number.POSITIVE_INFINITY]) await assert.rejects(runImport({ ...options, concurrency }), { code: 'INVALID_CONCURRENCY' });
   await assert.rejects(runImport({ ...options, shouldPause: true }), { code: 'INVALID_PAUSE_CALLBACK' });
   const client = createApi({ origin, token, fetchImpl: async () => response({ items: [], nextCursor: 'loop' }) });
   await assert.rejects(client.list('pages'), { code: 'REPEATED_PAGE_CURSOR' });
 });
 
-for (const concurrency of [4, 8, 16, 32]) test(`explicit concurrency ${concurrency} permits exactly that many in-flight requests and preserves all checkpoints`, async t => {
+for (const concurrency of [4, 8, 16, 32, 64]) test(`explicit concurrency ${concurrency} permits exactly that many in-flight requests and preserves all checkpoints`, { timeout: 30000 }, async t => {
   const options = await fixture(t, Array.from({ length: concurrency * 2 + 1 }, (_, i) => record(`parallel-${i}`)));
   let entered = 0, release;
   const firstWave = new Promise(resolve => { release = resolve; });
@@ -428,8 +428,9 @@ for (const concurrency of [4, 8, 16, 32]) test(`explicit concurrency ${concurren
   assert.equal(api.calls.filter(call => call.method === 'POST').length, writes);
 });
 
-for (const concurrency of [8, 16, 32]) test(`a terminal failure with ${concurrency} active requests drains the first wave before unlocking and resumes exactly once`, { timeout: 30000 }, async t => {
+for (const concurrency of [8, 16, 32, 64]) test(`a terminal failure with ${concurrency} active requests drains the first wave before unlocking and resumes exactly once`, { timeout: 30000 }, async t => {
   const total = concurrency * 2 + 1;
+  const batchSize = Math.min(100, concurrency * 2);
   const sources = Array.from({ length: total }, (_, i) => record(`drain-${i}`));
   const options = await fixture(t, sources), lockPath = path.join(path.dirname(options.checkpoint), 'import.lock');
   const deferred = () => { let resolve; const promise = new Promise(done => { resolve = done; }); return { promise, resolve }; };
@@ -449,7 +450,7 @@ for (const concurrency of [8, 16, 32]) test(`a terminal failure with ${concurren
       if (position === 0) return response({}, 401);
     } else if (url.pathname.endsWith('/publish') && ++publications === concurrency - 2) otherWorkersPublished.resolve();
   });
-  const outcome = runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl, concurrency, batchSize: concurrency * 2 })
+  const outcome = runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl, concurrency, batchSize })
     .then(value => { settled = true; return { value }; }, error => { settled = true; return { error }; });
   try {
     await firstWaveEntered.promise;
@@ -484,7 +485,7 @@ for (const concurrency of [8, 16, 32]) test(`a terminal failure with ${concurren
     }
 
     failingRun = false;
-    const resumed = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl, concurrency, batchSize: concurrency * 2 });
+    const resumed = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl, concurrency, batchSize });
     assert.deepEqual(resumed.counts, { created: total, published: total, preserved: 0, preservedEdited: 0, uncertain: 0, planned: 0 });
     assert.equal(resumed.remaining, 0); assert.equal(resumed.needsReview, false);
     assert.equal(api.records.size, total);
@@ -517,6 +518,55 @@ test('a requested pause completes one batch, releases the lock and resumes witho
   const resumed = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl, concurrency: 8, batchSize: 2 });
   assert.equal(resumed.paused, undefined); assert.equal(resumed.remaining, 0); assert.equal(resumed.counts.published, 5);
   for (const sourceId of ['one', 'two', 'three', 'four', 'five']) assert.equal(api.calls.filter(call => call.method === 'POST' && call.body?.data?.source_id === sourceId).length, 1);
+});
+
+test('a pause requested with 64 active requests drains the bounded 100-record batch before releasing its lock', { timeout: 30000 }, async t => {
+  const sources = Array.from({ length: 129 }, (_, i) => record(`pause64-${i}`));
+  const options = await fixture(t, sources), lockPath = path.join(path.dirname(options.checkpoint), 'import.lock');
+  const deferred = () => { let resolve; const promise = new Promise(done => { resolve = done; }); return { promise, resolve }; };
+  const gates = Array.from({ length: 64 }, deferred), firstWaveEntered = deferred(), otherRecordsPublished = deferred();
+  let entered = 0, published = 0, pauseRequested = false, settled = false;
+  const api = mockApi([], async ({ method, body, url }) => {
+    if (method !== 'POST') return;
+    if (body?.data) {
+      const position = sources.findIndex(source => source.sourceId === body.data.source_id);
+      if (position < 64) {
+        if (++entered === 64) firstWaveEntered.resolve();
+        await gates[position].promise;
+      }
+    } else if (url.pathname.endsWith('/publish') && ++published === 99) otherRecordsPublished.resolve();
+  });
+  const outcome = runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl, concurrency: 64, batchSize: 100, shouldPause: () => pauseRequested })
+    .then(value => { settled = true; return { value }; }, error => { settled = true; return { error }; });
+  try {
+    await firstWaveEntered.promise;
+    assert.equal(api.maxActive(), 64);
+    pauseRequested = true;
+    for (const gate of gates.slice(0, 63)) gate.resolve();
+    await otherRecordsPublished.promise;
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(settled, false);
+    assert.ok((await lstat(lockPath)).isFile(), 'the last request must finish before a pause releases the lock');
+    assert.equal(api.calls.filter(call => call.method === 'POST' && call.body?.data).length, 100);
+    assert.equal(api.calls.filter(call => call.body?.data?.source_id === 'pause64-100').length, 0);
+
+    gates[63].resolve();
+    const result = await outcome; assert.ifError(result.error);
+    assert.equal(result.value.paused, true); assert.equal(result.value.completedLine, 100);
+    assert.equal(result.value.counts.published, 100); assert.equal(result.value.remaining, 29);
+    const saved = JSON.parse(await readFile(options.checkpoint, 'utf8'));
+    assert.equal(saved.completedLine, 100); assert.deepEqual(saved.pending, {});
+    await assert.rejects(lstat(lockPath), { code: 'ENOENT' });
+
+    const resumed = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl, concurrency: 64 });
+    assert.equal(resumed.remaining, 0); assert.equal(resumed.counts.published, sources.length);
+    for (const source of sources) assert.equal(api.calls.filter(call => call.method === 'POST' && call.body?.data?.source_id === source.sourceId).length, 1);
+    assert.equal(api.calls.filter(call => call.method === 'POST' && call.url.pathname.endsWith('/publish')).length, sources.length);
+    assert.equal(api.maxActive(), 64);
+  } finally {
+    for (const gate of gates) gate.resolve();
+    await outcome;
+  }
 });
 
 test('pausing before a resumed batch preserves pending successes and reports the actual unfinished records', async t => {
