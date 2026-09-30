@@ -47,6 +47,9 @@
     },
     "production": {
       "name": "flexweb-content-cms",
+      "placement": {
+        "region": "aws:eu-south-1"
+      },
       "d1_databases": [
         {
           "binding": "DB",
