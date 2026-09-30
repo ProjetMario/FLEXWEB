@@ -6,6 +6,7 @@ import path from 'node:path';
 import { acquireLock, executeRelease, getNetlifyProductionState, PUBLIC_SITE_ID, requireRelease, ReleaseError } from './release-core.mjs';
 import { fileDigest } from './snapshot-io.mjs';
 import { verifyAutomationProxy } from './automation-probe.mjs';
+import { requestNetlify } from './netlify-request.mjs';
 
 const exec = promisify(execFile);
 const root = process.cwd();
@@ -19,9 +20,7 @@ async function command(file, args, extraEnv = {}) {
   catch { throw new ReleaseError(`COMMAND_FAILED_${path.basename(file).replace(/[^a-z0-9]/gi, '_').toUpperCase()}`); }
 }
 async function netlify(method, suffix) {
-  const response = await fetch(`https://api.netlify.com/api/v1${suffix}`, { method, headers: { authorization: `Bearer ${env.NETLIFY_AUTH_TOKEN}`, 'content-type': 'application/json' }, signal: AbortSignal.timeout(60000) });
-  if (!response.ok) throw new ReleaseError(`NETLIFY_HTTP_${response.status}`);
-  return response.status === 204 ? {} : response.json();
+  return requestNetlify(method, suffix, { token: env.NETLIFY_AUTH_TOKEN });
 }
 async function markerAt(origin) {
   const response = await fetch(`${origin}/.well-known/flexweb-release.json`, { redirect: 'error', cache: 'no-store', signal: AbortSignal.timeout(20000) });
