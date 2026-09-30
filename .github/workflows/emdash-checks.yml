@@ -30,6 +30,7 @@ jobs:
     timeout-minutes: 35
     env:
       NODE_OPTIONS: --max-old-space-size=3072
+      CONTEXT: production
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -44,7 +45,6 @@ jobs:
           node scripts/check-seo.mjs
           node scripts/seo/quality.mjs --enforce-release
           node scripts/seo/audit-territorial-publication.mjs
-          node --import tsx --test tests/seo/*.test.*
       - name: Verify responsive pages and mocked quote flow
         run: |
           npm run preview -- --host 127.0.0.1 --port 4321 > /tmp/flexweb-preview.log 2>&1 &
@@ -54,6 +54,7 @@ jobs:
             if curl --fail --silent http://127.0.0.1:4321/ > /dev/null; then break; fi
             sleep 1
           done
+          node --import tsx --test tests/seo/*.test.*
           node scripts/cms/release-smoke.mjs http://127.0.0.1:4321
           node --test tests/quote-flow.test.mjs tests/analytics.test.mjs tests/automation-proxy.test.mjs
       - name: Prepare and validate complete migration without writing to a CMS
@@ -90,6 +91,9 @@ jobs:
           node-version: '24'
           cache: npm
           cache-dependency-path: apps/content-cms/package-lock.json
+      - name: Install parent Astro configuration dependencies
+        run: npm ci
+        working-directory: .
       - run: npm ci
       - run: npm run check
       - run: npm test
