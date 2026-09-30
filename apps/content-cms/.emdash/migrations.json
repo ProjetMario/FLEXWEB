@@ -94,7 +94,13 @@
 		],
 		"fingerprint": "d040241afe27f01b0dcb6f360d78056e4ee7d32a29e8b23ae2443c40620f5dc6"
 	},
-	"i18n": null,
+	"i18n": {
+		"defaultLocale": "fr",
+		"locales": [
+			"fr"
+		],
+		"prefixDefaultLocale": false
+	},
 	"database": {
 		"type": "sqlite",
 		"executorEntrypoint": "@emdash-cms/cloudflare/internal/db/d1-migrations",

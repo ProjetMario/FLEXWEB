@@ -35,6 +35,8 @@ Le serveur de développement tourne sur `http://127.0.0.1:4321`. Avec Astro 7, `
 
 Le seed ne contient aucune entreprise de démonstration. Il définit uniquement le schéma, appliqué par EmDash lors de son initialisation. Une modification future du seed ne remplace pas une migration de schéma déjà initialisé. Après déploiement initial, vérifier les six collections avant tout import ; modifier un schéma existant via les outils natifs, après sauvegarde.
 
+La configuration Astro déclare aussi le français comme langue de contenu (`i18n.defaultLocale: 'fr'`, `locales: ['fr']`). Le `defaultLocale` du seed seul ne règle pas la langue des futures créations natives. `routing: 'manual'` désactive le routage linguistique automatique Astro ; le middleware applicatif requis délègue sans modifier les URL ni les réponses. L'authentification reste assurée par les middlewares EmDash. Avec une seule langue, EmDash ne filtre pas ses listes par langue ; les fiches existantes gardent leur propre locale. Le manifeste `.emdash/migrations.json` reprend la même configuration sans ajouter de migration. Après déploiement en aperçu, contrôler les routes natives sans préfixe et vérifier `GET /_emdash/api/manifest` : `contentLocale.defaultLocale` doit être `fr`, `implicit` doit être `false`, et l'absence de `i18n` multilingue reste normale. Cette configuration ne migre aucune fiche existante.
+
 ## Mise en service Cloudflare
 
 1. Se connecter avec `npx wrangler login`, puis contrôler le compte avec `npx wrangler whoami`.
