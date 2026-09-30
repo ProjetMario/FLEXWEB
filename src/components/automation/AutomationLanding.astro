@@ -1,5 +1,7 @@
 ---
 import ProjectEvidence from "../seo/ProjectEvidence.astro";
+import CommercialConversion from "../marketing/CommercialConversion.astro";
+import QuoteEntry from "../marketing/QuoteEntry.astro";
 import BaseLayout from "../../layout/BaseLayout.astro";
 import StructuredData from "../seo/StructuredData.astro";
 import type { AutomationPage } from "../../data/automationPages";
@@ -47,10 +49,10 @@ const schemas = [
             <p class="eyebrow">{page.label}</p>
             <h1>{page.heading}</h1>
             <p class="intro">{page.intro}</p>
-            <div class="actions">
-              <a class="button primary" href="/demarrer/?service=automation">Demander un devis d’automatisation IA <span aria-hidden="true">↗</span></a>
+            {!isHub ? <QuoteEntry service="automation" /> : <div class="actions">
+              <a class="button primary" href="/demarrer/?service=automation&offre=sur-mesure">Demander un devis d’automatisation IA <span aria-hidden="true">↗</span></a>
               <a class="text-link" href="#exemples">Voir des exemples <span aria-hidden="true">↓</span></a>
-            </div>
+            </div>}
             <p class="fineprint">Projet sur mesure · Outils existants étudiés · Validation humaine définie ensemble</p>
           </div>
           <aside class="workflow" aria-label="Exemple de parcours d’une demande">
@@ -66,6 +68,8 @@ const schemas = [
         </div>
       </div>
     </section>
+
+    {!isHub && <div class="container"><CommercialConversion service="automation" area={page.area as 'Savoie' | 'Haute-Savoie'} /></div>}
 
     <section class="container content-section" aria-labelledby="context-title">
       <div class="split-heading">
@@ -120,7 +124,7 @@ const schemas = [
     </section>
 
     <section class="container content-section">
-      <aside class="quote-panel"><p class="eyebrow">Parlons de votre première tâche</p><h2>Qu’aimeriez-vous arrêter de recopier chaque semaine ?</h2><p>Décrivez votre activité, vos outils et une tâche qui revient souvent. Nous pourrons cadrer un premier projet et établir une proposition sur devis.</p><a class="button primary" href="/demarrer/?service=automation">Demander mon devis d’automatisation IA <span aria-hidden="true">↗</span></a></aside>
+      <aside class="quote-panel"><p class="eyebrow">Parlons de votre première tâche</p><h2>Qu’aimeriez-vous arrêter de recopier chaque semaine ?</h2><p>Décrivez votre activité, vos outils et une tâche qui revient souvent. Nous pourrons cadrer un premier projet et établir une proposition sur devis.</p><a class="button primary" href="/demarrer/?service=automation&offre=sur-mesure">Demander mon devis d’automatisation IA <span aria-hidden="true">↗</span></a></aside>
       <nav class="regions" aria-label="Automatisation IA par zone">
         <span>Découvrir l’accompagnement :</span>
         <a href="/automatisation-ia/" aria-current={isHub ? "page" : undefined}>France</a>

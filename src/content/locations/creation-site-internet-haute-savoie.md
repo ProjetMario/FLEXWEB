@@ -5,8 +5,8 @@ type: "department"
 department: "Haute-Savoie"
 region: "Auvergne-Rhône-Alpes"
 country: "France"
-introduction: "FLEX-WEB accompagne les entreprises, commerçants et professions libérales de la Haute-Savoie dans la création de sites internet performants, conçus pour convertir les visiteurs locaux en clients."
-localContext: "La Haute-Savoie bénéficie d'une économie dynamique, entre lac Léman, montagne et proximité de Genève. Les entreprises locales, du tourisme à l'artisanat en passant par le commerce transfrontalier, ont un fort besoin de visibilité numérique ciblée."
+introduction: "Donnez à vos visiteurs un chemin clair vers votre entreprise. FLEX-WEB crée votre site en Haute-Savoie pour expliquer vos services et recueillir des demandes utiles, avec des offres à 299 € TTC ou 590 € TTC."
+localContext: "À Annecy, Annemasse, Thonon-les-Bains ou dans les communes voisines, votre site doit montrer ce que vous faites, pour qui et comment vous contacter. Nous définissons les pages, les contenus et le calendrier avec vous avant paiement."
 targetIndustries:
   - "Artisans et entreprises du bâtiment"
   - "Commerçants et boutiques de proximité"
@@ -43,7 +43,7 @@ faq:
   - question: "Les options mensuelles sont-elles obligatoires ?"
     answer: "Non. La création du site est payée une seule fois : 299 € TTC jusqu’à 5 pages, ou 590 € TTC pour 5 pages et plus avec référencement SEO et IA. La mise en place du CRM et des automatisations est une offre distincte à 990 € TTC. La maintenance avec modifications et suivi du référencement à 49 € TTC/mois ainsi que l’option CRM, automatisation et référencement avec suivi des dernières technologies (veille et recommandations) à 99 € TTC/mois sont facultatives. Le devis précise les prestations choisies."
   - question: "Le site est-il visible sur Google ?"
-    answer: "Oui, chaque site est conçu avec une structure SEO propre, des balises optimisées, des temps de chargement courts et des données structurées pour faciliter l'indexation."
+    answer: "Nous préparons le site à l’exploration des moteurs. L’offre à 590 € TTC comprend le travail SEO et IA défini au devis : structure, contenus, données structurées et soumission à Google et Bing. La soumission n’est pas une confirmation d’indexation ni une garantie de position."
   - question: "FLEX-WEB développe-t-il aussi des applications mobiles en Haute-Savoie ?"
     answer: "Oui, en complément des sites internet, nous développons des applications mobiles et web sur mesure pour les entreprises de Haute-Savoie : réservation, espace client, gestion interne ou outil de fidélisation."
 seoTitle: "Création de site internet en Haute-Savoie — FLEX-WEB"
@@ -52,6 +52,10 @@ isDraft: false
 ---
 
 ## Présenter votre activité et la façon de travailler avec vous
+
+Un site commercial doit distinguer les raisons de vous contacter. Demander une prestation, présenter un projet ou obtenir une estimation peuvent nécessiter des informations différentes. Le menu, les preuves visuelles et le formulaire doivent accompagner ce choix, sans demander au visiteur de comprendre votre organisation interne.
+
+Le projet [2 Savoie Immo](/realisations/2savoie-immo/) illustre deux intentions : rechercher un bien et demander une estimation. Cette distinction permet de définir des appels à l’action adaptés à chaque parcours. Nous décrivons ici les fonctions publiques du site, sans lui attribuer de résultats chiffrés.
 
 Un visiteur doit trouver vos prestations, votre zone d'intervention et les informations utiles à sa demande. Pour une entreprise de Haute-Savoie, cela peut concerner un chantier, une prestation de service, une demande professionnelle ou une activité d'accueil. Le site est construit autour de ce parcours, avec un contenu lisible sur téléphone.
 

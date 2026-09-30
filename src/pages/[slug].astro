@@ -1,5 +1,7 @@
 ---
 import ProjectEvidence from "../components/seo/ProjectEvidence.astro";
+import CommercialConversion from "../components/marketing/CommercialConversion.astro";
+import QuoteEntry from "../components/marketing/QuoteEntry.astro";
 import BaseLayout from "../layout/BaseLayout.astro";
 import StructuredData from "../components/seo/StructuredData.astro";
 import { getCollection, render, type CollectionEntry } from "astro:content";
@@ -51,6 +53,7 @@ const { entry, nameToSlug, mobileDestinations, isMobile } = Astro.props as {
 };
 const { Content } = await render(entry);
 const { data } = entry;
+const isRegionalCommercial = ["creation-site-internet-savoie", "creation-site-internet-haute-savoie"].includes(data.slug);
 const mobileContent = localApplicationContent[data.slug];
 const automationPath = data.department === "Haute-Savoie" ? "/automatisation-ia-haute-savoie/" : data.department === "Savoie" ? "/automatisation-ia-savoie/" : "/automatisation-ia/";
 const preposition = data.type === "city" ? "à" : "en";
@@ -220,6 +223,8 @@ if (faqSchema) {
       {introText}
     </p>
 
+    {isRegionalCommercial && <QuoteEntry service={isMobile ? 'application' : 'site'} />}
+
     <p class="mt-4 text-lg leading-relaxed" style="color: var(--color-text)">
       {localContextText}
     </p>
@@ -230,7 +235,7 @@ if (faqSchema) {
       </p>
     )}
 
-    <section class="mt-8 rounded-2xl p-6" style="background-color: var(--color-surface)">
+    {isRegionalCommercial ? <CommercialConversion service={isMobile ? 'application' : 'site'} area={data.name as 'Savoie' | 'Haute-Savoie'} /> : <section class="mt-8 rounded-2xl p-6" style="background-color: var(--color-surface)">
       <h2 class="text-xl font-semibold tracking-tight" style="color: var(--color-text)">
         En bref
       </h2>
@@ -239,7 +244,7 @@ if (faqSchema) {
           ? `FLEX-WEB développe des applications mobiles et web pour les professionnels ${preposition} ${data.name}. Le devis précise la conception, les fonctionnalités, les tests, le déploiement et le suivi retenus.`
           : `FLEX-WEB accompagne les professionnels ${preposition} ${data.name} pour concevoir un site internet clair, rapide et adapté à leur activité. La prestation peut inclure l'optimisation pour les moteurs de recherche, l'hébergement, la maintenance et le support.`}
       </p>
-    </section>
+    </section>}
 
     {!isMobile && (
       <div class="mt-12 space-y-6 text-lg leading-relaxed" style="color: var(--color-text)">
@@ -393,7 +398,7 @@ if (faqSchema) {
         </p>
       )}
       <a
-        href={isMobile ? "/contact/?service=application" : "/demarrer/?service=site"}
+        href={isMobile ? "/demarrer/?service=application" : websiteOffers[0].href}
         class="mt-6 inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-medium text-white transition hover:opacity-90"
         style="background-color: var(--color-accent)"
       >

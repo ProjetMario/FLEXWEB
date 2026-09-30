@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
+  <defs>
+    <linearGradient id="fxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0071e3"/>
+      <stop offset="100%" stop-color="#00c6ff"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded square -->
+  <rect width="1000" height="1000" rx="300" fill="url(#fxGrad)"/>
+
+  <!-- FX monogram -->
+  <g fill="#ffffff">
+    <!-- Letter F -->
+    <path d="M262.5 275
+             h275 v70 h-200 v110 h150 v70 h-150 v220 h-75
+             V275 Z"/>
+
+    <!-- Letter X -->
+    <path d="M537.5 275
+             h72.5 l92.5 152.5 92.5-152.5 h72.5
+             l-135 217.5 135 217.5 h-72.5 l-92.5-152.5-92.5 152.5 h-72.5
+             l135-217.5 L537.5 275 Z"/>
+  </g>
+</svg>
