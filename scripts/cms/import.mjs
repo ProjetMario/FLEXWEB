@@ -116,7 +116,7 @@ export async function scanInput(filename) {
 }
 
 function retryDelay(error, attempt) { return Math.min(30000, Math.max(error.retryAfter || 0, 500 * 2 ** attempt)); }
-const transient = error => error instanceof ImportError && (error.status === 429 || error.status >= 500 || error.code === 'NETWORK_UNCERTAIN');
+const transient = error => error instanceof ImportError && (error.status === 429 || error.status >= 500 || ['NETWORK_UNCERTAIN', 'BODY_RESPONSE_FAILED'].includes(error.code));
 
 export function createApi({ origin, token, fetchImpl = fetch, sleep = pause, maxAttempts = 4 }) {
   origin = normalizeOrigin(origin);
@@ -135,11 +135,21 @@ export function createApi({ origin, token, fetchImpl = fetch, sleep = pause, max
         } catch { throw new ImportError('NETWORK_UNCERTAIN'); }
         const wait = response.headers.get('retry-after');
         const waitMs = wait ? (/^\d+$/.test(wait) ? Number(wait) * 1000 : Math.max(0, Date.parse(wait) - Date.now())) : 0;
-        if (!response.ok) throw new ImportError(`CMS_HTTP_${response.status}`, response.status, Number.isFinite(waitMs) ? waitMs : 0);
+        if (!response.ok) {
+          // Release an unread error body without buffering arbitrary provider text.
+          // Cleanup failure must never hide the HTTP status or Retry-After.
+          try { await response.body?.cancel(); } catch { /* The original HTTP failure remains authoritative. */ }
+          throw new ImportError(`CMS_HTTP_${response.status}`, response.status, Number.isFinite(waitMs) ? waitMs : 0);
+        }
         let result;
-        try { result = await response.json(); } catch { throw new ImportError('INVALID_CMS_RESPONSE'); }
+        try { result = await response.json(); }
+        catch (error) {
+          // A stream can fail after successful headers and after a POST committed.
+          // Preserve that uncertainty; only malformed JSON is a protocol failure.
+          throw new ImportError(error instanceof SyntaxError ? 'INVALID_CMS_RESPONSE' : 'BODY_RESPONSE_FAILED', response.status);
+        }
         // Never echo arbitrary server messages (they can contain credentials or content).
-        must(result.success === true && result.data && typeof result.data === 'object', 'CMS_OPERATION_REJECTED');
+        must(result?.success === true && result.data && typeof result.data === 'object', 'CMS_OPERATION_REJECTED');
         return result.data;
       } catch (error) {
         if (!retry || !transient(error) || attempt + 1 === maxAttempts) throw error;

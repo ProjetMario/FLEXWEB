@@ -19,6 +19,12 @@ function record(sourceId = 'first', overrides = {}) {
 }
 function item(value, id = value.sourceId) { return { id, type: value.collection, status: 'draft', data: mapRecord(value).data, version: 1, draftRevisionId: null }; }
 function response(data, status = 200, headers = {}) { return new Response(JSON.stringify({ success: true, data }), { status, headers: { 'content-type': 'application/json', ...headers } }); }
+function brokenBodyResponse(status = 200) {
+  return new Response(new ReadableStream({ start(controller) {
+    controller.enqueue(new TextEncoder().encode('{"success":true,"data":'));
+    controller.error(new TypeError('private provider detail must not escape'));
+  } }), { status, headers: { 'content-type': 'application/json' } });
+}
 async function fixture(t, records, gzip = false) {
   const root = await mkdtemp(path.join(os.tmpdir(), 'flexweb-import-test-'));
   t.after(() => rm(root, { recursive: true, force: true }));
@@ -164,6 +170,78 @@ test('an uncertain publication reloads the item before recognizing success witho
   assert.deepEqual(calls.map(call => [call.method, call.url.pathname]), [
     ['POST', '/_emdash/api/content/pages/created-1/publish'], ['GET', '/_emdash/api/content/pages/created-1'],
   ]);
+});
+
+test('a committed CREATE with a lost response body is reconciled without duplicate creation or unverified publication', async t => {
+  const options = await fixture(t, [record()]);
+  const api = mockApi([], ({ method, body, records }) => {
+    if (method === 'POST' && body?.data) {
+      records.set('pages:committed', { id: 'committed', type: 'pages', status: 'draft', data: body.data, version: 1, draftRevisionId: null });
+      return brokenBodyResponse(201);
+    }
+  });
+  const result = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl });
+  assert.equal(result.counts.uncertain, 1); assert.equal(result.counts.preserved, 1); assert.equal(result.counts.published, 0);
+  assert.equal(result.needsReview, true); assert.equal(api.records.size, 1);
+  assert.equal(api.calls.filter(call => call.method === 'POST').length, 1);
+  assert.ok(api.calls.some(call => call.method === 'GET' && call.url.searchParams.has('fieldFilters')));
+  const checkpoint = JSON.parse(await readFile(options.checkpoint, 'utf8'));
+  assert.equal(checkpoint.completedLine, 1); assert.deepEqual(checkpoint.pending, {});
+});
+
+test('a committed PUBLISH with a lost response body is confirmed by GET without repeating the POST', async t => {
+  const options = await fixture(t, [record()]);
+  const api = mockApi([], ({ url, method, records }) => {
+    if (method === 'POST' && url.pathname.endsWith('/publish')) {
+      const row = records.get('pages:created-1'); row.status = 'published'; row.version++;
+      return brokenBodyResponse();
+    }
+  });
+  const result = await runImport({ ...options, execute: true, publishBaseline: true, fetchImpl: api.fetchImpl });
+  assert.equal(result.counts.created, 1); assert.equal(result.counts.published, 1); assert.equal(result.needsReview, false);
+  const calls = api.calls.filter(call => call.url.pathname.startsWith('/_emdash/api/content/pages/'));
+  assert.deepEqual(calls.map(call => [call.method, call.url.pathname]), [
+    ['POST', '/_emdash/api/content/pages/created-1/publish'], ['GET', '/_emdash/api/content/pages/created-1'],
+  ]);
+});
+
+test('HTTP errors release unread bodies before a GET retry, retaining status and Retry-After', async () => {
+  const events = [];
+  const client = createApi({ origin, token, sleep: async ms => events.push(`sleep:${ms}`), fetchImpl: async () => {
+    events.push('fetch');
+    if (events.length > 1) return response({ ok: true });
+    return new Response(new ReadableStream({ cancel() { events.push('cancel'); } }), { status: 429, headers: { 'retry-after': '2' } });
+  } });
+  assert.deepEqual(await client.request('GET', '/auth/me'), { ok: true });
+  assert.deepEqual(events, ['fetch', 'cancel', 'sleep:2000', 'fetch']);
+});
+
+test('failed body cancellation cannot replace an HTTP error or trigger a direct POST retry', async () => {
+  let calls = 0, canceled = 0;
+  const client = createApi({ origin, token, sleep: async () => assert.fail('POST must not retry directly'), fetchImpl: async () => {
+    calls++;
+    return new Response(new ReadableStream({ cancel() { canceled++; throw new Error(token); } }), { status: 503, headers: { 'retry-after': '3' } });
+  } });
+  await assert.rejects(client.request('POST', '/content/pages', {}), error => error.code === 'CMS_HTTP_503' && error.status === 503 && error.retryAfter === 3000 && !String(error).includes(token));
+  assert.equal(calls, 1); assert.equal(canceled, 1);
+});
+
+test('body stream failures have a distinct safe diagnostic, bounded GET retries and no direct POST retry', async () => {
+  let calls = 0, sleeps = 0;
+  const client = createApi({ origin, token, maxAttempts: 3, sleep: async () => { sleeps++; }, fetchImpl: async () => { calls++; return brokenBodyResponse(); } });
+  await assert.rejects(client.request('GET', '/auth/me'), error => error.code === 'BODY_RESPONSE_FAILED' && error.status === 200 && !String(error).includes('private provider'));
+  assert.equal(calls, 3); assert.equal(sleeps, 2);
+  await assert.rejects(client.request('POST', '/content/pages', {}), { code: 'BODY_RESPONSE_FAILED' });
+  assert.equal(calls, 4); assert.equal(sleeps, 2);
+});
+
+test('malformed JSON and rejected envelopes stay protocol errors without automatic retry', async () => {
+  for (const [body, code] of [['not JSON ' + token, 'INVALID_CMS_RESPONSE'], ['null', 'CMS_OPERATION_REJECTED']]) {
+    let calls = 0;
+    const client = createApi({ origin, token, sleep: async () => assert.fail('invalid protocol must not retry'), fetchImpl: async () => { calls++; return new Response(body); } });
+    await assert.rejects(client.request('GET', '/auth/me'), error => error.code === code && !String(error).includes(token));
+    assert.equal(calls, 1);
+  }
 });
 
 test('an uncertain publication reloads and stops if a concurrent edit changes the revision', async t => {
