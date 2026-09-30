@@ -7,6 +7,9 @@ on:
       - '.github/workflows/emdash*'
       - 'apps/content-cms/**'
       - 'package*.json'
+      - 'src/**'
+      - 'tests/**'
+      - 'scripts/seo/**'
   push:
     branches: [main]
     paths:
@@ -14,11 +17,58 @@ on:
       - '.github/workflows/emdash*'
       - 'apps/content-cms/**'
       - 'package*.json'
+      - 'src/**'
+      - 'tests/**'
+      - 'scripts/seo/**'
 
 permissions:
   contents: read
 
 jobs:
+  public-site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      NODE_OPTIONS: --max-old-space-size=3072
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Compile every public page and enforce SEO controls
+        run: |
+          npm run build
+          node scripts/check-seo.mjs
+          node scripts/seo/quality.mjs --enforce-release
+          node scripts/seo/audit-territorial-publication.mjs
+          node --import tsx --test tests/seo/*.test.*
+      - name: Verify responsive pages and mocked quote flow
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4321 > /tmp/flexweb-preview.log 2>&1 &
+          PREVIEW_PID=$!
+          trap 'kill "$PREVIEW_PID" || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4321/ > /dev/null; then break; fi
+            sleep 1
+          done
+          node scripts/cms/release-smoke.mjs http://127.0.0.1:4321
+          node --test tests/quote-flow.test.mjs tests/analytics.test.mjs tests/automation-proxy.test.mjs
+      - name: Prepare and validate complete migration without writing to a CMS
+        run: |
+          npm run cms:export
+          node scripts/cms/import.mjs --input .cms/import.ndjson.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: emdash-baseline-${{ github.sha }}
+          path: |
+            cms/baseline.json.gz
+            .cms/import.ndjson.gz
+            .cms/export-report.json
+          include-hidden-files: true
+          retention-days: 14
   safeguards:
     runs-on: ubuntu-latest
     steps:
