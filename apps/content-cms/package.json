@@ -13,7 +13,12 @@
     "test": "node --test tests/*.test.mjs",
     "preview": "wrangler dev",
     "deploy:preview": "CLOUDFLARE_ENV=preview astro build && wrangler deploy --env preview",
-    "deploy:production": "CLOUDFLARE_ENV=production astro build && wrangler deploy --env production"
+    "deploy:production": "CLOUDFLARE_ENV=production astro build && wrangler deploy --env production",
+    "predev": "node scripts/apply-emdash-lock-patch.mjs",
+    "prebuild": "node scripts/apply-emdash-lock-patch.mjs",
+    "precheck": "node scripts/apply-emdash-lock-patch.mjs",
+    "predeploy:preview": "node scripts/apply-emdash-lock-patch.mjs",
+    "predeploy:production": "node scripts/apply-emdash-lock-patch.mjs"
   },
   "emdash": {
     "seed": "seed/seed.json"
@@ -33,7 +38,8 @@
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "typescript": "5.9.3",
-    "wrangler": "4.144.0"
+    "wrangler": "4.144.0",
+    "miniflare": "5.20260926.1-alpha"
   },
   "exports": {
     "./plugin": "./src/plugin.mjs",

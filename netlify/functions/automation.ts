@@ -7,8 +7,11 @@ const respond = (error: string, status: number) =>
     { status, headers: { "Cache-Control": "no-store" } },
   );
 export default async (request: Request, context: Context) => {
-  const deployContext = context.deploy.context;
-  if (deployContext === "deploy-preview" || deployContext === "branch-deploy")
+  // A promoted manual deploy may retain its original preview metadata. Only
+  // Netlify's canonical request URL may forward requests to the live service;
+  // a client-supplied Origin header never authorizes an immutable preview URL.
+  const url = new URL(request.url);
+  if (url.origin !== "https://flex-web.fr")
     return respond(
       "Les demandes sont désactivées dans cet aperçu. Utilisez flex-web.fr pour envoyer votre projet.",
       503,
@@ -25,7 +28,6 @@ export default async (request: Request, context: Context) => {
   if (request.method !== "POST") return respond("Méthode non acceptée.", 405);
   if (!actions.has(context.params.action))
     return respond("Action inconnue.", 404);
-  const url = new URL(request.url);
   if (request.headers.get("origin") !== url.origin)
     return respond("Origine non autorisée.", 403);
   if (!request.headers.get("content-type")?.includes("application/json"))

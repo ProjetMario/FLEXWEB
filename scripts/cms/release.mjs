@@ -3,8 +3,9 @@ import { promisify } from 'node:util';
 import { writeFile, mkdir, readdir, copyFile } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import path from 'node:path';
-import { acquireLock, executeRelease, PUBLIC_SITE_ID, requireRelease, ReleaseError } from './release-core.mjs';
+import { acquireLock, executeRelease, getNetlifyProductionState, PUBLIC_SITE_ID, requireRelease, ReleaseError } from './release-core.mjs';
 import { fileDigest } from './snapshot-io.mjs';
+import { verifyAutomationProxy } from './automation-probe.mjs';
 
 const exec = promisify(execFile);
 const root = process.cwd();
@@ -37,7 +38,7 @@ async function currentProduction() {
     requireRelease(/^https:\/\/[a-z0-9-]+--flex-webb\.netlify\.app$/.test(origin), 'UNEXPECTED_DEPLOY_ORIGIN');
     marker = await markerAt(origin);
   }
-  return { siteId: site.id, id: deployed.id, ready: deployed.state === 'ready', gitBuildsStopped: site.build_settings?.stop_builds === true, snapshotSha256: marker.snapshotSha256, codeCommit: marker.codeCommit };
+  return getNetlifyProductionState(site, marker);
 }
 async function verifyRemote(candidate, expected, production = false) {
   const origin = production ? 'https://flex-web.fr' : candidate.url;
@@ -48,6 +49,7 @@ async function verifyRemote(candidate, expected, production = false) {
     requireRelease(response.status === 200, 'REMOTE_PAGE_UNAVAILABLE');
     if (production) requireRelease(!/noindex/i.test(response.headers.get('x-robots-tag') || ''), 'PRODUCTION_NOINDEX');
   }
+  await verifyAutomationProxy(origin);
 }
 async function localTests() {
   const server = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', '4321'], { cwd: root, env, stdio: 'ignore' });
@@ -84,9 +86,9 @@ if (env.ENABLE_EMDASH_PUBLICATION !== 'true') {
     const codeCommit = await command('git', ['rev-parse', 'HEAD']);
     env.CMS_SOURCE_COMMIT = codeCommit;
     env.CMS_PUBLICATION_REPORT_PATH = reportPath;
-    // The snapshot adapter owns the authenticated CMS contract and URL/price guards.
-    await command(node, ['scripts/cms/snapshot.mjs', 'pull', '--mode', 'published', '--output', snapshotPath]);
     const providers = {
+      // executeRelease checks the Netlify policy before this authenticated export.
+      pullSnapshot: output => command(node, ['scripts/cms/snapshot.mjs', 'pull', '--mode', 'published', '--output', output]),
       validateSnapshot: input => command(node, ['scripts/cms/snapshot.mjs', 'validate', '--input', input]),
       applySnapshot: input => command(node, ['scripts/cms/snapshot.mjs', 'apply', '--input', input]),
       currentProduction,

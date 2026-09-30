@@ -30,7 +30,8 @@ export const ALL: APIRoute = async (context) => {
       return await withEmDashRuntime(async (runtime) => {
         const repository = new ContentRepository(runtime.db);
         const revisions = new RevisionRepository(runtime.db);
-        const batch = await repository.findMany(collection, { limit, cursor: url.searchParams.get('cursor') || undefined, orderBy: { field: 'id', direction: 'asc' }, ...(mode === 'published' ? { where: { status: 'published' } } : {}) });
+        // Native cursors use this supported system field, with id as tie-breaker.
+        const batch = await repository.findMany(collection, { limit, cursor: url.searchParams.get('cursor') || undefined, orderBy: { field: 'createdAt', direction: 'asc' }, ...(mode === 'published' ? { where: { status: 'published' } } : {}) });
         const entries = [];
         let bytes = 0;
         for (const item of batch.items) {

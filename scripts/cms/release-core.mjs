@@ -11,6 +11,23 @@ export class ReleaseError extends Error {
 }
 export function requireRelease(condition, code) { if (!condition) throw new ReleaseError(code); }
 
+/** Netlify's production policy lives on the site, not in build_settings. */
+export function getNetlifyProductionState(site, marker = {}) {
+  const deployed = site.published_deploy || {};
+  return {
+    siteId: site.id, id: deployed.id, ready: deployed.state === 'ready',
+    gitBuildsStopped: site.build_settings?.stop_builds === true,
+    // Require an explicit false; an omitted or invalid policy is not approval.
+    nonGitProductionDeploysAllowed: site.prevent_non_git_prod_deploys === false,
+    snapshotSha256: marker.snapshotSha256, codeCommit: marker.codeCommit,
+  };
+}
+
+export function requireDeploymentPolicy(production) {
+  requireRelease(production.gitBuildsStopped === true, 'GIT_AUTOPUBLISH_STILL_ENABLED');
+  requireRelease(production.nonGitProductionDeploysAllowed === true, 'NON_GIT_PRODUCTION_DEPLOYS_FORBIDDEN');
+}
+
 /** Deterministic manifest, streamed one file at a time; symlinks cannot escape dist. */
 export async function artifactManifest(root) {
   const files = [];
@@ -60,32 +77,47 @@ export async function executeRelease({ snapshotPath, artifactDir, codeCommit, pr
   }
   async function checkSnapshot() { requireRelease(await fileDigest(snapshotPath) === result.snapshotSha256, 'SNAPSHOT_CHANGED'); }
   async function checkArtifact(digest) { requireRelease((await artifactManifest(artifactDir)).digest === digest, 'ARTIFACT_CHANGED'); }
+  async function checkProductionUnchanged() {
+    const current = await providers.currentProduction();
+    requireRelease(current.siteId === PUBLIC_SITE_ID && current.id === baseline.id && current.ready, 'PRODUCTION_CHANGED');
+    requireDeploymentPolicy(current);
+    return current;
+  }
   try {
+    // Check the live policy before even exporting CMS content or reporting a lot.
+    // Every invocation, including recovery of an unchanged lot, starts here.
+    baseline = await providers.currentProduction();
+    requireRelease(baseline.siteId === PUBLIC_SITE_ID && baseline.id && baseline.ready, 'WRONG_OR_UNREADY_PRODUCTION');
+    requireDeploymentPolicy(baseline);
+    result.previousDeployId = baseline.id;
+    if (providers.pullSnapshot) await providers.pullSnapshot(snapshotPath);
     snapshot = await readSnapshot(snapshotPath, { metadataOnly: true });
     requireRelease(snapshot.schemaVersion === 1 && typeof snapshot.id === 'string' && /^[a-f0-9]{40}$/.test(codeCommit), 'INVALID_RELEASE_INPUT');
     requireRelease(snapshot.sourceCommit === codeCommit, 'SNAPSHOT_SOURCE_MISMATCH');
     result.snapshotId = snapshot.id; result.snapshotSha256 = await fileDigest(snapshotPath);
+    const marker = { schemaVersion: 1, snapshotId: snapshot.id, snapshotSha256: result.snapshotSha256, codeCommit };
     await record('checking');
     await providers.validateSnapshot(snapshotPath);
-    baseline = await providers.currentProduction();
-    requireRelease(baseline.siteId === PUBLIC_SITE_ID && baseline.id && baseline.ready, 'WRONG_OR_UNREADY_PRODUCTION');
-    requireRelease(baseline.gitBuildsStopped === true, 'GIT_AUTOPUBLISH_STILL_ENABLED');
-    result.previousDeployId = baseline.id;
     requireRelease(await providers.currentSourceCommit() === codeCommit, 'SOURCE_ADVANCED');
     if (baseline.snapshotSha256 === result.snapshotSha256 && baseline.codeCommit === codeCommit) {
-      await record('deployed', { deployId: baseline.id, unchanged: true });
+      // A matching immutable deploy is insufficient to acknowledge the public
+      // site after an interrupted status callback: verify its live marker too.
+      await providers.verifyProduction({ siteId: baseline.siteId, id: baseline.id }, marker);
+      await checkProductionUnchanged();
+      await record('deployed', { deployId: baseline.id, unchanged: true, productionVerified: true });
       return result;
     }
     await providers.archiveSnapshot(snapshotPath, result.snapshotSha256);
     await providers.applySnapshot(snapshotPath);
     await checkSnapshot();
+    await checkProductionUnchanged();
     await providers.buildAndTest();
     await checkSnapshot();
-    const marker = { schemaVersion: 1, snapshotId: snapshot.id, snapshotSha256: result.snapshotSha256, codeCommit };
     await mkdir(path.join(artifactDir, '.well-known'), { recursive: true });
     await writeFile(path.join(artifactDir, '.well-known', 'flexweb-release.json'), JSON.stringify(marker) + '\n');
     const manifest = await artifactManifest(artifactDir);
     result.artifactSha256 = manifest.digest;
+    await checkProductionUnchanged();
     candidate = await providers.createPreview({ artifactDir, marker, manifest });
     requireRelease(candidate.siteId === PUBLIC_SITE_ID && candidate.id && candidate.ready && candidate.draft === true, 'INVALID_PREVIEW_DEPLOYMENT');
     await record('checking', { previewDeployId: candidate.id, previewUrl: candidate.url });
@@ -93,8 +125,7 @@ export async function executeRelease({ snapshotPath, artifactDir, codeCommit, pr
     await checkSnapshot(); await checkArtifact(manifest.digest);
     await record('checking', { previewVerified: true });
     requireRelease(await providers.currentSourceCommit() === codeCommit, 'SOURCE_ADVANCED');
-    const current = await providers.currentProduction();
-    requireRelease(current.siteId === PUBLIC_SITE_ID && current.id === baseline.id && current.gitBuildsStopped === true, 'PRODUCTION_CHANGED');
+    await checkProductionUnchanged();
     try { await providers.promote(candidate.id); }
     catch {
       // A timeout can hide a successful promotion. Read state before deciding;
@@ -107,7 +138,7 @@ export async function executeRelease({ snapshotPath, artifactDir, codeCommit, pr
     const confirmed = await providers.currentProduction();
     requireRelease(confirmed.siteId === PUBLIC_SITE_ID && confirmed.id === candidate.id, 'PROMOTION_NOT_CURRENT');
     await providers.verifyProduction(candidate, marker);
-    await record('deployed', { deployId: candidate.id, publishedAt: now() });
+    await record('deployed', { deployId: candidate.id, publishedAt: now(), productionVerified: true });
     return result;
   } catch (error) {
     const code = error instanceof ReleaseError ? error.code : 'RELEASE_FAILED';
@@ -115,10 +146,14 @@ export async function executeRelease({ snapshotPath, artifactDir, codeCommit, pr
       try {
         const current = await providers.currentProduction();
         if (current.id === candidate.id) {
-          await providers.promote(baseline.id);
-          const restored = await providers.currentProduction();
-          result.rollback = restored.id === baseline.id ? 'confirmed' : 'uncertain';
-          result.restoredDeployId = restored.id === baseline.id ? baseline.id : undefined;
+          if (current.nonGitProductionDeploysAllowed !== true || current.gitBuildsStopped !== true) {
+            result.rollback = 'skipped-deployment-policy';
+          } else {
+            await providers.promote(baseline.id);
+            const restored = await providers.currentProduction();
+            result.rollback = restored.id === baseline.id ? 'confirmed' : 'uncertain';
+            result.restoredDeployId = restored.id === baseline.id ? baseline.id : undefined;
+          }
         } else result.rollback = 'skipped-production-changed';
       } catch { result.rollback = 'uncertain'; }
     }

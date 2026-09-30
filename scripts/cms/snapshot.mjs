@@ -183,6 +183,7 @@ export async function pullSnapshot({ client, manifest, sourceCommit, mode = 'pub
 export async function reportSnapshot({ client, snapshot, status, report = {}, deployId }) {
   const states = { draft: 'draft', checking: 'checking', blocked: 'review_failed', deployed: 'deployed', rollback: 'review_failed' };
   requireValue(Object.hasOwn(states, status), 'UNKNOWN_PUBLICATION_STATUS');
+  if (status === 'deployed') requireValue(report.productionVerified === true, 'PRODUCTION_NOT_VERIFIED');
   const route = `/api/flexweb/snapshots/${snapshot.id}/status`;
   const current = await client.request('GET', route);
   const state = status === 'checking' && report.previewVerified === true ? 'preview_ready' : states[status];
@@ -195,6 +196,25 @@ export async function reportSnapshot({ client, snapshot, status, report = {}, de
   // A previously deployed unchanged release need not pass through checking again.
   if (current.state === 'deployed' && status === 'checking') return current;
   if (current.state === 'deployed' && status === 'deployed' && current.deployId === deployId) return current;
+  if (status === 'deployed') {
+    requireValue(typeof deployId === 'string' && /^[a-z0-9-]+$/.test(deployId), 'INVALID_DEPLOY_ID');
+    // The real production marker was just verified by executeRelease. A lost
+    // status request can leave any earlier state behind, and the unchanged
+    // release deliberately does not rebuild/re-upload a preview. Reconcile via
+    // the existing CAS state graph; do not relax server transition rules or
+    // blindly replay any request whose outcome was uncertain.
+    let observed = current;
+    const transition = async (state, detail = {}) => {
+      observed = await client.request('POST', route, { state, expectedState: observed.state, ...detail });
+      requireValue(observed?.state === state, 'PUBLICATION_STATUS_UNCONFIRMED');
+    };
+    if (observed.state === 'deployed') await transition('review_failed', { errors: ['RECONCILING_CONFIRMED_PRODUCTION'] });
+    if (['draft', 'review_failed'].includes(observed.state)) await transition('checking');
+    if (observed.state === 'checking') await transition('preview_ready', body.previewUrl ? { previewUrl: body.previewUrl } : {});
+    requireValue(observed.state === 'preview_ready', 'PUBLICATION_STATUS_UNEXPECTED');
+    await transition('deployed', { deployId, ...(body.previewUrl ? { previewUrl: body.previewUrl } : {}) });
+    return observed;
+  }
   if (current.state === 'checking' && state === 'checking') return current;
   return client.request('POST', route, body);
 }

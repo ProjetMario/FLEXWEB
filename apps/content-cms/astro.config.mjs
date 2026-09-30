@@ -8,6 +8,19 @@ import { flexwebBrevo } from './src/email-plugin.mjs';
 
 export default defineConfig({
   output: 'server',
+  // Declare the content language without adding prefixes or redirects to CMS routes.
+  i18n: { defaultLocale: 'fr', locales: ['fr'], routing: 'manual' },
+  vite: {
+    environments: {
+      ssr: {
+        build: {
+          // Kysely has order-sensitive circular imports. Preserve initialization
+          // order across Rolldown chunks in the deployed Worker as well as dev.
+          rolldownOptions: { output: { strictExecutionOrder: true } },
+        },
+      },
+    },
+  },
   adapter: cloudflare({ imageService: 'passthrough' }),
   integrations: [
     react(),
