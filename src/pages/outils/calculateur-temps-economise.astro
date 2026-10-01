@@ -7,7 +7,7 @@ const canonicalUrl = "https://flex-web.fr/outils/calculateur-temps-economise/";
 const schemas = [{ "@type": "WebApplication", "@id": `${canonicalUrl}#tool`, name: "Calculateur de temps économisé", url: canonicalUrl, applicationCategory: "BusinessApplication", operatingSystem: "Web", offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" }, provider: { "@id": "https://flex-web.fr/#organization" } }];
 ---
 <BaseLayout title="Calculateur de temps économisé par automatisation | Flex-Web" description="Estimez le temps que votre entreprise pourrait économiser en automatisant une tâche répétitive, avec hypothèses transparentes et limites affichées.">
-  <main class="tool-page">
+  <div class="tool-page">
     <nav aria-label="Fil d’Ariane"><a href="/">Accueil</a> / <span>Calculateur</span></nav>
     <header><p>Ressource Flex-Web</p><h1>Combien de temps une automatisation peut-elle vous rendre ?</h1><p>Entrez une tâche répétée chaque semaine. Le calcul donne un ordre de grandeur pour décider si un cadrage vaut la peine.</p></header>
     <TimeSavingsCalculator client:load />
@@ -16,6 +16,6 @@ const schemas = [{ "@type": "WebApplication", "@id": `${canonicalUrl}#tool`, nam
       <p>Le calcul ne promet pas un gain réel. Il met en évidence une zone de travail : fréquence, durée, coût horaire et part réellement automatisable. Une tâche utile à automatiser reste une tâche mesurable, répétée, avec des règles claires et une reprise manuelle possible.</p>
       <a href="/demarrer/?service=automation" data-conversion-event="quote_click" data-conversion-service="automation">Étudier mon processus →</a>
     </section>
-  </main>
+  </div>
   <StructuredData schemas={schemas} slot="head" />
 </BaseLayout>
