@@ -13,9 +13,16 @@ export const MAX_URLS = 50;
 const sha = value => createHash('sha256').update(value).digest('hex');
 const commercial = ['creation-site-internet', 'creation-application-mobile', 'automatisation-ia'].flatMap(service => ['', '-savoie', '-haute-savoie'].map(region => `/${service}${region}/`));
 const realizations = ['foot-nation', '2savoie-immo', 'serrurier73'].map(slug => `/realisations/${slug}/`);
+const regionalApplications = commercial.filter(route => /^\/creation-application-mobile-(?:savoie|haute-savoie)\/$/.test(route));
+const automationGuides = ['assistant-ia-interne-entreprise', 'connecter-demandes-crm', 'automatisation-ou-application-sur-mesure', 'taches-automatiser-pme'].map(slug => `/journal/${slug}/`);
 const priorityRoutes = new Set(['/', '/about/', '/pricing/', '/journal/', '/realisations/', ...commercial, ...realizations]);
 const dependencies = new Map([
   ['src/pages/[slug].astro', commercial],
+  ['src/data/regional-application-briefs.ts', regionalApplications],
+  ['src/components/marketing/ApplicationRegionalBrief.astro', regionalApplications],
+  ['src/data/journalArticles.json', ['/journal/']],
+  ['src/components/JournalListing.jsx', ['/journal/']],
+  ['src/layout/AutomationGuideLayout.astro', automationGuides],
   ['src/components/automation/AutomationLanding.astro', commercial.filter(route => route.startsWith('/automatisation-'))],
   ['src/data/automationPages.ts', commercial.filter(route => route.startsWith('/automatisation-'))],
   ['src/pages/realisations/[slug].astro', realizations],
@@ -77,9 +84,14 @@ export function pageFingerprint(html, url, robots = '') {
   if (canonicals.length !== 1 || new URL(canonicals[0], url).href !== url) throw Error('CANONICAL_MISMATCH');
   if (!main || !title || !normalize(text(main))) throw Error('MISSING_CONTENT');
   // CSS/JS filenames and navigation changes alone are not a material page update.
-  const links = [];
-  walk(main, node => { const a = attrs(node); if (node.tagName === 'a' && a.href) links.push([normalize(text(node)), a.href]); });
-  return sha(JSON.stringify({ title, description, main: normalize(text(main)), links, schemas }));
+  const links = [], images = [];
+  walk(main, node => {
+    const a = attrs(node);
+    if (node.tagName === 'a' && a.href) links.push([normalize(text(node)), a.href]);
+    if (node.tagName === 'img') images.push({ src: a.src || '', srcset: a.srcset || '', alt: a.alt || '' });
+    if (node.tagName === 'source' && node.parentNode?.tagName === 'picture') images.push({ srcset: a.srcset || '', media: a.media || '', type: a.type || '' });
+  });
+  return sha(JSON.stringify({ title, description, main: normalize(text(main)), links, images, schemas }));
 }
 
 async function jsonFile(filename, fallback) {
