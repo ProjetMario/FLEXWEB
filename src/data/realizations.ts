@@ -7,6 +7,10 @@ export const realizations = [
     journey: ['Choisir son entrée : joueur, club, éducateur, bénévole ou supporter.', 'Créer son compte avec le mode d’inscription proposé.', 'Explorer les profils et les espaces de la plateforme.'],
     projectQuestions: ['Quels profils auront accès à votre application ?', 'Quelles informations chacun pourra-t-il voir ou modifier ?', 'Quelle première action permettra de tester l’intérêt du service ?'],
     features: ['Des entrées pour les joueurs, clubs, éducateurs, bénévoles et supporters.', 'Un parcours d’inscription par e-mail ou avec Google.', 'Des espaces et profils pour structurer la communauté et une recherche pour explorer la plateforme.'],
+    stack: ['Plateforme web', 'Parcours multi-profils', 'Authentification visible', 'Recherche et profils publics'],
+    limits: ['Les résultats commerciaux, l’activité des comptes et les données internes ne sont pas publiés.', 'Cette fiche décrit les parcours publics vérifiés, pas l’ensemble des écrans privés.'],
+    testimonial: 'Témoignage client à ajouter uniquement après autorisation écrite.',
+    measuredResults: 'Résultats chiffrés non publiés : aucune performance commerciale n’est revendiquée sans mesure confirmée.',
     takeaway: 'Lorsqu’un projet comporte plusieurs types d’utilisateurs, le cadrage doit préciser leurs droits, leurs parcours et les informations visibles. Ces décisions précèdent le choix des écrans.',
     service: 'application', servicePath: '/creation-application-mobile/', serviceLabel: 'Développer une application web ou mobile' },
   { slug: '2savoie-immo', name: '2 Savoie Immo', category: 'Immobilier en Savoie et Haute-Savoie', href: 'https://www.2savoie.immo/', domain: '2savoie.immo', image: '2savoie-immo.jpg',
@@ -16,6 +20,10 @@ export const realizations = [
     journey: ['Consulter les biens ou choisir la demande d’estimation.', 'Lire les informations utiles sur le bien, le territoire ou l’agence.', 'Transmettre ses coordonnées et préciser son projet.'],
     projectQuestions: ['Quels sont les deux ou trois principaux motifs de contact ?', 'Qui tiendra les annonces et les contenus à jour ?', 'Quelles informations sont nécessaires avant de rappeler un prospect ?'],
     features: ['Un catalogue de biens avec des pages de présentation.', 'Un accès à la demande d’estimation depuis la navigation.', 'Un formulaire avec les coordonnées et le message du visiteur.', 'Une présentation des territoires et de l’agence pour situer son activité.'],
+    stack: ['Site immobilier', 'Catalogue de biens', 'Formulaire de demande', 'Pages de territoire'],
+    limits: ['Les volumes de prospects, ventes ou estimations ne sont pas affichés sans données confirmées.', 'Les connexions internes éventuelles au suivi commercial ne sont pas revendiquées dans cette fiche.'],
+    testimonial: 'Témoignage client à ajouter uniquement après autorisation écrite.',
+    measuredResults: 'Résultats chiffrés à confirmer : la fiche reste limitée aux fonctions publiquement observables.',
     takeaway: 'Un site immobilier doit distinguer la recherche d’un bien et le projet de vente. Des appels à l’action adaptés permettent de recueillir une demande plus précise. Un raccordement au suivi commercial peut ensuite faire l’objet d’un cadrage séparé.',
     service: 'site', servicePath: '/creation-site-internet-haute-savoie/', serviceLabel: 'Créer un site en Haute-Savoie' },
   { slug: 'serrurier73', name: 'Serrurier 73', category: 'Artisan en Savoie', href: 'https://serrurier73.fr/', domain: 'serrurier73.fr', image: 'serrurier73.jpg',
@@ -25,6 +33,15 @@ export const realizations = [
     journey: ['Identifier la prestation : portail, escalier, garde-corps ou serrurerie.', 'Explorer les réalisations pour préciser son idée.', 'Appeler ou demander un devis depuis le site.'],
     projectQuestions: ['Quelles prestations souhaitez-vous recevoir en priorité ?', 'Quelles photos de réalisations pouvez-vous publier ?', 'Quelle zone d’intervention faut-il annoncer et quelles demandes filtrer ?'],
     features: ['Des rubriques pour les portails, escaliers, garde-corps et travaux de serrurerie.', 'Un accès aux réalisations pour découvrir les ouvrages.', 'Des actions pour appeler ou demander un devis.', 'Des pages qui expliquent les prestations et leur contexte local.'],
+    stack: ['Site vitrine artisan', 'Galerie de réalisations', 'Actions téléphone et devis', 'Pages prestations'],
+    limits: ['Le nombre de demandes générées et les ventes ne sont pas publiés sans mesure validée.', 'Les informations décrivent le site public observé à la date de vérification.'],
+    testimonial: 'Témoignage client à ajouter uniquement après autorisation écrite.',
+    measuredResults: 'Résultats chiffrés non publiés : aucune promesse de demandes ou de chiffre d’affaires n’est associée à cette fiche.',
     takeaway: 'Pour un artisan, des prestations faciles à identifier et des exemples visuels aident le visiteur à formuler sa demande. Le téléphone et le formulaire répondent à des situations différentes : ils doivent rester faciles à trouver sur mobile.',
     service: 'site', servicePath: '/creation-site-internet-savoie/', serviceLabel: 'Créer un site en Savoie' },
+] as const;
+
+export const plannedCaseStudies = [
+  { title: 'Automatisation métier', status: 'Exemple en cours de documentation', text: 'Fiche à publier lorsqu’un parcours réel pourra être décrit avec périmètre, validations et limites vérifiées.' },
+  { title: 'Assistant IA interne', status: 'Exemple en cours de documentation', text: 'Fiche à publier uniquement avec un cas réel, des sources documentaires autorisées et une preuve de fonctionnement.' },
 ] as const;

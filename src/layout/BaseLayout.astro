@@ -5,6 +5,7 @@ import Footer from "../components/global/Footer.jsx";
 import CookieConsent from "../components/global/CookieConsent.jsx";
 import Acquisition from "../components/seo/Acquisition.astro";
 import Analytics from "../components/seo/Analytics.astro";
+import ConversionEvents from "../components/seo/ConversionEvents.astro";
 
 import navigationLinks from "../data/navigation.json";
 import footerData from "../data/footer.json";
@@ -21,6 +22,7 @@ const { title, description, image, noindex, keywords, transparentNav = false } =
 
     <Analytics />
     <Acquisition />
+    <ConversionEvents />
 
     <slot name="head" />
   </head>

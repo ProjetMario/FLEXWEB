@@ -4,7 +4,7 @@ interface Props { service: CommercialService; secondaryHref?: string; secondaryL
 const { service, secondaryHref = '#votre-projet', secondaryLabel = 'Voir le périmètre et le budget' } = Astro.props;
 ---
 <div class="quote-entry">
-  <a class="quote-entry-primary" href={commercialQuoteHref(service)}>Demander mon devis <span aria-hidden="true">→</span></a>
+  <a class="quote-entry-primary" href={commercialQuoteHref(service)} data-conversion-event="quote_click" data-conversion-service={service}>Demander mon devis <span aria-hidden="true">→</span></a>
   <a class="quote-entry-secondary" href={secondaryHref}>{secondaryLabel}</a>
   <p>Demande gratuite — périmètre et calendrier validés avant paiement.</p>
 </div>

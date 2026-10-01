@@ -10,7 +10,7 @@ const euros = (cents) => new Intl.NumberFormat("fr-FR", {style: "currency", curr
       <div class="offer-top"><span class="offer-category">{["Votre présence en ligne", "Votre visibilité", "Votre gestion simplifiée"][i]}</span><span class="offer-index" aria-hidden="true">0{i + 1}</span></div>
       <h3>{offer.name}</h3><p class="offer-description">{offer.description}</p>
       <p class="offer-amount">{euros(offer.setupCents)} <span>TTC</span></p><p class="offer-frequency">Paiement unique</p>
-      <a class="m-button" href={offer.href} aria-label={`Choisir l’offre ${offer.name}`}>Choisir cette offre <span aria-hidden="true">↗</span></a>
+      <a class="m-button" href={offer.href} aria-label={`Choisir l’offre ${offer.name}`} data-conversion-event="quote_click" data-conversion-service="site">Choisir cette offre <span aria-hidden="true">↗</span></a>
       <ul class="offer-features">{offer.features.map(feature => <li><span aria-hidden="true">✓</span>{feature}</li>)}</ul>
       <p class="offer-footnote">Devis gratuit avant tout paiement.</p>
     </article>)}

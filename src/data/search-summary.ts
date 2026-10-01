@@ -38,6 +38,15 @@ Les scénarios présentés sont des démonstrations illustratives. Ils ne consti
 - [Serrurier 73 : prestations artisanales](https://flex-web.fr/realisations/serrurier73/)
 Les fonctionnalités publiques sont décrites sans attribuer de résultats commerciaux non mesurés.
 
+## Spécialités métier
+- [Sites, devis et automatisation pour artisans](https://flex-web.fr/specialites/artisans/)
+- [Sites, CRM et automatisations pour l’immobilier](https://flex-web.fr/specialites/immobilier/)
+- [Automatisation IA, CRM et applications pour entreprises de services](https://flex-web.fr/specialites/entreprises-services/)
+
+## Ressources interactives
+- [Calculateur de temps économisé](https://flex-web.fr/outils/calculateur-temps-economise/)
+- [Démonstration CRM : demandes, relances et devis](https://flex-web.fr/outils/demo-crm/)
+
 ## Pages principales
 - [Automatisation IA en France](https://flex-web.fr/automatisation-ia/)
 - [Automatisation IA en Savoie](https://flex-web.fr/automatisation-ia-savoie/)

@@ -23,7 +23,7 @@ export default function PricingCard({ plan }) {
           <strong className="whitespace-nowrap text-4xl font-semibold tracking-tight">
             {plan.firstPayment}
           </strong>
-          <span className="text-sm">HT</span>
+          <span className="text-sm">TTC</span>
         </p>
         <p className="mt-3 text-sm leading-relaxed text-[#52525b]">
           {plan.setupPrice} de création
@@ -33,7 +33,7 @@ export default function PricingCard({ plan }) {
           <p className="text-sm text-[#424245]">Puis, chaque mois</p>
           <p className="mt-1 text-2xl font-semibold text-[#1d1d1f]">
             {plan.monthlyPrice}{" "}
-            <span className="ml-1 text-sm font-normal">HT / mois</span>
+            <span className="ml-1 text-sm font-normal">TTC / mois</span>
           </p>
         </div>
       </div>

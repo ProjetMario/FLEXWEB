@@ -1,0 +1,21 @@
+---
+import BaseLayout from "../../layout/BaseLayout.astro";
+import CrmDemo from "../../components/marketing/CrmDemo.jsx";
+import StructuredData from "../../components/seo/StructuredData.astro";
+import "../../styles/tools.css";
+const canonicalUrl = "https://flex-web.fr/outils/demo-crm/";
+const schemas = [{ "@type": "WebApplication", "@id": `${canonicalUrl}#tool`, name: "Démonstration CRM Flex-Web", url: canonicalUrl, applicationCategory: "BusinessApplication", operatingSystem: "Web", offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" }, provider: { "@id": "https://flex-web.fr/#organization" } }];
+---
+<BaseLayout title="Démonstration CRM : demandes, relances et devis | Flex-Web" description="Comprendre comment un CRM simple organise les demandes, relances, devis et prochaines actions avant une automatisation sur mesure.">
+  <main class="tool-page">
+    <nav aria-label="Fil d’Ariane"><a href="/">Accueil</a> / <span>Démo CRM</span></nav>
+    <header><p>Ressource Flex-Web</p><h1>Voir comment une demande devient une action suivie.</h1><p>Cette démonstration illustre un fonctionnement possible : demande reçue, qualification, relance, devis et prochaine action.</p></header>
+    <CrmDemo client:load />
+    <section class="tool-copy">
+      <h2>Ce que cette démo montre vraiment</h2>
+      <p>Le CRM ne remplace pas votre décision. Il sert à retrouver les contacts, statuts, devis et actions à traiter. Les connexions e-mail, SMS, facturation ou outils métier sont étudiées au devis selon vos accès réels.</p>
+      <a href="/demarrer/?service=automation&offre=crm-automation" data-conversion-event="quote_click" data-conversion-service="automation">Mettre en place mon CRM →</a>
+    </section>
+  </main>
+  <StructuredData schemas={schemas} slot="head" />
+</BaseLayout>
