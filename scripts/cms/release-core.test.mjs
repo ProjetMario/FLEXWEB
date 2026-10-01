@@ -43,6 +43,20 @@ test('one build, verified preview and same deployment promoted', async t => {
   assert.equal(JSON.parse(await readFile(path.join(options.artifactDir, '.well-known/flexweb-release.json'))).snapshotSha256, r.snapshotSha256);
 });
 
+test('publication evidence retains actual previous production code and snapshot for targeted notifications', async t => {
+  const options = await fixture(t);
+  const production = options.providers.currentProduction;
+  const previousCodeCommit = 'b'.repeat(40), previousSnapshotSha256 = 'c'.repeat(64);
+  options.providers.currentProduction = async () => ({ ...await production(), codeCommit: previousCodeCommit, snapshotSha256: previousSnapshotSha256 });
+  const result = await executeRelease(options);
+  assert.equal(result.status, 'deployed');
+  const saved = JSON.parse(await readFile(options.statusPath));
+  assert.equal(saved.previousDeployId, 'previous');
+  assert.equal(saved.previousCodeCommit, previousCodeCommit);
+  assert.equal(saved.previousSnapshotSha256, previousSnapshotSha256);
+  assert.equal(saved.codeCommit, commit);
+});
+
 test('same revision and code already deployed do not build again', async t => {
   const options = await fixture(t);
   options.providers.currentProduction = async () => ({ siteId: PUBLIC_SITE_ID, id: 'previous', ready: true, gitBuildsStopped: true, nonGitProductionDeploysAllowed: true, codeCommit: commit, snapshotSha256: sha256(await readFile(options.snapshotPath)) });

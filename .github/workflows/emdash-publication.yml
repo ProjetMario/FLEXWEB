@@ -38,6 +38,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
+          fetch-depth: 0
           persist-credentials: true
       - uses: actions/setup-node@v4
         with:
@@ -49,11 +50,25 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Test publication safeguards
         run: npm run cms:test
+      - name: Test IndexNow with simulated provider
+        run: node --test scripts/seo/indexnow-submit.test.mjs
+      - name: Restore IndexNow receipt ledger
+        uses: actions/cache/restore@v4
+        with:
+          path: .cms/indexnow-state.json
+          key: flexweb-indexnow-v2-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: flexweb-indexnow-v2-
       - name: Snapshot, build once, verify preview, promote the same deployment
         run: node scripts/cms/release.mjs
       - name: Notify IndexNow for changed priority URLs
         if: success()
         run: node scripts/seo/indexnow-submit.mjs
+      - name: Persist IndexNow receipts and uncertain attempts
+        if: always() && hashFiles('.cms/indexnow-state.json') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: .cms/indexnow-state.json
+          key: flexweb-indexnow-v2-${{ github.run_id }}-${{ github.run_attempt }}
       - name: Archive immutable snapshot and publication evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -62,6 +77,7 @@ jobs:
           path: |
             .cms/publication-report.json
             .cms/indexnow-report.json
+            .cms/indexnow-state.json
             .cms/releases/*.json
           include-hidden-files: true
           retention-days: 90

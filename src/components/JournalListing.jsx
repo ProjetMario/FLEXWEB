@@ -14,14 +14,14 @@ export default function JournalListing({ data = [], featured = null }) {
           </span>
         </div>
         <p className="text-sm font-light text-gray-400 mt-4 max-w-xs leading-relaxed">
-          Conseils pratiques pour créer un site internet clair, rapide et visible localement.
+          Sites internet, automatisation IA et applications : des repères concrets pour choisir votre projet et préparer votre devis.
         </p>
       </MotionWrapper>
 
       {featured && (
         <MotionWrapper type="fade-up" className="w-full max-w-8xl mx-auto px-4 pb-12" as="section">
           <a
-            href={`/journal/${featured.slug}`}
+            href={`/journal/${featured.slug}/`}
             className="group grid grid-cols-1 md:grid-cols-2 gap-0 border border-gray-100 rounded-xl overflow-hidden hover:border-gray-300 transition-colors duration-200"
           >
             <div className="relative overflow-hidden bg-[#f5ebda] aspect-[4/3] md:aspect-auto">
@@ -57,7 +57,7 @@ export default function JournalListing({ data = [], featured = null }) {
         <MotionWrapper type="fade-up" isContainer className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12 grotesque-font">
           {data.map((item) => (
             <MotionChild key={item.slug}>
-              <a href={`/journal/${item.slug}`} className="group flex flex-col gap-0">
+              <a href={`/journal/${item.slug}/`} className="group flex flex-col gap-0">
                 <div className="overflow-hidden aspect-[4/3]">
                   <img
                     loading="lazy"

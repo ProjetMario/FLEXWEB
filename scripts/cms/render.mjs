@@ -26,23 +26,29 @@ export async function renderSnapshot({root=process.cwd(),dist=path.join(root,'di
  try{
  const stageFile=route=>path.join(stage,hash(route)+'.html');
  const pageFile=route=>path.join(dist,route,'index.html');
+ const markTouched=(route,date)=>{const previous=touched.get(route);if(!previous||Date.parse(date)>Date.parse(previous))touched.set(route,date);};
  for(const entry of snapshot.entries.filter(e=>e.collection!=='communes')){
   const html=await readFile(pageFile(entry.path),'utf8');let result=applyPage(html,entry);
   if(entry.data.images)result=applyImages(result,entry.data.images,{mediaOrigin:process.env.EMDASH_URL});
   // Parse the result again: malformed edits cannot remove canonical/meta/main.
-  extractPage(result,entry.path);await writeFile(stageFile(entry.path),result);changes.set(entry.path,stageFile(entry.path));touched.set(entry.path,entry.updatedAt);
+  extractPage(result,entry.path);
+  if(result!==html){await writeFile(stageFile(entry.path),result);changes.set(entry.path,stageFile(entry.path));markTouched(entry.path,entry.updatedAt);}
  }
  const communeEntries=snapshot.entries.filter(e=>e.collection==='communes');
  if(communeEntries.length){
   const original=JSON.parse(await readFile(path.join(root,'src/data/national/territorial-drafts.json'),'utf8'));const communes=new Map(original.communes.map(c=>[c.code,c]));
   for(const entry of communeEntries){const commune=communes.get(entry.sourceId);if(!commune)throw Error('Commune inconnue');
-   for(const axis of ['sites','automatisation']){const route=draftPath(axis,commune),html=await readFile(changes.get(route)??pageFile(route),'utf8');await writeFile(stageFile(route),addCommuneNotes(html,entry,commune));changes.set(route,stageFile(route));touched.set(route,entry.updatedAt);}
+   for(const axis of ['sites','automatisation']){const route=draftPath(axis,commune),html=await readFile(changes.get(route)??pageFile(route),'utf8'),result=addCommuneNotes(html,entry,commune);
+    if(result!==html){await writeFile(stageFile(route),result);changes.set(route,stageFile(route));markTouched(route,entry.updatedAt);}
+   }
   }
  }
  // Validate the entire batch before writing any rendered file.
  for(const [route,filename]of changes)await copyFile(filename,pageFile(route));
  let sitemapFiles=[];try{sitemapFiles=await readdir(path.join(dist,'sitemaps'));}catch(e){if(e.code!=='ENOENT')throw e;}
- for(const name of sitemapFiles.filter(n=>n.endsWith('.xml'))){const filename=path.join(dist,'sitemaps',name);const xml=await readFile(filename,'utf8');const updated=xml.replace(/<url>([\s\S]*?)<\/url>/g,(whole,body)=>{const loc=body.match(/<loc>([^<]+)<\/loc>/)?.[1];if(!loc)return whole;const date=touched.get(new URL(loc).pathname);if(!date)return whole;const day=date.slice(0,10);return `<url>${/<lastmod>/.test(body)?body.replace(/<lastmod>[^<]*<\/lastmod>/,`<lastmod>${day}</lastmod>`):body+`<lastmod>${day}</lastmod>`}</url>`;});if(updated!==xml)await writeFile(filename,updated);}
+ // Source content can be newer than the last CMS revision. Never move its
+ // sitemap date backwards, or refresh unchanged pages just for a re-publication.
+ for(const name of sitemapFiles.filter(n=>n.endsWith('.xml'))){const filename=path.join(dist,'sitemaps',name);const xml=await readFile(filename,'utf8');const updated=xml.replace(/<url>([\s\S]*?)<\/url>/g,(whole,body)=>{const loc=body.match(/<loc>([^<]+)<\/loc>/)?.[1];if(!loc)return whole;const date=touched.get(new URL(loc).pathname);if(!date)return whole;const day=new Date(date).toISOString().slice(0,10),previous=body.match(/<lastmod>([^<]*)<\/lastmod>/)?.[1];if(previous&&Date.parse(previous)>=Date.parse(day))return whole;return `<url>${/<lastmod>/.test(body)?body.replace(/<lastmod>[^<]*<\/lastmod>/,`<lastmod>${day}</lastmod>`):body+`<lastmod>${day}</lastmod>`}</url>`;});if(updated!==xml)await writeFile(filename,updated);}
  const report={active:true,id:snapshot.id,pages:changes.size,changedRoutes:[...changes.keys()]};await writeFile(path.join(root,'.cms/render-report.json'),JSON.stringify(report,null,2)+'\n',{mode:0o600});return report;
  }finally{await rm(stage,{recursive:true,force:true});}
 }

@@ -2,10 +2,11 @@
 import BaseLayout from "./BaseLayout.astro";
 import StructuredData from "../components/seo/StructuredData.astro";
 
-interface Props { title: string; description: string; slug: string; answer: string; readingTime: string; updatedOn?: string }
-const { title, description, slug, answer, readingTime, updatedOn } = Astro.props;
+interface Props { title: string; description: string; slug: string; answer: string; readingTime: string; updatedOn?: string; publishedOn?: string }
+const { title, description, slug, answer, readingTime, updatedOn, publishedOn } = Astro.props;
 const canonicalUrl = `https://flex-web.fr/journal/${slug}/`;
-const published = "2026-09-11";
+const published = publishedOn || "2026-09-11";
+const formatDate = (date: string) => new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" }).format(new Date(`${date}T12:00:00Z`));
 const schemas = [
   { "@type": "WebPage", "@id": canonicalUrl, url: canonicalUrl, name: title, description, inLanguage: "fr-FR", isPartOf: { "@id": "https://flex-web.fr/#website" } },
   { "@type": "Article", "@id": `${canonicalUrl}#article`, mainEntityOfPage: { "@id": canonicalUrl }, url: canonicalUrl, headline: title, description, inLanguage: "fr-FR", datePublished: published, dateModified: updatedOn || published, author: { "@id": "https://flex-web.fr/#organization" }, publisher: { "@id": "https://flex-web.fr/#organization" }, about: { "@type": "Service", name: "Automatisation de tâches IA", url: "https://flex-web.fr/automatisation-ia/" } },
@@ -16,6 +17,7 @@ const schemas = [
   ] },
 ];
 const related = [
+  { slug: "assistant-ia-interne-entreprise", title: "Assistant IA interne : par où commencer dans une PME ?" },
   { slug: "taches-automatiser-pme", title: "Quelles tâches automatiser dans une PME ?" },
   { slug: "connecter-demandes-crm", title: "Comment relier les demandes de votre site à un CRM ?" },
   { slug: "automatisation-ou-application-sur-mesure", title: "Automatisation ou application sur mesure : que choisir ?" },
@@ -30,7 +32,7 @@ const related = [
       <p class="eyebrow">Guide pratique · Automatisation & outils métier</p>
       <h1>{title}</h1>
       <p class="description">{description}</p>
-      <p class="byline">Par FLEX-WEB · <time datetime={published}>11 septembre 2026</time> · {readingTime} de lecture</p>
+      <p class="byline">Par <a href="/about/" rel="author">FLEX-WEB</a> · <time datetime={published}>{formatDate(published)}</time> · {readingTime} de lecture</p>
       {updatedOn && <p class="byline">Mis à jour le <time datetime={updatedOn}>{new Intl.DateTimeFormat('fr-FR', { day:'numeric', month:'long', year:'numeric', timeZone:'Europe/Paris' }).format(new Date(`${updatedOn}T12:00:00Z`))}</time></p>}
     </header>
     <aside class="quick-answer" aria-labelledby="quick-answer-title"><h2 id="quick-answer-title">La réponse en quelques mots</h2><p>{answer}</p></aside>

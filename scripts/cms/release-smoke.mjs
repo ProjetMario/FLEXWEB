@@ -4,7 +4,7 @@ import { chromium } from 'playwright';
 const origin = process.argv[2] || 'http://127.0.0.1:4321';
 const url = new URL(origin);
 if (!((url.protocol === 'http:' && url.hostname === '127.0.0.1') || (url.protocol === 'https:' && /^[a-z0-9-]+--flex-webb\.netlify\.app$/.test(url.hostname)))) throw new Error('Unexpected preview origin');
-const paths = ['/creation-site-internet-savoie/', '/creation-site-internet-haute-savoie/', '/automatisation-ia-savoie/', '/automatisation-ia-haute-savoie/', '/creation-application-mobile-savoie/', '/creation-application-mobile-haute-savoie/', '/realisations/foot-nation/', '/realisations/2savoie-immo/', '/realisations/serrurier73/'];
+const paths = ['/journal/assistant-ia-interne-entreprise/', '/about/', '/creation-site-internet-savoie/', '/creation-site-internet-haute-savoie/', '/automatisation-ia-savoie/', '/automatisation-ia-haute-savoie/', '/creation-application-mobile-savoie/', '/creation-application-mobile-haute-savoie/', '/realisations/foot-nation/', '/realisations/2savoie-immo/', '/realisations/serrurier73/'];
 const browser = await chromium.launch({ headless: true });
 try {
   for (const width of [375, 768, 1440]) {
@@ -29,5 +29,5 @@ try {
     }
     await context.close();
   }
-  console.log('EmDash preview: 9 pages × 3 widths, canonical, quote CTA and keyboard checks passed; external APIs blocked.');
+  console.log(`EmDash preview: ${paths.length} pages × 3 widths, canonical, quote CTA and keyboard checks passed; external APIs blocked.`);
 } finally { await browser.close(); }
