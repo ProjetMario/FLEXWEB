@@ -25,10 +25,17 @@ export const websiteOffers: WebsiteOffer[] = publicQuotes.websiteOffers.map((off
 }));
 export const automationOffers = publicQuotes.automationOffers.map(offer => ({
   ...offer,
+  description: "Mise en place d’un CRM, automatisation des tâches répétitives et assistant IA interne à votre entreprise, selon le périmètre défini au devis.",
+  features: [...offer.features, "Mise en place d’un assistant IA interne à l’entreprise, adapté aux besoins définis au devis"],
   href: `/demarrer/?service=automation&offre=${offer.id}`,
 }));
 export const projectOffers = [...websiteOffers, ...automationOffers];
-export const pricingOptions = publicQuotes.options;
+// Presentation of the current services; monetary values and historical quote
+// snapshots remain owned by the shared catalogue. New scope is agreed by quote.
+export const pricingOptions = publicQuotes.options.map(option => option.id === "crm" ? {
+  ...option,
+  description: "Suivi du CRM, des automatisations, de votre assistant IA interne, du référencement et des dernières technologies, avec veille et recommandations adaptées à votre entreprise, selon le périmètre convenu au devis.",
+} : option);
 
 // Keep the two presentational component types compatible without publishing
 // the former subscription catalog or buyout prices.
@@ -49,7 +56,7 @@ export type PricingFaqItem = { question: string; answer: string };
 export const pricingFaq: PricingFaqItem[] = [
   {
     question: "Que comprennent les trois offres ?",
-    answer: "299 € TTC : un site vitrine jusqu’à 5 pages. 590 € TTC : un site de 5 pages et plus avec référencement naturel (SEO) et optimisation pour la recherche par IA (GEO), notamment sur Google et Bing. 990 € TTC : la mise en place d’un CRM pour les contacts, clients, devis et factures, avec automatisation des tâches répétitives. Chaque forfait est payé une seule fois ; le devis fixe les pages, les outils, les automatisations et le périmètre exact.",
+    answer: "299 € TTC : un site vitrine jusqu’à 5 pages. 590 € TTC : un site de 5 pages et plus avec référencement naturel (SEO) et optimisation pour la recherche par IA (GEO), notamment sur Google et Bing. 990 € TTC : la mise en place d’un CRM pour les contacts, clients, devis et factures, avec automatisation des tâches répétitives et mise en place d’un assistant IA interne à l’entreprise. Chaque forfait est payé une seule fois ; le devis fixe les pages, les outils, les automatisations et le périmètre exact.",
   },
   {
     question: "L’offre à 590 € garantit-elle une position sur Google ou dans les réponses IA ?",
@@ -57,11 +64,11 @@ export const pricingFaq: PricingFaqItem[] = [
   },
   {
     question: "Un abonnement mensuel est-il obligatoire ?",
-    answer: "Non. Les options mensuelles sont facultatives : 49 € TTC par mois pour la maintenance, les modifications et le suivi du référencement ; 99 € TTC par mois pour le CRM, l’automatisation, le référencement et le suivi des dernières technologies. Vous choisissez les options utiles dans votre devis ; elles ne sont pas ajoutées automatiquement.",
+    answer: "Non. Les options mensuelles sont facultatives : 49 € TTC par mois pour la maintenance, les modifications et le suivi du référencement ; 99 € TTC par mois pour le CRM, l’automatisation, l’assistant IA interne à l’entreprise, le référencement et le suivi des dernières technologies. Vous choisissez les options utiles dans votre devis ; elles ne sont pas ajoutées automatiquement.",
   },
   {
     question: "Que comprennent les options à 49 € et 99 € par mois ?",
-    answer: "L’option à 49 € TTC par mois couvre la maintenance simple, les modifications de contenu et le suivi du référencement. L’option à 99 € TTC par mois concerne le CRM, l’automatisation, le référencement et le suivi des dernières technologies, avec veille et recommandations adaptées à votre activité. Le devis définit les interventions, les outils, les limites et les conditions de chaque option. Les licences, consommations et travaux sur mesure éventuels sont précisés avant accord.",
+    answer: "L’option à 49 € TTC par mois couvre la maintenance simple, les modifications de contenu et le suivi du référencement. L’option à 99 € TTC par mois concerne le CRM, l’automatisation, l’assistant IA interne à l’entreprise, le référencement et le suivi des dernières technologies, avec veille et recommandations adaptées à votre activité. Le devis définit les interventions, les outils, les limites et les conditions de chaque option. Les licences, consommations et travaux sur mesure éventuels sont précisés avant accord.",
   },
   {
     question: "L’hébergement et le nom de domaine sont-ils compris ?",
@@ -69,7 +76,7 @@ export const pricingFaq: PricingFaqItem[] = [
   },
   {
     question: "Quelle différence entre le forfait CRM à 990 € et l’option à 99 €/mois ?",
-    answer: "Le forfait à 990 € TTC finance la mise en place du CRM et les automatisations définies au devis. L’option facultative à 99 € TTC/mois sert au suivi du CRM, des automatisations, du référencement et des dernières technologies, avec veille et recommandations. Les outils, interventions, licences et limites sont précisés avant accord. Les automatisations IA avancées et les applications web ou mobiles font l’objet d’un devis sur mesure.",
+    answer: "Le forfait à 990 € TTC finance la mise en place du CRM, des automatisations et d’un assistant IA interne à l’entreprise, selon le périmètre défini au devis. L’option facultative à 99 € TTC/mois sert au suivi du CRM, des automatisations, de l’assistant IA interne, du référencement et des dernières technologies, avec veille et recommandations. Les outils, interventions, licences et limites sont précisés avant accord. Les automatisations IA avancées et les applications web ou mobiles font l’objet d’un devis sur mesure.",
   },
   {
     question: "Quand dois-je payer et quand le projet est-il livré ?",
