@@ -22,9 +22,9 @@ export const searchSummary = `# Flex-Web
 ## Tarifs publics
 - Site vitrine jusqu’à 5 pages : 299 € TTC en paiement unique.
 - Site de 5 pages et plus avec référencement SEO et IA (GEO) pour Google, Bing et les principaux moteurs : 590 € TTC en paiement unique. Le périmètre de pages est confirmé au devis ; le classement et les citations IA ne sont pas garantis.
-- Installation d’un CRM et automatisation des tâches répétitives : 990 € TTC en paiement unique, pour les contacts, devis, factures et le suivi client définis au devis.
+- Installation d’un CRM, automatisation des tâches répétitives et mise en place d’un assistant IA interne à l’entreprise : 990 € TTC en paiement unique, pour les contacts, devis, factures et le suivi client définis au devis.
 - Option maintenance, modifications et suivi du référencement : 49 € TTC par mois.
-- Option de suivi du CRM, des automatisations, du référencement et des dernières technologies (veille et recommandations) : 99 € TTC par mois, distincte de l’installation.
+- Option de suivi du CRM, des automatisations, de l’assistant IA interne, du référencement et des dernières technologies (veille et recommandations) : 99 € TTC par mois, distincte de l’installation.
 - Automatisation IA sur mesure et applications : devis personnalisé.
 - Le devis précise le périmètre, les limites, les taxes et les éventuels coûts de services tiers. Les options mensuelles ne sont pas obligatoires.
 - Le calendrier dépend du projet et est fixé au devis après étude du besoin.

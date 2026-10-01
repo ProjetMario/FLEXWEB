@@ -109,7 +109,7 @@ export default function StartProject() {
       <h1>{service === "automation" ? "Automatisez vos tâches." : service === "application" ? "Votre application sur mesure." : "Votre site internet."}<br />Commençons par votre besoin.</h1>
       <p className="flow-intro">{bespoke
         ? "Présentez votre activité, vos outils et ce que vous souhaitez améliorer. Nous préparons une proposition personnalisée avant tout engagement."
-        : service === "automation" ? "Mettez en place votre CRM et automatisez vos tâches répétitives pour 990 € TTC en paiement unique. Les outils et automatisations sont confirmés au devis."
+        : service === "automation" ? "Mettez en place votre CRM, vos automatisations et votre assistant IA interne pour 990 € TTC en paiement unique. Les outils, les usages et le périmètre sont confirmés au devis."
         : "Un site vitrine jusqu’à 5 pages à 299 € TTC, ou un site de 5 pages et plus avec SEO et IA à 590 € TTC. Paiement unique après validation du devis."}</p>
       <ol className="flow-steps" aria-label="Étapes de la demande">
         {["Votre activité", "Votre offre", "Votre projet"].map((s, i) => <li key={s} aria-current={step === i ? "step" : undefined}>{i + 1}. {s}</li>)}
