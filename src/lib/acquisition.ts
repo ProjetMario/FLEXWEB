@@ -10,7 +10,7 @@ export function publicLanding(path: string): string | null {
   if (/^\/territoires\/departements\/(?:0[1-9]|1[0-9]|2[1-9]|[3-8][0-9]|9[0-5]|2[ab]|97[1-8]|98[6-8])\/$/.test(path)) return path;
   if (path === '/') return path;
   if (/^\/ressources(?:\/(?:sites|automatisation)(?:\/(?:[a-z0-9-]+|page\/[1-9][0-9]*))?)?\/$/.test(path) && path.length < 120) return path;
-  return /^\/(?:creation-site-internet(?:-[a-z-]+)?|creation-application-mobile(?:-[a-z-]+)?|automatisation-ia(?:-[a-z-]+)?|pricing|contact|about|journal(?:\/[a-z-]+)?|realisations(?:\/[a-z0-9-]+)?)\/$/.test(path) && path.length < 120 ? path : null;
+  return /^\/(?:creation-site-internet(?:-[a-z-]+)?|creation-application-mobile(?:-[a-z-]+)?|automatisation-ia(?:-[a-z-]+)?|pricing|contact|about|journal(?:\/[a-z-]+)?|realisations(?:\/[a-z0-9-]+)?|specialites\/(?:artisans|immobilier|entreprises-services)|outils\/(?:calculateur-temps-economise|demo-crm))\/$/.test(path) && path.length < 120 ? path : null;
 }
 export function classifySource(referrer: string, origin: string, search: string): string {
   const query = new URLSearchParams(search);

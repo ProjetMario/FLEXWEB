@@ -301,6 +301,7 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
     <section class="mt-16 rounded-2xl border p-6" style="border-color: var(--color-border)">
       <h2 class="text-2xl font-semibold tracking-tight">Automatiser les tâches autour de votre projet</h2>
       <p class="mt-4 leading-relaxed">Découvrez le <a href="/automatisation-ia/" class="underline">cadrage d'une automatisation IA</a>, avec des parcours dédiés à la <a href="/automatisation-ia-savoie/" class="underline">Savoie</a> et à la <a href="/automatisation-ia-haute-savoie/" class="underline">Haute-Savoie</a>. Les demandes, les documents et le CRM peuvent être reliés selon vos outils et le périmètre du devis.</p>
+      <p class="mt-4 leading-relaxed">Pour voir un parcours métier, consultez les spécialités <a href="/specialites/artisans/" class="underline">artisans</a>, <a href="/specialites/immobilier/" class="underline">immobilier</a> et <a href="/specialites/entreprises-services/" class="underline">entreprises de services</a>.</p>
     </section>
 
     <section id="faq" class="mt-16">
@@ -326,6 +327,8 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
         href="/demarrer/?service=site"
         class="mt-6 inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-medium text-white transition hover:opacity-90"
         style="background-color: var(--color-accent)"
+        data-conversion-event="quote_click"
+        data-conversion-service="site"
       >
         Demander un devis
       </a>

@@ -15,7 +15,11 @@
     },
     {
       "label": "Réalisations",
-      "href": "/#realisations"
+      "href": "/realisations/"
+    },
+    {
+      "label": "Spécialités",
+      "href": "/specialites/artisans/"
     },
     {
       "label": "Tarifs",

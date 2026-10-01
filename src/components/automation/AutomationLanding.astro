@@ -12,10 +12,10 @@ const siteUrl = "https://flex-web.fr";
 const canonicalUrl = `${siteUrl}/${page.slug}/`;
 const isHub = page.area === "France";
 const guides = [
+  { href: "/outils/calculateur-temps-economise/", title: "Calculateur de temps économisé", text: "Estimer l’intérêt d’une première tâche à automatiser." },
+  { href: "/outils/demo-crm/", title: "Démonstration CRM interactive", text: "Voir comment une demande devient une action suivie." },
   { href: "/journal/assistant-ia-interne-entreprise/", title: "Assistant IA interne : comment commencer ?", text: "Documents, droits et tests pour un premier usage dans votre équipe." },
   { href: "/journal/taches-automatiser-pme/", title: "Quelles tâches automatiser dans une PME ?", text: "Choisir un premier parcours utile et mesurable." },
-  { href: "/journal/connecter-demandes-crm/", title: "Relier les demandes de votre site à un CRM", text: "Passer du formulaire à une prochaine action claire." },
-  { href: "/journal/automatisation-ou-application-sur-mesure/", title: "Automatisation ou application sur mesure ?", text: "Choisir selon votre besoin, vos outils et vos utilisateurs." },
 ];
 const method = [
   { title: "Décrire le travail", text: "Nous identifions une tâche répétitive, son volume, les personnes concernées et les exceptions." },
@@ -61,7 +61,7 @@ const schemas = [
             <h1>{page.heading}</h1>
             <p class="intro">{page.intro}</p>
             {!isHub ? <QuoteEntry service="automation" /> : <div class="actions">
-              <a class="button primary" href="/demarrer/?service=automation&offre=sur-mesure">Demander un devis d’automatisation IA <span aria-hidden="true">↗</span></a>
+              <a class="button primary" href="/demarrer/?service=automation&offre=sur-mesure" data-conversion-event="quote_click" data-conversion-service="automation">Demander un devis d’automatisation IA <span aria-hidden="true">↗</span></a>
               <a class="text-link" href="#exemples">Voir des exemples <span aria-hidden="true">↓</span></a>
             </div>}
             <p class="fineprint">Projet sur mesure · Outils existants étudiés · Validation humaine définie ensemble</p>
@@ -158,7 +158,7 @@ const schemas = [
     </section>
 
     <section class="container content-section">
-      <aside class="quote-panel"><p class="eyebrow">Parlons de votre première tâche</p><h2>Qu’aimeriez-vous arrêter de recopier chaque semaine ?</h2><p>Décrivez votre activité, vos outils et une tâche qui revient souvent. Nous pourrons cadrer un premier projet et établir une proposition sur devis.</p><a class="button primary" href="/demarrer/?service=automation&offre=sur-mesure">Demander mon devis d’automatisation IA <span aria-hidden="true">↗</span></a></aside>
+      <aside class="quote-panel"><p class="eyebrow">Parlons de votre première tâche</p><h2>Qu’aimeriez-vous arrêter de recopier chaque semaine ?</h2><p>Décrivez votre activité, vos outils et une tâche qui revient souvent. Nous pourrons cadrer un premier projet et établir une proposition sur devis.</p><a class="button primary" href="/demarrer/?service=automation&offre=sur-mesure" data-conversion-event="quote_click" data-conversion-service="automation">Demander mon devis d’automatisation IA <span aria-hidden="true">↗</span></a></aside>
       <nav class="regions" aria-label="Automatisation IA par zone">
         <span>Découvrir l’accompagnement :</span>
         <a href="/automatisation-ia/" aria-current={isHub ? "page" : undefined}>France</a>
