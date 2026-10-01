@@ -51,6 +51,9 @@ jobs:
         run: npm run cms:test
       - name: Snapshot, build once, verify preview, promote the same deployment
         run: node scripts/cms/release.mjs
+      - name: Notify IndexNow for changed priority URLs
+        if: success()
+        run: node scripts/seo/indexnow-submit.mjs
       - name: Archive immutable snapshot and publication evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -58,6 +61,7 @@ jobs:
           name: emdash-publication-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             .cms/publication-report.json
+            .cms/indexnow-report.json
             .cms/releases/*.json
           include-hidden-files: true
           retention-days: 90

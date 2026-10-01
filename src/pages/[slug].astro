@@ -57,6 +57,11 @@ const isRegionalCommercial = ["creation-site-internet-savoie", "creation-site-in
 const mobileContent = localApplicationContent[data.slug];
 const automationPath = data.department === "Haute-Savoie" ? "/automatisation-ia-haute-savoie/" : data.department === "Savoie" ? "/automatisation-ia-savoie/" : "/automatisation-ia/";
 const preposition = data.type === "city" ? "à" : "en";
+const regionalOfferRows = [
+  ["Site vitrine", "Jusqu’à 5 pages pour présenter l’activité, les services et les moyens de contact.", "299 € TTC"],
+  ["SEO et IA", "Site de 5 pages et plus avec structure, contenus et référencement Google/Bing/IA.", "590 € TTC"],
+  ["CRM et automatisation", "Suivi des contacts, devis, factures, tâches répétitives et assistant IA interne.", "990 € TTC"],
+];
 
 const normalizeName = (name: string) =>
   name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -245,6 +250,40 @@ if (faqSchema) {
           : `FLEX-WEB accompagne les professionnels ${preposition} ${data.name} pour concevoir un site internet clair, rapide et adapté à leur activité. La prestation peut inclure l'optimisation pour les moteurs de recherche, l'hébergement, la maintenance et le support.`}
       </p>
     </section>}
+
+    {isRegionalCommercial && !isMobile && (
+      <section class="mt-12 rounded-2xl border p-6" style="border-color: var(--color-border)">
+        <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+          Sites internet, SEO IA et automatisation {preposition} {data.name}
+        </h2>
+        <p class="mt-4 leading-relaxed" style="color: var(--color-text-muted)">
+          Le bon choix dépend de votre objectif : présenter votre entreprise, développer votre visibilité locale, ou mieux suivre les demandes qui arrivent depuis le site. Les trois prestations peuvent être demandées séparément ou combinées dans un devis.
+        </p>
+        <div class="mt-5 overflow-x-auto">
+          <table class="w-full border-collapse text-left text-sm">
+            <thead>
+              <tr>
+                <th class="border p-3" style="border-color: var(--color-border); background-color: var(--color-surface)">Offre</th>
+                <th class="border p-3" style="border-color: var(--color-border); background-color: var(--color-surface)">Ce qui est cadré</th>
+                <th class="border p-3" style="border-color: var(--color-border); background-color: var(--color-surface)">Tarif</th>
+              </tr>
+            </thead>
+            <tbody>
+              {regionalOfferRows.map((row) => (
+                <tr>
+                  <th scope="row" class="border p-3 font-semibold" style="border-color: var(--color-border)">{row[0]}</th>
+                  <td class="border p-3" style="border-color: var(--color-border); color: var(--color-text-muted)">{row[1]}</td>
+                  <td class="border p-3" style="border-color: var(--color-border); color: var(--color-text-muted)">{row[2]}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-5 text-sm leading-relaxed" style="color: var(--color-text-muted)">
+          Les options à 49 € TTC/mois et 99 € TTC/mois sont facultatives. Les classements Google, Bing et les citations dans les réponses IA ne sont pas garantis.
+        </p>
+      </section>
+    )}
 
     {!isMobile && (
       <div class="mt-12 space-y-6 text-lg leading-relaxed" style="color: var(--color-text)">

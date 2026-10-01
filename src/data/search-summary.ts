@@ -51,6 +51,7 @@ Les fonctionnalités publiques sont décrites sans attribuer de résultats comme
 - [Mentions légales](https://flex-web.fr/mentions-legales/)
 
 ## Guides pratiques
+- [Combien coûte un site internet en Savoie ?](https://flex-web.fr/journal/combien-coute-site-internet-savoie/)
 - [Quelles tâches automatiser dans une PME ?](https://flex-web.fr/journal/taches-automatiser-pme/)
 - [Connecter ses demandes à un CRM](https://flex-web.fr/journal/connecter-demandes-crm/)
 - [Automatisation ou application sur mesure ?](https://flex-web.fr/journal/automatisation-ou-application-sur-mesure/)
