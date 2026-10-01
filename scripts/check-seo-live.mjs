@@ -6,7 +6,7 @@ const paths=['/','/realisations/','/realisations/foot-nation/','/realisations/2s
 for(const path of paths){
  const response=await fetch(origin+path);assert.equal(response.status,200,path);
  const html=await response.text();assert.ok(html.includes(`href="https://flex-web.fr${path}"`),`canonical ${path}`);
- if(path.includes('/realisations/') && path!== '/realisations/')assert.ok(html.includes('2026-09-15'),`date ${path}`);
+ if(path.includes('/realisations/') && path!== '/realisations/')assert.ok(html.includes('2026-09-30'),`date ${path}`);
  if(path==='/'||!path.startsWith('/realisations/'))assert.ok(html.includes('/realisations/'),`evidence link ${path}`);
  console.log('OK',path);
 }
