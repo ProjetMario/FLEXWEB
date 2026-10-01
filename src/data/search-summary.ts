@@ -51,6 +51,7 @@ Les fonctionnalités publiques sont décrites sans attribuer de résultats comme
 - [Mentions légales](https://flex-web.fr/mentions-legales/)
 
 ## Guides pratiques
+- [Assistant IA interne : usages, documents et tests dans une PME](https://flex-web.fr/journal/assistant-ia-interne-entreprise/)
 - [Combien coûte un site internet en Savoie ?](https://flex-web.fr/journal/combien-coute-site-internet-savoie/)
 - [Quelles tâches automatiser dans une PME ?](https://flex-web.fr/journal/taches-automatiser-pme/)
 - [Connecter ses demandes à un CRM](https://flex-web.fr/journal/connecter-demandes-crm/)

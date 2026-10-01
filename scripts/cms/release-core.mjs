@@ -90,6 +90,8 @@ export async function executeRelease({ snapshotPath, artifactDir, codeCommit, pr
     requireRelease(baseline.siteId === PUBLIC_SITE_ID && baseline.id && baseline.ready, 'WRONG_OR_UNREADY_PRODUCTION');
     requireDeploymentPolicy(baseline);
     result.previousDeployId = baseline.id;
+    result.previousCodeCommit = baseline.codeCommit;
+    result.previousSnapshotSha256 = baseline.snapshotSha256;
     if (providers.pullSnapshot) await providers.pullSnapshot(snapshotPath);
     snapshot = await readSnapshot(snapshotPath, { metadataOnly: true });
     requireRelease(snapshot.schemaVersion === 1 && typeof snapshot.id === 'string' && /^[a-f0-9]{40}$/.test(codeCommit), 'INVALID_RELEASE_INPUT');

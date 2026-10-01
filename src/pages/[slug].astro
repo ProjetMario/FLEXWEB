@@ -1,5 +1,6 @@
 ---
 import ProjectEvidence from "../components/seo/ProjectEvidence.astro";
+import ApplicationRegionalBrief from "../components/marketing/ApplicationRegionalBrief.astro";
 import CommercialConversion from "../components/marketing/CommercialConversion.astro";
 import QuoteEntry from "../components/marketing/QuoteEntry.astro";
 import BaseLayout from "../layout/BaseLayout.astro";
@@ -309,6 +310,8 @@ if (faqSchema) {
         <p>Un processus répétitif dans vos outils actuels peut aussi relever d'une <a href={automationPath} class="underline">automatisation IA</a>. Nous examinons ce besoin avant de proposer une application complète.</p>
       </div>
     )}
+
+    {isMobile && isRegionalCommercial && <ApplicationRegionalBrief slug={data.slug} />}
 
     {!isMobile && (
       <section class="mt-12 rounded-2xl p-6" style="background-color: var(--color-surface)">

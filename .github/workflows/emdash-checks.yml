@@ -81,6 +81,7 @@ jobs:
           node-version: '24'
       - run: npm ci
       - run: npm run cms:test
+      - run: node --test scripts/seo/indexnow-submit.test.mjs
   cms-runtime:
     runs-on: ubuntu-latest
     defaults:
