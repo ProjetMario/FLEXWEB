@@ -6,14 +6,16 @@ import { commercialQuoteHref } from '../../data/commercialConversion';
 export function getStaticPaths() { return realizations.map(project => ({params:{slug:project.slug},props:{project}})); }
 const { project } = Astro.props;
 const url = `https://flex-web.fr/realisations/${project.slug}/`;
-const schemas = [{ '@type':'Article', '@id':url+'#article', headline:project.title, description:project.intro, url, datePublished:'2026-09-15', dateModified:'2026-09-30', author:{'@id':'https://flex-web.fr/#organization'}, publisher:{'@id':'https://flex-web.fr/#organization'}, image:`https://flex-web.fr/images/showcase/${project.image}`, mainEntityOfPage:url }, {'@type':'BreadcrumbList', itemListElement:[{name:'Accueil',item:'https://flex-web.fr/'},{name:'Réalisations',item:'https://flex-web.fr/realisations/'},{name:project.name,item:url}].map((item,i)=>({'@type':'ListItem',position:i+1,...item}))}];
+const verifiedAt = '2026-09-30';
+const verifiedAtLabel = '30 septembre 2026';
+const schemas = [{ '@type':'Article', '@id':url+'#article', headline:project.title, description:project.intro, url, datePublished:verifiedAt, dateModified:verifiedAt, author:{'@id':'https://flex-web.fr/#organization'}, publisher:{'@id':'https://flex-web.fr/#organization'}, image:`https://flex-web.fr/images/showcase/${project.image}`, mainEntityOfPage:url }, {'@type':'BreadcrumbList', itemListElement:[{name:'Accueil',item:'https://flex-web.fr/'},{name:'Réalisations',item:'https://flex-web.fr/realisations/'},{name:project.name,item:url}].map((item,i)=>({'@type':'ListItem',position:i+1,...item}))}];
 ---
 <BaseLayout title={`${project.title} | FLEX-WEB`} description={project.intro}>
 <article class="case-study">
 <nav aria-label="Fil d’Ariane"><a href="/">Accueil</a> / <a href="/realisations/">Réalisations</a> / {project.name}</nav>
 <p class="eyebrow">{project.category}</p><h1>{project.title}</h1><p class="intro">{project.intro}</p>
 <p><a class="cta" href={commercialQuoteHref(project.service)}>Demander mon devis pour un projet similaire →</a></p>
-<p class="byline">Par <a href="/about/">FLEX-WEB</a> · Présentation vérifiée le <time datetime="2026-09-15">15 septembre 2026</time></p>
+<p class="byline">Par <a href="/about/">FLEX-WEB</a> · Présentation vérifiée le <time datetime={verifiedAt}>{verifiedAtLabel}</time></p>
 <a href={project.href} target="_blank" rel="noopener noreferrer" aria-label={`Visiter ${project.name} (nouvel onglet)`}><img src={`/images/showcase/${project.image}`} alt={`Aperçu du site ${project.name}`} width="1280" height="960" /></a>
 <h2>Le besoin auquel répond le parcours</h2><p>{project.need}</p>
 <h2>Du premier écran à l’action</h2><ol class="journey">{project.journey.map((step, index) => <li><span aria-hidden="true">0{index + 1}</span><p>{step}</p></li>)}</ol>

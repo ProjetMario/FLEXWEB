@@ -26,6 +26,14 @@ const quoteChecklist = [
   { title: "Le total TTC et le suivi choisi", text: "Le prix de création, les éventuels besoins supplémentaires et les options mensuelles retenues, avec leurs limites et leurs conditions. Chaque coût récurrent est identifié." },
 ];
 
+const decisionRows = [
+  ["Présence simple", "Site vitrine jusqu’à 5 pages", "299 € TTC"],
+  ["Visibilité plus travaillée", "Site de 5 pages et plus avec SEO et IA pour Google, Bing et les principaux moteurs", "590 € TTC"],
+  ["Suivi client et tâches répétitives", "CRM, automatisations et assistant IA interne", "990 € TTC"],
+  ["Suivi après mise en ligne", "Maintenance, modifications et suivi du référencement", "49 € TTC/mois"],
+  ["Accompagnement avancé", "CRM, automatisations, assistant IA, référencement et veille technologique", "99 € TTC/mois"],
+];
+
 const serviceFaq = [
   {
     "question": "Combien coûte la création d'un site internet ?",
@@ -156,6 +164,35 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
       <p class="mt-3 leading-relaxed" style="color: var(--color-text-muted)">
         Un site vitrine jusqu’à 5 pages pour présenter votre activité ; un site de 5 pages et plus avec SEO et IA pour travailler votre visibilité sur Google, Bing et les autres moteurs compatibles. Le devis confirme ce qui sera réalisé, les éléments à fournir et les éventuels coûts récurrents.
       </p>
+    </section>
+
+    <section class="mt-12 rounded-2xl border p-6" style="border-color: var(--color-border)">
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Quelle offre choisir ?
+      </h2>
+      <p class="mt-3 leading-relaxed" style="color: var(--color-text-muted)">
+        Choisissez d’abord selon l’action attendue : être présent, être mieux compris par les moteurs, ou structurer le suivi des demandes. Le devis confirme ensuite les pages, les contenus, les limites et les options retenues.
+      </p>
+      <div class="mt-5 overflow-x-auto">
+        <table class="w-full border-collapse text-left text-sm">
+          <thead>
+            <tr>
+              <th class="border p-3" style="border-color: var(--color-border); background-color: var(--color-surface)">Besoin</th>
+              <th class="border p-3" style="border-color: var(--color-border); background-color: var(--color-surface)">Prestation adaptée</th>
+              <th class="border p-3" style="border-color: var(--color-border); background-color: var(--color-surface)">Tarif public</th>
+            </tr>
+          </thead>
+          <tbody>
+            {decisionRows.map((row) => (
+              <tr>
+                <th scope="row" class="border p-3 font-semibold" style="border-color: var(--color-border)">{row[0]}</th>
+                <td class="border p-3" style="border-color: var(--color-border); color: var(--color-text-muted)">{row[1]}</td>
+                <td class="border p-3" style="border-color: var(--color-border); color: var(--color-text-muted)">{row[2]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section id="offres" class="mt-16 scroll-mt-24" aria-labelledby="offres-title">

@@ -23,6 +23,36 @@ const serviceFaq = [
   }
 ];
 
+const useCases = [
+  {
+    title: "Espace client",
+    text: "Suivi de demandes, documents, historique et messages accessibles depuis un navigateur.",
+  },
+  {
+    title: "Outil interne",
+    text: "Tableau de bord pour traiter les dossiers, affecter les actions et garder une trace des décisions.",
+  },
+  {
+    title: "SaaS métier",
+    text: "Parcours récurrent pour plusieurs utilisateurs, avec rôles, abonnements éventuels et évolutions prévues.",
+  },
+];
+
+const quoteItems = [
+  "Les utilisateurs, leurs rôles et les actions autorisées.",
+  "Les écrans du premier lot et les fonctions hors périmètre.",
+  "Les données à créer, importer, conserver ou supprimer.",
+  "Les connexions utiles : site, CRM, paiement, messagerie ou outils métier.",
+  "Le mode de déploiement : application web, mobile ou publication sur store si elle est justifiée.",
+];
+
+const comparisonRows = [
+  ["Besoin principal", "Un espace dédié avec vos règles métier.", "Quelques actions répétitives entre outils existants."],
+  ["Utilisateurs", "Clients, équipe, partenaires ou plusieurs rôles.", "Équipe interne travaillant déjà dans ses logiciels."],
+  ["Prix", "Sur devis selon le premier lot.", "990 € TTC pour le CRM et les automatisations prévues au devis, ou sur mesure selon le besoin."],
+  ["IA", "Assistant interne, résumé ou aide à la décision si les données le permettent.", "Classement, résumé, brouillon ou relance à valider."],
+];
+
 const entry = await getEntry("services", "creation-application-mobile");
 
 if (!entry) {
@@ -114,6 +144,61 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
       </h2>
       <p class="mt-3 leading-relaxed" style="color: var(--color-text-muted)">
         FLEX-WEB développe des applications métier, des portails clients et des SaaS pour les entreprises en France, avec un accompagnement en Savoie et Haute-Savoie. Le devis précise le premier périmètre, les intégrations, le déploiement et les modalités de suivi.
+      </p>
+    </section>
+
+    <section class="mt-12" aria-labelledby="app-needs-title">
+      <h2 id="app-needs-title" class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Trois besoins fréquents
+      </h2>
+      <div class="mt-6 grid gap-5 md:grid-cols-3">
+        {useCases.map((item) => (
+          <article class="rounded-2xl border p-5" style="border-color: var(--color-border)">
+            <h3 class="font-semibold">{item.title}</h3>
+            <p class="mt-3 text-sm leading-relaxed" style="color: var(--color-text-muted)">{item.text}</p>
+          </article>
+        ))}
+      </div>
+      <p class="mt-5 leading-relaxed" style="color: var(--color-text-muted)">
+        Une application devient utile lorsque le site internet ou le CRM ne suffisent plus : plusieurs profils doivent agir, les dossiers doivent garder un historique, ou votre équipe a besoin d’un parcours métier stable.
+      </p>
+    </section>
+
+    <section class="mt-12 rounded-2xl border p-6" style="border-color: var(--color-border)">
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Application ou automatisation IA ?
+      </h2>
+      <div class="mt-5 overflow-x-auto">
+        <table class="w-full border-collapse text-left text-sm">
+          <thead>
+            <tr>
+              <th class="border p-3" style="border-color: var(--color-border); background-color: var(--color-surface)">Critère</th>
+              <th class="border p-3" style="border-color: var(--color-border); background-color: var(--color-surface)">Application</th>
+              <th class="border p-3" style="border-color: var(--color-border); background-color: var(--color-surface)">Automatisation</th>
+            </tr>
+          </thead>
+          <tbody>
+            {comparisonRows.map((row) => (
+              <tr>
+                <th scope="row" class="border p-3 font-semibold" style="border-color: var(--color-border)">{row[0]}</th>
+                <td class="border p-3" style="border-color: var(--color-border); color: var(--color-text-muted)">{row[1]}</td>
+                <td class="border p-3" style="border-color: var(--color-border); color: var(--color-text-muted)">{row[2]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="mt-12 rounded-2xl p-6" style="background-color: var(--color-surface)">
+      <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
+        Ce que le devis d’application doit figer
+      </h2>
+      <ul class="mt-5 list-disc space-y-2 pl-6" style="color: var(--color-text)">
+        {quoteItems.map((item) => <li>{item}</li>)}
+      </ul>
+      <p class="mt-5 text-sm leading-relaxed" style="color: var(--color-text-muted)">
+        Le paiement intervient après validation du devis. Les coûts d’hébergement, de services tiers, d’assistance et d’évolutions sont distingués du premier développement.
       </p>
     </section>
 

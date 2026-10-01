@@ -22,6 +22,16 @@ const method = [
   { title: "Tester une démonstration", text: "Nous vérifions des cas normaux, des informations manquantes et des interruptions avant votre validation." },
   { title: "Mettre en service et suivre", text: "La prise en main, la visibilité des erreurs et le périmètre de suivi sont définis avec vous." },
 ];
+const deliverables = [
+  { title: "CRM et suivi client", text: "Contacts, demandes, devis, factures et prochaines actions visibles dans un parcours de suivi." },
+  { title: "Automatisations utiles", text: "Création de fiche, classement, rappel ou préparation de message selon les tâches répétitives retenues." },
+  { title: "Assistant IA interne", text: "Aide à la réponse, résumé ou consultation de connaissances internes lorsque les données sont disponibles et vérifiables." },
+];
+const limits = [
+  "Les prix, disponibilités et engagements commerciaux restent validés par l’entreprise.",
+  "Les connexions dépendent des accès, API et limites des outils utilisés.",
+  "Les coûts tiers, volumes et abonnements sont indiqués séparément au devis.",
+];
 const schemas = [
   { "@type": "WebPage", "@id": canonicalUrl, url: canonicalUrl, name: page.title, description: page.description, inLanguage: "fr-FR", isPartOf: { "@id": `${siteUrl}/#website` } },
   { "@type": "Service", "@id": `${canonicalUrl}#service`, url: canonicalUrl, name: `Automatisation de tâches IA ${isHub ? "en France" : `en ${page.area}`}`, description: page.intro, serviceType: "Automatisation de tâches et intégration CRM", provider: { "@id": `${siteUrl}/#organization` }, areaServed: { "@type": isHub ? "Country" : "AdministrativeArea", name: page.area }, offers: { "@type": "Offer", name: "Projet d’automatisation sur mesure sur devis", description: "Périmètre, connexions et coûts récurrents précisés dans le devis.", url: `${siteUrl}/demarrer/?service=automation` } },
@@ -105,6 +115,29 @@ const schemas = [
       <div class="measurement"><h3>Mesurer ce qui change</h3><p>Avant la mise en service, choisissez un repère : temps de traitement d’une demande, ressaisies nécessaires ou actions en attente. Comparez ensuite des périodes similaires. Les gains dépendent du processus et doivent être observés dans votre activité.</p></div>
     </section>
 
+    <section class="container content-section section-border" aria-labelledby="offer-title">
+      <div class="split-heading">
+        <div>
+          <p class="eyebrow">Offre et limites</p>
+          <h2 id="offer-title">CRM, automatisation et assistant IA interne.</h2>
+        </div>
+        <div>
+          <p>L’installation du CRM, l’automatisation des tâches répétitives et la mise en place d’un assistant IA interne sont proposées à <strong>990 € TTC</strong> en paiement unique, selon le périmètre fixé au devis. Le suivi mensuel à <strong>99 € TTC/mois</strong> reste facultatif et couvre le CRM, les automatisations, l’assistant IA interne, le référencement et le suivi des dernières technologies.</p>
+          <div class="deliverables-grid">
+            {deliverables.map((item) => (
+              <article>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </article>
+            ))}
+          </div>
+          <ul class="limits-list">
+            {limits.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      </div>
+    </section>
+
     <section class="container content-section section-border" aria-labelledby="ecosystem-title">
       <div class="split-heading">
         <div><p class="eyebrow">Un parcours cohérent</p><h2 id="ecosystem-title">Votre site, vos outils, votre suivi.</h2></div>
@@ -186,6 +219,12 @@ const schemas = [
   .measurement h3 { font-size: 16px; }
   .measurement p { margin-top: 9px; font-size: 14px; }
   .section-border { border-top: 1px solid #e8edf2; }
+  .deliverables-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 26px; }
+  .deliverables-grid article { border: 1px solid #e1e7ee; border-radius: 14px; padding: 18px; background: #fff; }
+  .deliverables-grid h3 { font-size: 15px; }
+  .deliverables-grid p { font-size: 13px; margin-top: 9px; line-height: 1.65; }
+  .limits-list { margin-top: 22px; padding-left: 22px; list-style: disc; color: #53606d; }
+  .limits-list li { margin-top: 8px; line-height: 1.65; }
   .faq details { border-bottom: 1px solid #e0e6ec; padding: 21px 0; }
   .faq details:first-child { padding-top: 0; }
   .faq summary { font-size: 16px; font-weight: 550; cursor: pointer; line-height: 1.6; }
@@ -200,6 +239,6 @@ const schemas = [
   .regions { display: flex; justify-content: center; flex-wrap: wrap; gap: 18px; margin-top: 30px; font-size: 13px; color: #53606d; }
   .regions a { color: #005ebd; text-decoration: underline; text-underline-offset: 3px; }
   .regions a[aria-current="page"] { font-weight: 650; }
-  @media (max-width: 900px) { .hero-grid { gap: 30px; } .split-heading { gap: 40px; } .method-grid { grid-template-columns: repeat(2, 1fr); } .examples-grid { gap: 14px; } .example-card { padding: 20px; } }
+  @media (max-width: 900px) { .hero-grid { gap: 30px; } .split-heading { gap: 40px; } .method-grid { grid-template-columns: repeat(2, 1fr); } .examples-grid { gap: 14px; } .example-card { padding: 20px; } .deliverables-grid { grid-template-columns: 1fr; } }
   @media (max-width: 700px) { .container { width: calc(100% - 36px); } .hero { padding-bottom: 48px; } .breadcrumbs { margin-bottom: 36px; } .hero-grid, .split-heading, .examples-grid, .guides-grid { grid-template-columns: 1fr; } .hero-grid { gap: 40px; } .content-section { padding-block: 48px; } .split-heading { gap: 26px; } .workflow { padding: 25px; } .button { width: 100%; } .method-grid { gap: 28px 20px; } .method-grid h3 { font-size: 16px; } .quote-panel { padding: 34px 22px; } .regions { gap: 13px; } .regions span { width: 100%; text-align: center; } }
 </style>
