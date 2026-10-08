@@ -11,6 +11,9 @@ on:
       - 'src/**'
       - 'tests/**'
       - 'scripts/seo/**'
+      - 'scripts/check-seo*.mjs'
+      - 'public/**'
+      - 'netlify/functions/retired-content.mts'
   push:
     branches: [main]
     paths:
@@ -22,6 +25,9 @@ on:
       - 'src/**'
       - 'tests/**'
       - 'scripts/seo/**'
+      - 'scripts/check-seo*.mjs'
+      - 'public/**'
+      - 'netlify/functions/retired-content.mts'
 
 permissions:
   contents: read
@@ -63,6 +69,14 @@ jobs:
         run: |
           npm run cms:export
           node scripts/cms/import.mjs --input .cms/import.ndjson.gz
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: seo-smoke-${{ github.sha }}
+          path: .cms/smoke/*.png
+          include-hidden-files: true
+          retention-days: 14
+          if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
         with:
           name: emdash-baseline-${{ github.sha }}

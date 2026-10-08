@@ -15,8 +15,15 @@ const commercial = ['creation-site-internet', 'creation-application-mobile', 'au
 const realizations = ['foot-nation', '2savoie-immo', 'serrurier73'].map(slug => `/realisations/${slug}/`);
 const regionalApplications = commercial.filter(route => /^\/creation-application-mobile-(?:savoie|haute-savoie)\/$/.test(route));
 const automationGuides = ['assistant-ia-interne-entreprise', 'connecter-demandes-crm', 'automatisation-ou-application-sur-mesure', 'taches-automatiser-pme'].map(slug => `/journal/${slug}/`);
-const priorityRoutes = new Set(['/', '/about/', '/pricing/', '/journal/', '/realisations/', ...commercial, ...realizations]);
+// Explicitly reviewed territory set; a template edit must never notify all 20k leaves.
+const reviewedTerritories = ['/territoires/', '/territoires/departements/38/', '/territoires/sites/montalieu-vercieu-38247/'];
+const priorityRoutes = new Set(['/', '/about/', '/pricing/', '/journal/', '/realisations/', ...commercial, ...realizations, ...reviewedTerritories]);
 const dependencies = new Map([
+  ['src/components/seo/national/TerritorySearch.astro', [reviewedTerritories[0]]],
+  ['src/lib/seo/territorial-directory.mjs', [reviewedTerritories[0]]],
+  ['src/pages/territoires/departements/[code].astro', [reviewedTerritories[1]]],
+  ['src/lib/seo/territorial-editorial.mjs', reviewedTerritories.slice(1)],
+  ['src/components/seo/national/TerritorialLocalCase.astro', [reviewedTerritories[2]]],
   ['src/pages/[slug].astro', commercial],
   ['src/data/regional-application-briefs.ts', regionalApplications],
   ['src/components/marketing/ApplicationRegionalBrief.astro', regionalApplications],

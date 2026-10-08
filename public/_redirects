@@ -1,8 +1,5 @@
-# Nettoyage d'anciennes pages produits retirées de l'indexation Flex-Web.
-/journal/dyson-microfan /journal/ 301
-/journal/dyson-microfan/ /journal/ 301
-/journal/supersonic-r-hair-dryer /journal/ 301
-/journal/supersonic-r-hair-dryer/ /journal/ 301
+# Les anciens articles produits sans remplacement sont servis en HTTP 410
+# par netlify/functions/retired-content.mts, sans redirection vers le journal.
 
 # Consolidation of synthetic app location pages.
 # Policy: src/data/location-indexing.ts. Both slash variants are intentional.

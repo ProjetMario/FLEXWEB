@@ -55,6 +55,13 @@ test('shared regional brief and guide dependencies select their bounded page set
   assert.deepEqual(candidateURLs(['src/data/business.ts']), []);
 });
 
+test('territorial publication only selects the explicitly reviewed dossier and hubs', () => {
+  assert.deepEqual(candidateURLs(['src/components/seo/national/TerritorySearch.astro', 'src/lib/seo/territorial-editorial.mjs']),
+    ['/territoires/', '/territoires/departements/38/', '/territoires/sites/montalieu-vercieu-38247/'].map(route => ORIGIN + route));
+  assert.deepEqual(candidateURLs(['src/pages/territoires/[axe]/[slug].astro']), []);
+  assert.throws(() => normalizedURL('/territoires/sites/autre-ville-99999/'), /OUT_OF_SCOPE/);
+});
+
 test('fingerprint rejects canonical and robots blockers, ignores irrelevant asset filenames', () => {
   assert.throws(() => pageFingerprint(html('', url, '<meta content="noindex,follow" name="robots">'), url), /NOINDEX/);
   assert.throws(() => pageFingerprint(html(), url, 'bingbot: noindex'), /NOINDEX/);

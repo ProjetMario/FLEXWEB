@@ -79,6 +79,7 @@ jobs:
             .cms/indexnow-report.json
             .cms/indexnow-state.json
             .cms/releases/*.json
+            .cms/smoke/*.png
           include-hidden-files: true
           retention-days: 90
           if-no-files-found: ignore
