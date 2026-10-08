@@ -4,7 +4,7 @@
  * Resume reuses receipts for the same sitemap manifest. Use a new output directory to recheck production.
  */
 import { createHash } from 'node:crypto';
-import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { appendFile, mkdir, readFile, rename, truncate, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { readSitemap } from './read-sitemap.mjs';
@@ -158,23 +158,33 @@ export async function runAudit({ sitemap = 'https://flex-web.fr/sitemap.xml', ou
   let previous;
   try { previous = JSON.parse(await readFile(manifestPath, 'utf8')); } catch (error) { if (error.code !== 'ENOENT') throw error; }
   if (previous && (previous.sha256 !== manifest.sha256 || previous.sitemap !== sitemap)) throw new Error('Sitemap changed. Use a new output directory to retain previous evidence.');
-  await writeFile(manifestPath, JSON.stringify(manifest));
+  if (!previous) {
+    await writeFile(manifestPath + '.tmp', JSON.stringify(manifest));
+    await rename(manifestPath + '.tmp', manifestPath);
+  }
   const receiptsPath = resolve(output, 'receipts.jsonl');
   const records = new Map();
   try {
-    const lines = (await readFile(receiptsPath, 'utf8')).split('\n');
+    const raw = await readFile(receiptsPath);
+    const lines = raw.toString('utf8').split('\n');
+    let badTail = false;
     for (let i = 0; i < lines.length; i++) {
       if (!lines[i].trim()) continue;
       try { const row = JSON.parse(lines[i]); if (urlSet.has(row.url)) records.set(row.url, row); }
-      catch (error) { if (i !== lines.length - 1) throw error; }
+      catch (error) { if (i !== lines.length - 1) throw error; badTail = true; }
     }
-    // Restore a clean final newline after a process interruption in the last receipt.
-    await writeFile(receiptsPath, [...records.values()].map(row => JSON.stringify(row)).join('\n') + (records.size ? '\n' : ''));
+    // Never rewrite valid receipts: a disk-full failure must not destroy prior evidence.
+    if (badTail) await truncate(receiptsPath, raw.lastIndexOf(10) + 1);
+    else if (raw.length && raw[raw.length - 1] !== 10) await appendFile(receiptsPath, '\n');
   } catch (error) { if (error.code !== 'ENOENT') throw error; }
   const pending = urls.filter(url => !records.has(url)).slice(0, max);
   let index = 0; let writeQueue = Promise.resolve();
   progress(`Audit ${urls.length} URLs: ${records.size} receipts restored, ${pending.length} pending, concurrency ${concurrency}.`);
-  const checkpoint = async () => writeFile(resolve(output, 'summary.json'), JSON.stringify(summarize([...records.values()], manifest), null, 2));
+  const checkpoint = async () => {
+    const path = resolve(output, 'summary.json');
+    await writeFile(path + '.tmp', JSON.stringify(summarize([...records.values()], manifest), null, 2));
+    await rename(path + '.tmp', path);
+  };
   await checkpoint();
   await Promise.all(Array.from({ length: concurrency }, async () => {
     while (index < pending.length) {

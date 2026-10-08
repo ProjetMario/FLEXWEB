@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { appendFile, mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createReader, inspectHtml, inspectUrl, runAudit } from '../../scripts/seo/audit-indexability.mjs';
@@ -44,7 +44,10 @@ test('crawls sitemap with bounded concurrency, retries failures, records redirec
     const read = createReader({ retryBaseMs: 1, maxRetryMs: 2 });
     const first = await runAudit({ sitemap: origin + '/sitemap.xml', output, max: 2, read, progress: () => {} });
     assert.equal(first.complete, false);
+    const preserved = await readFile(join(output, 'receipts.jsonl'), 'utf8');
+    await appendFile(join(output, 'receipts.jsonl'), '{\"url\":\"partial');
     const result = await runAudit({ sitemap: origin + '/sitemap.xml', output, read, progress: () => {} });
+    assert.ok((await readFile(join(output, 'receipts.jsonl'), 'utf8')).startsWith(preserved));
     assert.equal(result.complete, true); assert.equal(result.completed, 5);
     assert.equal(result.issues.redirect, 1); assert.equal(result.issues.noindex, 1); assert.equal(result.issues.http_404, 1);
     assert.equal(hits.get('/retry/'), 2);
