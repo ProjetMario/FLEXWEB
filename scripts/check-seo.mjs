@@ -1,4 +1,6 @@
 import {readSitemap} from './seo/read-sitemap.mjs';
+import {analyseDocument} from './seo/audit-indexability.mjs';
+import {parseStaticHeaders,staticRobotsForUrl} from './seo/static-headers.mjs';
 import { readFile, readdir, access } from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import path from 'node:path';
@@ -6,6 +8,9 @@ const root = path.resolve('dist');
 async function walk(dir) { const entries = await readdir(dir,{withFileTypes:true}); return (await Promise.all(entries.map(e => e.isDirectory() ? walk(path.join(dir,e.name)) : path.join(dir,e.name)))).flat(); }
 const files = (await walk(root)).filter(f => f.endsWith('.html'));
 const origin='https://flex-web.fr';
+let headerSource='';
+try{headerSource=await readFile(path.join(root,'_headers'),'utf8');}catch(error){if(error.code!=='ENOENT')throw error;}
+const staticHeaders=parseStaticHeaders(headerSource);
 const urls=await readSitemap(origin+'/sitemap.xml',url=>readFile(path.join(root,new URL(url).pathname),'utf8'));
 assert.equal(urls.length,new Set(urls).size,'Duplicate sitemap URL');
 const sitemapRoutes=new Set();
@@ -27,6 +32,10 @@ for (const file of files) {
  const route=relative==='index.html'?'/':relative.endsWith('/index.html')?'/'+relative.slice(0,-10):'/'+relative;
  const noindex=isNoindex(html),anchors=new Set([...html.matchAll(/\bid="([^"]*)"/g)].map(m=>detached(normalize(m[1])))),links=new Map();
  if(sitemapRoutes.has(route)){
+  // Inspect the emitted HTML after EmDash rendering, not a source template.
+  // parse5 handles attribute order/case and ignores comments or example markup.
+  const indexability=analyseDocument(html,origin+route,staticRobotsForUrl(origin+route,staticHeaders));
+  assert.deepEqual(indexability.issues,[],`Indexability (Google/Bing) ${route}`);
   assert(!noindex,`Noindex included: ${route}`);
   assert.equal([...html.matchAll(/<h1(?:\s|>)/g)].length,1,`Single h1: ${route}`);
   assert.equal([...html.matchAll(/<title>/g)].length,1,`Single title: ${route}`);

@@ -6,10 +6,13 @@ import ProjectGuides from '../../../components/seo/national/ProjectGuides.astro'
 import TerritoryPlanner from '../../../components/seo/national/TerritoryPlanner.astro';
 import TerritorialDossier from '../../../components/seo/national/TerritorialDossier.astro';
 import TerritorialBrief from '../../../components/seo/national/TerritorialBrief.astro';
+import TerritorialLocalCase from '../../../components/seo/national/TerritorialLocalCase.astro';
+import {territorialDossier} from '../../../lib/seo/territorial-editorial.mjs';
 import {websiteOffers,automationOffers} from '../../../data/pricing';
 export function getStaticPaths(){return draftEntries().map(({axis,commune,slug})=>({params:{axe:axis,slug},props:{axis,commune}}));}
 const {axis,commune:c}=Astro.props;
 const content=draftContent(axis,c),data=draftData();
+const editorial=territorialDossier(axis,c.code);
 const enrichment=enrichedTerritory(c.code),source=enrichmentData(),insights=localInsights(axis,c,enrichment),questions=localQuestions(axis,c,enrichment);
 const otherAxis=axis==='sites'?'automatisation':'sites';
 const offers=axis==='sites'?websiteOffers:automationOffers;
@@ -20,11 +23,12 @@ const localGuides=[
 ].filter(guide=>guide.axis===axis&&guide.codes.includes(c.code));
 const money=(n:number)=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n/100);
 ---
-<ResourceLayout title={content.title} description={`Trame de projet pour ${c.name} : ${axis==='sites'?'site internet et suivi des demandes':'automatisation des tâches et IA'}. Données officielles, diagnostic des adresses, simulateur et brief à adapter à votre entreprise.`}>
+<ResourceLayout title={editorial?.title??content.title} description={editorial?.description??`Trame de projet pour ${c.name} : ${axis==='sites'?'site internet et suivi des demandes':'automatisation des tâches et IA'}. Données officielles, diagnostic des adresses, simulateur et brief à adapter à votre entreprise.`}>
  <nav aria-label="Fil d’Ariane"><a href="/territoires/">Projets par commune</a><a href={draftHubPath(axis)}>{axis==='sites'?'Sites internet':'Automatisation IA'}</a><a href={'/territoires/departements/'+c.departmentCode.toLowerCase()+'/'}>{c.department}</a></nav>
  <aside class="note"><strong>Des repères pour votre projet à {c.name}.</strong><p>Cette fiche combine des données publiques, des diagnostics calculés et des outils de cadrage. Les méthodes sont partagées entre communes et doivent être adaptées à votre entreprise.</p></aside>
- <h1>{content.title}</h1><p class="lead">{content.introduction}</p>
+ <h1>{editorial?.title??content.title}</h1><p class="lead">{editorial?.introduction??content.introduction}</p>
  <p><a class="action" href={offers[0].href}>Décrire mon projet</a><a href="#territory-planner">Tester la qualification d’une demande ↓</a></p>
+ {editorial&&<TerritorialLocalCase dossier={editorial}/>}
  <section class="note"><h2>Repères territoriaux vérifiés</h2><ul><li>Commune : {c.name} · code INSEE {c.code}</li><li>Département : {c.department} ({c.departmentCode})</li><li>Région : {c.region}</li><li>Codes postaux fournis : {c.postalCodes.length?c.postalCodes.join(', '):'Non renseignés dans la source'}</li><li>Population fournie par l’API : {c.population.toLocaleString('fr-FR')} habitants</li></ul><p class="meta">Extraction du {data.retrievedAt}. Le millésime de population n’est pas indiqué dans cette réponse API ; ce chiffre ne décrit pas un marché ni un volume de recherches.</p><a href={`https://geo.api.gouv.fr/communes/${c.code}`}>Consulter la fiche officielle</a></section>
  <section aria-labelledby="local-diagnostic"><h2 id="local-diagnostic">Ce que les données de {c.name} changent dans votre projet</h2>
  <p>Les faits viennent de l’API de l’État ; les actions proposées sont des recommandations Flex-Web. Elles servent à préparer un formulaire et des règles de suivi, sans déduire une demande commerciale locale.</p>

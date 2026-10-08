@@ -1,7 +1,8 @@
 ---
-import {territoryDepartments} from '../../../lib/seo/territorial-directory.mjs';
+import {territoryDepartments,territoryRegions} from '../../../lib/seo/territorial-directory.mjs';
 import {issueLabels} from '../../../lib/seo/territorial-search.mjs';
 const departments=territoryDepartments();
+const regions=territoryRegions();
 ---
 <section class="territory-search" aria-labelledby="territory-search-heading">
  <h2 id="territory-search-heading">Retrouver une fiche.</h2>
@@ -20,7 +21,12 @@ const departments=territoryDepartments();
   <button type="button" data-page="previous">Précédent</button><span id="territory-page-label"></span><button type="button" data-page="next">Suivant</button>
  </nav>
  <noscript><p>La recherche nécessite JavaScript. Les liens par département ci-dessous donnent accès aux mêmes fiches sans JavaScript.</p></noscript>
- <details class="departments"><summary>Parcourir les fiches par département, sans recherche</summary><ul>{departments.map(d=><li><a href={`/territoires/departements/${d.code.toLowerCase()}/`}>{d.code} — {d.name} ({d.items.length} communes)</a></li>)}</ul></details>
+ <nav class="departments" aria-labelledby="territory-regions-heading">
+  <h3 id="territory-regions-heading">Parcourir les régions et territoires</h3>
+  <p>Choisissez un département puis une commune pour retrouver ses fiches site internet et automatisation. Tous ces liens fonctionnent sans recherche et sans JavaScript.</p>
+  <div class="region-jumps">{regions.map(region=><a href={`#region-${region.code}`}>{region.name}</a>)}</div>
+  {regions.map(region=><section id={`region-${region.code}`} class="region-group"><h4>{region.name}</h4><ul>{region.departments.map(d=><li><a href={`/territoires/departements/${d.code.toLowerCase()}/`}>{d.code} — {d.name} ({d.items.length} communes)</a></li>)}</ul></section>)}
+ </nav>
 </section>
 <script>
  import {issueLabels,prepareSearchRecords,searchTerritories} from '../../../lib/seo/territorial-search.mjs';
@@ -59,4 +65,7 @@ const departments=territoryDepartments();
 </script>
 <style>
 .territory-search{margin:40px 0;padding:28px;border:1px solid #dce1e9;border-radius:24px;background:#fff}.search-controls{display:grid;grid-template-columns:2fr 1fr 1fr;gap:16px}.search-controls label{display:flex;flex-direction:column;gap:8px;font-size:.9rem;font-weight:600;min-width:0}.search-controls input,.search-controls select{font:inherit;font-weight:400;width:100%;min-width:0;border:1px solid #abb4c2;border-radius:12px;padding:12px;background:#fff;min-height:48px}button{cursor:pointer;font:inherit}button:disabled{opacity:.5;cursor:default}button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #0066cc;outline-offset:3px}.clear,#territory-search-pagination button{background:#f5f5f7;border:1px solid #dce1e9;border-radius:999px;padding:12px 20px}#territory-search-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}#territory-search-results :global(article){border-top:1px solid #dce1e9;padding:20px 0}#territory-search-results :global(h3){font-size:1.15rem}#territory-search-results :global(p){font-size:.9rem;margin:8px 0}#territory-search-results :global(article div){display:flex;gap:12px;flex-wrap:wrap}#territory-search-results :global(a){font-size:.95rem}#territory-search-pagination{margin:24px 0;align-items:center;justify-content:space-between;gap:12px}#territory-search-pagination[hidden]{display:none}#territory-search-pagination:not([hidden]){display:flex}.departments{margin-top:32px}.departments summary{cursor:pointer;font-weight:600}.departments ul{columns:2;column-gap:30px}.departments li{break-inside:avoid;font-size:.95rem;margin:8px 0}@media(max-width:900px){.search-controls{grid-template-columns:1fr}}@media(max-width:600px){.territory-search{padding:20px}#territory-search-results{grid-template-columns:1fr}.departments ul{columns:1}#territory-search-pagination{flex-wrap:wrap}}
+</style>
+<style>
+.departments{display:block;margin-top:40px}.region-jumps{display:flex;flex-wrap:wrap;gap:12px 24px;margin:20px 0 32px}.region-jumps a{font-size:.95rem}.region-group{margin:24px 0;padding-top:18px;border-top:1px solid #dce1e9;scroll-margin-top:120px}.region-group h4{font-size:1.05rem;font-weight:650;margin-bottom:10px}.departments .region-group ul{margin:0}
 </style>
