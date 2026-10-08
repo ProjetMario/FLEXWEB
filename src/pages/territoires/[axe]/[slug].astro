@@ -23,7 +23,7 @@ const localGuides=[
 ].filter(guide=>guide.axis===axis&&guide.codes.includes(c.code));
 const money=(n:number)=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n/100);
 ---
-<ResourceLayout title={editorial?.title??content.title} description={editorial?.description??`Trame de projet pour ${c.name} : ${axis==='sites'?'site internet et suivi des demandes':'automatisation des tâches et IA'}. Données officielles, diagnostic des adresses, simulateur et brief à adapter à votre entreprise.`}>
+<ResourceLayout title={editorial?.seoTitle??editorial?.title??content.title} description={editorial?.description??`Trame de projet pour ${c.name} : ${axis==='sites'?'site internet et suivi des demandes':'automatisation des tâches et IA'}. Données officielles, diagnostic des adresses, simulateur et brief à adapter à votre entreprise.`}>
  <nav aria-label="Fil d’Ariane"><a href="/territoires/">Projets par commune</a><a href={draftHubPath(axis)}>{axis==='sites'?'Sites internet':'Automatisation IA'}</a><a href={'/territoires/departements/'+c.departmentCode.toLowerCase()+'/'}>{c.department}</a></nav>
  <aside class="note"><strong>Des repères pour votre projet à {c.name}.</strong><p>Cette fiche combine des données publiques, des diagnostics calculés et des outils de cadrage. Les méthodes sont partagées entre communes et doivent être adaptées à votre entreprise.</p></aside>
  <h1>{editorial?.title??content.title}</h1><p class="lead">{editorial?.introduction??content.introduction}</p>
