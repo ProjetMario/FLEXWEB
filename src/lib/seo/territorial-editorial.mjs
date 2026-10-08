@@ -4,7 +4,8 @@ const dossiers = {
   'sites:38247': {
     verifiedAt: '2026-10-08',
     title: 'Créer un site à Montalieu-Vercieu : du contact local à la demande de devis',
-    description: 'Un parcours concret pour les artisans et commerces de Montalieu-Vercieu : coordonnées, zone 38390, pages utiles et qualification des devis. Sources officielles et exemples à adapter.',
+    seoTitle: 'Site internet à Montalieu-Vercieu : projet et devis',
+    description: 'Préparez votre site à Montalieu-Vercieu : pages utiles, zone d’intervention, formulaire de devis et suivi client. Conseils concrets et sources locales.',
     introduction: 'Pour une entreprise à Montalieu-Vercieu, un site utile doit préciser ce que vous faites, où vous recevez ou intervenez et ce qu’un client doit transmettre pour obtenir une réponse. Voici un exemple de cadrage pour un artisan : coordonnées cohérentes, lieu réel du chantier et demande de devis exploitable.',
     heading: 'Montalieu-Vercieu : construire un parcours de devis qui distingue les lieux',
     answer: 'Affichez Montalieu-Vercieu et 38390 avec votre adresse professionnelle réelle. Dans une demande d’intervention, recueillez aussi le nom de la commune du chantier : le seul code postal 38390 ne suffit pas à identifier Montalieu-Vercieu. Le visiteur doit pouvoir demander un devis sans qu’une disponibilité ou une zone d’intervention soit confirmée automatiquement.',

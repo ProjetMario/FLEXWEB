@@ -1,5 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {draftData, draftEntries, draftPath} from '../../src/lib/seo/territorial-drafts.mjs';
 import {territoryDepartments, territoryRegions} from '../../src/lib/seo/territorial-directory.mjs';
 import {territorialDossier, territorialDossiersForDepartment} from '../../src/lib/seo/territorial-editorial.mjs';
@@ -43,4 +44,16 @@ test('navigation lastmod changes only for regional directory and promoted Isere 
   ['/territoires/','2026-10-08'],
   ['/territoires/departements/38/','2026-10-08'],
  ]);
+});
+
+test('Montalieu metadata stays concise including the brand while retaining the detailed H1',()=>{
+ const dossier=territorialDossier('sites','38247');
+ // BaseHead normalizes an optional brand suffix then appends this single one.
+ const renderedTitle=dossier.seoTitle.replace(/\s*[—–|]\s*flex-web\s*$/i,'')+' — Flex-Web';
+ assert(renderedTitle.length>=50&&renderedTitle.length<70);
+ assert(dossier.description.length>=140&&dossier.description.length<=160);
+ assert.notEqual(dossier.seoTitle,dossier.title);
+ const page=readFileSync(new URL('../../src/pages/territoires/[axe]/[slug].astro',import.meta.url),'utf8');
+ assert.match(page,/<ResourceLayout title=\{editorial\?\.seoTitle\?\?editorial\?\.title\?\?content\.title\}/);
+ assert.match(page,/<h1>\{editorial\?\.title\?\?content\.title\}<\/h1>/);
 });
