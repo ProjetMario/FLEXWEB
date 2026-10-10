@@ -23,7 +23,6 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    # Reuse the existing deployment environment without changing its protections.
     environment: emdash-publication
     env:
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
@@ -48,14 +47,14 @@ jobs:
         run: |
           node --check scripts/deploy.mjs
           node --check site/nova-v2.js
-      - name: Verify preview, preserve backend and publish the existing Nova Habitat site
-        run: npm run deploy
+      - name: Inspect legacy function metadata without changing production
+        run: node diagnostics/inspect.mjs
       - name: Store deployment verification report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: nova-habitat-publication-${{ github.run_id }}
-          path: .work/deploy-report.json
+          path: .work/*.json
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 14
