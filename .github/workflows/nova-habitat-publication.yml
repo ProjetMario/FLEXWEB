@@ -1,0 +1,72 @@
+name: Nova Habitat deployment preparation
+on:
+  push:
+    branches: [nova-habitat-refresh-20261010]
+permissions:
+  contents: read
+concurrency:
+  group: nova-habitat-refresh-20261010
+  cancel-in-progress: false
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: emdash-publication
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+    steps:
+      - name: Read only - verify Nova Habitat deployment access
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs/promises';
+          const siteId = '5215a04e-7872-45e3-b354-fc8f994d2219';
+          const expectedName = 'nova-habitat-demo-flexweb';
+          const token = process.env.NETLIFY_AUTH_TOKEN;
+          if (!token) throw new Error('Configured Netlify deployment credential is unavailable in this environment. No site was modified.');
+          async function api(path) {
+            const url = new URL(path, 'https://api.netlify.com/api/v1/');
+            if (url.origin !== 'https://api.netlify.com' || !url.pathname.startsWith('/api/v1/')) throw new Error('Unexpected API host');
+            const response = await fetch(url, {headers: {Authorization: `Bearer ${token}`}, redirect: 'error', signal: AbortSignal.timeout(30000)});
+            if (!response.ok) throw new Error(`Netlify read failed: HTTP ${response.status}. No site was modified.`);
+            return {value: await response.json(), link: response.headers.get('link')};
+          }
+          const {value: site} = await api(`sites/${siteId}`);
+          if (site.id !== siteId || site.name !== expectedName) throw new Error('Target mismatch; no site was modified');
+          const deployId = site.published_deploy?.id;
+          if (!deployId) throw new Error('No published deployment found');
+          const {value: deploy} = await api(`deploys/${deployId}`);
+          let path = `sites/${siteId}/files?per_page=100&page=1`;
+          const files = [];
+          while (path) {
+            const page = await api(path);
+            if (!Array.isArray(page.value)) throw new Error('Unexpected file manifest');
+            files.push(...page.value);
+            path = page.link?.match(/<([^>]+)>;\s*rel="next"/)?.[1] ?? null;
+          }
+          const report = {
+            readOnly: true,
+            siteId: site.id,
+            siteName: site.name,
+            publishedDeploy: deployId,
+            publishedAt: deploy.published_at,
+            repository: site.build_settings?.repo_url ?? null,
+            branch: site.build_settings?.repo_branch ?? null,
+            fileCount: files.length,
+            importantFiles: files.filter(f => /(?:^\/(?:index\.html|style\.css|logo-nova-habitat\.jpg|_headers|_redirects)$|functions.*manifest)/.test(f.path)),
+            availableFunctions: (deploy.available_functions ?? []).map(f => ({name: f.n, digest: f.d, runtime: f.r, routes: f.ro, priority: f.p})),
+            functionSchedules: deploy.function_schedules ?? [],
+            functionsRegion: deploy.functions_region,
+            edgeFunctionsPresent: deploy.edge_functions_present,
+            deployKeys: Object.keys(deploy).sort()
+          };
+          await fs.writeFile('nova-habitat-preflight.json', JSON.stringify(report, null, 2));
+          console.log(JSON.stringify(report, null, 2));
+          NODE
+      - name: Save non-secret preparation report
+        uses: actions/upload-artifact@v4
+        with:
+          name: nova-habitat-preflight
+          path: nova-habitat-preflight.json
+          retention-days: 7
+          if-no-files-found: error
