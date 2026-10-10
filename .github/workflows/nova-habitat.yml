@@ -26,49 +26,74 @@ jobs:
           node-version: '24'
       - name: Install pinned Netlify SDK
         run: npm install --ignore-scripts --no-audit --no-fund
-      - name: Check existing bundle references in drafts only
+      - name: Deploy complete storefront preview and verify preservation of production
         shell: bash
         run: |
           node --input-type=module <<'JS'
-          import {NetlifyAPI} from '@netlify/api';
-          import {mkdir,writeFile} from 'node:fs/promises';
+          import {NetlifyAPI,methods} from '@netlify/api';
+          import {mkdir,writeFile,readFile} from 'node:fs/promises';
+          import {createHash} from 'node:crypto';
           const api=new NetlifyAPI(process.env.NETLIFY_AUTH_TOKEN);
           const site_id='5215a04e-7872-45e3-b354-fc8f994d2219';
-          const report={published:false,operation:'existing-bundle-reference-check',candidates:[]};
+          const report={published:false,operation:'storefront-preview',sourceCommit:process.env.GITHUB_SHA};
+          const sha=b=>createHash('sha1').update(b).digest('hex');
+          const check=(ok,msg)=>{if(!ok)throw Error(msg)};
+          const fetchBytes=async url=>{const r=await fetch(url,{signal:AbortSignal.timeout(30000)});check(r.ok,`Asset HTTP ${r.status}`);return Buffer.from(await r.arrayBuffer())};
           await mkdir('.work',{recursive:true});
           try{
             const site=await api.getSite({site_id});
+            check(site.name==='nova-habitat-demo-flexweb','Wrong project');
             const original=await api.getDeploy({deploy_id:site.published_deploy.id});
             const entries=await api.listSiteFiles({site_id});
-            if(entries.some(f=>f.deploy_id!==original.id))throw Error('Production changed');
-            for(const key of ['id','oid']){
-              const functions=Object.fromEntries(original.available_functions.map(f=>[f.n,f[key]]));
-              if(Object.values(functions).some(v=>typeof v!=='string'||!/^[0-9a-f]{64}$/.test(v)))throw Error('Invalid existing reference');
-              const draft=await api.createSiteDeploy({site_id,title:`Nova Habitat — vérification isolée des bundles (${key})`,body:{files:Object.fromEntries(entries.map(f=>[f.path,f.sha])),functions,draft:true,async:false}});
-              const item={referenceField:key,previewId:draft.id,state:draft.state,requiredFunctions:draft.required_functions,requiredFileCount:draft.required?.length};
-              report.candidates.push(item);
-              if(!(draft.required_functions||[]).length){
-                let current=draft;
-                for(let i=0;i<30;i++){
-                  current=await api.getDeploy({deploy_id:draft.id});
-                  if(['ready','error','rejected'].includes(current.state))break;
-                  await new Promise(r=>setTimeout(r,2000));
-                }
-                item.state=current.state;
-                item.functions=(current.available_functions||[]).map(f=>({name:f.n,digest:f.d,id:f.id,originalId:f.oid,runtime:f.r,mode:f.im,routes:f.ro}));
-              }
+            check(entries.every(f=>f.deploy_id===original.id),'Production changed');
+            const patch=new Map();
+            for(const file of ['index.html','nova-v2.css','nova-v2.js','nova-forms.html','merci-nova.html'])patch.set('/'+file,await readFile('site/'+file));
+            const assets=JSON.parse(await readFile('assets.json','utf8'));
+            for(const image of assets.images)patch.set('/'+image.file,await fetchBytes(image.url));
+            const files=Object.fromEntries(entries.map(f=>[f.path,f.sha]));
+            for(const [path,bytes] of patch)files[path]=sha(bytes);
+            const draft=await api.createSiteDeploy({site_id,title:'Nova Habitat — refonte complète depuis GitHub (aperçu)',body:{files,draft:true,async:false}});
+            report.previewId=draft.id;
+            report.requiredFileCount=draft.required?.length;
+            check(!(draft.required_functions||[]).length,'Unexpected function upload');
+            const bySha=new Map([...patch].map(([path,bytes])=>[sha(bytes),{path,bytes}]));
+            for(const digest of draft.required||[]){
+              const file=bySha.get(digest);check(file,'Unexpected original asset request');
+              await api.uploadDeployFile({deploy_id:draft.id,path:file.path.replace(/^\//,''),size:file.bytes.length,body:file.bytes});
             }
-            report.productionUnchanged=(await api.getSite({site_id})).published_deploy.id===original.id;
-          }catch(e){report.error=String(e.message);report.http=e.status;}
-          await writeFile('.work/bundle-reference-report.json',JSON.stringify(report,null,2));
+            let deployed;
+            for(let i=0;i<70;i++){
+              deployed=await api.getDeploy({deploy_id:draft.id});
+              if(['ready','error','rejected'].includes(deployed.state))break;
+              await new Promise(r=>setTimeout(r,2000));
+            }
+            check(deployed.state==='ready','Preview not ready');
+            const url=`https://${draft.id}--nova-habitat-demo-flexweb.netlify.app`;
+            report.previewUrl=url;
+            const html=(await fetchBytes(url+'/')).toString('utf8');
+            for(const id of ['curage','toiture','jardins','devis'])check(html.includes(`id="${id}"`),'Missing section '+id);
+            check((html.match(/pas une réalisation Nova Habitat/g)||[]).length>=3,'AI disclaimers missing');
+            const logo=await fetchBytes(url+'/logo-nova-habitat.jpg');
+            report.logoUnchanged=createHash('sha256').update(logo).digest('hex')===assets.logo_sha256;
+            check(report.logoUnchanged,'Logo changed');
+            report.forms=(await api.listSiteForms({site_id})).map(f=>({id:f.id,name:f.name,fields:f.fields}));
+            report.snippets=(await api.listSiteSnippets({site_id})).map(s=>({id:s.id,title:s.title,general_position:s.general_position}));
+            report.emailHookTypes=(await api.listHookTypes()).filter(h=>/email/i.test(h.name));
+            report.assetMethods=methods.filter(m=>/SiteAsset|SiteSnippet/.test(m.operationId)).map(m=>({name:m.operationId,parameters:m.parameters}));
+            const final=await api.getSite({site_id});
+            report.productionUnchanged=final.published_deploy.id===original.id;
+            check(report.productionUnchanged,'Unexpected production change');
+            report.previewVerified=true;
+          }catch(e){report.error=String(e.message);report.http=e.status;process.exitCode=1;}
+          await writeFile('.work/storefront-preview.json',JSON.stringify(report,null,2));
           console.log(JSON.stringify(report,null,2));
           JS
-      - name: Store non-secret diagnostic report only
+      - name: Save verification report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: nova-habitat-publication-${{ github.run_id }}
-          path: .work/bundle-reference-report.json
+          path: .work/storefront-preview.json
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 14
