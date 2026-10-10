@@ -26,56 +26,37 @@ jobs:
           node-version: '24'
       - name: Install pinned Netlify SDK
         run: npm install --ignore-scripts --no-audit --no-fund
-      - name: Inspect preserved deployment files without publishing
+      - name: Verify native function inheritance in an isolated draft only
         shell: bash
         run: |
           node --input-type=module <<'JS'
           import {NetlifyAPI} from '@netlify/api';
-          import {writeFile,mkdir} from 'node:fs/promises';
-          import {spawnSync} from 'node:child_process';
-          const siteId='5215a04e-7872-45e3-b354-fc8f994d2219';
-          const token=process.env.NETLIFY_AUTH_TOKEN;
-          const api=new NetlifyAPI(token);
-          const report={published:false,operation:'read-deployment-archive'};
+          import {mkdir,writeFile} from 'node:fs/promises';
+          const api=new NetlifyAPI(process.env.NETLIFY_AUTH_TOKEN);
+          const site_id='5215a04e-7872-45e3-b354-fc8f994d2219';
+          const report={published:false,operation:'isolated-function-inheritance-check'};
           await mkdir('.work',{recursive:true});
-          try {
-            const site=await api.getSite({site_id:siteId});
-            const id=site.published_deploy.id;
-            report.deployId=id;
-            // Exact read endpoints used by Netlify's Deploy file browser and Download UI.
-            // Source: app.netlify.com/assets/js/lib.f5c7fa88d4814c09c700.js
-            const base=`https://api.netlify.com/api/v1/deploys/${id}`;
-            const config=await fetch(`${base}/files/netlify.toml`,{headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/vnd.bitballoon.v1.raw'},signal:AbortSignal.timeout(30000)});
-            report.configStatus=config.status;
-            if(config.ok){
-              await writeFile('.work/original-netlify.toml',Buffer.from(await config.arrayBuffer()));
-              const parse=spawnSync('python3',['-c',`import tomllib,json\nc=tomllib.load(open('.work/original-netlify.toml','rb'))\nprint(json.dumps({'keys':list(c),'build':c.get('build',{}),'functions':c.get('functions',{}),'apiRoutes':[{k:r[k] for k in ('from','to','status','force') if k in r} for r in c.get('redirects',[]) if '/api/' in r.get('from','') or '/.netlify/functions/' in r.get('from','')]}))`],{encoding:'utf8'});
-              if(parse.status===0)report.configuration=JSON.parse(parse.stdout); else report.configParseFailed=true;
+          try{
+            const site=await api.getSite({site_id});
+            const original=await api.getDeploy({deploy_id:site.published_deploy.id});
+            const entries=await api.listSiteFiles({site_id});
+            if(entries.some(f=>f.deploy_id!==original.id))throw Error('Production changed');
+            const draft=await api.createSiteDeploy({site_id,title:'Nova Habitat — vérification isolée de conservation',body:{files:Object.fromEntries(entries.map(f=>[f.path,f.sha])),draft:true,async:false}});
+            report.previewId=draft.id;
+            report.initial={state:draft.state,requiredFunctions:draft.required_functions,requiredFileCount:draft.required?.length};
+            let current=draft;
+            for(let i=0;i<45;i++){
+              current=await api.getDeploy({deploy_id:draft.id});
+              if(['ready','error','rejected'].includes(current.state))break;
+              await new Promise(r=>setTimeout(r,2000));
             }
-            for(let attempt=0;attempt<8;attempt++){
-              const r=await fetch(`${base}/download`,{headers:{Authorization:`Bearer ${token}`},signal:AbortSignal.timeout(30000)});
-              report.archiveStatus=r.status;
-              if(!r.ok)break;
-              const metadata=await r.json();
-              report.archiveResponseKeys=Object.keys(metadata);
-              report.archiveState=metadata.state||metadata.status||null;
-              const url=metadata.url||metadata.download_url||metadata.downloadUrl;
-              if(url){
-                const zip=await fetch(url,{signal:AbortSignal.timeout(60000)});
-                report.zipStatus=zip.status;
-                if(zip.ok){
-                  const b=Buffer.from(await zip.arrayBuffer());
-                  await writeFile('.work/original-deploy.zip',b);
-                  report.archiveBytes=b.length;
-                  const p=spawnSync('python3',['-c',`import zipfile,json\nz=zipfile.ZipFile('.work/original-deploy.zip')\nprint(json.dumps([{'path':f.filename,'size':f.file_size} for f in z.infolist()]))`],{encoding:'utf8'});
-                  if(p.status===0)report.archiveEntries=JSON.parse(p.stdout); else report.zipParseFailed=true;
-                }
-                break;
-              }
-              await new Promise(r=>setTimeout(r,5000));
-            }
+            report.state=current.state;
+            report.functions=(current.available_functions||[]).map(f=>({name:f.n,digest:f.d,runtime:f.r,mode:f.im}));
+            report.functionInheritancePreserved=(original.available_functions||[]).length===report.functions.length && (original.available_functions||[]).every(f=>report.functions.some(g=>g.name===f.n&&g.digest===f.d&&g.runtime===f.r&&g.mode===f.im));
+            report.productionUnchanged=(await api.getSite({site_id})).published_deploy.id===original.id;
+            report.summary=current.summary;
           }catch(e){report.error=String(e.message);report.http=e.status;}
-          await writeFile('.work/archive-metadata.json',JSON.stringify(report,null,2));
+          await writeFile('.work/inheritance-report.json',JSON.stringify(report,null,2));
           console.log(JSON.stringify(report,null,2));
           JS
       - name: Store non-secret diagnostic report only
@@ -83,7 +64,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nova-habitat-publication-${{ github.run_id }}
-          path: .work/archive-metadata.json
+          path: .work/inheritance-report.json
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 14
