@@ -35,10 +35,12 @@ async function bytes(url, maxBytes = 12 * 1024 * 1024) {
   return result;
 }
 
-function functionConfiguration(fn) {
+function functionConfiguration(fn, overrides) {
+  // rg is the resolved AWS region, not an explicit override. Preserve inheritance.
+  const region = overrides.find(item => item.name === fn.n)?.region;
   return compact({
     display_name: fn.dn, generator: fn.g, build_data: fn.bd,
-    memory: fn.m, priority: fn.p, region: fn.rg,
+    memory: fn.m, priority: fn.p, region,
     routes: (fn.ro || []).map(route => compact({
       pattern: route.p, literal: route.l, expression: route.e,
       methods: route.m, prefer_static: route.ps
@@ -66,6 +68,7 @@ function checkFunctions(base, deploy) {
     check(candidate && candidate.d === fn.d, `Function not preserved: ${fn.n}`);
     check(candidate.r === fn.r, `Function runtime changed: ${fn.n}`);
     check(candidate.im === fn.im, `Invocation mode changed: ${fn.n}`);
+    check(candidate.rg === fn.rg, `Function region changed: ${fn.n}`);
     const routeKey = routes => JSON.stringify((routes || []).map(r => compact({ p: r.p, l: r.l, e: r.e, m: r.m, ps: r.ps })).sort((a, b) => String(a.p).localeCompare(String(b.p))));
     check(routeKey(candidate.ro) === routeKey(fn.ro), `Function routing changed: ${fn.n}`);
   }
@@ -125,6 +128,8 @@ async function createAndUpload(api, manifest, patches, draft) {
   check(Boolean(deploy.id), 'Missing new deploy ID');
   console.log(JSON.stringify({ phase: draft ? 'preview-created' : 'production-created', deployId: deploy.id }));
   if (draft) report.previewId = deploy.id; else report.productionId = deploy.id;
+  report.requiredFunctions = deploy.required_functions || [];
+  report.requiredFileCount = (deploy.required || []).length;
   check(!(deploy.required_functions || []).length, 'Netlify requires a function bundle that is not locally available; nothing will be uploaded');
   check(!(deploy.required_edge_functions || []).length && !(deploy.required_server || []).length, 'Unexpected backend upload requested');
   const byHash = new Map([...patches].map(([path, content]) => [hash(content), { path, content }]));
@@ -160,7 +165,6 @@ async function main() {
       console.log(JSON.stringify({ published: false, status: 'authorization-pending', site: LIVE }));
       return;
     }
-    // The SDK exchanges the approved OAuth ticket and holds the access token in memory.
     await api.getAccessToken({ id: ticketId }, { timeout: 30000, poll: 1000 });
   }
   const site = await api.getSite({ site_id: SITE_ID });
@@ -185,7 +189,7 @@ async function main() {
   const manifest = {
     files,
     functions: Object.fromEntries(functions.map(fn => [fn.n, fn.d])),
-    functions_config: Object.fromEntries(functions.map(fn => [fn.n, functionConfiguration(fn)])),
+    functions_config: Object.fromEntries(functions.map(fn => [fn.n, functionConfiguration(fn, base.functions_region_overrides || [])])),
     function_schedules: base.function_schedules || []
   };
   report.baseId = baseId;
@@ -209,7 +213,6 @@ async function main() {
     report.published = true;
     report.productionId = published.id;
   }
-  // No automatic rollback. A failed draft never changes the published site.
   await mkdir(resolve(ROOT, '.work'), { recursive: true });
   await writeFile(resolve(ROOT, '.work/deploy-report.json'), JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report, null, 2));
