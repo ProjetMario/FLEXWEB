@@ -1,0 +1,61 @@
+name: Nova Habitat — publication Netlify
+
+on:
+  push:
+    branches: [nova-habitat]
+    paths:
+      - 'site/**'
+      - 'scripts/**'
+      - 'assets.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/nova-habitat.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nova-habitat-5215a04e-7872-45e3-b354-fc8f994d2219
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Reuse the existing deployment environment without changing its protections.
+    environment: emdash-publication
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_AGENT: chatgpt
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify access is available without exposing credentials
+        shell: bash
+        run: |
+          if [ -z "$NETLIFY_AUTH_TOKEN" ]; then
+            echo '::error::Netlify deployment access is not configured in this environment. No deployment was attempted.'
+            exit 1
+          fi
+      - name: Install pinned Netlify SDK
+        run: npm install --ignore-scripts --no-audit --no-fund
+      - name: Check JavaScript syntax
+        run: |
+          node --check scripts/deploy.mjs
+          node --check site/nova-v2.js
+      - name: Verify preview, preserve backend and publish the existing Nova Habitat site
+        run: npm run deploy
+      - name: Store deployment verification report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nova-habitat-publication-${{ github.run_id }}
+          path: .work/deploy-report.json
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 14
