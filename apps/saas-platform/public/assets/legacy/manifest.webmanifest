@@ -1,9 +1,0 @@
-{
-  "name": "FLEXWEB",
-  "short_name": "FLEXWEB",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "description": "Plateforme FLEXWEB",
-  "icons": []
-}

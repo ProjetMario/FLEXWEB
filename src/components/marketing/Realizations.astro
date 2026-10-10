@@ -1,7 +1,0 @@
----
-import { realizations as sites } from '../../data/realizations';
----
-<section id="realisations" class="realizations-band"><div class="mw m-section">
-  <div class="section-heading"><p class="m-eyebrow">RÉALISATIONS FLEX-WEB</p><h2>Votre projet commence<br />par des exemples concrets.</h2><p>Découvrez le besoin, le parcours et les fonctions visibles de chaque réalisation.</p></div>
-  <div class="realizations-grid">{sites.map(site => <article class="realization-card"><a class="realization-preview" href={site.href} target="_blank" rel="noopener noreferrer" aria-label={`Découvrir le site ${site.name} (nouvel onglet)`}><div class="browser-chrome" aria-hidden="true"><span>● ● ●</span><span>{site.domain}</span><span>↗</span></div><img src={`/images/showcase/${site.image}`} alt={`Aperçu de la page d’accueil de ${site.name}`} width="1280" height="960" loading="lazy" decoding="async" /></a><div class="realization-caption"><div><p>{site.category}</p><h3>{site.name}</h3></div><a href={site.href} target="_blank" rel="noopener noreferrer" aria-label={`Visiter ${site.name} (nouvel onglet)`}>Voir le site <span aria-hidden="true">↗</span></a></div><p style="padding:0 24px 24px"><a href={`/realisations/${site.slug}/`} style="color:#1260d6;text-decoration:underline">Découvrir le projet {site.name} →</a></p></article>)}</div>
-</div></section>
