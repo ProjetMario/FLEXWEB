@@ -26,7 +26,7 @@ jobs:
           node-version: '24'
       - name: Install pinned Netlify SDK
         run: npm install --ignore-scripts --no-audit --no-fund
-      - name: Verify native function inheritance in an isolated draft only
+      - name: Check existing bundle references in drafts only
         shell: bash
         run: |
           node --input-type=module <<'JS'
@@ -34,29 +34,33 @@ jobs:
           import {mkdir,writeFile} from 'node:fs/promises';
           const api=new NetlifyAPI(process.env.NETLIFY_AUTH_TOKEN);
           const site_id='5215a04e-7872-45e3-b354-fc8f994d2219';
-          const report={published:false,operation:'isolated-function-inheritance-check'};
+          const report={published:false,operation:'existing-bundle-reference-check',candidates:[]};
           await mkdir('.work',{recursive:true});
           try{
             const site=await api.getSite({site_id});
             const original=await api.getDeploy({deploy_id:site.published_deploy.id});
             const entries=await api.listSiteFiles({site_id});
             if(entries.some(f=>f.deploy_id!==original.id))throw Error('Production changed');
-            const draft=await api.createSiteDeploy({site_id,title:'Nova Habitat — vérification isolée de conservation',body:{files:Object.fromEntries(entries.map(f=>[f.path,f.sha])),draft:true,async:false}});
-            report.previewId=draft.id;
-            report.initial={state:draft.state,requiredFunctions:draft.required_functions,requiredFileCount:draft.required?.length};
-            let current=draft;
-            for(let i=0;i<45;i++){
-              current=await api.getDeploy({deploy_id:draft.id});
-              if(['ready','error','rejected'].includes(current.state))break;
-              await new Promise(r=>setTimeout(r,2000));
+            for(const key of ['id','oid']){
+              const functions=Object.fromEntries(original.available_functions.map(f=>[f.n,f[key]]));
+              if(Object.values(functions).some(v=>typeof v!=='string'||!/^[0-9a-f]{64}$/.test(v)))throw Error('Invalid existing reference');
+              const draft=await api.createSiteDeploy({site_id,title:`Nova Habitat — vérification isolée des bundles (${key})`,body:{files:Object.fromEntries(entries.map(f=>[f.path,f.sha])),functions,draft:true,async:false}});
+              const item={referenceField:key,previewId:draft.id,state:draft.state,requiredFunctions:draft.required_functions,requiredFileCount:draft.required?.length};
+              report.candidates.push(item);
+              if(!(draft.required_functions||[]).length){
+                let current=draft;
+                for(let i=0;i<30;i++){
+                  current=await api.getDeploy({deploy_id:draft.id});
+                  if(['ready','error','rejected'].includes(current.state))break;
+                  await new Promise(r=>setTimeout(r,2000));
+                }
+                item.state=current.state;
+                item.functions=(current.available_functions||[]).map(f=>({name:f.n,digest:f.d,id:f.id,originalId:f.oid,runtime:f.r,mode:f.im,routes:f.ro}));
+              }
             }
-            report.state=current.state;
-            report.functions=(current.available_functions||[]).map(f=>({name:f.n,digest:f.d,runtime:f.r,mode:f.im}));
-            report.functionInheritancePreserved=(original.available_functions||[]).length===report.functions.length && (original.available_functions||[]).every(f=>report.functions.some(g=>g.name===f.n&&g.digest===f.d&&g.runtime===f.r&&g.mode===f.im));
             report.productionUnchanged=(await api.getSite({site_id})).published_deploy.id===original.id;
-            report.summary=current.summary;
           }catch(e){report.error=String(e.message);report.http=e.status;}
-          await writeFile('.work/inheritance-report.json',JSON.stringify(report,null,2));
+          await writeFile('.work/bundle-reference-report.json',JSON.stringify(report,null,2));
           console.log(JSON.stringify(report,null,2));
           JS
       - name: Store non-secret diagnostic report only
@@ -64,7 +68,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nova-habitat-publication-${{ github.run_id }}
-          path: .work/inheritance-report.json
+          path: .work/bundle-reference-report.json
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 14
