@@ -24,25 +24,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - name: Install deployment SDK and browser validation
-        run: |
-          npm install --ignore-scripts --no-audit --no-fund
-          npm install --no-save --ignore-scripts --no-audit --no-fund playwright
-          npx playwright install --with-deps chromium
-      - name: Check source syntax
-        run: |
-          node --check site/nova-v2.js
-          node --check scripts/publish-presentation.mjs
-      - name: Publish approved presentation without replacing legacy functions
-        run: node scripts/publish-presentation.mjs
-      - name: Save publication and browser verification
+      - name: Install deployment SDK
+        run: npm install --ignore-scripts --no-audit --no-fund
+      - name: Prepare permanent quote receiver without changing the historical site
+        run: node scripts/publish-forms.mjs
+      - name: Save receiving service verification
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: nova-habitat-publication-${{ github.run_id }}
           path: |
-            .work/presentation-report.json
-            .work/nova-*.png
+            .work/form-service-report.json
+            .work/form-endpoint.json
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 14
