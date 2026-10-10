@@ -1,6 +1,5 @@
 'use strict';
 (() => {
-  // N'activer le drone qu'après validation de sa disponibilité réelle par Hugo.
   const config = Object.freeze({ droneEnabled: false });
   const menu = document.querySelector('.menu-toggle');
   const nav = document.getElementById('navigation');
@@ -44,7 +43,6 @@
     history.replaceState(null, '', target);
     document.querySelector(target)?.scrollIntoView();
   }
-  // Conserver le routage d'authentification présent sur le site d'origine.
   if (/(?:^#|&)(?:invite_token|recovery_token|confirmation_token|access_token)=/.test(location.hash)) {
     location.replace('/admin/' + location.hash);
     return;
@@ -64,8 +62,23 @@
     status.textContent = message;
     status.dataset.state = state;
   }
+  function validatePhone() {
+    const telephone = form.elements.namedItem('telephone');
+    if (!(telephone instanceof HTMLInputElement)) return true;
+    if (telephone.value.replace(/\D/g, '').length >= 6) return true;
+    telephone.setCustomValidity('Indiquez un numéro permettant de vous rappeler.');
+    telephone.reportValidity();
+    telephone.addEventListener('input', () => telephone.setCustomValidity(''), { once: true });
+    return false;
+  }
   let submitting = false;
   form.addEventListener('submit', async event => {
+    // Envoi classique vers le service Netlify dédié : confirmation réelle,
+    // sans requête CORS opaque et sans message de succès simulé.
+    if (form.dataset.nativeSubmit === 'true' && !localPreview) {
+      if (!form.reportValidity() || !validatePhone()) event.preventDefault();
+      return;
+    }
     event.preventDefault();
     if (submitting) return;
     if (localPreview) {
@@ -73,14 +86,7 @@
       status.focus();
       return;
     }
-    if (!form.reportValidity()) return;
-    const telephone = form.elements.namedItem('telephone');
-    if (telephone instanceof HTMLInputElement && telephone.value.replace(/\D/g, '').length < 6) {
-      telephone.setCustomValidity('Indiquez un numéro permettant de vous rappeler.');
-      telephone.reportValidity();
-      telephone.addEventListener('input', () => telephone.setCustomValidity(''), { once: true });
-      return;
-    }
+    if (!form.reportValidity() || !validatePhone()) return;
     const body = new URLSearchParams();
     for (const [name, value] of new FormData(form)) if (typeof value === 'string') body.append(name, value.trim());
     submitting = true;
