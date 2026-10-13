@@ -27,7 +27,7 @@ seoDescription: "Site jusqu’à 5 pages à 299 € TTC, SEO et IA dès 5 pages 
 isDraft: false
 ---
 
-## Un site qui répond aux questions avant la prise de contact
+## Création de site internet en Savoie : du premier regard à la demande de devis
 
 Votre visiteur doit comprendre ce que vous faites, à qui vous vous adressez et comment vous contacter. Le projet commence donc par vos prestations, votre zone d'intervention et les informations que vous souhaitez recevoir dans une demande de devis.
 
@@ -74,3 +74,12 @@ Si vos clients doivent suivre un dossier, déposer des documents ou consulter de
 ## Un accompagnement local et à distance
 
 FLEX-WEB est basé à Voglans, en Savoie. Nous accompagnons les projets en [Savoie](/creation-site-internet-savoie/), en [Haute-Savoie](/creation-site-internet-haute-savoie/) et dans toute la France avec des échanges, validations et démonstrations à distance. Les modalités du projet sont convenues au cadrage.
+
+
+## Vérifier votre visibilité avec des données réelles
+
+Pour une activité en Savoie ou en Haute-Savoie, suivez les requêtes qui décrivent réellement vos prestations et votre zone desservie. Dans Search Console et Bing Webmaster Tools, distinguez impressions, clics, position moyenne et demandes de devis confirmées. Une soumission de sitemap ne prouve pas l’indexation.
+
+Pour faciliter la compréhension par les moteurs et assistants IA, présentez une réponse directe, des livrables précis, vos coordonnées exactes et des preuves vérifiables. Les réalisations et leurs fonctionnalités doivent être distinguées des exemples de parcours possibles.
+
+[Comparer les critères d’un prestataire de site internet en Savoie](/journal/creation-site-internet-savoie-comparatif/) ou [recevoir un devis pour votre site](/demarrer/?service=site).

@@ -15,10 +15,10 @@ export interface AutomationPage {
 export const automationPages: Record<string, AutomationPage> = {
   france: {
     slug: "automatisation-ia",
-    title: "Automatisation IA pour entreprises en France | FLEX-WEB",
+    title: "Automatisation IA et CRM pour entreprises en France | FLEX-WEB",
     description: "Automatisez vos tâches, connectez vos demandes à un CRM et préparez vos réponses avec l’IA. FLEX-WEB accompagne les entreprises en France. Projet sur devis.",
     label: "Automatisation IA · France",
-    heading: "L’automatisation IA au service de votre entreprise.",
+    heading: "Automatisation IA et CRM : simplifiez vos tâches répétitives.",
     intro: "FLEX-WEB conçoit des automatisations de tâches avec ou sans intelligence artificielle : centraliser les demandes, préparer des réponses, organiser les relances et connecter vos outils. Commencez par un besoin concret, avec un projet sur devis.",
     area: "France",
     contextTitle: "Un projet à distance, ancré dans votre façon de travailler",
