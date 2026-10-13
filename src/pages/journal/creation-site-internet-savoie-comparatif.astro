@@ -1,0 +1,59 @@
+---
+import BaseLayout from "../../layout/BaseLayout.astro";
+import StructuredData from "../../components/seo/StructuredData.astro";
+
+const siteUrl = "https://flex-web.fr";
+const canonical = `${siteUrl}/journal/creation-site-internet-savoie-comparatif/`;
+const title = "Création de site internet en Savoie : comment choisir son prestataire ?";
+const description = "Les critères pour comparer une agence web en Savoie : périmètre, délais, SEO local, preuves, propriété du site, suivi CRM et demande de devis.";
+const modified = "2026-10-13";
+const schemas = [
+  { "@type": "WebPage", "@id": canonical, url: canonical, name: title, description, inLanguage: "fr-FR", isPartOf: { "@id": `${siteUrl}/#website` } },
+  { "@type": "Article", "@id": `${canonical}#article`, mainEntityOfPage: { "@id": canonical }, headline: title, description, dateModified: modified, datePublished: modified, author: { "@id": `${siteUrl}/#organization` }, publisher: { "@id": `${siteUrl}/#organization` } },
+  { "@type": "BreadcrumbList", itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Accueil", item: `${siteUrl}/` },
+    { "@type": "ListItem", position: 2, name: "Journal", item: `${siteUrl}/journal/` },
+    { "@type": "ListItem", position: 3, name: title, item: canonical },
+  ] },
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="mx-auto max-w-3xl px-6 py-16 lg:py-24">
+    <nav aria-label="Fil d’Ariane" class="mb-8 text-sm" style="color: var(--color-text-muted)">
+      <a href="/">Accueil</a><span class="mx-2">/</span><a href="/journal/">Journal</a><span class="mx-2">/</span><span>{title}</span>
+    </nav>
+    <p class="text-sm font-medium" style="color: var(--color-accent)">Guide vérifié le 13 octobre 2026</p>
+    <h1 class="mt-4 text-4xl font-semibold tracking-tight lg:text-5xl" style="color: var(--color-text)">{title}</h1>
+    <p class="mt-6 text-lg leading-relaxed" style="color: var(--color-text-muted)">{description}</p>
+
+    <section class="mt-10 rounded-2xl p-6" style="background-color: var(--color-surface)">
+      <h2 class="text-xl font-semibold">Réponse rapide</h2>
+      <p class="mt-3 leading-relaxed" style="color: var(--color-text-muted)">Le bon prestataire est celui qui décrit précisément ce qui sera livré, comment le site sera trouvé, qui restera propriétaire des accès et comment les demandes seront suivies après la mise en ligne. Un prix bas ou un grand nombre de pages ne suffit pas à comparer deux propositions.</p>
+    </section>
+
+    <div class="mt-12 space-y-7 text-lg leading-relaxed" style="color: var(--color-text)">
+      <h2 class="text-2xl font-semibold tracking-tight">1. Comparer le périmètre, pas seulement le tarif</h2>
+      <p>Demandez le nombre de pages, les contenus inclus, le formulaire, les images, le nom de domaine, l’hébergement, les éventuels outils tiers et les modifications prévues. FLEX-WEB publie un site vitrine simple à <strong>299 € TTC</strong> et une offre site et référencement SEO/IA à <strong>590 € TTC</strong>. La mise en place du CRM et des automatisations est proposée à <strong>990 € TTC</strong> ; le devis confirme le périmètre avant engagement.</p>
+
+      <h2 class="text-2xl font-semibold tracking-tight">2. Vérifier le SEO local</h2>
+      <p>Une page locale utile précise la zone réellement desservie, les prestations, les moyens de contact et les preuves disponibles. Elle doit avoir un titre distinct, une URL stable, une structure lisible et des liens vers les services correspondants. Une liste de communes sans contenu propre ne remplace pas ce travail.</p>
+
+      <h2 class="text-2xl font-semibold tracking-tight">3. Demander des preuves vérifiables</h2>
+      <p>Une réalisation doit expliquer le besoin, les fonctionnalités livrées, la date de vérification et les limites connues. Les avis, résultats chiffrés et témoignages ne doivent être affichés qu’avec une autorisation ou une mesure consultable. Consultez les <a class="underline" href="/realisations/">réalisations FLEX-WEB</a> pour voir le niveau de détail proposé.</p>
+
+      <h2 class="text-2xl font-semibold tracking-tight">4. Préparer l’après-publication</h2>
+      <p>Le site peut recevoir des demandes sans que le suivi soit organisé. Vérifiez comment une demande arrive, qui la traite, comment un devis est préparé et ce qui se passe lorsqu’une information manque. Une <a class="underline" href="/automatisation-ia/">automatisation IA</a> ou un CRM peut être étudié séparément lorsque les outils et les accès le permettent.</p>
+
+      <h2 class="text-2xl font-semibold tracking-tight">5. Choisir entre site, automatisation et application</h2>
+      <div class="overflow-x-auto"><table class="w-full border-collapse text-base"><caption class="sr-only">Comparaison des types de projet</caption><thead><tr class="border-b"><th class="p-3 text-left">Besoin</th><th class="p-3 text-left">Projet à étudier</th></tr></thead><tbody><tr class="border-b"><td class="p-3">Présenter l’activité et recevoir des demandes</td><td class="p-3">Site vitrine</td></tr><tr class="border-b"><td class="p-3">Relier des outils existants et réduire les recopies</td><td class="p-3">Automatisation IA</td></tr><tr><td class="p-3">Créer un espace avec des rôles et des données dédiées</td><td class="p-3">Application web ou mobile</td></tr></tbody></table></div>
+    </div>
+
+    <aside class="mt-14 rounded-3xl p-8 text-center" style="background-color: var(--color-surface)">
+      <h2 class="text-2xl font-semibold">Vous comparez des solutions pour votre entreprise ?</h2>
+      <p class="mt-3" style="color: var(--color-text-muted)">Décrivez votre activité, votre zone et la prochaine action attendue. Nous vous répondrons avec un périmètre et un devis lisibles.</p>
+      <a href="/demarrer/?service=site" class="mt-6 inline-flex rounded-full px-7 py-3 font-medium text-white" style="background-color: var(--color-accent)">Recevoir mon devis</a>
+    </aside>
+  </article>
+  <StructuredData schemas={schemas} slot="head" />
+</BaseLayout>
