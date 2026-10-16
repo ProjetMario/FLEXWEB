@@ -7,7 +7,7 @@ const euros = (cents) => new Intl.NumberFormat("fr-FR", {style: "currency", curr
   <div class="section-heading"><p class="m-eyebrow">VOTRE PROCHAINE ÉTAPE</p><h2 id={`${id}-title`}>Trois offres.<br />Un objectif : avancer.</h2><p>Présenter votre activité. Gagner en visibilité. Simplifier votre gestion.<br />Un forfait payé une seule fois, après validation du devis.</p></div>
   <div class="offer-grid">
     {projectOffers.map((offer, i) => <article id={`offre-${offer.id}`} class:list={["offer-card", {"offer-complete": i === 1}]}>
-      <div class="offer-top"><span class="offer-category">{["Votre présence en ligne", "Votre visibilité", "Votre gestion simplifiée"][i]}</span><span class="offer-index" aria-hidden="true">0{i + 1}</span></div>
+      <div class="offer-top"><span class="offer-category">{["Pack Standard · Votre présence en ligne", "Pack Medium · Votre visibilité", "Pack Premium · Votre gestion simplifiée"][i]}</span><span class="offer-index" aria-hidden="true">0{i + 1}</span></div>
       <h3>{offer.name}</h3><p class="offer-description">{offer.description}</p>
       <p class="offer-amount">{euros(offer.setupCents)} <span>TTC</span></p><p class="offer-frequency">Paiement unique</p>
       <a class="m-button" href={offer.href} aria-label={`Choisir l’offre ${offer.name}`} data-conversion-event="quote_click" data-conversion-service="site">Choisir cette offre <span aria-hidden="true">↗</span></a>
