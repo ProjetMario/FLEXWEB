@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/cms/render.mjs",
+    "build": "astro build && node scripts/cms/render.mjs && node scripts/prospects/audit.mjs",
     "cms:export": "node scripts/cms/export.mjs",
     "cms:test": "node --test scripts/cms/*.test.mjs",
     "cms:import": "node scripts/cms/import.mjs",

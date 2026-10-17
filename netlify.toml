@@ -5,6 +5,11 @@
 [build.environment]
   NODE_VERSION = "24"
 
+[[headers]]
+  for = "/maquettes/contexte/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
