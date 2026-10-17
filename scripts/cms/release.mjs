@@ -51,10 +51,16 @@ async function verifyRemote(candidate, expected, production = false) {
     if (production) requireRelease(!/noindex/i.test(response.headers.get('x-robots-tag') || ''), 'PRODUCTION_NOINDEX');
   }
   const prospects = JSON.parse(await readFile(path.join(root, 'src/data/prospects.json'), 'utf8'));
+  const logos = JSON.parse(await readFile(path.join(root, 'src/data/prospect-logos.json'), 'utf8'));
   for (const prospect of prospects.filter(item => item.batch === 'pilot-10')) {
     const response = await fetch(`${origin}/${prospect.slug}/`, { redirect: 'error', signal: AbortSignal.timeout(20000) });
     requireRelease(response.status === 200, 'PROSPECT_PREVIEW_UNAVAILABLE');
-    const inspection = analyseDocument(await response.text(), `https://flex-web.fr/${prospect.slug}/`);
+    const html=await response.text();
+    const inspection = analyseDocument(html, `https://flex-web.fr/${prospect.slug}/`);
+    const logo=logos[prospect.slug];
+    requireRelease(logo && html.includes(logo.src), 'PROSPECT_LOGO_NOT_RENDERED');
+    const asset=await fetch(new URL(logo.src,origin), { redirect:'error',signal:AbortSignal.timeout(20000) });
+    requireRelease(asset.status===200 && /^image\//.test(asset.headers.get('content-type')||''), 'PROSPECT_LOGO_UNAVAILABLE');
     requireRelease(!inspection.googleIndexable && !inspection.bingIndexable && inspection.issues.every(issue => issue === 'noindex'), 'PROSPECT_INDEXABILITY_MISMATCH');
     const context = await fetch(`${origin}/maquettes/contexte/${prospect.slug}.json`, { redirect: 'error', signal: AbortSignal.timeout(20000) });
     requireRelease(context.status === 200 && validProspectContext(await context.json(), prospect.slug), 'PROSPECT_CONTEXT_UNAVAILABLE');
