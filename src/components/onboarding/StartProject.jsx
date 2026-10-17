@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { websiteOffers, automationOffers, pricingOptions, publicQuoteVersion } from "../../data/pricing.ts";
 import { leadSource } from "../../lib/acquisition.ts";
 import { trackLead } from "../../lib/analytics.ts";
+import { isProspectSlug, validProspectContext } from "../../lib/prospect-context.mjs";
 import { api, createIdentity, money, saveToken } from "./api";
 
 const bespokeOffers = {
@@ -24,6 +25,7 @@ export default function StartProject() {
   const [sitePlan, setSitePlan] = useState("essentielle");
   const [automationPlan, setAutomationPlan] = useState("crm-automation");
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [prospectContext, setProspectContext] = useState(null);
   const [data, setData] = useState({
     companyName: "", contactName: "", email: "", phone: "", city: "", businessType: "",
     planId: "essentielle", message: "", timeline: "a-definir", privacyConsent: false,
@@ -46,7 +48,30 @@ export default function StartProject() {
     if (requestedService === "automation") setAutomationPlan(planId);
     try { identity.current = JSON.parse(sessionStorage.getItem("flexweb-intake-v2") || "null"); }
     catch { identity.current = null; }
-    setReady(true);
+    const slug = query.get("maquette");
+    const controller = new AbortController();
+    let active = true;
+    const timer = setTimeout(() => controller.abort(), 4000);
+    async function prefill() {
+      try {
+        if (isProspectSlug(slug)) {
+          const response = await fetch(`/maquettes/contexte/${slug}.json`, {signal: controller.signal, credentials: "omit"});
+          if (response.ok) {
+            const context = await response.json();
+            if (active && validProspectContext(context, slug)) {
+              setProspectContext(context);
+              setData(d => ({...d, companyName: context.name, city: context.city, businessType: context.activity,
+                message: query.get("intent") === "modification"
+                  ? `Je souhaite adapter la maquette proposée pour ${context.name}. Mes modifications : `
+                  : `Je souhaite échanger sur le site proposé pour ${context.name}. `}));
+            }
+          }
+        }
+      } catch { /* The quote form remains available if a preview has expired. */ }
+      finally { clearTimeout(timer); if (active) setReady(true); }
+    }
+    prefill();
+    return () => { active = false; clearTimeout(timer); controller.abort(); };
   }, []);
   const offerChoices = service === "site" ? websiteOffers : service === "automation" ? [...automationOffers, bespokeOffers.automation] : [bespokeOffers.application];
   const displayedOffer = offerChoices.find((o) => o.id === data.planId) || offerChoices[0];
@@ -86,7 +111,7 @@ export default function StartProject() {
         publicQuote: bespoke
           ? { version: publicQuoteVersion, service }
           : { version: publicQuoteVersion, service, tier: displayedOffer.tier, options: selectedOptions },
-        message: `${quoteSummary}\nConditions à confirmer dans une proposition adaptée avant tout paiement.\n\nBesoin du client :\n${data.message}`,
+        message: `${quoteSummary}\nConditions à confirmer dans une proposition adaptée avant tout paiement.${prospectContext ? `\nMaquette consultée : https://flex-web.fr/${prospectContext.slug}/` : ""}\n\nBesoin du client :\n${data.message}`,
       });
       saveToken(identity.current.accessToken);
       trackLead("project_quote", service);
@@ -114,6 +139,7 @@ export default function StartProject() {
       <ol className="flow-steps" aria-label="Étapes de la demande">
         {["Votre activité", "Votre offre", "Votre projet"].map((s, i) => <li key={s} aria-current={step === i ? "step" : undefined}>{i + 1}. {s}</li>)}
       </ol>
+      {prospectContext && <p className="flow-note" role="status">Votre demande concerne la maquette de <strong>{prospectContext.name}</strong>. Vous pouvez corriger les informations et préciser vos souhaits avant l’envoi.</p>}
       <div className="flow-columns">
         <form ref={form} onSubmit={step === 2 ? submit : next} className="flow-card" aria-busy={busy}>
           <fieldset className="flow-fieldset" disabled={!ready || busy}>

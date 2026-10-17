@@ -11,6 +11,7 @@ on:
       - 'src/**'
       - 'tests/**'
       - 'scripts/seo/**'
+      - 'scripts/prospects/**'
       - 'scripts/check-seo*.mjs'
       - 'public/**'
       - 'netlify/functions/retired-content.mts'
@@ -25,6 +26,7 @@ on:
       - 'src/**'
       - 'tests/**'
       - 'scripts/seo/**'
+      - 'scripts/prospects/**'
       - 'scripts/check-seo*.mjs'
       - 'public/**'
       - 'netlify/functions/retired-content.mts'
@@ -94,6 +96,7 @@ jobs:
         with:
           node-version: '24'
       - run: npm ci
+      - run: python3 scripts/prospects/test-generate-prospect-mockups.py
       - run: npm run cms:test
       - run: node --test scripts/seo/indexnow-submit.test.mjs
   cms-runtime:

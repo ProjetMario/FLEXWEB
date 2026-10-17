@@ -1,12 +1,14 @@
 import { execFile, spawn } from 'node:child_process';
 import { promisify } from 'node:util';
-import { writeFile, mkdir, readdir, copyFile } from 'node:fs/promises';
+import { writeFile, readFile, mkdir, readdir, copyFile } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import path from 'node:path';
 import { acquireLock, executeRelease, getNetlifyProductionState, PUBLIC_SITE_ID, requireRelease, ReleaseError } from './release-core.mjs';
 import { fileDigest } from './snapshot-io.mjs';
 import { verifyAutomationProxy } from './automation-probe.mjs';
 import { requestNetlify } from './netlify-request.mjs';
+import { analyseDocument } from '../seo/audit-indexability.mjs';
+import { validProspectContext } from '../../src/lib/prospect-context.mjs';
 
 const exec = promisify(execFile);
 const root = process.cwd();
@@ -47,6 +49,15 @@ async function verifyRemote(candidate, expected, production = false) {
     const response = await fetch(`${origin}${route}`, { redirect: 'error', signal: AbortSignal.timeout(20000) });
     requireRelease(response.status === 200, 'REMOTE_PAGE_UNAVAILABLE');
     if (production) requireRelease(!/noindex/i.test(response.headers.get('x-robots-tag') || ''), 'PRODUCTION_NOINDEX');
+  }
+  const prospects = JSON.parse(await readFile(path.join(root, 'src/data/prospects.json'), 'utf8'));
+  for (const prospect of prospects.filter(item => item.batch === 'pilot-10')) {
+    const response = await fetch(`${origin}/${prospect.slug}/`, { redirect: 'error', signal: AbortSignal.timeout(20000) });
+    requireRelease(response.status === 200, 'PROSPECT_PREVIEW_UNAVAILABLE');
+    const inspection = analyseDocument(await response.text(), `https://flex-web.fr/${prospect.slug}/`);
+    requireRelease(!inspection.googleIndexable && !inspection.bingIndexable && inspection.issues.every(issue => issue === 'noindex'), 'PROSPECT_INDEXABILITY_MISMATCH');
+    const context = await fetch(`${origin}/maquettes/contexte/${prospect.slug}.json`, { redirect: 'error', signal: AbortSignal.timeout(20000) });
+    requireRelease(context.status === 200 && validProspectContext(await context.json(), prospect.slug), 'PROSPECT_CONTEXT_UNAVAILABLE');
   }
   await verifyAutomationProxy(origin);
 }

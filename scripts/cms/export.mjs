@@ -9,6 +9,7 @@ import {fileURLToPath} from 'node:url';
 import {execFileSync} from 'node:child_process';
 import {extractPage,hash,baselineHash,classifyPath,sourceId,SITE} from './content.mjs';
 import {extractImages} from './images.mjs';
+import {isProspectMockup} from './document-policy.mjs';
 
 /** Initial migration: stream every emitted public page, never hold 20k bodies. */
 export async function exportBaseline({root=process.cwd(),dist=path.join(root,'dist'),output=path.join(root,'.cms/import.ndjson.gz'),manifestFile=path.join(root,'cms/baseline.json.gz')}={}){
@@ -32,7 +33,8 @@ export async function exportBaseline({root=process.cwd(),dist=path.join(root,'di
    if(!item.isFile()||item.name!=='index.html')continue;
    const relative=path.relative(dist,path.dirname(absolute)).split(path.sep).join('/');const route=relative?'/'+relative+'/':'/';
    const html=await readFile(absolute,'utf8');
-   // Standalone tenant sites/private payment routes are not public CMS content.
+   // Tenant sites, private payment routes and prospect demos are not CMS content.
+   if(isProspectMockup(html))continue;
    if(!html.includes(`href="${SITE+route}"`)||route.startsWith('/sites/')||route.startsWith('/espace-projet/'))continue;
    const page=extractPage(html,route),collection=classifyPath(route),sid=sourceId(route);
    if(paths.has(route))throw Error('DUPLICATE_EXPORT_ROUTE');paths.add(route);
