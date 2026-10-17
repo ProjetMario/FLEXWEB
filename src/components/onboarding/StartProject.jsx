@@ -5,6 +5,8 @@ import { trackLead } from "../../lib/analytics.ts";
 import { isProspectSlug, validProspectContext } from "../../lib/prospect-context.mjs";
 import { api, createIdentity, money, saveToken } from "./api";
 
+const packNames = { essentielle: "Standard", visibilite: "Medium", "crm-automation": "Premium" };
+
 const bespokeOffers = {
   automation: {
     id: "achat",
@@ -73,14 +75,22 @@ export default function StartProject() {
     prefill();
     return () => { active = false; clearTimeout(timer); controller.abort(); };
   }, []);
-  const offerChoices = service === "site" ? websiteOffers : service === "automation" ? [...automationOffers, bespokeOffers.automation] : [bespokeOffers.application];
+  const offerChoices = prospectContext && data.planId !== "achat"
+    ? [...websiteOffers, ...automationOffers]
+    : service === "site" ? websiteOffers : service === "automation" ? [...automationOffers, bespokeOffers.automation] : [bespokeOffers.application];
+  const steps = prospectContext ? ["Vos coordonnées", "Votre pack et votre projet"] : ["Votre activité", "Votre offre", "Votre projet"];
+  const finalStep = steps.length - 1;
   const displayedOffer = offerChoices.find((o) => o.id === data.planId) || offerChoices[0];
   const bespoke = !displayedOffer.setupCents;
   const activeOptions = pricingOptions.filter((option) => selectedOptions.includes(option.id));
   const set = (e) => {
     if (e.target.name === "planId") {
-      if (service === "site") setSitePlan(e.target.value);
-      if (service === "automation") setAutomationPlan(e.target.value);
+      const nextService = prospectContext && e.target.value !== "achat"
+        ? e.target.value === "crm-automation" ? "automation" : "site"
+        : service;
+      setService(nextService);
+      if (nextService === "site") setSitePlan(e.target.value);
+      if (nextService === "automation") setAutomationPlan(e.target.value);
     }
     setData((d) => ({ ...d, [e.target.name]: e.target.type === "checkbox" ? e.target.checked : e.target.value }));
   };
@@ -88,7 +98,7 @@ export default function StartProject() {
     setService(value); setError("");
     setData(d => ({...d, planId: value === "site" ? sitePlan : value === "automation" ? automationPlan : "achat"}));
   };
-  useEffect(() => { if (ready) heading.current?.focus(); }, [step]);
+  useEffect(() => { if (ready) heading.current?.focus(); }, [step, ready]);
   function next(e) {
     e.preventDefault();
     if (!form.current.reportValidity()) return;
@@ -130,20 +140,22 @@ export default function StartProject() {
   );
   return (
     <>
-      <p className="flow-eyebrow">Votre projet, étape par étape</p>
-      <h1>{service === "automation" ? "Automatisez vos tâches." : service === "application" ? "Votre application sur mesure." : "Votre site internet."}<br />Commençons par votre besoin.</h1>
-      <p className="flow-intro">{bespoke
+      <p className="flow-eyebrow">{prospectContext ? "Votre maquette, votre prochain projet" : "Votre projet, étape par étape"}</p>
+      <h1>{prospectContext ? <>Un pack pour<br />{prospectContext.name}.</> : <>{service === "automation" ? "Automatisez vos tâches." : service === "application" ? "Votre application sur mesure." : "Votre site internet."}<br />Commençons par votre besoin.</>}</h1>
+      <p className="flow-intro">{prospectContext
+        ? "Votre entreprise est déjà renseignée. Complétez vos coordonnées, puis confirmez votre pack et vos souhaits. Votre devis reste gratuit : aucun paiement à cette étape."
+        : bespoke
         ? "Présentez votre activité, vos outils et ce que vous souhaitez améliorer. Nous préparons une proposition personnalisée avant tout engagement."
         : service === "automation" ? "Mettez en place votre CRM, vos automatisations et votre assistant IA interne pour 990 € TTC en paiement unique. Les outils, les usages et le périmètre sont confirmés au devis."
         : "Un site vitrine jusqu’à 5 pages à 299 € TTC, ou un site de 5 pages et plus avec SEO et IA à 590 € TTC. Paiement unique après validation du devis."}</p>
-      <ol className="flow-steps" aria-label="Étapes de la demande">
-        {["Votre activité", "Votre offre", "Votre projet"].map((s, i) => <li key={s} aria-current={step === i ? "step" : undefined}>{i + 1}. {s}</li>)}
+      <ol className={`flow-steps${prospectContext ? " flow-steps-short" : ""}`} aria-label="Étapes de la demande">
+        {steps.map((s, i) => <li key={s} aria-current={step === i ? "step" : undefined}>{i + 1}. {s}</li>)}
       </ol>
-      {prospectContext && <p className="flow-note" role="status">Votre demande concerne la maquette de <strong>{prospectContext.name}</strong>. Vous pouvez corriger les informations et préciser vos souhaits avant l’envoi.</p>}
+      {prospectContext && <div className="flow-prospect-summary" role="status"><p>Votre demande concerne la maquette de <strong>{prospectContext.name}</strong>. Vous pouvez corriger les informations et préciser vos souhaits avant l’envoi.</p><p><strong>{packNames[displayedOffer.id] ? `Pack ${packNames[displayedOffer.id]}` : displayedOffer.name}</strong> · {bespoke ? "Sur devis" : `${money(displayedOffer.setupCents)} TTC en paiement unique`}{bespoke ? " · Budget et accompagnement à définir dans votre devis" : activeOptions.length ? ` · Options : ${money(activeOptions.reduce((total, option) => total + option.monthlyCents, 0))} TTC/mois` : " · Aucune option mensuelle sélectionnée"}.</p></div>}
       <div className="flow-columns">
-        <form ref={form} onSubmit={step === 2 ? submit : next} className="flow-card" aria-busy={busy}>
+        <form ref={form} onSubmit={step === finalStep ? submit : next} className="flow-card" aria-busy={busy}>
           <fieldset className="flow-fieldset" disabled={!ready || busy}>
-            <h2 ref={heading} tabIndex={-1}>{["Faisons connaissance", bespoke ? "Votre prestation" : "Choisissez votre formule", "Ce que vous souhaitez accomplir"][step]}</h2>
+            <h2 ref={heading} tabIndex={-1}>{prospectContext ? (step === 0 ? "Faisons connaissance" : "Votre pack, vos souhaits") : ["Faisons connaissance", bespoke ? "Votre prestation" : "Choisissez votre formule", "Ce que vous souhaitez accomplir"][step]}</h2>
             {step === 0 && <>
               <label htmlFor="quote-service">Votre projet</label><select id="quote-service" name="service" value={service} onChange={e => changeService(e.target.value)}>
                 <option value="site">Créer un site internet et développer sa visibilité</option><option value="automation">Mettre en place un CRM et automatiser des tâches</option><option value="application">Développer une application</option>
@@ -158,10 +170,12 @@ export default function StartProject() {
             {step === 1 && <>
               {offerChoices.map((o) => <label className="flow-offer" key={o.id}>
                 <input type="radio" name="planId" value={o.id} checked={data.planId === o.id} onChange={set} />
-                {o.name}
+                {prospectContext && packNames[o.id] ? <><strong>Pack {packNames[o.id]}</strong><span className="flow-pack-name">{o.name}</span></> : o.name}
                 <span className="flow-price">{o.setupCents ? `${money(o.setupCents)} TTC` : "Sur devis"}</span>
                 <span className="flow-note">{o.setupCents ? "Forfait payé une seule fois. Options mensuelles facultatives." : "Proposition personnalisée après étude de votre besoin."}</span>
-                <ul className="flow-list">{o.features.map((f) => <li key={f}>{f}</li>)}</ul>
+                {prospectContext && data.planId !== o.id
+                  ? o.description && <span className="flow-note">{o.description}</span>
+                  : <ul className="flow-list">{o.features.map((f) => <li key={f}>{f}</li>)}</ul>}
               </label>)}
               {!bespoke && <fieldset className="flow-fieldset">
                 <legend>Options facultatives</legend>
@@ -173,7 +187,8 @@ export default function StartProject() {
                 </label>)}
               </fieldset>}
             </>}
-            {step === 2 && <>
+            {step === finalStep && <>
+              {prospectContext && <h3 className="flow-project-heading">Précisez votre projet</h3>}
               <label>Votre besoin<textarea name="message" value={data.message} onChange={set} required minLength={15} maxLength={2400} rows={5}
                 placeholder={service === "automation" ? "Quelles tâches répétez-vous ? Quels outils utilisez-vous ?" : service === "application" ? "Qui utilisera votre application et quelles fonctions sont nécessaires ?" : "Votre activité, vos clients et les demandes que vous souhaitez recevoir…"} /></label>
               <label>Quand souhaitez-vous démarrer ?<select name="timeline" value={data.timeline} onChange={set}>
@@ -184,17 +199,19 @@ export default function StartProject() {
                 <span>J’accepte l’utilisation de mes informations pour traiter mon projet et recevoir les messages nécessaires à son suivi. <a href="/privacy/" target="_blank" rel="noreferrer">Confidentialité</a>.</span>
               </label>
               <p className="flow-note">Cette demande est gratuite et ne vaut pas commande. Les fonctionnalités et conditions sont confirmées avant paiement.</p>
+              {prospectContext && <p className="flow-note">Et ensuite ? Nous préparons votre devis, vous validez son périmètre et ses conditions, puis vous accédez au paiement sécurisé. Votre maquette sera adaptée aux contenus que vous aurez approuvés.</p>}
             </>}
             {error && <p className="flow-error" role="alert">{error}</p>}
             <div className="flow-actions">
               {step > 0 && <button className="flow-button secondary" type="button" disabled={busy} onClick={() => { setStep((s) => s - 1); setError(""); }}>Retour</button>}
-              <button className="flow-button" disabled={busy} type="submit">{busy ? "Enregistrement…" : step === 2 ? "Recevoir mon devis" : "Continuer"}</button>
+              <button className="flow-button" disabled={busy} type="submit">{busy ? "Enregistrement…" : step === finalStep ? "Recevoir mon devis" : "Continuer"}</button>
             </div>
           </fieldset>
         </form>
         <aside className="flow-aside">
           <p className="flow-eyebrow">Votre récapitulatif</p>
-          <h2>{displayedOffer.name}</h2>
+          <h2>{prospectContext && packNames[displayedOffer.id] ? `Pack ${packNames[displayedOffer.id]}` : displayedOffer.name}</h2>
+          {prospectContext && packNames[displayedOffer.id] && <p className="flow-note">{displayedOffer.name}</p>}
           <p className="flow-price">{bespoke ? "Sur devis" : `${money(displayedOffer.setupCents)} TTC`}</p>
           <p className="flow-note">{bespoke ? "Le budget dépend des fonctionnalités, intégrations et outils nécessaires." : service === "automation" ? "Mise en place en paiement unique. Outils, licences et périmètre des automatisations précisés au devis." : "Création en paiement unique. Hébergement et nom de domaine précisés au devis."}</p>
           {!bespoke && (activeOptions.length ? <ul className="flow-list">{activeOptions.map((o) => <li key={o.id}>{o.name} : +{money(o.monthlyCents)} TTC / mois</li>)}</ul> : <p className="flow-note">Aucune option mensuelle sélectionnée.</p>)}
