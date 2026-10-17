@@ -1,9 +1,10 @@
 ---
 import prospects from '../data/prospects.json';
+import logos from '../data/prospect-logos.json';
 import ProspectLanding from '../components/prospects/ProspectLanding.astro';
 
 export function getStaticPaths() {
-  return prospects.map(prospect => ({params: {prospect: prospect.slug}, props: {prospect}}));
+  return prospects.map(prospect => ({params: {prospect: prospect.slug}, props: {prospect: {...prospect, logo: logos[prospect.slug]}}}));
 }
 const {prospect} = Astro.props;
 ---

@@ -10,6 +10,11 @@
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
 
+[[headers]]
+  for = "/images/prospects/logos/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"

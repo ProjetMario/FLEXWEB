@@ -13,7 +13,7 @@ interface Prospect {
   services: { title: string; text: string }[];
   sourceUrl?: string;
   verifiedAt?: string;
-  logo?: { src: string; alt: string };
+  logo?: { src: string; alt: string; width: number; height: number; origin: "official" | "proposed"; sourceUrl?: string; verifiedAt?: string; iconSrc?: string; background?: string };
   heroImage?: { src: string; alt: string; credit?: string };
   accent?: string;
 }
@@ -41,6 +41,8 @@ const euro = (cents: number) => new Intl.NumberFormat("fr-FR", { style: "currenc
 const isSafeUrl = (value?: string) => Boolean(value && (/^https?:\/\//i.test(value) || /^\/(?!\/)/.test(value)));
 const heroImage = isSafeUrl(prospect.heroImage?.src) ? prospect.heroImage : null;
 const logo = isSafeUrl(prospect.logo?.src) ? prospect.logo : null;
+const compactLogo = Boolean(logo && logo.width / logo.height < 1.6);
+const logoBackground = /^#[0-9a-f]{6}$/i.test(logo?.background || "") ? `background:${logo.background}` : undefined;
 const sourceUrl = /^https?:\/\//i.test(prospect.sourceUrl || "") ? prospect.sourceUrl : null;
 const accent = /^#[0-9a-f]{6}$/i.test(prospect.accent || "") ? prospect.accent : null;
 const verifiedDate = prospect.verifiedAt && !Number.isNaN(Date.parse(prospect.verifiedAt))
@@ -63,6 +65,7 @@ const offerHrefs = [standardHref, quoteHref("seo", "visibilite"), quoteHref("aut
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <link rel="canonical" href={canonical} />
+    {logo?.iconSrc && <link rel="icon" type="image/svg+xml" href={logo.iconSrc} />}
     <title>{prospect.name} — proposition de site par Flex-Web</title>
   </head>
   <body data-theme={theme} style={accent ? `--accent:${accent}` : undefined}>
@@ -74,9 +77,11 @@ const offerHrefs = [standardHref, quoteHref("seo", "visibilite"), quoteHref("aut
 
     <div class="prospect-preview">
       <header class="brand-header shell">
-        <a class="brand" href="#contenu" aria-label={`${prospect.name}, début de la maquette`}>
-          {logo ? <img class="brand-logo" src={logo.src} alt={logo.alt} width="72" height="72" /> : <span class="brand-mark" aria-hidden="true">{monogram}</span>}
-          <span class="brand-wordmark">{prospect.name}<small>{prospect.city}</small></span>
+        <a class:list={["brand", { "brand--with-logo": Boolean(logo) }]} href="#contenu" aria-label={`${prospect.name}, début de la maquette`}>
+          {logo ? <span class:list={["brand-identity", { "brand-identity--compact": compactLogo }]} data-logo-origin={logo.origin}>
+            <img class:list={["brand-logo", { "brand-logo--backed": Boolean(logo.background) }]} style={logoBackground} src={logo.src} alt={logo.alt} width={logo.width} height={logo.height} fetchpriority="high" />
+            <span class="brand-caption">{compactLogo && <strong>{prospect.name}</strong>}<span class="brand-location">{prospect.city}{logo.origin === "proposed" && <span class="logo-proposal"> · Logo proposé</span>}</span></span>
+          </span> : <><span class="brand-mark" aria-hidden="true">{monogram}</span><span class="brand-wordmark">{prospect.name}<small>{prospect.city}</small></span></>}
         </a>
         <nav class="main-nav" aria-label="Navigation de la maquette">
           <a class="nav-services" href="#prestations">Prestations</a>
@@ -251,7 +256,7 @@ const offerHrefs = [standardHref, quoteHref("seo", "visibilite"), quoteHref("aut
         <p class="pricing-note">Demande de devis gratuite, sans engagement. Le périmètre, l’hébergement, le nom de domaine et les éventuels frais complémentaires sont précisés avant votre accord. Le référencement ne garantit ni classement ni citation par les moteurs.</p>
         <div class="monthly-options"><div><p class="eyebrow">POUR LA SUITE, SI VOUS EN AVEZ BESOIN</p><h3>Un accompagnement facultatif.</h3></div><div class="monthly-grid">{pricingOptions.map(option => <div class="monthly-option"><p><strong>{euro(option.monthlyCents)}</strong><span> TTC / mois</span></p><h4>{option.name}</h4><p>{option.description}</p></div>)}</div></div>
         <div class="modification"><div><h3>Une autre couleur ? Une idée à ajouter ?</h3><p>Parlons de ce qui rend votre entreprise unique.</p></div><a class="offer-button" href={modifyHref}>Demander une modification <span aria-hidden="true">↗</span></a></div>
-        <details class="about-preview"><summary>À propos de cette proposition</summary><div><p>Cette page est une maquette commerciale non officielle, réalisée par Flex-Web pour {prospect.name}. Elle ne représente pas une commande ni une relation commerciale déjà conclue. Les boutons de demande sont adressés à Flex-Web.</p><p>Les illustrations sont des visuels de présentation ; elles ne représentent pas des travaux, des locaux ou une équipe réels. Les prestations et contenus définitifs seront validés avec l’entreprise avant la mise en ligne de son site.</p>{verifiedDate && sourceUrl && <p>Source relevée le <time datetime={prospect.verifiedAt}>{verifiedDate}</time>.</p>}{sourceUrl && <p><a href={sourceUrl} target="_blank" rel="nofollow noopener noreferrer">Consulter la source publique des informations <span aria-hidden="true">↗</span></a></p>}<p>Vous représentez cette entreprise et souhaitez corriger une information ou retirer cette proposition ? <a href={modifyHref}>Contactez Flex-Web.</a></p></div></details>
+        <details class="about-preview"><summary>À propos de cette proposition</summary><div><p>Cette page est une maquette commerciale non officielle, réalisée par Flex-Web pour {prospect.name}. Elle ne représente pas une commande ni une relation commerciale déjà conclue. Les boutons de demande sont adressés à Flex-Web.</p><p>Les illustrations sont des visuels de présentation ; elles ne représentent pas des travaux, des locaux ou une équipe réels. Les prestations et contenus définitifs seront validés avec l’entreprise avant la mise en ligne de son site.</p>{logo?.origin === "proposed" && <p class="logo-provenance">Proposition de logo créée par Flex-Web pour cette maquette. Elle pourra être ajustée ou remplacée par votre logo existant ; elle n’est pas présentée comme votre identité officielle.</p>}{logo?.origin === "official" && logo.sourceUrl && <p class="logo-provenance">Logo de l’entreprise retrouvé sur sa <a href={logo.sourceUrl} target="_blank" rel="nofollow noopener noreferrer">source publique</a>. Son utilisation dans cette proposition ne signifie pas que l’entreprise l’a approuvée.</p>}{verifiedDate && sourceUrl && <p>Source relevée le <time datetime={prospect.verifiedAt}>{verifiedDate}</time>.</p>}{sourceUrl && <p><a href={sourceUrl} target="_blank" rel="nofollow noopener noreferrer">Consulter la source publique des informations <span aria-hidden="true">↗</span></a></p>}<p>Vous représentez cette entreprise et souhaitez corriger une information ou retirer cette proposition ? <a href={modifyHref}>Contactez Flex-Web.</a></p></div></details>
         <footer class="flex-footer"><p>Une proposition imaginée par <a href="https://flex-web.fr/">Flex-Web</a>.</p><nav aria-label="Informations Flex-Web"><a href="https://flex-web.fr/mentions-legales/">Mentions légales</a><a href="https://flex-web.fr/privacy/">Confidentialité</a></nav></footer>
       </div>
     </section>
@@ -273,4 +278,9 @@ const offerHrefs = [standardHref, quoteHref("seo", "visibilite"), quoteHref("aut
   @media(max-width:800px){.hero-actions{display:block}.hero-actions .text-link{display:inline-block;margin-top:20px}.services-grid{grid-template-columns:1fr}.service-card{padding:25px 28px}.service-heading{margin-bottom:18px}.service-card h3{font-size:24px}.service-card>p{max-width:64ch}.brand-wordmark small{font-size:10px}.hero-copy>.eyebrow{font-size:10px}.modification{align-items:stretch;flex-direction:column;gap:22px}.modification .offer-button{align-self:flex-start}.contact-preview>.button{font-size:13px}.monthly-option>p:last-child{font-size:14px}.flex-brand>span{max-width:22ch}}
   @media(max-width:620px){.preview-notice{font-size:12px;align-items:flex-start;text-align:left;gap:9px}.preview-dot{margin-top:7px;flex-shrink:0}.brand{max-width:65%}.brand-wordmark{font-size:14px}.main-nav{font-size:12px}.hero-copy>.eyebrow{font-size:10px}.hero-actions .text-link{font-size:13px;margin-top:20px}.hero-intro{font-size:15px}.hero-actions .button{font-size:13px}.visual-caption>span{font-size:11px}.small-label{font-size:10px}.identity-strip strong{font-size:12px}.section-intro>.eyebrow{font-size:11px}.section-intro>p:last-child,.service-card>p,.contact-preview p:not(.eyebrow){font-size:14px}.contact-preview .eyebrow{font-size:10px}.preview-end,.preview-end>span:first-child{font-size:11px}.offer-intro .eyebrow,.monthly-options .eyebrow{font-size:10px}.offer-intro>p:last-child{font-size:15px}.offer-card{display:flex;padding:29px 24px}.offer-featured{padding:28px 23px}.offer-badge{font-size:9px;left:15px;right:15px;padding:8px}.offer-card h3{font-size:25px;margin-top:13px}.offer-card ul{border-left:0;border-top:1px solid #dce3ed;padding:22px 0 0;margin:22px 0 26px}.offer-card .offer-button{margin-top:auto;font-size:14px;width:100%;justify-content:space-between;gap:12px}.offer-price{font-size:54px}.offer-tier,.offer-frequency,.offer-price>span{font-size:12px}.offer-description,.offer-card li{font-size:14px}.offer-intro{padding-bottom:52px}.monthly-option h4{font-size:14px}.modification .offer-button{align-self:stretch;font-size:14px}.about-preview{font-size:12px}.flex-footer{font-size:12px}.flex-brand>a{font-size:11px}.flex-brand>span{font-size:11px;max-width:15ch}.pricing-note{font-size:12px}.monthly-grid{gap:28px}.hero-visual{min-width:0}.hero-copy{min-width:0}.hero-actions .button{max-width:100%}}
   @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  /* Logos are kept at their natural aspect ratio, including wide wordmarks. */
+  .brand--with-logo{max-width:55%;min-width:0}.brand-identity{display:grid;gap:7px;min-width:0}.brand--with-logo .brand-logo{display:block;width:clamp(190px,24vw,310px);height:88px;max-width:100%;object-fit:contain;object-position:left center;border-radius:0;background:transparent}.brand-location{font-size:11px;color:var(--muted);line-height:1.45;letter-spacing:.03em}.logo-proposal{font-size:10px;letter-spacing:0}.brand-header:has(.brand--with-logo){padding-block:22px}.logo-provenance a{text-decoration:underline}
+  .brand--with-logo .brand-logo--backed{padding:8px;border-radius:5px}
+  .brand-caption{display:grid;gap:4px;min-width:0}.brand-caption>strong{font-size:18px;line-height:1.2;overflow-wrap:anywhere}.brand-identity--compact{display:flex;align-items:center;gap:16px}.brand-identity--compact .brand-logo{width:88px;flex:0 0 88px}.brand-identity--compact .brand-caption{max-width:240px}
+  @media(max-width:620px){.brand-identity--compact{gap:9px}.brand-identity--compact .brand-logo{width:58px;height:58px;flex-basis:58px}.brand-caption>strong{font-size:13px}.brand--with-logo{max-width:65%;flex:1;min-width:0}.brand--with-logo .brand-logo{width:100%;height:78px;max-width:225px}.brand-location{font-size:10px}.logo-proposal{font-size:10px}.brand-header:has(.brand--with-logo){min-height:120px;padding-block:16px;align-items:center}.brand-identity{gap:5px}}
 </style>

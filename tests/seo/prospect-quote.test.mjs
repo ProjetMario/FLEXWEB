@@ -5,6 +5,7 @@ import {chromium} from 'playwright';
 import {isProspectSlug, validProspectContext, publicProspectContext} from '../../src/lib/prospect-context.mjs';
 
 const prospects = JSON.parse(await readFile(new URL('../../src/data/prospects.json', import.meta.url)));
+const logos = JSON.parse(await readFile(new URL('../../src/data/prospect-logos.json', import.meta.url)));
 const preview = new URL(process.env.FLEXWEB_TEST_URL || 'http://127.0.0.1:4321');
 if (!['127.0.0.1','localhost'].includes(preview.hostname)) throw Error('Mocked tests require local preview');
 
@@ -23,15 +24,23 @@ test('pilot mockups are readable on phone, tablet and desktop', async () => {
     await mkdir('.cms/smoke',{recursive:true});
     const pilots=prospects.filter(p=>p.batch==='pilot-10');
     assert.equal(pilots.length,10);
+    const longest=[...prospects].sort((a,b)=>b.name.length-a.name.length).slice(0,6);
+    const samples=[...new Map([...pilots,...prospects.filter(p=>logos[p.slug].origin==='official'),...longest].map(p=>[p.slug,p])).values()];
     for (const width of [375,768,1440]) {
       const context=await browser.newContext({viewport:{width,height:920}});
       await context.route('**/*',route=>new URL(route.request().url()).origin===preview.origin ? route.continue() : route.abort());
       const page=await context.newPage();
-      for (const [index,p] of pilots.entries()) {
+      for (const [index,p] of samples.entries()) {
         await page.goto(new URL('/'+p.slug+'/',preview).href);
-        assert.equal(await page.locator('h1').count(),1);
+        assert.equal(await page.locator('h1').count(),1, p.slug + ': ' + (await page.locator('h1').allTextContents()).join(' | '));
         assert.match(await page.locator('body').innerText(),/maquette non officielle/);
         assert.equal(await page.locator('form').count(),0);
+        const logo=logos[p.slug];
+        const renderedLogo=page.locator('.brand-logo');
+        assert.equal(await renderedLogo.getAttribute('src'),logo.src);
+        assert(await renderedLogo.evaluate(img=>img.complete && img.naturalWidth>0),'Logo failed to load: '+p.slug);
+        assert.equal(await page.locator('[data-logo-origin]').getAttribute('data-logo-origin'),logo.origin);
+        if(logo.origin==='proposed') assert(await page.getByText(' · Logo proposé',{exact:true}).isVisible());
         assert.equal(await page.locator('meta[name="robots"]').getAttribute('content'),'noindex,nofollow');
         assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),p.slug+' overflow '+width);
         for (const [label,price] of [['Standard','299'],['Medium','590'],['Premium','990']]) {
