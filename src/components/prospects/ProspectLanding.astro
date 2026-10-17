@@ -85,7 +85,7 @@ const offerHrefs = [standardHref, quoteHref("seo", "visibilite"), quoteHref("aut
         </a>
         <nav class="main-nav" aria-label="Navigation de la maquette">
           <a class="nav-services" href="#prestations">Prestations</a>
-          <a class="nav-contact" href="#votre-site">Votre futur site <span aria-hidden="true">↗</span></a>
+          <a class="nav-contact" href="#votre-site">Choisir mon pack <span aria-hidden="true">↗</span></a>
         </nav>
       </header>
 
@@ -97,7 +97,7 @@ const offerHrefs = [standardHref, quoteHref("seo", "visibilite"), quoteHref("aut
             <p class="hero-intro">{prospect.intro}</p>
             <div class="hero-actions">
               <a class="button primary" href="#prestations">Découvrir les prestations <span aria-hidden="true">↗</span></a>
-              <a class="text-link" href="#votre-site">Cette maquette vous plaît ? <span aria-hidden="true">↓</span></a>
+              <a class="text-link hero-offer-link" href="#votre-site"><strong>Votre site dès 299 € TTC</strong><span>Voir les packs <span aria-hidden="true">↓</span></span></a>
             </div>
             <div class="hero-signature"><span aria-hidden="true">✳</span><p><strong>{prospect.name}</strong><br />Une présence à votre image.</p></div>
           </div>
@@ -233,7 +233,7 @@ const offerHrefs = [standardHref, quoteHref("seo", "visibilite"), quoteHref("aut
         <section class="contact-preview shell" aria-labelledby="contact-preview-title">
           <span class="contact-asterisk" aria-hidden="true">✳</span>
           <div><p class="eyebrow">LE PROCHAIN ÉCHANGE COMMENCE ICI</p><h2 id="contact-preview-title">Un site à votre image.<br />Un contact plus simple.</h2><p>Cet espace pourra accueillir vos coordonnées et un formulaire de demande. Pour l’instant, découvrez comment concrétiser cette proposition avec Flex-Web.</p></div>
-          <a class="button primary" href="#votre-site">Découvrir la proposition <span aria-hidden="true">↗</span></a>
+          <a class="button primary" href="#votre-site">Choisir mon pack <span aria-hidden="true">↗</span></a>
         </section>
       </main>
 
@@ -243,23 +243,38 @@ const offerHrefs = [standardHref, quoteHref("seo", "visibilite"), quoteHref("aut
     <section class="flex-offer" id="votre-site" aria-labelledby="offer-title">
       <div class="offer-shell">
         <div class="flex-brand"><a href="https://flex-web.fr/" aria-label="Découvrir Flex-Web"><span aria-hidden="true">F<span class="flex-brand-dash">—</span>W</span> FLEX-WEB</a><span>Votre partenaire pour la suite</span></div>
-        <div class="offer-intro"><p class="eyebrow">CETTE PAGE A ÉTÉ IMAGINÉE POUR VOUS</p><h2 id="offer-title">Et si c’était<br /><span>votre prochain site ?</span></h2><p>{prospect.name}, voici une première direction. Ensemble, nous ajustons les textes, les couleurs et les contenus pour créer un site qui vous ressemble.</p></div>
-        <div class="offer-grid">{projectOffers.map((offer, index) => <article class:list={["offer-card", { "offer-featured": index === 0 }]} aria-labelledby={`pack-${offer.id}`}>
-          {index === 0 && <p class="offer-badge">LE POINT DE DÉPART POUR VOTRE SITE</p>}
+        <div class="offer-intro"><p class="eyebrow">CETTE PAGE A ÉTÉ IMAGINÉE POUR VOUS</p><h2 id="offer-title">Votre maquette est prête.<br /><span>Choisissez la suite.</span></h2><p>{prospect.name}, partez de cette proposition : nous adaptons ensemble les textes, les couleurs et les contenus à votre activité. Choisissez votre pack pour préparer votre projet avec Flex-Web.</p></div>
+        <nav class="pack-shortcuts" aria-label="Comparer les trois packs">
+          {projectOffers.map((offer, index) => <a href={`#choisir-${offer.id}`}><span>Pack {offerLabels[index]}</span><strong>{euro(offer.setupCents)} <small>TTC</small></strong><span class="shortcut-purpose">{["Présenter votre activité", "Développer votre visibilité", "Simplifier votre gestion"][index]}</span></a>)}
+        </nav>
+        <p class="pack-choice-note">Trois forfaits en paiement unique. Les options mensuelles restent facultatives.</p>
+        <div class="offer-grid">{projectOffers.map((offer, index) => <article id={`choisir-${offer.id}`} class:list={["offer-card", { "offer-featured": index === 0 }]} aria-labelledby={`pack-${offer.id}`}>
+          {index === 0 && <p class="offer-badge">POUR DÉMARRER SIMPLEMENT</p>}
           <p class="offer-tier">PACK {offerLabels[index]}</p>
           <h3 id={`pack-${offer.id}`}>{offerEyebrows[index]}</h3>
           <p class="offer-price">{euro(offer.setupCents)}<span>TTC</span></p><p class="offer-frequency">Paiement unique · selon devis</p>
           <p class="offer-description">{offer.description}</p>
+          <div class="offer-actions"><a class:list={["offer-button", { "offer-button-primary": index === 0 }]} href={offerHrefs[index]}>Choisir le pack {offerLabels[index]}<span aria-hidden="true">↗</span></a><p>Devis gratuit · Aucun paiement à cette étape</p></div>
           <ul>{offer.features.map(feature => <li><span aria-hidden="true">✓</span>{feature}</li>)}</ul>
-          <a class:list={["offer-button", { "offer-button-primary": index === 0 }]} href={offerHrefs[index]}>{index === 0 ? "Je souhaite ce site" : `Découvrir le pack ${offerLabels[index]}`}<span aria-hidden="true">↗</span></a>
         </article>)}</div>
         <p class="pricing-note">Demande de devis gratuite, sans engagement. Le périmètre, l’hébergement, le nom de domaine et les éventuels frais complémentaires sont précisés avant votre accord. Le référencement ne garantit ni classement ni citation par les moteurs.</p>
+        <section class="next-steps" aria-labelledby="next-steps-title"><p class="eyebrow">UNE SUITE SIMPLE</p><h3 id="next-steps-title">De la maquette à votre projet.</h3><ol>
+          <li><span class="step-number" aria-hidden="true">01</span><div><h4>Choisissez votre pack</h4><p>Un prix TTC clair, avec les options qui vous sont utiles.</p></div></li>
+          <li><span class="step-number" aria-hidden="true">02</span><div><h4>Confirmez vos coordonnées</h4><p>Votre entreprise et votre maquette sont déjà renseignées.</p></div></li>
+          <li><span class="step-number" aria-hidden="true">03</span><div><h4>Validez votre projet</h4><p>Le périmètre, le calendrier et le paiement sont confirmés avant commande.</p></div></li>
+        </ol></section>
         <div class="monthly-options"><div><p class="eyebrow">POUR LA SUITE, SI VOUS EN AVEZ BESOIN</p><h3>Un accompagnement facultatif.</h3></div><div class="monthly-grid">{pricingOptions.map(option => <div class="monthly-option"><p><strong>{euro(option.monthlyCents)}</strong><span> TTC / mois</span></p><h4>{option.name}</h4><p>{option.description}</p></div>)}</div></div>
+        <section class="pack-faq" aria-labelledby="pack-faq-title"><h3 id="pack-faq-title">Avant de choisir.</h3>
+          <details><summary>Le site sera-t-il adapté à mon entreprise ?</summary><p>Oui. Cette maquette est un point de départ : les textes, les couleurs, le logo et les contenus définitifs sont validés avec vous. Le devis précise les pages et les fonctionnalités retenues.</p></details>
+          <details><summary>Dois-je prendre un abonnement mensuel ?</summary><p>Non. Les packs à 299 €, 590 € et 990 € TTC sont des forfaits en paiement unique. Les accompagnements à 49 € et 99 € TTC par mois sont facultatifs et ne sont jamais ajoutés automatiquement. L’hébergement, le nom de domaine et les éventuelles licences sont précisés au devis.</p></details>
+          <details><summary>Que se passe-t-il après mon choix ?</summary><p>Vous confirmez vos coordonnées et vos souhaits dans un formulaire prérempli. Flex-Web prépare votre devis et confirme les conditions avec vous. La demande est gratuite et ne vaut pas commande ; aucun paiement n’est demandé à cette étape.</p></details>
+        </section>
         <div class="modification"><div><h3>Une autre couleur ? Une idée à ajouter ?</h3><p>Parlons de ce qui rend votre entreprise unique.</p></div><a class="offer-button" href={modifyHref}>Demander une modification <span aria-hidden="true">↗</span></a></div>
         <details class="about-preview"><summary>À propos de cette proposition</summary><div><p>Cette page est une maquette commerciale non officielle, réalisée par Flex-Web pour {prospect.name}. Elle ne représente pas une commande ni une relation commerciale déjà conclue. Les boutons de demande sont adressés à Flex-Web.</p><p>Les illustrations sont des visuels de présentation ; elles ne représentent pas des travaux, des locaux ou une équipe réels. Les prestations et contenus définitifs seront validés avec l’entreprise avant la mise en ligne de son site.</p>{logo?.origin === "proposed" && <p class="logo-provenance">Proposition de logo créée par Flex-Web pour cette maquette. Elle pourra être ajustée ou remplacée par votre logo existant ; elle n’est pas présentée comme votre identité officielle.</p>}{logo?.origin === "official" && logo.sourceUrl && <p class="logo-provenance">Logo de l’entreprise retrouvé sur sa <a href={logo.sourceUrl} target="_blank" rel="nofollow noopener noreferrer">source publique</a>. Son utilisation dans cette proposition ne signifie pas que l’entreprise l’a approuvée.</p>}{verifiedDate && sourceUrl && <p>Source relevée le <time datetime={prospect.verifiedAt}>{verifiedDate}</time>.</p>}{sourceUrl && <p><a href={sourceUrl} target="_blank" rel="nofollow noopener noreferrer">Consulter la source publique des informations <span aria-hidden="true">↗</span></a></p>}<p>Vous représentez cette entreprise et souhaitez corriger une information ou retirer cette proposition ? <a href={modifyHref}>Contactez Flex-Web.</a></p></div></details>
         <footer class="flex-footer"><p>Une proposition imaginée par <a href="https://flex-web.fr/">Flex-Web</a>.</p><nav aria-label="Informations Flex-Web"><a href="https://flex-web.fr/mentions-legales/">Mentions légales</a><a href="https://flex-web.fr/privacy/">Confidentialité</a></nav></footer>
       </div>
     </section>
+    <aside class="mobile-pack-bar" aria-label="Choisir une offre Flex-Web"><div><span>FLEX-WEB · VOTRE SITE</span><strong>Standard · 299 € <small>TTC</small></strong></div><a href="#votre-site">Choisir mon pack <span aria-hidden="true">↑</span></a></aside>
   </body>
 </html>
 
@@ -283,4 +298,13 @@ const offerHrefs = [standardHref, quoteHref("seo", "visibilite"), quoteHref("aut
   .brand--with-logo .brand-logo--backed{padding:8px;border-radius:5px}
   .brand-caption{display:grid;gap:4px;min-width:0}.brand-caption>strong{font-size:18px;line-height:1.2;overflow-wrap:anywhere}.brand-identity--compact{display:flex;align-items:center;gap:16px}.brand-identity--compact .brand-logo{width:88px;flex:0 0 88px}.brand-identity--compact .brand-caption{max-width:240px}
   @media(max-width:620px){.brand-identity--compact{gap:9px}.brand-identity--compact .brand-logo{width:58px;height:58px;flex-basis:58px}.brand-caption>strong{font-size:13px}.brand--with-logo{max-width:65%;flex:1;min-width:0}.brand--with-logo .brand-logo{width:100%;height:78px;max-width:225px}.brand-location{font-size:10px}.logo-proposal{font-size:10px}.brand-header:has(.brand--with-logo){min-height:120px;padding-block:16px;align-items:center}.brand-identity{gap:5px}}
+  /* Keep the next action near the price, without hiding the mockup or its terms. */
+  .hero-actions .hero-offer-link{display:inline-flex;flex-direction:column;align-items:flex-start;gap:5px;line-height:1.5;padding-bottom:7px}.hero-offer-link strong{font-size:13px;font-weight:600}.hero-offer-link>span{margin-left:0;font-size:12px}.hero-offer-link>span>span{margin-left:8px}
+  .pack-shortcuts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.pack-shortcuts>a{display:flex;flex-direction:column;gap:6px;padding:20px;border:1px solid #dce3ed;border-radius:12px;text-decoration:none;background:#fff;min-width:0}.pack-shortcuts>a:first-child{border-color:#006ad9;background:#f3f8ff}.pack-shortcuts>a>span:first-child{font-size:13px;font-weight:600;color:#0064cd}.pack-shortcuts strong{font-size:25px;letter-spacing:-.035em;line-height:1.3}.pack-shortcuts small{font-size:11px;font-weight:400;letter-spacing:0}.shortcut-purpose{font-size:12px;line-height:1.5;color:#657080}.pack-choice-note{text-align:center;color:#657080;font-size:12px;line-height:1.8;margin:16px 0 52px}.offer-card{scroll-margin-top:42px}.offer-actions{display:grid;gap:9px;margin-top:24px}.offer-card .offer-actions .offer-button{margin:0;width:100%;font-size:13px;justify-content:space-between}.offer-actions>p{font-size:11px;line-height:1.6;color:#657080}.offer-card ul{margin-bottom:0}
+  .next-steps{padding-top:44px;margin-top:38px;border-top:1px solid #e6eaf0}.next-steps>.eyebrow{font-size:10px;color:#657080}.next-steps h3,.pack-faq h3{font-size:26px;font-weight:500;letter-spacing:-.035em;line-height:1.25;margin-top:10px}.next-steps ol{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px;list-style:none;margin:26px 0 0;padding:0}.next-steps li{display:flex;gap:13px;align-items:flex-start;min-width:0}.step-number{display:grid;place-items:center;flex:0 0 34px;height:34px;border:1px solid #dce3ed;border-radius:50%;color:#0064cd;font-size:11px;font-weight:600}.next-steps h4{font-size:14px;line-height:1.5;font-weight:600;margin-top:5px}.next-steps li p{font-size:13px;line-height:1.8;color:#657080;margin-top:8px}.pack-faq{padding-block:36px 8px}.pack-faq h3{margin:0 0 22px}.pack-faq details{border-top:1px solid #e6eaf0}.pack-faq details:last-child{border-bottom:1px solid #e6eaf0}.pack-faq summary{cursor:pointer;min-height:52px;padding:17px 0;font-size:14px;font-weight:600;line-height:1.6}.pack-faq details p{max-width:90ch;padding-bottom:22px;color:#657080;font-size:14px;line-height:1.85}.mobile-pack-bar{display:none}
+  @media(hover:hover){.pack-shortcuts>a:hover{border-color:#006ad9;background:#f3f8ff}}
+  @media(max-width:1050px){.offer-card .offer-actions{grid-column:1;grid-row:6;margin-top:22px}.offer-card ul{grid-column:2;grid-row:1/7;margin:0;padding:0 0 0 28px}.next-steps ol{gap:20px}.next-steps li{gap:10px}.next-steps h4{font-size:13px}.next-steps li p{font-size:12px}}
+  @media(max-width:800px){.next-steps ol{grid-template-columns:1fr;gap:22px}.next-steps h4{font-size:14px}.next-steps li p{font-size:14px;margin-top:5px}.next-steps li{gap:14px}.pack-shortcuts>a{padding:17px}.shortcut-purpose{font-size:11px}}
+  @media(max-width:620px){html{scroll-padding-bottom:calc(110px + env(safe-area-inset-bottom,0px))}body{padding-bottom:calc(94px + env(safe-area-inset-bottom,0px))}a,summary{scroll-margin-bottom:calc(110px + env(safe-area-inset-bottom,0px))}.hero-actions .hero-offer-link{margin-top:20px}.hero-offer-link strong{font-size:14px}.hero-offer-link>span{font-size:13px}.pack-shortcuts{gap:7px}.pack-shortcuts>a{padding:13px 9px;border-radius:9px;gap:7px}.pack-shortcuts>a>span:first-child{font-size:11px;white-space:nowrap}.pack-shortcuts strong{font-size:22px}.pack-shortcuts small{display:block;font-size:10px;line-height:1.2}.shortcut-purpose{font-size:10px;line-height:1.5}.pack-choice-note{text-align:left;margin:14px 0 46px;font-size:12px}.offer-card .offer-actions{margin-top:23px}.offer-card .offer-actions .offer-button{font-size:14px;min-height:52px}.offer-actions>p{font-size:11px}.offer-card ul{padding:22px 0 0;margin:23px 0 0}.next-steps{margin-top:30px;padding-top:32px}.next-steps h3,.pack-faq h3{font-size:26px}.pack-faq{padding-top:30px}.pack-faq summary{font-size:14px}.mobile-pack-bar{position:fixed;left:0;right:0;bottom:0;z-index:15;display:flex;justify-content:space-between;align-items:center;gap:12px;background:#fff;color:#1f2532;border-top:1px solid #cdd9e7;box-shadow:0 -5px 20px #2038510a;padding:13px 16px calc(13px + env(safe-area-inset-bottom,0px))}.mobile-pack-bar>div{display:grid;gap:4px;min-width:0}.mobile-pack-bar>div>span{font-size:9px;color:#657080;letter-spacing:.055em}.mobile-pack-bar strong{font-size:13px;line-height:1.5;white-space:nowrap;font-weight:600}.mobile-pack-bar small{font-size:10px;font-weight:400}.mobile-pack-bar>a{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:12px 15px;border-radius:7px;background:#006ad9;color:#fff;text-decoration:none;font-size:12px;font-weight:600;line-height:1.4;white-space:nowrap}.mobile-pack-bar>a:focus-visible{outline-color:#006ad9;outline-offset:3px}}
+
 </style>
