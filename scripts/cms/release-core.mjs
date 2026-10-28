@@ -16,6 +16,7 @@ export function getNetlifyProductionState(site, marker = {}) {
   const deployed = site.published_deploy || {};
   return {
     siteId: site.id, id: deployed.id, ready: deployed.state === 'ready',
+    locked: deployed.locked === true,
     gitBuildsStopped: site.build_settings?.stop_builds === true,
     // Require an explicit false; an omitted or invalid policy is not approval.
     nonGitProductionDeploysAllowed: site.prevent_non_git_prod_deploys === false,
@@ -128,7 +129,7 @@ export async function executeRelease({ snapshotPath, artifactDir, codeCommit, pr
     await record('checking', { previewVerified: true });
     requireRelease(await providers.currentSourceCommit() === codeCommit, 'SOURCE_ADVANCED');
     await checkProductionUnchanged();
-    try { published = await providers.publishProduction({ artifactDir, marker, manifest, preview: candidate }); }
+    try { published = await providers.publishProduction({ artifactDir, marker, manifest, preview: candidate, baseline }); }
     catch {
       // An upload timeout may hide a completed production deployment. Reconcile
       // its immutable marker; never retry an uncertain mutation blindly.
@@ -142,11 +143,13 @@ export async function executeRelease({ snapshotPath, artifactDir, codeCommit, pr
     promoted = true;
     const confirmed = await providers.currentProduction();
     requireRelease(confirmed.siteId === PUBLIC_SITE_ID && confirmed.id === published.id, 'PROMOTION_NOT_CURRENT');
+    if(baseline.locked)requireRelease(confirmed.locked===true,'PRODUCTION_LOCK_NOT_RESTORED');
     requireDeploymentPolicy(confirmed);
     await checkArtifact(manifest.digest);
     await providers.verifyProduction(published, marker);
     const verified = await providers.currentProduction();
     requireRelease(verified.siteId === PUBLIC_SITE_ID && verified.id === published.id && verified.ready, 'PRODUCTION_CHANGED');
+    if(baseline.locked)requireRelease(verified.locked===true,'PRODUCTION_LOCK_NOT_RESTORED');
     await record('deployed', { deployId: published.id, publishedAt: now(), productionVerified: true });
     return result;
   } catch (error) {

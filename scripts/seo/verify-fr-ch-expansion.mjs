@@ -3,7 +3,7 @@ import {readFile,access} from 'node:fs/promises';
 import path from 'node:path';
 import {parse} from 'parse5';
 import {readSitemap} from './read-sitemap.mjs';
-import {candidates,directoryGroups,directoryPath,candidatePath,expansionEnabled,swissTranslations,swissLanguages,swissLanguagePath,locationLanguage} from '../../src/lib/seo-expansion/fr-ch.mjs';
+import {candidates,directoryGroups,directoryPath,candidatePath,expansionEnabled,swissTranslations,swissLanguages,swissLanguagePath,locationLanguage,localizedSwissRegion} from '../../src/lib/seo-expansion/fr-ch.mjs';
 if(!expansionEnabled())throw Error('Build the draft with FLEXWEB_FR_CH_EXPANSION=1');
 const root=path.resolve('dist'),base=candidates(),translations=swissTranslations(),all=[...base,...translations],groups=directoryGroups();
 assert.equal(base.length,30000);assert.equal(translations.length,8440);
@@ -24,6 +24,10 @@ for(let i=0;i<all.length;i++){
  const lang=locale||locationLanguage(location);
  assert(html.includes(`<html lang="${lang}"`),`${route}: language`);
  assert(html.includes(location.code),`${route}: official code`);
+ if(location.country==='CH'&&lang!=='fr'){
+  const normalized=html.replace(/<!--[\s\S]*?-->/g,'');
+  assert(normalized.includes(`<li>${lang==='de'?'Sprachregion laut Quelle':'Regione linguistica secondo la fonte'} : ${localizedSwissRegion(location,lang)}</li>`),`${route}: official language region`);
+ }
  if(location.country==='CH')for(const language of swissLanguages){
   const target=swissLanguagePath(audience,location,language);
   assert(html.includes(`hreflang="${language}-CH" href="https://flex-web.fr${target}"`),`${route}: alternate ${language}`);

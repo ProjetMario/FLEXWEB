@@ -36,6 +36,8 @@ test('France and Switzerland project drafts are readable and use the correct req
     if(route.includes('-ch-')){
       assert.equal(await page.locator('main nav.swiss-languages a').count(),3);
       const text=await page.locator('main').innerText();assert.match(text,language==='de'?/Französisch und Englisch/:language==='it'?/francese e inglese/:/français et en anglais/);
+      if(route.includes('geneve')&&language==='de')assert.equal(await page.locator('main li').filter({hasText:'Sprachregion laut Quelle'}).innerText(),'Sprachregion laut Quelle : Französisch');
+      if(route.includes('zurich')&&language==='it')assert.equal(await page.locator('main li').filter({hasText:'Regione linguistica secondo la fonte'}).innerText(),'Regione linguistica secondo la fonte : Tedesco');
     }
     const faq=page.locator('details').first();await faq.locator('summary').click();assert.equal(await faq.getAttribute('open'),'');
     if(route.includes('particuliers/geneve'))await page.screenshot({path:`.cms/geo-smoke/fr-ch-geneve-particulier-${width}.png`,fullPage:true});

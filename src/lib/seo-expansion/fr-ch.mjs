@@ -15,6 +15,12 @@ export function inventory() {
 export const candidatePath=(audience,location)=>`/projets-sites/${audience}/${location.slug}/`;
 export const swissLanguages = ['fr','de','it'];
 export const locationLanguage=location=>location.country==='CH'&&location.languageArea==='Allemand'?'de':location.country==='CH'&&location.languageArea==='Italien'?'it':'fr';
+export function localizedSwissRegion(location,locale){
+ const regions={fr:{Allemand:'Allemand',Français:'Français',Italien:'Italien',Romanche:'Romanche'},de:{Allemand:'Deutsch',Français:'Französisch',Italien:'Italienisch',Romanche:'Rätoromanisch'},it:{Allemand:'Tedesco',Français:'Francese',Italien:'Italiano',Romanche:'Romancio'}};
+ const label=regions[locale]?.[location.languageArea];
+ if(!label)throw Error('Unknown Swiss language region');
+ return label;
+}
 export function swissLanguagePath(audience,location,locale){
  if(location.country!=='CH'||!swissLanguages.includes(locale))throw Error('Invalid Swiss language route');
  return locale===locationLanguage(location)?candidatePath(audience,location):`/projets-sites/suisse/${locale}/${audience}/${location.slug}/`;

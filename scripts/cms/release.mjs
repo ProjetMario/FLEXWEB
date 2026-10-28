@@ -9,6 +9,7 @@ import { verifyAutomationProxy } from './automation-probe.mjs';
 import { requestNetlify } from './netlify-request.mjs';
 import { analyseDocument } from '../seo/audit-indexability.mjs';
 import { validProspectContext } from '../../src/lib/prospect-context.mjs';
+import { uploadWithProductionLock } from './production-upload.mjs';
 
 const exec = promisify(execFile);
 const root = process.cwd();
@@ -18,7 +19,12 @@ const snapshotPath = path.join(root, '.cms/release-snapshot.json');
 const node = process.execPath;
 
 async function command(file, args, extraEnv = {}) {
-  try { return (await exec(file, args, { cwd: root, env: { ...env, ...extraEnv }, maxBuffer: 64 * 1024 * 1024 })).stdout.trim(); }
+  const timeout=file==='npx'?30*60*1000:file==='git'?60000:20*60*1000;
+  try {
+    const running=exec(file,args,{cwd:root,env:{...env,...extraEnv},maxBuffer:64*1024*1024,timeout});
+    running.child?.stdin?.end(); // A CI command must fail rather than wait for an invisible prompt.
+    return (await running).stdout.trim();
+  }
   catch { throw new ReleaseError(`COMMAND_FAILED_${path.basename(file).replace(/[^a-z0-9]/gi, '_').toUpperCase()}`); }
 }
 async function netlify(method, suffix) {
@@ -134,6 +140,7 @@ if (env.ENABLE_EMDASH_PUBLICATION !== 'true') {
         requireRelease(await fileDigest(filename) === digest, 'ARCHIVE_MISMATCH');
       },
       buildAndTest: async () => {
+        console.log('Release phase: build and local verification');
         env.CMS_SNAPSHOT_PATH = path.join(root, '.cms/snapshot.json');
         env.CONTEXT = 'production';
         await command('npm', ['run', 'build']);
@@ -144,6 +151,7 @@ if (env.ENABLE_EMDASH_PUBLICATION !== 'true') {
         await localTests();
       },
       createPreview: async ({ artifactDir, marker }) => {
+        console.log('Release phase: upload verified preview');
         // --no-build prevents a second build. No --prod until preview is verified.
         const raw = await command('npx', ['--yes', 'netlify-cli@23.15.1', 'deploy', '--no-build', '--dir', artifactDir, '--site', PUBLIC_SITE_ID, '--json', '--message', `EmDash ${marker.snapshotSha256.slice(0, 16)} ${codeCommit}`]);
         const output = JSON.parse(raw);
@@ -155,16 +163,24 @@ if (env.ENABLE_EMDASH_PUBLICATION !== 'true') {
         return { siteId: deploy.site_id, id: deploy.id, url, ready: deploy.state === 'ready', draft: current.id !== deploy.id };
       },
       verifyPreview: async (candidate, marker) => {
+        console.log('Release phase: verify remote preview');
         await verifyRemote(candidate, marker);
         await command(node, ['scripts/check-seo-live.mjs', candidate.url]);
         await command(node, ['scripts/cms/release-smoke.mjs', candidate.url]);
       },
-      publishProduction: async ({ artifactDir, marker }) => {
-        const raw = await command('npx', ['--yes', 'netlify-cli@23.15.1', 'deploy', '--prod', '--no-build', '--dir', artifactDir, '--site', PUBLIC_SITE_ID, '--json', '--message', `EmDash production ${marker.snapshotSha256.slice(0, 16)} ${codeCommit}`]);
-        const output = JSON.parse(raw);
-        requireRelease(typeof output.deploy_id === 'string', 'MISSING_PRODUCTION_ID');
-        const deploy = await netlify('GET', `/deploys/${encodeURIComponent(output.deploy_id)}`);
-        return { siteId: deploy.site_id, id: deploy.id, ready: deploy.state === 'ready', url: deploy.deploy_ssl_url };
+      publishProduction: async ({ artifactDir, marker, baseline }) => {
+        console.log('Release phase: production upload with temporary deployment unlock');
+        return uploadWithProductionLock({expected:marker,expectedProductionId:baseline.id,currentProduction,
+          unlock:id=>netlify('POST',`/deploys/${encodeURIComponent(id)}/unlock`),
+          lock:id=>netlify('POST',`/deploys/${encodeURIComponent(id)}/lock`),
+          upload:async()=>{
+            const raw = await command('npx', ['--yes', 'netlify-cli@23.15.1', 'deploy', '--prod', '--no-build', '--dir', artifactDir, '--site', PUBLIC_SITE_ID, '--json', '--message', `EmDash production ${marker.snapshotSha256.slice(0, 16)} ${codeCommit}`]);
+            const output = JSON.parse(raw);
+            requireRelease(typeof output.deploy_id === 'string', 'MISSING_PRODUCTION_ID');
+            const deploy = await netlify('GET', `/deploys/${encodeURIComponent(output.deploy_id)}`);
+            return { siteId: deploy.site_id, id: deploy.id, ready: deploy.state === 'ready', url: deploy.deploy_ssl_url };
+          },
+        });
       },
       verifyProduction: (candidate, marker) => verifyRemote(candidate, marker, true),
       report: (_snapshot, state) => command(node, ['scripts/cms/snapshot.mjs', 'report', '--input', snapshotPath, '--status', state.status, ...(state.deployId ? ['--deploy-id', state.deployId] : [])]),
