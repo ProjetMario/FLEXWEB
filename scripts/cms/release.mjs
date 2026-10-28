@@ -10,6 +10,7 @@ import { requestNetlify } from './netlify-request.mjs';
 import { analyseDocument } from '../seo/audit-indexability.mjs';
 import { validProspectContext } from '../../src/lib/prospect-context.mjs';
 import { uploadWithProductionLock } from './production-upload.mjs';
+import { commandFailureCode } from './command-diagnostic.mjs';
 
 const exec = promisify(execFile);
 const root = process.cwd();
@@ -25,7 +26,7 @@ async function command(file, args, extraEnv = {}) {
     running.child?.stdin?.end(); // A CI command must fail rather than wait for an invisible prompt.
     return (await running).stdout.trim();
   }
-  catch { throw new ReleaseError(`COMMAND_FAILED_${path.basename(file).replace(/[^a-z0-9]/gi, '_').toUpperCase()}`); }
+  catch(error) { throw new ReleaseError(commandFailureCode(file,args,error)); }
 }
 async function netlify(method, suffix) {
   return requestNetlify(method, suffix, { token: env.NETLIFY_AUTH_TOKEN });
@@ -127,7 +128,7 @@ if (env.ENABLE_EMDASH_PUBLICATION !== 'true') {
     env.CMS_PUBLICATION_REPORT_PATH = reportPath;
     const providers = {
       // executeRelease checks the Netlify policy before this authenticated export.
-      pullSnapshot: output => command(node, ['scripts/cms/snapshot.mjs', 'pull', '--mode', 'published', '--output', output]),
+      pullSnapshot: output => {console.log('Release phase: pull published CMS content');return command(node, ['scripts/cms/snapshot.mjs', 'pull', '--mode', 'published', '--output', output]);},
       validateSnapshot: input => command(node, ['scripts/cms/snapshot.mjs', 'validate', '--input', input]),
       applySnapshot: input => command(node, ['scripts/cms/snapshot.mjs', 'apply', '--input', input]),
       currentProduction,
