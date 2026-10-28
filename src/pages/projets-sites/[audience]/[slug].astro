@@ -1,4 +1,5 @@
 ---
+import SwissLocalized from '../../../components/seo-expansion/SwissLocalized.astro';
 import ResourceLayout from '../../../components/seo/national/ResourceLayout.astro';
 import StructuredData from '../../../components/seo/StructuredData.astro';
 import {business} from '../../../data/business';
@@ -9,6 +10,7 @@ export function getStaticPaths(){
 }
 const {audience,location}=Astro.props;
 const individual=audience==='particuliers', swiss=location.country==='CH';
+const locale=swiss&&location.languageArea==='Allemand'?'de':swiss&&location.languageArea==='Italien'?'it':'fr';
 const title=`Création de site internet pour ${individual?'particulier':'entreprise'} à ${location.name} (${swiss ? `canton de ${location.area}, Suisse` : location.areaCode})`;
 const description=`Préparer un projet de site ${individual?'personnel':'professionnel'} à ${location.name}, ${location.area} : besoins, contenus, budget sur devis et étapes de vérification avec Flex-Web.`;
 const url=business.url+candidatePath(audience,location);
@@ -35,13 +37,14 @@ const schemas=[
 const official=swiss?'https://www.agvchapp.bfs.admin.ch/fr':`https://geo.api.gouv.fr/communes/${location.code}`;
 const privacy=swiss?'https://www.edoeb.admin.ch/fr/declaration-de-protection-des-donnees-sur-internet':'https://www.cnil.fr/fr/cookies-et-autres-traceurs/regles/cookies/comment-mettre-mon-site-web-en-conformite';
 ---
-<ResourceLayout title={title} description={description} noindex={true} quoteHref={href}>
- <StructuredData schemas={schemas} slot="head" />
+{locale!=='fr'&&<SwissLocalized audience={audience} location={location} locale={locale} />}
+{locale==='fr'&&<ResourceLayout title={title} description={description} noindex={true} quoteHref={href}>
+ <Fragment slot="head"><StructuredData schemas={schemas} /><meta name="flexweb-territory" content={`${audience}:${location.country}:${location.code}`} /></Fragment>
  <nav aria-label="Fil d’Ariane"><a href="/">Accueil</a><a href="/creation-site-internet/">Création de sites</a></nav>
  <article>
  <header><p class="eyebrow">Projet de site · {swiss?'Suisse':'France'} · {individual?'Particulier':'Entreprise'}</p><h1>{title}</h1>
  <p class="lead">{individual?`Vous souhaitez présenter un projet personnel depuis ${location.name} ? Commencez par le public, les contenus que vous pouvez publier et l’action attendue des visiteurs.`:`Votre entreprise souhaite présenter ses prestations et recevoir des demandes depuis ${location.name} ? Définissez votre clientèle, vos services et les informations utiles à recueillir.`} Flex-Web étudie votre besoin depuis Voglans, en Savoie ; le périmètre et les conditions sont définis avant accord.</p>
- <p class="meta">{swiss?"Répertoire suisse au":"Données françaises extraites le"} <time datetime={sourceDate}>{formattedDate}</time> · fiche de préparation</p><a class="action" href={href}>{individual||swiss?'Écrire pour étudier mon projet':'Demander un devis de site'} →</a>
+ <p class="meta">{swiss?"Répertoire suisse au":"Données françaises extraites le"} <time datetime={sourceDate}>{formattedDate}</time> · fiche de préparation</p><a class="action" href={href} data-conversion-event="quote_click" data-conversion-service="site">{individual||swiss?'Écrire pour étudier mon projet':'Demander un devis de site'} →</a>
  {individual&&<p>Le formulaire de devis en ligne est actuellement réservé aux professionnels. Pour un projet personnel, contactez-nous par e-mail pour vérifier les conditions applicables.</p>}
  {swiss&&<p>Pour un projet en Suisse, la langue de travail, les taxes, les frais et les modalités à distance sont à confirmer au devis. Cette page ne prouve pas une implantation locale.</p>}
  </header>
@@ -53,11 +56,11 @@ const privacy=swiss?'https://www.edoeb.admin.ch/fr/declaration-de-protection-des
  <section><h2>Que doit préciser le devis ?</h2><p>Le devis définit les pages, les contenus, les fonctionnalités, le domaine, l’hébergement, les éventuelles licences, les responsabilités et les conditions de suivi. Le calendrier dépend du périmètre et des éléments fournis. {swiss?'Les conditions fiscales, la monnaie et les frais liés à un projet transfrontalier sont à confirmer.':individual?'Les modalités et le tarif pour un projet personnel sont à confirmer individuellement.':'Les offres publiques pour les entreprises et leurs limites figurent dans les tarifs.'}</p>{!individual&&!swiss&&<p><a href="/pricing/">Consulter les offres publiques et leurs conditions</a></p>}</section>
  <section><h2>Que vérifier avant la mise en ligne ?</h2><ol><li>Relire les contenus, coordonnées et autorisations de publication.</li><li>Tester les liens, la lisibilité sur téléphone et le fonctionnement du contact.</li><li>Vérifier les adresses de pages existantes et les redirections prévues en cas de refonte.</li><li>Convenir de la propriété du domaine, des accès et des frais récurrents.</li></ol><p>Les informations sur les données personnelles doivent correspondre aux traitements réellement utilisés. Pour préparer le projet, consultez les informations de {swiss?'l’autorité suisse de protection des données':'la CNIL sur les cookies et traceurs'} : <a href={privacy}>source officielle</a>. La réglementation applicable dépend du projet et doit être vérifiée.</p></section>
  <section id="questions"><h2>Questions avant de commencer</h2>{faq.map(item=><details><summary>{item.question}</summary><p>{item.answer}</p></details>)}</section>
- <section class="note"><h2>Parler de votre projet</h2><p>Indiquez votre objectif, votre lieu, les contenus disponibles et les fonctions souhaitées. Utilisez un exemple anonymisé et ne communiquez pas de mot de passe dans le premier message.</p><a class="action" href={href}>{individual||swiss?'Contacter Flex-Web par e-mail':'Décrire mon projet professionnel'} →</a></section>
+ <section class="note"><h2>Parler de votre projet</h2><p>Indiquez votre objectif, votre lieu, les contenus disponibles et les fonctions souhaitées. Utilisez un exemple anonymisé et ne communiquez pas de mot de passe dans le premier message.</p><a class="action" href={href} data-conversion-event="quote_click" data-conversion-service="site">{individual||swiss?'Contacter Flex-Web par e-mail':'Décrire mon projet professionnel'} →</a><p>Vous pouvez également écrire à <a href={`mailto:${business.email}`}>{business.email}</a>.</p></section>
  <nav aria-label="Guides et services complémentaires"><a href="/guides/preparer-projet-site-internet/">Préparer un projet de site</a><a href="/creation-site-internet/">Offre de création de site</a><a href="/realisations/">Réalisations documentées</a>{existingTerritory&&<a href={existingTerritory}>Consulter les repères territoriaux existants</a>}<a href={candidatePath(individual?'entreprises':'particuliers',location)}>Voir le parcours {individual?'entreprise':'particulier'} pour cette commune</a></nav>
  <p class="meta">Données territoriales : {swiss?'Office fédéral de la statistique':'sources administratives françaises'}, {swiss?"répertoire au":"extraction du"} {sourceDate}. Les distances entre centres sont calculées à vol d’oiseau à partir des coordonnées de l’extraction française. Les recommandations de projet sont générales et doivent être adaptées à votre situation.</p>
  </article>
-</ResourceLayout>
+</ResourceLayout>}
 <style>
 .resource section{margin:42px 0}.resource ol{list-style:decimal;padding-left:22px}.resource li{margin:8px 0}.resource details{border-top:1px solid #dedee5;padding:18px 0}.resource summary{font-weight:600;cursor:pointer;line-height:1.5}
 </style>

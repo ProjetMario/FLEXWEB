@@ -20,7 +20,7 @@ for(const agent of ['OAI-SearchBot','ChatGPT-User','Claude-SearchBot','Claude-Us
 }
 // Draft pages are deliberately excluded from indexing while editorial and
 // consumer/cross-border qualification is completed. Test representative paths.
-for(const route of ['/projets-sites/','/projets-sites/fr/page/1/','/projets-sites/ch/page/1/','/projets-sites/particuliers/paris-fr-75056/','/projets-sites/entreprises/paris-fr-75056/','/projets-sites/particuliers/geneve-ch-6621/','/projets-sites/entreprises/geneve-ch-6621/']){
+for(const route of ['/projets-sites/','/projets-sites/fr/page/1/','/projets-sites/ch/page/1/','/projets-sites/particuliers/paris-fr-75056/','/projets-sites/entreprises/paris-fr-75056/','/projets-sites/particuliers/geneve-ch-6621/','/projets-sites/entreprises/geneve-ch-6621/','/projets-sites/particuliers/zurich-ch-261/','/projets-sites/entreprises/lugano-ch-5192/']){
  const response=await fetch(origin+route,{redirect:'error',signal:AbortSignal.timeout(30000)});assert.equal(response.status,200,route);
  const body=await response.text();assert.match(body,/<meta[^>]*name="robots"[^>]*content="[^"]*noindex/,route);
 }

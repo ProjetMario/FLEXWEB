@@ -1,6 +1,6 @@
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { identifyAISource, classifySource, publicLanding, captureAcquisition, leadSource, acquisitionEventFields } from '../../src/lib/acquisition';
+import { identifyAISource, classifySource, publicLanding, territoryLanding, captureAcquisition, leadSource, acquisitionEventFields } from '../../src/lib/acquisition';
 import { trackLead } from '../../src/lib/analytics';
 const origin = 'https://flex-web.fr';
 const consent = 'flex-web-cookie-consent';
@@ -53,6 +53,25 @@ test('rejects private routes, forged stored categories and unknown English paths
 test('website and application landing pages are eligible but unknown paths are not', () => {
  for (const path of ['/guides/preparer-projet-site-internet/','/guides/preparer-projet-application-mobile/','/en/websites/','/en/applications/','/en/guides/website-project-brief/','/en/guides/application-project-brief/']) assert.equal(publicLanding(path),path);
  assert.equal(publicLanding('/en/guides/private-client/'),null);
+});
+test('territorial attribution uses an official code and a bounded language, never slug text', () => {
+  assert.equal(territoryLanding('/projets-sites/particuliers/zurich-ch-261/','particuliers:CH:261'),'territoire:CH:261:particuliers');
+  assert.equal(territoryLanding('/projets-sites/particuliers/nom-prive-ch-261/','particuliers:CH:261'),'territoire:CH:261:particuliers');
+  assert.equal(territoryLanding('/projets-sites/particuliers/zurich-ch-261/','entreprises:CH:261'),null);
+  assert.equal(territoryLanding('/projets-sites/particuliers/zurich-ch-261/?secret=1','particuliers:CH:261'),null);
+  assert.equal(territoryLanding('/espace-projet/private/','particuliers:CH:261'),null);
+  localStorage.setItem(consent,'accepted');
+  Object.assign(location,{pathname:'/projets-sites/particuliers/zurich-ch-261/',search:'?utm_source=chatgpt'});
+  Object.assign(document,{documentElement:{lang:'de'},querySelector:()=>({getAttribute:()=> 'particuliers:CH:261'})});
+  captureAcquisition();
+  assert.equal(leadSource(),'Assistant IA (chatgpt) | territoire:CH:261:particuliers');
+  assert.deepEqual(acquisitionEventFields(),{ai_source:'chatgpt',landing_language:'de'});
+  assert.doesNotMatch(sessionStorage.getItem(key),/zurich|utm_source/);
+  localStorage.setItem(consent,'refused');captureAcquisition();assert.equal(sessionStorage.getItem(key),null);
+});
+test('a territorial path without a matching server marker is not recorded', () => {
+  localStorage.setItem(consent,'accepted');Object.assign(location,{pathname:'/projets-sites/entreprises/inconnu-fr-12345/',search:''});
+  captureAcquisition();assert.equal(sessionStorage.getItem(key),null);
 });
 test('storage failures do not interrupt the quote flow', () => {
   globalThis.localStorage.getItem = () => { throw new Error('storage denied'); };
