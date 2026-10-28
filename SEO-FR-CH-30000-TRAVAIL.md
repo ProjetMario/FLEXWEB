@@ -22,3 +22,9 @@ Les contenus partagent une trame : une simple variation de commune ne démontre 
 L’aperçu distant est construit avec l’activation explicite ; les contrôles prévus lisent les 30 000 fichiers HTML, contrôlent les 152 pages de navigation et vérifient que ces brouillons ne figurent dans aucun sous-sitemap.
 
 Les visites issues d’une fiche territoriale peuvent être attribuées, uniquement après consentement, par pays, code officiel et public. Le texte libre du slug et les paramètres d’URL ne sont pas conservés dans cette attribution. Un clic de contact est un `quote_click` et ne constitue pas une demande enregistrée ; un e-mail n’entre pas automatiquement dans le formulaire professionnel ou son CRM.
+
+## Résultat de la prévisualisation
+
+La construction GitHub Actions [40717923275](https://github.com/ProjetMario/FLEXWEB/actions/runs/40717923275) du commit `fc83612` a réussi et créé un [aperçu Netlify](https://6ae217d434759af6d1de0c75--flex-webb.netlify.app/projets-sites/). La vérification distante indique 20 610 URL dans le sitemap de l’aperçu, dont les 20 594 URL de production conservées, et 30 pages stratégiques contrôlées en HTTP. Les 30 000 fiches candidates restent exclues de ce sitemap et en `noindex` : elles ne sont donc pas comprises dans les 20 610 URL. Les pages de Zurich et de Lugano ont également répondu en HTTP 200 dans l’aperçu.
+
+Le marqueur de production contrôlé après le déploiement d’aperçu était toujours `10df474cc500492ff5b36ba7b32ff69d9fcb38b3`. L’aperçu ne constitue ni une publication sur flex-web.fr ni une demande d’indexation. Les conditions de service pour particuliers, la clientèle suisse et les langues d’accompagnement restent à confirmer ; le contenu des fiches doit être examiné pour déterminer lesquelles apportent une valeur propre avant toute indexation.
