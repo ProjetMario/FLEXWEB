@@ -23,7 +23,7 @@ if (page.faq.length) schemas.push({ '@type': 'FAQPage', '@id': `${url}#questions
 <ResourceLayout title={page.title} description={page.description} lang={page.lang}>
   <StructuredData schemas={schemas} slot="head" />
   <article class="geo-content">
-    <nav aria-label={en ? 'Breadcrumb' : 'Fil d’Ariane'}><a href={home}>{en ? 'Home' : 'Accueil'}</a>{page.path !== home && <span aria-current="page">{en ? 'Flex-Web · Services & guides' : 'CRM & automatisation'}</span>}</nav>
+    <nav aria-label={en ? 'Breadcrumb' : 'Fil d’Ariane'}><a href={home}>{en ? 'Home' : 'Accueil'}</a>{page.path !== home && <span aria-current="page">{en ? 'Flex-Web · Services & guides' : page.kind === 'article' ? 'Guides pratiques' : 'CRM & automatisation'}</span>}</nav>
     <header>
       <p class="eyebrow">Flex-Web · Voglans, Savoie, France</p>
       <h1>{page.title}</h1>
