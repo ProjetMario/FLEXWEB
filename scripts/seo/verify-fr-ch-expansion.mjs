@@ -9,12 +9,17 @@ const root=path.resolve('dist'),all=candidates(),groups=directoryGroups();
 assert.equal(all.length,30000);
 assert.equal(new Set(all.map(x=>x.path)).size,30000);
 assert.equal(groups.reduce((sum,g)=>sum+g.items.length,0),15000);
+const titles=new Set(),descriptions=new Set();
 const sampleIndexes=new Set([0,1,12889,12890,14999,15000,15001,27889,27890,29999]);
 for(let i=0;i<all.length;i++){
  const {path:route,audience,location}=all[i];
  const html=await readFile(path.join(root,route,'index.html'),'utf8');
  assert.match(html,/<meta\b[^>]*name="robots"[^>]*content="[^"]*noindex/,route);
  assert.equal([...html.matchAll(/<h1(?:\s|>)/g)].length,1,route);
+ const title=html.match(/<title>([\s\S]*?)<\/title>/)?.[1];
+ const description=html.match(/<meta\b[^>]*name="description"[^>]*content="([^"]+)"/)?.[1];
+ assert(title&&!titles.has(title),`${route}: duplicate title`);titles.add(title);
+ assert(description&&!descriptions.has(description),`${route}: duplicate description`);descriptions.add(description);
  assert(html.includes(`<link rel="canonical" href="https://flex-web.fr${route}"`),route);
  assert(html.includes(`Code ${location.country==='CH'?'OFS':'INSEE'} : ${location.code}`),route);
  assert(html.includes('Cette fiche ne revendique pas de bureau ni de client dans la commune'),route);
@@ -36,4 +41,4 @@ for(const group of groups){
  for(const location of group.items)for(const audience of ['particuliers','entreprises'])assert(html.includes(candidatePath(audience,location)),location.slug);
 }
 const urls=await readSitemap('https://flex-web.fr/sitemap.xml',url=>readFile(path.join(root,new URL(url).pathname),'utf8'));assert(!urls.some(url=>new URL(url).pathname.startsWith('/projets-sites/')));
-console.log(JSON.stringify({status:'passed',draftPages:all.length,directoryPages:groups.length+1,checkedHtml:all.length,structuredDataSamples:sampleIndexes.size,indexation:'noindex',sitemap:'excluded'}));
+console.log(JSON.stringify({status:'passed',draftPages:all.length,directoryPages:groups.length+1,checkedHtml:all.length,uniqueTitles:titles.size,uniqueDescriptions:descriptions.size,structuredDataSamples:sampleIndexes.size,indexation:'noindex',sitemap:'excluded'}));

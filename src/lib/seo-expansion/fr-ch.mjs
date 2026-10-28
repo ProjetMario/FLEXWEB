@@ -1,5 +1,6 @@
 import {readFileSync} from 'node:fs';
 import path from 'node:path';
+import {draftData,draftPath} from '../seo/territorial-drafts.mjs';
 export const audiences = ['particuliers','entreprises'];
 export const expansionEnabled = () => process.env.FLEXWEB_FR_CH_EXPANSION === '1';
 let cached;
@@ -26,4 +27,12 @@ export function directoryGroups(){
   const items=candidateLocations(country),total=Math.ceil(items.length/directorySize);
   return Array.from({length:total},(_,index)=>({country,page:index+1,total,items:items.slice(index*directorySize,(index+1)*directorySize)}));
  });
+}
+
+let existingFrench;
+export function existingFrenchSite(location){
+ if(location.country!=='FR')return null;
+ existingFrench ??= new Map(draftData().communes.map(commune=>[commune.code,commune]));
+ const commune=existingFrench.get(location.code);
+ return commune?draftPath('sites',commune):null;
 }

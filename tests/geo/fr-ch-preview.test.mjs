@@ -9,6 +9,7 @@ const cases=[
  ['/projets-sites/entreprises/paris-fr-75056/','/demarrer/?service=site'],
  ['/projets-sites/particuliers/geneve-ch-6621/','mailto:'],
  ['/projets-sites/entreprises/geneve-ch-6621/','mailto:'],
+ ['/projets-sites/entreprises/montalieu-vercieu-fr-38247/','/demarrer/?service=site'],
 ];
 test('France and Switzerland project drafts are readable and use the correct request path', {skip:process.env.FLEXWEB_FR_CH_EXPANSION!=='1'}, async()=>{
  const browser=await chromium.launch({headless:true});await mkdir('.cms/geo-smoke',{recursive:true});
@@ -25,6 +26,8 @@ test('France and Switzerland project drafts are readable and use the correct req
     assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
     const cta=page.locator('main a.action').first();assert((await cta.getAttribute('href')).startsWith(expected),route);
     await cta.focus();assert.equal(await cta.evaluate(e=>e===document.activeElement),true,route);
+    if(route.includes('montalieu')){assert.match(await page.locator('main').innerText(),/38390 correspond à 7 communes/);assert(await page.locator('a[href="/territoires/sites/montalieu-vercieu-38247/"]').count());}
+    if(route.includes('geneve'))assert.match(await page.locator('main').innerText(),/région linguistique/i);
     const faq=page.locator('details').first();await faq.locator('summary').click();assert.equal(await faq.getAttribute('open'),'');
     if(route.includes('particuliers/geneve'))await page.screenshot({path:`.cms/geo-smoke/fr-ch-geneve-particulier-${width}.png`,fullPage:true});
    }

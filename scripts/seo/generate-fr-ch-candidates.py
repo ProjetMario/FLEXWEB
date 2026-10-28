@@ -40,7 +40,7 @@ def prepare(france_file, swiss_file):
         if not code.isdigit() or not name or code in seen_swiss:
             raise ValueError(f'Invalid or duplicate Swiss commune: {code}')
         seen_swiss.add(code)
-        swiss_rows.append({'country':'CH','code':code,'name':name,'area':row['Canton'].strip(),'areaCode':row['CantonId'].strip(),'languageArea':row['SPRGEB2020_fr'].strip()})
+        swiss_rows.append({'country':'CH','code':code,'name':name,'area':row['Canton'].strip(),'areaCode':row['CantonId'].strip(),'languageArea':row['SPRGEB2020_fr'].strip(),'district':row.get('District','').strip(),'urbanization':row.get('DEGURB2021_fr','').strip()})
     swiss_rows.sort(key=lambda v:int(v['code']))
     required_fr = FR_TARGET_LOCATIONS - len(swiss_rows)
     if required_fr <= 0:
@@ -52,7 +52,10 @@ def prepare(france_file, swiss_file):
         if code in seen_fr:
             raise ValueError(f'Duplicate French commune: {code}')
         seen_fr.add(code)
-        fr_rows.append({'country':'FR','code':code,'name':name,'area':row['department'],'areaCode':row['departmentCode'],'population':row.get('population')})
+        enrichment = row.get('enrichment') or {}
+        postal_groups = [{'postalCode':g['postalCode'],'totalCommunes':g['totalCommunes']} for g in enrichment.get('postalGroups',[]) if g.get('postalCode') and isinstance(g.get('totalCommunes'),int)]
+        nearby = [{'name':n['name'],'code':n['code'],'departmentCode':n['departmentCode'],'distanceKm':n['distanceKm']} for n in enrichment.get('nearby',[])[:3] if all(k in n for k in ('name','code','departmentCode','distanceKm'))]
+        fr_rows.append({'country':'FR','code':code,'name':name,'area':row['department'],'areaCode':row['departmentCode'],'region':row.get('region'),'population':row.get('population'),'postalCodes':row.get('postalCodes') or [],'postalGroups':postal_groups,'nearby':nearby})
     fr_rows.sort(key=lambda v:(-(v['population'] or 0),v['code']))
     if len(fr_rows)<required_fr:
         raise ValueError('Not enough French communes')
