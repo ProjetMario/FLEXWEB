@@ -12,6 +12,9 @@ const cases=[
  ['/projets-sites/entreprises/montalieu-vercieu-fr-38247/','/demarrer/?service=site'],
  ['/projets-sites/particuliers/zurich-ch-261/','mailto:','de'],
  ['/projets-sites/entreprises/lugano-ch-5192/','mailto:','it'],
+ ['/projets-sites/suisse/fr/particuliers/zurich-ch-261/','mailto:','fr'],
+ ['/projets-sites/suisse/it/particuliers/zurich-ch-261/','mailto:','it'],
+ ['/projets-sites/suisse/de/entreprises/geneve-ch-6621/','mailto:','de'],
 ];
 test('France and Switzerland project drafts are readable and use the correct request path', {skip:process.env.FLEXWEB_FR_CH_EXPANSION!=='1'}, async()=>{
  const browser=await chromium.launch({headless:true});await mkdir('.cms/geo-smoke',{recursive:true});
@@ -30,9 +33,10 @@ test('France and Switzerland project drafts are readable and use the correct req
     const cta=page.locator('main a.action').first();assert((await cta.getAttribute('href')).startsWith(expected),route);
     await cta.focus();assert.equal(await cta.evaluate(e=>e===document.activeElement),true,route);
     if(route.includes('montalieu')){assert.match(await page.locator('main').innerText(),/38390 correspond à 7 communes/);assert(await page.locator('a[href="/territoires/sites/montalieu-vercieu-38247/"]').count());}
-    if(route.includes('geneve'))assert.match(await page.locator('main').innerText(),/région linguistique/i);
-    if(route.includes('zurich'))assert.match(await page.locator('main').innerText(),/Sprachregion laut Quelle/i);
-    if(route.includes('lugano'))assert.match(await page.locator('main').innerText(),/Regione linguistica secondo la fonte/i);
+    if(route.includes('-ch-')){
+      assert.equal(await page.locator('main nav.swiss-languages a').count(),3);
+      const text=await page.locator('main').innerText();assert.match(text,language==='de'?/Französisch und Englisch/:language==='it'?/francese e inglese/:/français et en anglais/);
+    }
     const faq=page.locator('details').first();await faq.locator('summary').click();assert.equal(await faq.getAttribute('open'),'');
     if(route.includes('particuliers/geneve'))await page.screenshot({path:`.cms/geo-smoke/fr-ch-geneve-particulier-${width}.png`,fullPage:true});
    }
@@ -43,6 +47,10 @@ test('France and Switzerland project drafts are readable and use the correct req
     assert((await menu.getByRole('link',{name:'Offerte anfragen ↗'}).getAttribute('href')).startsWith('mailto:'));
     await page.keyboard.press('Escape');assert.equal(await page.getByRole('button',{name:'Menü öffnen',exact:true}).getAttribute('aria-expanded'),'false');
    }
+   await page.goto(new URL('/projets-sites/particuliers/geneve-ch-6621/',origin).href);
+   await page.locator('main nav.swiss-languages a[lang="de"]').click();assert.equal(await page.locator('html').getAttribute('lang'),'de');
+   await page.locator('main nav.swiss-languages a[lang="it"]').click();assert.equal(await page.locator('html').getAttribute('lang'),'it');
+   await page.locator('main nav.swiss-languages a[lang="fr"]').click();assert.equal(new URL(page.url()).pathname,'/projets-sites/particuliers/geneve-ch-6621/');
    for(const route of ['/projets-sites/','/projets-sites/fr/page/1/','/projets-sites/ch/page/1/'])assert.equal((await page.goto(new URL(route,origin).href)).status(),200,route);
    await context.close();
   }

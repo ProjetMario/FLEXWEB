@@ -57,13 +57,13 @@ export async function acquireLock(filename) {
 }
 
 /**
- * Providers perform all external effects. The exact draft deployment is promoted,
- * never rebuilt. No arbitrary provider error/body is copied into the status file.
+ * Providers perform all external effects. Production uploads the same verified
+ * artifact without rebuilding. No arbitrary provider error/body enters reports.
  */
 export async function executeRelease({ snapshotPath, artifactDir, codeCommit, providers, statusPath, lockPath, now = () => new Date().toISOString() }) {
   const unlock = await acquireLock(lockPath);
   const result = { schemaVersion: 1, status: 'draft', startedAt: now(), codeCommit, siteId: PUBLIC_SITE_ID, events: [] };
-  let snapshot, baseline, candidate, promoted = false;
+  let snapshot, baseline, candidate, published, promoted = false;
   async function record(status, detail = {}) {
     Object.assign(result, detail, { status, updatedAt: now() });
     result.events.push({ status, at: result.updatedAt });
@@ -128,37 +128,32 @@ export async function executeRelease({ snapshotPath, artifactDir, codeCommit, pr
     await record('checking', { previewVerified: true });
     requireRelease(await providers.currentSourceCommit() === codeCommit, 'SOURCE_ADVANCED');
     await checkProductionUnchanged();
-    try { await providers.promote(candidate.id); }
+    try { published = await providers.publishProduction({ artifactDir, marker, manifest, preview: candidate }); }
     catch {
-      // A timeout can hide a successful promotion. Read state before deciding;
-      // never blindly repeat a mutation that may already have completed.
+      // An upload timeout may hide a completed production deployment. Reconcile
+      // its immutable marker; never retry an uncertain mutation blindly.
       let observed;
       try { observed = await providers.currentProduction(); } catch { throw new ReleaseError('PROMOTION_UNCERTAIN'); }
-      if (observed.id !== candidate.id) throw new ReleaseError('PROMOTION_UNCONFIRMED');
+      requireRelease(observed.siteId === PUBLIC_SITE_ID && observed.id !== baseline.id && observed.ready
+        && observed.codeCommit === marker.codeCommit && observed.snapshotSha256 === marker.snapshotSha256, 'PROMOTION_UNCONFIRMED');
+      published = observed;
     }
+    requireRelease(published?.siteId === PUBLIC_SITE_ID && published.id && published.id !== baseline.id && published.ready, 'INVALID_PRODUCTION_DEPLOYMENT');
     promoted = true;
     const confirmed = await providers.currentProduction();
-    requireRelease(confirmed.siteId === PUBLIC_SITE_ID && confirmed.id === candidate.id, 'PROMOTION_NOT_CURRENT');
-    await providers.verifyProduction(candidate, marker);
-    await record('deployed', { deployId: candidate.id, publishedAt: now(), productionVerified: true });
+    requireRelease(confirmed.siteId === PUBLIC_SITE_ID && confirmed.id === published.id, 'PROMOTION_NOT_CURRENT');
+    requireDeploymentPolicy(confirmed);
+    await checkArtifact(manifest.digest);
+    await providers.verifyProduction(published, marker);
+    const verified = await providers.currentProduction();
+    requireRelease(verified.siteId === PUBLIC_SITE_ID && verified.id === published.id && verified.ready, 'PRODUCTION_CHANGED');
+    await record('deployed', { deployId: published.id, publishedAt: now(), productionVerified: true });
     return result;
   } catch (error) {
     const code = error instanceof ReleaseError ? error.code : 'RELEASE_FAILED';
-    if (promoted && candidate && baseline) {
-      try {
-        const current = await providers.currentProduction();
-        if (current.id === candidate.id) {
-          if (current.nonGitProductionDeploysAllowed !== true || current.gitBuildsStopped !== true) {
-            result.rollback = 'skipped-deployment-policy';
-          } else {
-            await providers.promote(baseline.id);
-            const restored = await providers.currentProduction();
-            result.rollback = restored.id === baseline.id ? 'confirmed' : 'uncertain';
-            result.restoredDeployId = restored.id === baseline.id ? baseline.id : undefined;
-          }
-        } else result.rollback = 'skipped-production-changed';
-      } catch { result.rollback = 'uncertain'; }
-    }
+    // A failed live verification requires a forward fix. Never restore an old
+    // deployment or overwrite a concurrently published version automatically.
+    if (promoted && published) Object.assign(result, { deployId: published.id, forwardFixRequired: true });
     await record('blocked', { errorCode: code });
     return result;
   } finally { await unlock(); }

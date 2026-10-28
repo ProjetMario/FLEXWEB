@@ -13,6 +13,15 @@ export function inventory() {
   return cached;
 }
 export const candidatePath=(audience,location)=>`/projets-sites/${audience}/${location.slug}/`;
+export const swissLanguages = ['fr','de','it'];
+export const locationLanguage=location=>location.country==='CH'&&location.languageArea==='Allemand'?'de':location.country==='CH'&&location.languageArea==='Italien'?'it':'fr';
+export function swissLanguagePath(audience,location,locale){
+ if(location.country!=='CH'||!swissLanguages.includes(locale))throw Error('Invalid Swiss language route');
+ return locale===locationLanguage(location)?candidatePath(audience,location):`/projets-sites/suisse/${locale}/${audience}/${location.slug}/`;
+}
+export function swissTranslations(){
+ return candidates().filter(x=>x.location.country==='CH').flatMap(x=>swissLanguages.filter(locale=>locale!==locationLanguage(x.location)).map(locale=>({...x,locale,path:swissLanguagePath(x.audience,x.location,locale)})));
+}
 export function candidates() {
   const data=inventory();
   return audiences.flatMap(audience=>data.locations.map(location=>({audience,location,path:candidatePath(audience,location)})));

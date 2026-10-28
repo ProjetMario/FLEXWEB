@@ -18,7 +18,7 @@ const snapshotPath = path.join(root, '.cms/release-snapshot.json');
 const node = process.execPath;
 
 async function command(file, args, extraEnv = {}) {
-  try { return (await exec(file, args, { cwd: root, env: { ...env, ...extraEnv }, maxBuffer: 16 * 1024 * 1024 })).stdout.trim(); }
+  try { return (await exec(file, args, { cwd: root, env: { ...env, ...extraEnv }, maxBuffer: 64 * 1024 * 1024 })).stdout.trim(); }
   catch { throw new ReleaseError(`COMMAND_FAILED_${path.basename(file).replace(/[^a-z0-9]/gi, '_').toUpperCase()}`); }
 }
 async function netlify(method, suffix) {
@@ -49,6 +49,21 @@ async function verifyRemote(candidate, expected, production = false) {
     const response = await fetch(`${origin}${route}`, { redirect: 'error', signal: AbortSignal.timeout(20000) });
     requireRelease(response.status === 200, 'REMOTE_PAGE_UNAVAILABLE');
     if (production) requireRelease(!/noindex/i.test(response.headers.get('x-robots-tag') || ''), 'PRODUCTION_NOINDEX');
+  }
+  for(const route of ['/en/crm/','/en/websites/','/guides/preparer-projet-site-internet/','/llms.txt','/llms-full.txt']){
+    const response=await fetch(origin+route,{redirect:'error',signal:AbortSignal.timeout(20000)});
+    requireRelease(response.status===200,'REMOTE_GEO_PAGE_UNAVAILABLE');
+  }
+  if(env.FLEXWEB_FR_CH_EXPANSION==='1')for(const [route,lang] of [
+    ['/projets-sites/particuliers/geneve-ch-6621/','fr'],
+    ['/projets-sites/suisse/de/particuliers/geneve-ch-6621/','de'],
+    ['/projets-sites/suisse/it/particuliers/geneve-ch-6621/','it'],
+    ['/projets-sites/entreprises/paris-fr-75056/','fr'],
+  ]){
+    const response=await fetch(origin+route,{redirect:'error',signal:AbortSignal.timeout(20000)});
+    requireRelease(response.status===200,'REMOTE_TERRITORIAL_PAGE_UNAVAILABLE');
+    const html=await response.text();
+    requireRelease(html.includes(`<html lang="${lang}"`)&&/<meta[^>]*name="robots"[^>]*content="[^"]*noindex/.test(html),'REMOTE_TERRITORIAL_PAGE_MISMATCH');
   }
   const prospects = JSON.parse(await readFile(path.join(root, 'src/data/prospects.json'), 'utf8'));
   const logos = JSON.parse(await readFile(path.join(root, 'src/data/prospect-logos.json'), 'utf8'));
@@ -84,6 +99,8 @@ async function localTests() {
     // is listening, before the finally block tears the server down.
     const seoTests = (await readdir(path.join(root, 'tests/seo'))).filter(file => /\.test\.(mjs|ts)$/.test(file)).map(file => `tests/seo/${file}`);
     await command(node, ['--import', 'tsx', '--test', ...seoTests]);
+    const geoTests = (await readdir(path.join(root, 'tests/geo'))).filter(file => /\.test\.(mjs|ts)$/.test(file)).map(file => `tests/geo/${file}`);
+    await command(node, ['--import', 'tsx', '--test', ...geoTests]);
     await command(node, ['--test', 'tests/quote-flow.test.mjs'], { FLEXWEB_TEST_URL: 'http://127.0.0.1:4321' });
     await command(node, ['scripts/cms/release-smoke.mjs', 'http://127.0.0.1:4321']);
   } finally { server.kill('SIGTERM'); }
@@ -123,6 +140,7 @@ if (env.ENABLE_EMDASH_PUBLICATION !== 'true') {
         await command(node, ['scripts/check-seo.mjs']);
         await command(node, ['scripts/seo/quality.mjs', '--enforce-release']);
         await command(node, ['scripts/seo/audit-territorial-publication.mjs']);
+        if (env.FLEXWEB_FR_CH_EXPANSION === '1') await command(node, ['scripts/seo/verify-fr-ch-expansion.mjs']);
         await localTests();
       },
       createPreview: async ({ artifactDir, marker }) => {
@@ -141,7 +159,13 @@ if (env.ENABLE_EMDASH_PUBLICATION !== 'true') {
         await command(node, ['scripts/check-seo-live.mjs', candidate.url]);
         await command(node, ['scripts/cms/release-smoke.mjs', candidate.url]);
       },
-      promote: deployId => netlify('POST', `/sites/${PUBLIC_SITE_ID}/deploys/${encodeURIComponent(deployId)}/restore`),
+      publishProduction: async ({ artifactDir, marker }) => {
+        const raw = await command('npx', ['--yes', 'netlify-cli@23.15.1', 'deploy', '--prod', '--no-build', '--dir', artifactDir, '--site', PUBLIC_SITE_ID, '--json', '--message', `EmDash production ${marker.snapshotSha256.slice(0, 16)} ${codeCommit}`]);
+        const output = JSON.parse(raw);
+        requireRelease(typeof output.deploy_id === 'string', 'MISSING_PRODUCTION_ID');
+        const deploy = await netlify('GET', `/deploys/${encodeURIComponent(output.deploy_id)}`);
+        return { siteId: deploy.site_id, id: deploy.id, ready: deploy.state === 'ready', url: deploy.deploy_ssl_url };
+      },
       verifyProduction: (candidate, marker) => verifyRemote(candidate, marker, true),
       report: (_snapshot, state) => command(node, ['scripts/cms/snapshot.mjs', 'report', '--input', snapshotPath, '--status', state.status, ...(state.deployId ? ['--deploy-id', state.deployId] : [])]),
     };

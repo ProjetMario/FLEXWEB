@@ -31,9 +31,12 @@ export function publicLanding(path: string): string | null {
 const territoryPattern = /^territoire:(FR:(?:[0-9]{5}|2[AB][0-9]{3})|CH:[0-9]{1,4}):(particuliers|entreprises)$/;
 export function territoryLanding(path: string, marker: string | null): string | null {
   if(typeof path !== 'string' || path.length >= 160 || /[?#%\\\s]/.test(path) || typeof marker !== 'string') return null;
-  const match=path.match(/^\/projets-sites\/(particuliers|entreprises)\/[a-z0-9]+(?:-[a-z0-9]+)*-(fr|ch)-([a-z0-9]+)\/$/);
+  const translated=path.startsWith('/projets-sites/suisse/');
+  const normalized=path.replace(/^\/projets-sites\/suisse\/(fr|de|it)\//,'/projets-sites/');
+  const match=normalized.match(/^\/projets-sites\/(particuliers|entreprises)\/[a-z0-9]+(?:-[a-z0-9]+)*-(fr|ch)-([a-z0-9]+)\/$/);
   if(!match)return null;
   const [,audience,country,code]=match;
+  if(translated&&country!=='ch')return null;
   if(marker!==`${audience}:${country.toUpperCase()}:${code.toUpperCase()}`)return null;
   const value=`territoire:${country.toUpperCase()}:${code.toUpperCase()}:${audience}`;
   return territoryPattern.test(value)?value:null;

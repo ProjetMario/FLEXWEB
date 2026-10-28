@@ -24,7 +24,7 @@ jobs:
   publish:
     if: vars.ENABLE_EMDASH_PUBLICATION == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     environment: emdash-publication
     env:
       ENABLE_EMDASH_PUBLICATION: ${{ vars.ENABLE_EMDASH_PUBLICATION }}
@@ -34,6 +34,7 @@ jobs:
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
       NETLIFY_SITE_ID: 5f0ec4e5-fe16-4ef3-8380-9b8aff26edbb
       NODE_OPTIONS: --max-old-space-size=6144
+      FLEXWEB_FR_CH_EXPANSION: '1'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -58,7 +59,7 @@ jobs:
           path: .cms/indexnow-state.json
           key: flexweb-indexnow-v2-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: flexweb-indexnow-v2-
-      - name: Snapshot, build once, verify preview, promote the same deployment
+      - name: Snapshot, build once, verify preview and publish the verified files
         run: node scripts/cms/release.mjs
       - name: Notify IndexNow for changed priority URLs
         if: success()

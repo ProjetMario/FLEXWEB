@@ -1,0 +1,9 @@
+---
+import ProjectPage from '../../../../../components/seo-expansion/ProjectPage.astro';
+import {swissTranslations,expansionEnabled} from '../../../../../lib/seo-expansion/fr-ch.mjs';
+export function getStaticPaths(){
+ if(!expansionEnabled())return [];
+ return swissTranslations().map(({audience,location,locale})=>({params:{audience,slug:location.slug,locale},props:{audience,location,locale}}));
+}
+---
+<ProjectPage {...Astro.props} />

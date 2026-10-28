@@ -11,7 +11,7 @@ concurrency:
 jobs:
   preview:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     environment: emdash-publication
     env:
       NODE_OPTIONS: --max-old-space-size=6144
@@ -27,6 +27,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      - run: npm run cms:test
       - name: Capture current public production baseline
         run: node scripts/geo/capture-baseline.mjs
       - name: Build and validate every public route

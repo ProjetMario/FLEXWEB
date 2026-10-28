@@ -1,0 +1,7 @@
+---
+import {swissLanguages,swissLanguagePath} from '../../lib/seo-expansion/fr-ch.mjs';
+const {audience,location,locale,head=false}=Astro.props;
+const names={fr:'Français',de:'Deutsch',it:'Italiano'};
+---
+{head?swissLanguages.map(language=><link rel="alternate" hreflang={`${language}-CH`} href={`https://flex-web.fr${swissLanguagePath(audience,location,language)}`} />):<nav aria-label={locale==='de'?'Sprache wählen':locale==='it'?'Scegliere la lingua':'Choisir la langue'} class="swiss-languages">{swissLanguages.map(language=><a href={swissLanguagePath(audience,location,language)} hreflang={language} lang={language} aria-current={locale===language?'page':undefined}>{names[language]}</a>)}</nav>}
+<style>.swiss-languages{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.swiss-languages a{padding:8px 12px;border:1px solid #ddd;border-radius:6px}.swiss-languages a[aria-current="page"]{font-weight:700;text-decoration:underline}</style>
