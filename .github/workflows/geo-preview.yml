@@ -16,6 +16,7 @@ jobs:
     env:
       NODE_OPTIONS: --max-old-space-size=6144
       CONTEXT: production
+      FLEXWEB_FR_CH_EXPANSION: "1"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -38,6 +39,8 @@ jobs:
           node scripts/seo/audit-territorial-publication.mjs
           node scripts/geo/validate.mjs
           python3 scripts/geo/check-xml.py
+          python3 scripts/seo/test-fr-ch-candidates.py
+          node scripts/seo/verify-fr-ch-expansion.mjs
       - name: Verify consent, responsive pages and mocked quote requests
         run: |
           npm run preview -- --host 127.0.0.1 --port 4321 > /tmp/geo-preview.log 2>&1 &

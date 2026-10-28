@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Logo } from "./Logo.jsx";
 
-export default function Navigation({ data = {}, lang = "fr", languageLink }) {
+export default function Navigation({ data = {}, lang = "fr", languageLink, quoteHref: quoteOverride }) {
   const en = lang === "en";
-  const quoteHref = en ? "/en/contact/" : "/demarrer/";
+  const quoteHref = quoteOverride || (en ? "/en/contact/" : "/demarrer/");
   const [open, setOpen] = useState(false);
   const toggle = useRef(null), menu = useRef(null);
   const { links = [] } = data;

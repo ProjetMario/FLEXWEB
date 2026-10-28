@@ -68,7 +68,7 @@ def prepare(france_file, swiss_file):
       'status':'draft-not-published',
       'purpose':'Inventory for review; locations do not imply an office, customer, price, language support or service availability.',
       'sourceDate':'2026-01-01',
-      'france':{'inventorySource':france.get('source'),'inventorySourceSha256':france.get('sourceSha256'),'inputSha256':digest(raw_france),'cogSources':france.get('cogSources'),'locations':required_fr},
+      'france':{'retrievedAt':france.get('retrievedAt'),'cogYear':france.get('cogYear'),'inventorySource':france.get('source'),'inventorySourceSha256':france.get('sourceSha256'),'inputSha256':digest(raw_france),'cogSources':france.get('cogSources'),'locations':required_fr},
       'switzerland':{'source':SWISS_SOURCE,'documentation':OFFICIAL_DOC,'inputSha256':digest(raw_swiss),'locations':len(swiss_rows)},
       'selection':'All Swiss communes in the official snapshot; French communes sorted by population descending then INSEE code.',
       'audiences':['particuliers','entreprises'],

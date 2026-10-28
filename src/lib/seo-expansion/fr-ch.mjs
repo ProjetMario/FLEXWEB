@@ -1,0 +1,29 @@
+import {readFileSync} from 'node:fs';
+import path from 'node:path';
+export const audiences = ['particuliers','entreprises'];
+export const expansionEnabled = () => process.env.FLEXWEB_FR_CH_EXPANSION === '1';
+let cached;
+export function inventory() {
+  if (!cached) {
+    const data=JSON.parse(readFileSync(path.resolve('src/data/seo-expansion/fr-ch-candidates.json'),'utf8'));
+    if(data.status!=='draft-not-published'||data.locations.length!==15000||data.candidateCount!==30000)throw Error('Invalid France/Switzerland inventory');
+    cached=data;
+  }
+  return cached;
+}
+export const candidatePath=(audience,location)=>`/projets-sites/${audience}/${location.slug}/`;
+export function candidates() {
+  const data=inventory();
+  return audiences.flatMap(audience=>data.locations.map(location=>({audience,location,path:candidatePath(audience,location)})));
+}
+export function candidateLocations(country) {
+ return inventory().locations.filter(location=>location.country===country);
+}
+export const directorySize=100;
+export function directoryPath(country,page=1){return `/projets-sites/${country.toLowerCase()}/page/${page}/`;}
+export function directoryGroups(){
+ return ['FR','CH'].flatMap(country=>{
+  const items=candidateLocations(country),total=Math.ceil(items.length/directorySize);
+  return Array.from({length:total},(_,index)=>({country,page:index+1,total,items:items.slice(index*directorySize,(index+1)*directorySize)}));
+ });
+}

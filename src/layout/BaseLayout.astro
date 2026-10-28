@@ -11,7 +11,7 @@ import { englishNavigation, languagePairFor } from "../data/geo/site";
 import navigationLinks from "../data/navigation.json";
 import footerData from "../data/footer.json";
 
-const { title, description, image, noindex, keywords, lang = "fr" } = Astro.props;
+const { title, description, image, noindex, keywords, lang = "fr", quoteHref } = Astro.props;
 const pair = languagePairFor(Astro.url.pathname);
 const languageLink = pair ? { href: lang === "en" ? pair.fr : pair.en, label: lang === "en" ? "FR" : "EN", lang: lang === "en" ? "fr" : "en" } : undefined;
 ---
@@ -32,7 +32,7 @@ const languageLink = pair ? { href: lang === "en" ? pair.fr : pair.en, label: la
   <body class="flex min-h-svh flex-col bg-white">
     <div id="smooth-wrapper">
       <div id="smooth-content" class="flex flex-col min-h-svh">
-        <Navbar data={lang === "en" ? englishNavigation : navigationLinks} lang={lang} languageLink={languageLink} client:load />
+        <Navbar data={lang === "en" ? englishNavigation : navigationLinks} lang={lang} languageLink={languageLink} quoteHref={quoteHref} client:load />
         <main class="grow"><slot /></main>
         <Footer data={footerData} lang={lang} client:load />
         <CookieConsent lang={lang} client:load />

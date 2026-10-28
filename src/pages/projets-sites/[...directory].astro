@@ -1,0 +1,19 @@
+---
+import ResourceLayout from '../../components/seo/national/ResourceLayout.astro';
+import {candidatePath,directoryGroups,directoryPath,expansionEnabled} from '../../lib/seo-expansion/fr-ch.mjs';
+export function getStaticPaths(){
+ if(!expansionEnabled())return [];
+ const groups=directoryGroups();
+ return [{params:{directory:undefined},props:{group:null,groups}},...groups.map(group=>({params:{directory:`${group.country.toLowerCase()}/page/${group.page}`},props:{group,groups:[]}}))];
+}
+const {group,groups}=Astro.props;
+const name=group?.country==='CH'?'Suisse':'France';
+const title=group?`Projets de site en ${name} : communes, page ${group.page}`:'Préparer un site internet en France ou en Suisse';
+const desc='Parcourir les communes de France et de Suisse pour préparer un projet de site personnel ou professionnel. Conditions précisées avec Flex-Web.';
+---
+<ResourceLayout title={title} description={desc} noindex={true}>
+<nav aria-label="Fil d’Ariane"><a href="/">Accueil</a>{group&&<a href="/projets-sites/">Projets de sites</a>}</nav>
+<h1>{title}</h1>
+<p class="lead">Ces fiches de préparation distinguent les besoins d’un particulier et d’une entreprise. La présence d’une commune n’indique ni agence locale ni client existant. Les conditions du projet sont à confirmer avec Flex-Web.</p>
+{!group?<section><h2>Choisir un secteur</h2>{['FR','CH'].map(country=><div><h3>{country==='FR'?'France':'Suisse'}</h3><nav aria-label={`Pages du catalogue ${country}`}>{groups.filter(g=>g.country===country).map(g=><a href={directoryPath(country,g.page)}>Page {g.page}</a>)}</nav></div>)}</section>:<section><h2>Communes : {name}</h2><p>Pour chaque commune, choisissez le parcours adapté à votre projet.</p><ul>{group.items.map(location=><li><strong>{location.name} · {location.area}</strong> : <a href={candidatePath('particuliers',location)}>particulier</a> · <a href={candidatePath('entreprises',location)}>entreprise</a></li>)}</ul><nav aria-label="Pagination">{(group.page > 1) && <a href={directoryPath(group.country,group.page-1)}>← Page précédente</a>}<span>Page {group.page} sur {group.total}</span>{(group.page < group.total) && <a href={directoryPath(group.country,group.page+1)}>Page suivante →</a>}<a href="/projets-sites/">Retour au catalogue</a></nav></section>}
+</ResourceLayout>
