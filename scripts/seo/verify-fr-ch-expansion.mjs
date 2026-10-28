@@ -26,7 +26,8 @@ for(let i=0;i<all.length;i++){
  assert(html.includes(location.code),`${route}: official code`);
  if(location.country==='CH'&&lang!=='fr'){
   const normalized=html.replace(/<!--[\s\S]*?-->/g,'');
-  assert(normalized.includes(`<li>${lang==='de'?'Sprachregion laut Quelle':'Regione linguistica secondo la fonte'} : ${localizedSwissRegion(location,lang)}</li>`),`${route}: official language region`);
+  const region=normalized.match(/<li\b[^>]*>(?:Sprachregion laut Quelle|Regione linguistica secondo la fonte) : ([^<]+)<\/li>/)?.[1];
+  assert.equal(region,localizedSwissRegion(location,lang),`${route}: official language region`);
  }
  if(location.country==='CH')for(const language of swissLanguages){
   const target=swissLanguagePath(audience,location,language);
