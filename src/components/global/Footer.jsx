@@ -1,7 +1,8 @@
 import { Logo } from "./Logo.jsx";
 
-export default function Footer({ data = {} }) {
+export default function Footer({ data = {}, lang = "fr" }) {
 
+  if (lang === "en") return <footer className="border-t border-black/[0.08] bg-[#f5f5f7] py-12 text-sm text-[#424245]"><div className="mx-auto grid max-w-6xl gap-8 px-6 md:grid-cols-3"><div><Logo href="/en/" label="Flex-Web - Home" className="h-14" /><p className="mt-4 leading-relaxed">Websites, CRM and AI automation.<br />Flex-Web, a brand of Fleximmo.<br />Voglans · Savoie · France</p></div><nav aria-label="Services and contact" className="flex flex-col gap-3"><a href="/en/crm/">CRM and workflow automation</a><a href="/en/ai-automation/">AI automation</a><a href="/en/pricing/">Pricing</a><a href="/en/about/">About Flex-Web</a><a href="/en/contact/">Contact</a><a href="/" hrefLang="fr" lang="fr">Site en français</a></nav><nav aria-label="Legal information" className="flex flex-col gap-3"><a href="/privacy/">Privacy policy (French)</a><a href="/mentions-legales/">Legal notice (French)</a><a href="/cgv/">Terms of sale (French)</a><button type="button" className="text-left" onClick={() => window.dispatchEvent(new Event("flexweb-cookie-settings"))}>Cookie settings</button><span>© {new Date().getFullYear()} Flex-Web</span></nav></div></footer>;
   return (
     <footer
       className="w-full border-t border-black/[0.08] bg-[#f5f5f7] py-10 sm:py-14"
@@ -18,6 +19,7 @@ export default function Footer({ data = {} }) {
           <div>
             <div className="text-xs font-semibold text-[#6e6e73] mb-3">Services</div>
             <nav className="flex flex-col gap-2 text-sm text-[#424245]">
+              <a href="/crm-automatisation-entreprise/" className="hover:text-[#0071e3] transition">CRM et automatisation</a>
               <a href="/automatisation-ia/" className="hover:text-[#0071e3] transition">Automatisation IA</a>
               <a href="/automatisation-ia-savoie/" className="hover:text-[#0071e3] transition">Automatisation en Savoie</a>
               <a href="/automatisation-ia-haute-savoie/" className="hover:text-[#0071e3] transition">Automatisation en Haute-Savoie</a>
@@ -42,6 +44,7 @@ export default function Footer({ data = {} }) {
               <a href="/zones-intervention/" className="hover:text-[#0071e3] transition">Zones d’intervention</a>
               <a href="/about/" className="hover:text-[#0071e3] transition">À propos de Flex-Web</a>
               <a href="/#faq" className="hover:text-[#0071e3] transition">FAQ</a>
+              <a href="/en/" hrefLang="en" lang="en" className="hover:text-[#0071e3] transition">English website</a>
               <a href="/#contact" className="hover:text-[#0071e3] transition">Contact</a>
             </nav>
           </div>

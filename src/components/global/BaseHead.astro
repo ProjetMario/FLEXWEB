@@ -2,10 +2,12 @@
 import "../../styles/global.css";
 import StructuredData from "../seo/StructuredData.astro";
 import { business, organizationSchema, canonicalUrlFor } from "../../data/business";
-const { title, description = business.description, image = "/logo.png", noindex = false } = Astro.props;
+import { languagePairFor } from "../../data/geo/site";
+const { title, description = business.description, image = "/logo.png", noindex = false, lang = "fr", imageAlt = "Flex-Web — sites internet, CRM et automatisation IA" } = Astro.props;
 const cleanTitle = title?.replace(/\s*[—–|]\s*flex-web\s*$/i, "");
 const pageTitle = cleanTitle ? `${cleanTitle} — Flex-Web` : "Flex-Web — Automatisation IA, sites web et applications";
 const canonicalUrl = canonicalUrlFor(Astro.url.pathname);
+const languagePair = languagePairFor(Astro.url.pathname);
 const ogImage = new URL(image, business.url).toString();
 const robots = noindex ? "noindex, follow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";
 ---
@@ -17,18 +19,21 @@ const robots = noindex ? "noindex, follow" : "index, follow, max-image-preview:l
 <meta name="application-name" content="Flex-Web" />
 <meta name="msvalidate.01" content="0385A4D4C254F9ABD793D75D3D403229" />
 <link rel="canonical" href={canonicalUrl} />
+{!noindex && languagePair && <>{Object.entries(languagePair).map(([locale, path]) => <link rel="alternate" hreflang={locale} href={canonicalUrlFor(path)} />)}<link rel="alternate" hreflang="x-default" href={canonicalUrlFor(languagePair.fr)} /></>}
 <meta name="robots" content={robots} />
 <meta property="og:type" content="website" />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImage} />
+<meta property="og:image:alt" content={lang === "en" ? "Flex-Web — websites, CRM and AI automation" : imageAlt} />
 <meta property="og:site_name" content="Flex-Web" />
-<meta property="og:locale" content="fr_FR" />
+<meta property="og:locale" content={lang === "en" ? "en_GB" : "fr_FR"} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={pageTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image:alt" content={lang === "en" ? "Flex-Web — websites, CRM and AI automation" : imageAlt} />
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
 <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
 <link rel="shortcut icon" href="/favicon.ico" />
@@ -36,5 +41,6 @@ const robots = noindex ? "noindex, follow" : "index, follow, max-image-preview:l
 <link rel="manifest" href="/manifest.webmanifest" />
 <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 <link rel="alternate" type="text/plain" href="/llms.txt" title="Présentation factuelle de Flex-Web" />
+<link rel="alternate" type="text/plain" href="/llms-full.txt" title="Flex-Web — services, prices, sources and contact" />
 <meta name="theme-color" content="#ffffff" />
-<StructuredData schemas={[organizationSchema]} />
+<StructuredData schemas={[organizationSchema, { "@type": "WebSite", "@id": `${business.url}/#website`, url: `${business.url}/`, name: business.name, publisher: { "@id": `${business.url}/#organization` }, inLanguage: ["fr", "en"] }]} />

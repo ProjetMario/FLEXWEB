@@ -412,7 +412,7 @@
     "description": "Définir des rappels qui tiennent compte des réponses, des refus et du statut réel de chaque proposition.",
     "intent": "relance-devis",
     "status": "reviewed",
-    "reviewedAt": "2026-09-24",
+    "reviewedAt": "2026-10-28",
     "reviewer": "Relecture technique Flex-Web / Codex",
     "evidenceKind": "editorial-recommendation",
     "demandEvidence": "hypothesis",
@@ -433,6 +433,10 @@
       {
         "title": "Recette : une réponse reçue entre préparation et envoi",
         "text": "Préparez une relance fictive, puis enregistrez une réponse du client avant l’étape de transmission. Le nouvel état doit arrêter le message préparé. Rejouez ensuite la même tâche pour simuler une reprise après panne : aucun second envoi ne doit partir. Si le fournisseur n’a pas confirmé son résultat, affichez un état à vérifier et rapprochez les événements avant de décider d’un nouvel essai."
+      },
+      {
+        "title": "Préparer un brouillon ou une tâche avant l’envoi",
+        "text": "Le premier périmètre peut simplement signaler les devis à suivre et préparer une tâche. Si une IA rédige un brouillon, elle ne doit inventer ni remise, ni échéance, ni engagement. Le responsable vérifie le destinataire, les conditions du devis et le dernier échange. Le message n’est envoyé que selon les règles de validation convenues."
       }
     ],
     "example": "Un devis est prévu pour relance le matin, mais le client répond avant l’exécution. La nouvelle réponse suspend le rappel et crée une tâche pour le commercial. Exemple de recette, pas une campagne activée.",
@@ -456,7 +460,7 @@
     "problem": "Automatiser les rappels sur les devis en attente",
     "outcome": "Définir des rappels qui tiennent compte des réponses, des refus et du statut réel de chaque proposition.",
     "publicationSelected": true,
-    "reviewHash": "2e15cb94057a21da3d98ceed04afe4ed9dd3d82c587e99f951a736b57db7e111"
+    "reviewHash": "448be552dd11b3f75ce6d84fd5c0fbaf0144fae514ddc4f841e293c02b256ddb"
   },
   {
     "axis": "automatisation",

@@ -1,3 +1,5 @@
+# Public search crawlers use the same HTML and sitemap as visitors.
+# The wildcard also covers AI search agents; no training-specific rule is changed.
 User-agent: *
 Allow: /
 Disallow: /api/

@@ -1,0 +1,9 @@
+---
+import GeoPage from '../../components/geo/GeoPage.astro';
+import { englishPages } from '../../data/geo/pages';
+export function getStaticPaths() {
+  return englishPages.map(page => ({ params: { slug: page.path.slice('/en/'.length).replace(/\/$/, '') || undefined }, props: { page } }));
+}
+const { page } = Astro.props;
+---
+<GeoPage page={page} />

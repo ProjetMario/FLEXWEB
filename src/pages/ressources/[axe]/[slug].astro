@@ -1,4 +1,5 @@
 ---
+import {workflowFaq} from '../../../data/geo/faq';
 import {isPublishable} from '../../../lib/seo/editorial.mjs';
 import {getCollection} from 'astro:content';
 import ResourceLayout from '../../../components/seo/national/ResourceLayout.astro';
@@ -12,7 +13,9 @@ const url='https://flex-web.fr'+articlePath(a);
 const offers=a.axis==='sites'?websiteOffers:automationOffers;
 const quote=a.axis==='sites'?websiteOffers[0].href:'/demarrer/?service=automation&offre=sur-mesure';
 const money=(c:number)=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(c/100);
-const schemas=[{'@context':'https://schema.org','@type':'Article',headline:a.title,description:a.description,mainEntityOfPage:url,dateModified:a.reviewedAt,author:{'@type':'Organization',name:'Flex-Web',url:'https://flex-web.fr/'},publisher:{'@id':'https://flex-web.fr/#organization'}},{'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:[{name:'Accueil',item:'https://flex-web.fr/'},{name:'Ressources',item:'https://flex-web.fr/ressources/'},{name:axisLabels[a.axis],item:'https://flex-web.fr'+hubPath(a.axis)},{name:a.title,item:url}].map((v,i)=>({'@type':'ListItem',position:i+1,...v}))}];
+const faq=a.slug==='relance-devis' ? workflowFaq['relance-devis'] : [];
+const schemas: Record<string, unknown>[]=[{'@context':'https://schema.org','@type':'Article',headline:a.title,description:a.description,mainEntityOfPage:url,dateModified:a.reviewedAt,author:{'@type':'Organization',name:'Flex-Web',url:'https://flex-web.fr/'},publisher:{'@id':'https://flex-web.fr/#organization'}},{'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:[{name:'Accueil',item:'https://flex-web.fr/'},{name:'Ressources',item:'https://flex-web.fr/ressources/'},{name:axisLabels[a.axis],item:'https://flex-web.fr'+hubPath(a.axis)},{name:a.title,item:url}].map((v,i)=>({'@type':'ListItem',position:i+1,...v}))}];
+if(faq.length) schemas.push({'@type':'FAQPage','@id':url+'#questions',mainEntity:faq.map(item=>({'@type':'Question',name:item.question,acceptedAnswer:{'@type':'Answer',text:item.answer}}))});
 ---
 <ResourceLayout title={a.title} description={a.description}>
  <StructuredData schemas={schemas}/>
@@ -25,6 +28,7 @@ const schemas=[{'@context':'https://schema.org','@type':'Article',headline:a.tit
  <section><h2>À préparer pour votre projet</h2><ul>{a.checklist.map(item=><li>{item}</li>)}</ul></section>
  <section><h2>Le périmètre à confirmer</h2><p>{a.limits}</p><p>Le devis précise les outils, les accès, le calendrier et les éventuels coûts de licences ou de consommation. Aucun gain chiffré n’est annoncé sans mesure.</p></section>
  </div>
+ {faq.length > 0 && <section id="questions"><h2>Questions sur la relance des devis</h2>{faq.map(item=><div><h3>{item.question}</h3><p>{item.answer}</p></div>)}<p><a href="/crm-automatisation-entreprise/">CRM et automatisation : prix et périmètre</a> · <a href="/journal/connecter-demandes-crm/">Relier les demandes au CRM</a> · <a href="/journal/assistant-ia-interne-entreprise/">Assistant IA interne</a></p></section>}
  <ProjectGuides axis={a.axis}/>
  <section><h2>Quel accompagnement choisir ?</h2><div class="grid">{offers.map(o=><div class="card"><h3>{o.name}</h3><p class="price">{money(o.setupCents)} TTC</p><p>{o.description}</p><a href={o.href}>Définir le périmètre au devis →</a></div>)}</div>{a.axis==='automatisation'&&<p>Une automatisation IA avancée ou une application nécessite un <a href="/demarrer/?service=automation&offre=sur-mesure">devis personnalisé</a>. Le forfait CRM ne couvre pas automatiquement tous les scénarios décrits.</p>}
  <p>{pricingOptions.map((o,i)=><span>{i>0?' · ':''}{money(o.monthlyCents)} TTC/mois : {o.description}</span>)}</p></section>

@@ -1,13 +1,15 @@
 ---
+import { workflowFaq } from "../data/geo/faq";
 import BaseLayout from "./BaseLayout.astro";
 import StructuredData from "../components/seo/StructuredData.astro";
 
 interface Props { title: string; description: string; slug: string; answer: string; readingTime: string; updatedOn?: string; publishedOn?: string }
 const { title, description, slug, answer, readingTime, updatedOn, publishedOn } = Astro.props;
+const faq = workflowFaq[slug] || [];
 const canonicalUrl = `https://flex-web.fr/journal/${slug}/`;
 const published = publishedOn || "2026-09-11";
 const formatDate = (date: string) => new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" }).format(new Date(`${date}T12:00:00Z`));
-const schemas = [
+const schemas: Record<string, unknown>[] = [
   { "@type": "WebPage", "@id": canonicalUrl, url: canonicalUrl, name: title, description, inLanguage: "fr-FR", isPartOf: { "@id": "https://flex-web.fr/#website" } },
   { "@type": "Article", "@id": `${canonicalUrl}#article`, mainEntityOfPage: { "@id": canonicalUrl }, url: canonicalUrl, headline: title, description, inLanguage: "fr-FR", datePublished: published, dateModified: updatedOn || published, author: { "@id": "https://flex-web.fr/#organization" }, publisher: { "@id": "https://flex-web.fr/#organization" }, about: { "@type": "Service", name: "Automatisation de tâches IA", url: "https://flex-web.fr/automatisation-ia/" } },
   { "@type": "BreadcrumbList", itemListElement: [
@@ -16,6 +18,7 @@ const schemas = [
     { "@type": "ListItem", position: 3, name: title, item: canonicalUrl },
   ] },
 ];
+if (faq.length) schemas.push({ "@type": "FAQPage", "@id": `${canonicalUrl}#questions`, mainEntity: faq.map(item => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })) });
 const related = [
   { slug: "assistant-ia-interne-entreprise", title: "Assistant IA interne : par où commencer dans une PME ?" },
   { slug: "taches-automatiser-pme", title: "Quelles tâches automatiser dans une PME ?" },
@@ -36,7 +39,7 @@ const related = [
       {updatedOn && <p class="byline">Mis à jour le <time datetime={updatedOn}>{new Intl.DateTimeFormat('fr-FR', { day:'numeric', month:'long', year:'numeric', timeZone:'Europe/Paris' }).format(new Date(`${updatedOn}T12:00:00Z`))}</time></p>}
     </header>
     <aside class="quick-answer" aria-labelledby="quick-answer-title"><h2 id="quick-answer-title">La réponse en quelques mots</h2><p>{answer}</p></aside>
-    <div class="guide-content"><slot /></div>
+    <div class="guide-content"><slot />{faq.length > 0 && <section id="questions"><h2>Questions pour cadrer le projet</h2>{faq.map(item => <div><h3>{item.question}</h3><p>{item.answer}</p></div>)}<p>Pour préparer le périmètre et le budget, consultez l’offre <a href="/crm-automatisation-entreprise/">CRM et automatisation pour entreprise</a>.</p></section>}</div>
     <aside class="guide-cta"><p class="eyebrow">Passer du besoin au projet</p><h2>Décrivez une tâche que vous voulez simplifier.</h2><p>FLEX-WEB propose des projets d’<a href="/automatisation-ia/">automatisation IA en France</a>, avec un accompagnement dédié en <a href="/automatisation-ia-savoie/">Savoie</a> et <a href="/automatisation-ia-haute-savoie/">Haute-Savoie</a>. Le parcours, les connexions et le suivi sont précisés sur devis.</p><a class="quote-button" href="/demarrer/?service=automation&offre=sur-mesure">Demander mon devis <span aria-hidden="true">↗</span></a><p>Demande gratuite, sans engagement. Les livrables, le calendrier et les coûts sont validés avant paiement.</p></aside>
     <nav class="related" aria-label="Guides complémentaires"><h2>Pour continuer</h2>{related.map((item) => <a href={`/journal/${item.slug}/`}>{item.title} <span aria-hidden="true">↗</span></a>)}</nav>
   </article>

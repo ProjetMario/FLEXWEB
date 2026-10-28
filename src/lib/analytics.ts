@@ -1,3 +1,4 @@
+import { acquisitionEventFields } from "./acquisition.ts";
 type LeadService = "site" | "automation" | "application";
 type AnalyticsWindow = Window & {
   gtag?: (...args: unknown[]) => void;
@@ -22,6 +23,7 @@ export function trackLead(formId: "project_quote", service: LeadService): boolea
     if (!analyticsWindow) return false;
     if (formId !== "project_quote" || !["site", "automation", "application"].includes(service)) return false;
     analyticsWindow.gtag("event", "generate_lead", {
+      ...acquisitionEventFields(),
       form_id: formId,
       service_type: service,
       page_location: window.location.origin + window.location.pathname,
@@ -40,6 +42,7 @@ export function trackConversionEvent(eventName: string, service: string = "unkno
     if (!analyticsWindow) return false;
     if (!["quote_click", "form_start", "crm_link_open", "appointment_click"].includes(eventName)) return false;
     analyticsWindow.gtag("event", eventName, {
+      ...acquisitionEventFields(),
       service_type: String(service || "unknown").slice(0, 40),
       page_location: window.location.origin + window.location.pathname,
       transport_type: "beacon",

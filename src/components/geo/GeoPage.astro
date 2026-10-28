@@ -1,0 +1,46 @@
+---
+import ResourceLayout from '../seo/national/ResourceLayout.astro';
+import StructuredData from '../seo/StructuredData.astro';
+import { business, canonicalUrlFor } from '../../data/business';
+import { geoUpdatedOn, type GeoPage } from '../../data/geo/site';
+interface Props { page: GeoPage }
+const { page } = Astro.props;
+const en = page.lang === 'en';
+const url = canonicalUrlFor(page.path);
+const home = en ? '/en/' : '/';
+const cta = page.cta ?? { label: 'Discuss your project', href: '/en/contact/' };
+const dateLabel = new Intl.DateTimeFormat(en ? 'en-GB' : 'fr-FR', { dateStyle: 'long', timeZone: 'Europe/Paris' }).format(new Date(`${geoUpdatedOn}T12:00:00Z`));
+const schemas: Record<string, unknown>[] = [
+  { '@type': page.kind === 'about' ? 'AboutPage' : page.kind === 'contact' ? 'ContactPage' : 'WebPage', '@id': url, url, name: page.title, description: page.description, inLanguage: page.lang, isPartOf: { '@id': `${business.url}/#website` }, about: { '@id': `${business.url}/#organization` }, dateModified: geoUpdatedOn },
+  { '@type': 'BreadcrumbList', itemListElement: [ { '@type': 'ListItem', position: 1, name: en ? 'Home' : 'Accueil', item: canonicalUrlFor(home) }, ...(page.path === home ? [] : [{ '@type': 'ListItem', position: 2, name: page.title, item: url }]) ] },
+];
+if (page.kind === 'service') schemas.push({ '@type': 'Service', '@id': `${url}#service`, url, name: page.title, description: page.answer, provider: { '@id': `${business.url}/#organization` }, areaServed: { '@type': 'Country', name: 'France' }, offers: { '@type': 'Offer', name: en ? 'Scope agreed by quote' : 'Périmètre défini au devis', url: canonicalUrlFor(en ? '/en/pricing/' : '/pricing/') } });
+if (page.kind === 'article') schemas.push({ '@type': 'Article', '@id': `${url}#article`, headline: page.title, description: page.description, mainEntityOfPage: { '@id': url }, inLanguage: page.lang, datePublished: geoUpdatedOn, dateModified: geoUpdatedOn, author: { '@id': `${business.url}/#organization` }, publisher: { '@id': `${business.url}/#organization` } });
+if (page.faq.length) schemas.push({ '@type': 'FAQPage', '@id': `${url}#questions`, mainEntity: page.faq.map(faq => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })) });
+---
+<ResourceLayout title={page.title} description={page.description} lang={page.lang}>
+  <StructuredData schemas={schemas} slot="head" />
+  <article class="geo-content">
+    <nav aria-label={en ? 'Breadcrumb' : 'Fil d’Ariane'}><a href={home}>{en ? 'Home' : 'Accueil'}</a>{page.path !== home && <span aria-current="page">{en ? 'Flex-Web · Services & guides' : 'CRM & automatisation'}</span>}</nav>
+    <header>
+      <p class="eyebrow">Flex-Web · Voglans, Savoie, France</p>
+      <h1>{page.title}</h1>
+      <p class="lead">{page.answer}</p>
+      <p class="meta">{en ? 'By Flex-Web · Updated' : 'Par Flex-Web · Mis à jour le'} <time datetime={geoUpdatedOn}>{dateLabel}</time></p>
+      <a class="action" href={cta.href} data-conversion-event="quote_click" data-conversion-service="automation">{cta.label} ↗</a>
+    </header>
+    {page.sections.map(section => <section class="geo-section">
+      <h2>{section.title}</h2>
+      {section.paragraphs?.map(paragraph => <p>{paragraph}</p>)}
+      {section.items && <ul>{section.items.map(item => <li>{item}</li>)}</ul>}
+      {section.table && <div class="geo-table" tabindex="0" role="region" aria-label={section.table.caption}><table><caption>{section.table.caption}</caption><thead><tr>{section.table.columns.map(column => <th scope="col">{column}</th>)}</tr></thead><tbody>{section.table.rows.map(row => <tr>{row.map((cell, index) => index === 0 ? <th scope="row">{cell}</th> : <td>{cell}</td>)}</tr>)}</tbody></table></div>}
+      {section.links && <ul class="geo-links">{section.links.map(link => <li><a href={link.href}>{link.label} →</a></li>)}</ul>}
+    </section>)}
+    {page.faq.length > 0 && <section id="questions" class="geo-section"><h2>{en ? 'Questions before you start' : 'Questions avant de démarrer'}</h2>{page.faq.map(item => <details><summary>{item.question}</summary><p>{item.answer}</p></details>)}</section>}
+    <aside class="note"><h2>{en ? 'Prepare your project' : 'Préparer votre projet'}</h2><p>{en ? 'Describe one task, the tools involved and the result you need. We will clarify the scope, checks and costs before you order.' : 'Décrivez une tâche, les outils concernés et le résultat attendu. Le périmètre, les contrôles et le coût sont précisés avant votre commande.'}</p><a class="action" href={cta.href} data-conversion-event="quote_click" data-conversion-service="automation">{cta.label} ↗</a></aside>
+    <nav class="geo-related" aria-label={en ? 'Related services and guides' : 'Services et guides liés'}>{page.related.filter(link => link.href !== page.path).map(link => <a href={link.href}>{link.label} →</a>)}</nav>
+  </article>
+</ResourceLayout>
+<style>
+.geo-content{max-width:900px}.geo-section{margin:48px 0}.geo-section li{margin:10px 0}.geo-links{margin-top:20px}.geo-table{overflow-x:auto;margin:24px 0;border:1px solid #dedee5;border-radius:14px}.geo-table:focus-visible{outline:3px solid #0071e3;outline-offset:3px}table{width:100%;min-width:560px;border-collapse:collapse;text-align:left;font-size:.96rem;line-height:1.7}caption{text-align:left;padding:16px;color:#50505a;background:#f5f5f7}th,td{padding:16px;border-top:1px solid #dedee5;vertical-align:top}thead th{background:#f5f5f7}th{font-weight:600}details{border-top:1px solid #dedee5;padding:20px 0}summary{font-size:1.1rem;font-weight:600;cursor:pointer;line-height:1.5}details p{max-width:800px}.geo-related{border-top:1px solid #dedee5;padding-top:24px}
+</style>

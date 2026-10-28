@@ -1,5 +1,16 @@
 <script>
-import { captureAcquisition } from '../../lib/acquisition';
-captureAcquisition();
-window.addEventListener('flexweb-consent-change', captureAcquisition);
+import { captureAcquisition, acquisitionEventFields } from '../../lib/acquisition';
+let reported = false;
+function capture() {
+  captureAcquisition();
+  const fields = acquisitionEventFields();
+  const analytics = window as Window & { gtag?: (...args: unknown[]) => void };
+  // An observed referral, never a claim that an AI cited this business.
+  if (!reported && fields.ai_source !== 'unknown' && typeof analytics.gtag === 'function') {
+    analytics.gtag('event', 'ai_referral', { ...fields, page_location: location.origin + location.pathname });
+    reported = true;
+  }
+}
+capture();
+window.addEventListener('flexweb-consent-change', capture);
 </script>

@@ -26,6 +26,7 @@ test('accepted consent sends only a fixed service and sanitized URL', () => {
   const calls = mockWindow();
   assert.equal(trackLead('project_quote', 'automation'), true);
   assert.deepEqual(calls, [['event', 'generate_lead', {
+    ai_source: 'unknown', landing_language: 'unknown',
     form_id: 'project_quote', service_type: 'automation',
     page_location: 'https://flex-web.fr/demarrer/', transport_type: 'beacon',
   }]]);

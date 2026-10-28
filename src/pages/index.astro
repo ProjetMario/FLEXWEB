@@ -10,7 +10,7 @@ import { editorialTracking } from "../data/editorialTracking";
 import { specialties } from "../data/specialties";
 import "../styles/marketing.css";
 const schemas = [
-  { "@type": "WebSite", "@id": `${business.url}/#website`, name: business.name, url: `${business.url}/`, inLanguage: "fr-FR", publisher: { "@id": `${business.url}/#organization` } },
+  { "@type": "WebSite", "@id": `${business.url}/#website`, name: business.name, url: `${business.url}/`, inLanguage: ["fr", "en"], publisher: { "@id": `${business.url}/#organization` } },
   { "@type": "WebPage", "@id": `${business.url}/`, url: `${business.url}/`, name: "Automatisation IA, sites web et applications", description: business.description, isPartOf: { "@id": `${business.url}/#website` }, about: { "@id": `${business.url}/#organization` } },
   { "@type": "FAQPage", mainEntity: faqData.items.map(({question, answer}) => ({ "@type": "Question", name: question, acceptedAnswer: { "@type": "Answer", text: answer } })) },
 ];

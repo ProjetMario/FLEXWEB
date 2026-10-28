@@ -7,18 +7,21 @@ import Acquisition from "../components/seo/Acquisition.astro";
 import Analytics from "../components/seo/Analytics.astro";
 import ConversionEvents from "../components/seo/ConversionEvents.astro";
 
+import { englishNavigation, languagePairFor } from "../data/geo/site";
 import navigationLinks from "../data/navigation.json";
 import footerData from "../data/footer.json";
 
-const { title, description, image, noindex, keywords, transparentNav = false } = Astro.props;
+const { title, description, image, noindex, keywords, lang = "fr" } = Astro.props;
+const pair = languagePairFor(Astro.url.pathname);
+const languageLink = pair ? { href: lang === "en" ? pair.fr : pair.en, label: lang === "en" ? "FR" : "EN", lang: lang === "en" ? "fr" : "en" } : undefined;
 ---
 
 <html
-  lang="fr"
+  lang={lang}
   class="scroll-smooth no-touchevents hydrated bg-white"
 >
   <head>
-    <BaseHead title={title} description={description} image={image} noindex={noindex} keywords={keywords} />
+    <BaseHead title={title} description={description} image={image} noindex={noindex} keywords={keywords} lang={lang} />
 
     <Analytics />
     <Acquisition />
@@ -29,10 +32,10 @@ const { title, description, image, noindex, keywords, transparentNav = false } =
   <body class="flex min-h-svh flex-col bg-white">
     <div id="smooth-wrapper">
       <div id="smooth-content" class="flex flex-col min-h-svh">
-        <Navbar data={navigationLinks} transparent={transparentNav} client:load />
+        <Navbar data={lang === "en" ? englishNavigation : navigationLinks} lang={lang} languageLink={languageLink} client:load />
         <main class="grow"><slot /></main>
-        <Footer data={footerData} client:load />
-        <CookieConsent client:load />
+        <Footer data={footerData} lang={lang} client:load />
+        <CookieConsent lang={lang} client:load />
       </div>
     </div>
   </body>

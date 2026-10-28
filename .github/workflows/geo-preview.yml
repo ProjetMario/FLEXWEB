@@ -1,0 +1,69 @@
+name: GEO French and English verified preview
+on:
+  push:
+    branches: [codex/geo-fr-en-20261028]
+    paths: ['src/**', 'public/**', 'scripts/geo/**', 'tests/**', 'package*.json', '.github/workflows/geo-preview.yml']
+permissions:
+  contents: read
+concurrency:
+  group: geo-preview-fr-en
+  cancel-in-progress: false
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment: emdash-publication
+    env:
+      NODE_OPTIONS: --max-old-space-size=6144
+      CONTEXT: production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Capture current public production baseline
+        run: node scripts/geo/capture-baseline.mjs
+      - name: Build and validate every public route
+        env:
+          GEO_BASELINE_FILE: .cms/geo-baseline.json
+        run: |
+          npm run build
+          node scripts/check-seo.mjs
+          node scripts/seo/quality.mjs --enforce-release
+          node scripts/seo/audit-territorial-publication.mjs
+          node scripts/geo/validate.mjs
+          python3 scripts/geo/check-xml.py
+      - name: Verify consent, responsive pages and mocked quote requests
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4321 > /tmp/geo-preview.log 2>&1 &
+          PREVIEW_PID=$!
+          trap 'kill "$PREVIEW_PID" || true' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4321/ > /dev/null; then break; fi
+            sleep 1
+          done
+          node --import tsx --test tests/geo/*.test.* tests/seo/*.test.*
+          node --test tests/quote-flow.test.mjs tests/analytics.test.mjs tests/automation-proxy.test.mjs
+      - name: Create a draft Netlify deployment only
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: npx --yes netlify-cli@23.15.1 deploy --no-build --dir dist --site 5f0ec4e5-fe16-4ef3-8380-9b8aff26edbb --json --message "GEO French-English preview $GITHUB_SHA" > .cms/geo-preview.json
+      - name: Check the remote preview and production marker
+        run: node scripts/geo/verify-preview.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: geo-preview-${{ github.sha }}
+          path: |
+            .cms/geo-preview.json
+            .cms/geo-validation.json
+            .cms/geo-production-marker.json
+            .cms/geo-smoke/*.png
+          include-hidden-files: true
+          retention-days: 14
+          if-no-files-found: ignore

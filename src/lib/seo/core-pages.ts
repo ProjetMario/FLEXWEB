@@ -1,3 +1,5 @@
+import { englishPages } from "../../data/geo/pages";
+import { geoUpdatedOn } from "../../data/geo/site";
 import { getCollection } from "astro:content";
 import journalData from "../../data/journalArticles.json";
 import { isIndexableMobileLocation, mobileLocationPath } from "../../data/location-indexing";
@@ -6,9 +8,12 @@ import { realizations } from "../../data/realizations";
 
 const site = "https://flex-web.fr";
 const updatedPages: Record<string, string> = {
+  "/crm-automatisation-entreprise/": geoUpdatedOn,
+  "/privacy/": geoUpdatedOn,
+  ...Object.fromEntries(englishPages.map(page => [page.path, geoUpdatedOn])),
   "/about/": "2026-10-01",
   "/journal/": "2026-10-01",
-  "/journal/assistant-ia-interne-entreprise/": "2026-10-01",
+  "/journal/assistant-ia-interne-entreprise/": "2026-10-28",
   "/specialites/artisans/": "2026-10-01",
   "/specialites/immobilier/": "2026-10-01",
   "/specialites/entreprises-services/": "2026-10-01",
@@ -18,9 +23,9 @@ const updatedPages: Record<string, string> = {
   "/": "2026-09-30",
   "/creation-site-internet/": "2026-10-01",
   "/pricing/": "2026-09-24",
-  "/automatisation-ia/": "2026-10-01",
-  "/automatisation-ia-savoie/": "2026-10-01",
-  "/automatisation-ia-haute-savoie/": "2026-10-01",
+  "/automatisation-ia/": "2026-10-28",
+  "/automatisation-ia-savoie/": "2026-10-28",
+  "/automatisation-ia-haute-savoie/": "2026-10-28",
   "/creation-site-internet-savoie/": "2026-10-01",
   "/creation-site-internet-haute-savoie/": "2026-10-01",
   "/creation-application-mobile-savoie/": "2026-10-01",
@@ -29,7 +34,7 @@ const updatedPages: Record<string, string> = {
   "/realisations/2savoie-immo/": "2026-09-30",
   "/realisations/serrurier73/": "2026-09-30",
   "/journal/taches-automatiser-pme/": "2026-10-01",
-  "/journal/connecter-demandes-crm/": "2026-09-30",
+  "/journal/connecter-demandes-crm/": "2026-10-28",
   "/journal/automatisation-ou-application-sur-mesure/": "2026-10-01",
   "/creation-application-mobile/": "2026-10-01",
   "/cgv/": "2026-09-24",
@@ -43,6 +48,8 @@ const updatedPages: Record<string, string> = {
 
 export const corePages = async () => {
   const staticPages = [
+    { url: "/crm-automatisation-entreprise/", priority: 0.9, changefreq: "monthly" },
+    ...englishPages.map(page => ({ url: page.path, priority: 0.8, changefreq: "monthly" })),
     { url: "/", priority: 1.0, changefreq: "weekly" },
     { url: "/about/", priority: 0.8, changefreq: "monthly" },
     { url: "/contact/", priority: 0.8, changefreq: "monthly" },
@@ -112,5 +119,5 @@ export const corePages = async () => {
   ];
   const allPages = Array.from(new Map(candidates.map(page => [page.url, page])).values());
 
-  return allPages.map(p=>({url:p.url,lastmod:updatedPages[p.url] ?? (p.url.startsWith('/realisations/')?'2026-09-15':undefined),family:p.url.startsWith('/creation-site-internet-')?'territoires':'principal'}));
+  return allPages.map(p=>({url:p.url,lastmod:updatedPages[p.url] ?? (p.url.startsWith('/realisations/')?'2026-09-15':undefined),family:p.url.startsWith('/en/')?'english':p.url.startsWith('/creation-site-internet-')?'territoires':'principal'}));
 };
