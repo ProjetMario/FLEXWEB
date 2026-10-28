@@ -17,6 +17,8 @@ const sitemapRoutes=new Set();
 for(const url of urls){const parsed=new URL(url);assert.equal(parsed.origin,origin);assert(parsed.pathname.endsWith('/'),`${url} canonical slash`);sitemapRoutes.add(parsed.pathname);}
 const redirects = new Map((await readFile(path.join(root,'_redirects'),'utf8')).split('\n').filter(l=>l.trim()&&!l.startsWith('#')).map(l=>{const [from,to,status]=l.split(/\s+/);assert.equal(status,'301');return [from,to];}));
 const isNoindex=html=>/<meta\b[^>]*name="robots"[^>]*content="[^"]*noindex/.test(html);
+// The project directory is noindex,follow but provides real crawlable navigation.
+const isProjectDirectory=route=>/^\/projets-sites\/(?:$|(?:fr|ch)\/page\/\d+\/$)/.test(route);
 const normalize=s=>s.replace(/&amp;/g,'&').replace(/&#(x[0-9a-f]+|[0-9]+);/gi,(_,n)=>String.fromCodePoint(n[0].toLowerCase()==='x'?parseInt(n.slice(1),16):Number(n))).replace(/&quot;/g,'"');
 // V8 can represent regex captures as slices backed by the entire input string.
 // A no-op replace does not detach them. Copy every retained HTML-derived value
@@ -45,7 +47,7 @@ for (const file of files) {
   assert(!/aggregateRating|"@type"\s*:\s*"Review"/.test(html),`Unverified rating on ${route}`);
   for(const match of html.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g))JSON.parse(match[1]);
  }
- if(!noindex&&route!=='/404.html')for(const match of html.matchAll(/<a\b([^>]*?)href="([^"]+)"([^>]*)>/g)){
+ if((!noindex||isProjectDirectory(route))&&route!=='/404.html')for(const match of html.matchAll(/<a\b([^>]*?)href="([^"]+)"([^>]*)>/g)){
   const target=new URL(normalize(match[2]),origin+route);if(target.origin!==origin)continue;
   const key=detached(target.pathname+target.hash);
   if(!targets.has(key))targets.set(key,{pathname:detached(target.pathname),hash:detached(target.hash)});
@@ -77,14 +79,14 @@ assert.deepEqual([...new Set(errors)],[],'Broken internal links');
 // emitted HTML links from the homepage, including canonical slash redirects.
 const adjacency=new Map();
 for(const [route,page] of pages){
- if(page.noindex||route==='/404.html')continue;
+ if((page.noindex&&!isProjectDirectory(route))||route==='/404.html')continue;
  const links=new Set();
  for(const [key,follow] of page.links){
   if(!follow)continue;
   const target=targets.get(key);
   let destination=redirects.get(target.pathname)??target.pathname;
   if(!pages.has(destination)&&pages.has(destination+'/'))destination+='/';
-  if(pages.has(destination)&&!pages.get(destination).noindex)links.add(destination);
+  if(pages.has(destination)&&(!pages.get(destination).noindex||isProjectDirectory(destination)))links.add(destination);
  }
  adjacency.set(route,links);
 }

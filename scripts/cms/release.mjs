@@ -71,7 +71,8 @@ async function verifyRemote(candidate, expected, production = false) {
     const response=await fetch(origin+route,{redirect:'error',signal:AbortSignal.timeout(20000)});
     requireRelease(response.status===200,'REMOTE_TERRITORIAL_PAGE_UNAVAILABLE');
     const html=await response.text();
-    requireRelease(html.includes(`<html lang="${lang}"`)&&/<meta[^>]*name="robots"[^>]*content="[^"]*noindex/.test(html),'REMOTE_TERRITORIAL_PAGE_MISMATCH');
+    const noindex=/<meta[^>]*name="robots"[^>]*content="[^"]*noindex/.test(html);
+    requireRelease(html.includes(`<html lang="${lang}"`)&&noindex===route.startsWith('/projets-sites/suisse/'),'REMOTE_TERRITORIAL_PAGE_MISMATCH');
   }
   const prospects = JSON.parse(await readFile(path.join(root, 'src/data/prospects.json'), 'utf8'));
   const logos = JSON.parse(await readFile(path.join(root, 'src/data/prospect-logos.json'), 'utf8'));

@@ -29,7 +29,8 @@ test('France and Switzerland project drafts are readable and use the correct req
     assert.equal(await page.locator('h1').count(),1,route);
     assert.equal(await page.locator('html').getAttribute('lang'),language,route);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true,`${route} ${width}`);
-    assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
+    const robots=await page.locator('meta[name="robots"]').getAttribute('content');
+    if(route.startsWith('/projets-sites/suisse/'))assert.match(robots,/noindex/);else assert.doesNotMatch(robots,/noindex/);
     const cta=page.locator('main a.action').first();assert((await cta.getAttribute('href')).startsWith(expected),route);
     await cta.focus();assert.equal(await cta.evaluate(e=>e===document.activeElement),true,route);
     if(route.includes('montalieu')){assert.match(await page.locator('main').innerText(),/38390 correspond à 7 communes/);assert(await page.locator('a[href="/territoires/sites/montalieu-vercieu-38247/"]').count());}

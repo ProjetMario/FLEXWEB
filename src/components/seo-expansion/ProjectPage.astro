@@ -35,7 +35,7 @@ const official=swiss?'https://www.agvchapp.bfs.admin.ch/fr':`https://geo.api.gou
 const privacy=swiss?'https://www.edoeb.admin.ch/fr/declaration-de-protection-des-donnees-sur-internet':'https://www.cnil.fr/fr/cookies-et-autres-traceurs/regles/cookies/comment-mettre-mon-site-web-en-conformite';
 ---
 {locale!=='fr'&&<SwissLocalized audience={audience} location={location} locale={locale} />}
-{locale==='fr'&&<ResourceLayout title={title} description={description} noindex={true} quoteHref={href}>
+{locale==='fr'&&<ResourceLayout title={title} description={description} noindex={false} quoteHref={href}>
  <Fragment slot="head"><StructuredData schemas={schemas} />{swiss&&<SwissLanguageNav audience={audience} location={location} locale={locale} head />}<meta name="flexweb-territory" content={`${audience}:${location.country}:${location.code}`} /></Fragment>
  <nav aria-label="Fil d’Ariane"><a href="/">Accueil</a><a href="/creation-site-internet/">Création de sites</a></nav>
  <article>

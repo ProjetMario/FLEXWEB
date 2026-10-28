@@ -18,11 +18,12 @@ const baseline=JSON.parse(await readFile('.cms/geo-baseline.json','utf8'));asser
 for(const agent of ['OAI-SearchBot','ChatGPT-User','Claude-SearchBot','Claude-User','Googlebot','bingbot','PerplexityBot']){
  const response=await fetch(origin+'/en/crm/',{headers:{'User-Agent':agent},signal:AbortSignal.timeout(30000)});assert.equal(response.status,200,agent);
 }
-// Draft pages are deliberately excluded from indexing while editorial and
-// consumer/cross-border qualification is completed. Test representative paths.
+// Check that primary project pages are indexable and directory pages remain noindex.
 for(const route of ['/projets-sites/','/projets-sites/fr/page/1/','/projets-sites/ch/page/1/','/projets-sites/particuliers/paris-fr-75056/','/projets-sites/entreprises/paris-fr-75056/','/projets-sites/particuliers/geneve-ch-6621/','/projets-sites/entreprises/geneve-ch-6621/','/projets-sites/particuliers/zurich-ch-261/','/projets-sites/entreprises/lugano-ch-5192/']){
  const response=await fetch(origin+route,{redirect:'error',signal:AbortSignal.timeout(30000)});assert.equal(response.status,200,route);
- const body=await response.text();assert.match(body,/<meta[^>]*name="robots"[^>]*content="[^"]*noindex/,route);
+ const body=await response.text();const noindex=/<meta[^>]*name="robots"[^>]*content="[^"]*noindex/.test(body);
+ assert.equal(noindex,route==='/projets-sites/'||route.includes('/page/'),route);
+ if(!noindex)assert(urls.includes('https://flex-web.fr'+route),route);
 }
 const before=JSON.parse(await readFile('.cms/geo-production-marker.json','utf8'));
 const after=await fetch('https://flex-web.fr/.well-known/flexweb-release.json').then(r=>r.json());assert.deepEqual(after,before,'Production marker changed during preview preparation');

@@ -14,7 +14,8 @@ const sampleIndexes=new Set([0,1,12889,12890,14999,15000,15001,27889,27890,29999
 for(let i=0;i<all.length;i++){
  const {path:route,audience,location,locale}=all[i];
  const html=await readFile(path.join(root,route,'index.html'),'utf8');
- assert.match(html,/<meta\b[^>]*name="robots"[^>]*content="[^"]*noindex/,route);
+ const robots=html.match(/<meta\b[^>]*name="robots"[^>]*content="([^"]*)"/)?.[1]||'';
+ if(i<base.length)assert(!/\bnoindex\b/i.test(robots),route);else assert.match(robots,/\bnoindex\b/i,route);
  assert.equal([...html.matchAll(/<h1(?:\s|>)/g)].length,1,route);
  const title=html.match(/<title>([\s\S]*?)<\/title>/)?.[1];
  const description=html.match(/<meta\b[^>]*name="description"[^>]*content="([^"]+)"/)?.[1];
@@ -53,5 +54,7 @@ for(const group of groups){
  assert.match(html,/name="robots"[^>]*content="[^"]*noindex/);
  for(const location of group.items)for(const audience of ['particuliers','entreprises'])assert(html.includes(candidatePath(audience,location)),location.slug);
 }
-const urls=await readSitemap('https://flex-web.fr/sitemap.xml',url=>readFile(path.join(root,new URL(url).pathname),'utf8'));assert(!urls.some(url=>new URL(url).pathname.startsWith('/projets-sites/')));
-console.log(JSON.stringify({status:'passed',draftPages:base.length,translatedPages:translations.length,directoryPages:groups.length+1,checkedHtml:all.length,uniqueTitles:titles.size,uniqueDescriptions:descriptions.size,structuredDataSamples:sampleIndexes.size,indexation:'noindex',sitemap:'excluded'}));
+const urls=await readSitemap('https://flex-web.fr/sitemap.xml',url=>readFile(path.join(root,new URL(url).pathname),'utf8'));
+const paths=urls.map(url=>new URL(url).pathname);assert.equal(paths.length,new Set(paths).size,'Duplicate sitemap entries');
+assert.deepEqual(paths.filter(route=>route.startsWith('/projets-sites/')).sort(),base.map(item=>item.path).sort(),'Sitemap must contain exactly 30,000 primary project pages');
+console.log(JSON.stringify({status:'passed',draftPages:base.length,translatedPages:translations.length,directoryPages:groups.length+1,checkedHtml:all.length,uniqueTitles:titles.size,uniqueDescriptions:descriptions.size,structuredDataSamples:sampleIndexes.size,indexation:'primary pages indexable; translations and directories noindex',sitemap:'30000 primary pages'}));
