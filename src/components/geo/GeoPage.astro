@@ -8,6 +8,8 @@ const { page } = Astro.props;
 const en = page.lang === 'en';
 const url = canonicalUrlFor(page.path);
 const home = en ? '/en/' : '/';
+// Generic pages and contact do not imply a project type.
+const conversionService = page.service || (['/en/', '/en/about/', '/en/pricing/', '/en/contact/'].includes(page.path) ? 'unknown' : 'automation');
 const cta = page.cta ?? { label: 'Discuss your project', href: '/en/contact/' };
 const dateLabel = new Intl.DateTimeFormat(en ? 'en-GB' : 'fr-FR', { dateStyle: 'long', timeZone: 'Europe/Paris' }).format(new Date(`${geoUpdatedOn}T12:00:00Z`));
 const schemas: Record<string, unknown>[] = [
@@ -27,7 +29,7 @@ if (page.faq.length) schemas.push({ '@type': 'FAQPage', '@id': `${url}#questions
       <h1>{page.title}</h1>
       <p class="lead">{page.answer}</p>
       <p class="meta">{en ? 'By Flex-Web · Updated' : 'Par Flex-Web · Mis à jour le'} <time datetime={geoUpdatedOn}>{dateLabel}</time></p>
-      <a class="action" href={cta.href} data-conversion-event="quote_click" data-conversion-service={page.service || "automation"}>{cta.label} ↗</a>
+      <a class="action" href={cta.href} data-conversion-event="quote_click" data-conversion-service={conversionService}>{cta.label} ↗</a>
     </header>
     {page.sections.map(section => <section class="geo-section">
       <h2>{section.title}</h2>
@@ -37,7 +39,7 @@ if (page.faq.length) schemas.push({ '@type': 'FAQPage', '@id': `${url}#questions
       {section.links && <ul class="geo-links">{section.links.map(link => <li><a href={link.href}>{link.label} →</a></li>)}</ul>}
     </section>)}
     {page.faq.length > 0 && <section id="questions" class="geo-section"><h2>{en ? 'Questions before you start' : 'Questions avant de démarrer'}</h2>{page.faq.map(item => <details><summary>{item.question}</summary><p>{item.answer}</p></details>)}</section>}
-    <aside class="note"><h2>{en ? 'Prepare your project' : 'Préparer votre projet'}</h2><p>{en ? 'Describe one task, the tools involved and the result you need. We will clarify the scope, checks and costs before you order.' : 'Décrivez une tâche, les outils concernés et le résultat attendu. Le périmètre, les contrôles et le coût sont précisés avant votre commande.'}</p><a class="action" href={cta.href} data-conversion-event="quote_click" data-conversion-service={page.service || "automation"}>{cta.label} ↗</a></aside>
+    <aside class="note"><h2>{en ? 'Prepare your project' : 'Préparer votre projet'}</h2><p>{en ? 'Describe one task, the tools involved and the result you need. We will clarify the scope, checks and costs before you order.' : 'Décrivez une tâche, les outils concernés et le résultat attendu. Le périmètre, les contrôles et le coût sont précisés avant votre commande.'}</p><a class="action" href={cta.href} data-conversion-event="quote_click" data-conversion-service={conversionService}>{cta.label} ↗</a></aside>
     <nav class="geo-related" aria-label={en ? 'Related services and guides' : 'Services et guides liés'}>{page.related.filter(link => link.href !== page.path).map(link => <a href={link.href}>{link.label} →</a>)}</nav>
   </article>
 </ResourceLayout>
