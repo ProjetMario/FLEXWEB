@@ -1,0 +1,9 @@
+---
+import GeoPage from '../../components/geo/GeoPage.astro';
+import { frenchWebAppGuides } from '../../data/geo/web-app-pages';
+export function getStaticPaths() {
+ return frenchWebAppGuides.map(page => ({params:{slug:page.path.split('/')[2]},props:{page}}));
+}
+const {page}=Astro.props;
+---
+<GeoPage page={page} />

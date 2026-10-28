@@ -5,6 +5,7 @@ import { parse } from 'parse5';
 import { readSitemap } from '../seo/read-sitemap.mjs';
 const root = path.resolve('dist'), origin = 'https://flex-web.fr';
 const pairs = [
+  ['/guides/preparer-projet-site-internet/', '/en/guides/website-project-brief/'], ['/guides/preparer-projet-application-mobile/', '/en/guides/application-project-brief/'],
   ['/creation-site-internet/', '/en/websites/'], ['/creation-application-mobile/', '/en/applications/'],
   ['/', '/en/'], ['/about/', '/en/about/'], ['/automatisation-ia/', '/en/ai-automation/'],
   ['/crm-automatisation-entreprise/', '/en/crm/'], ['/pricing/', '/en/pricing/'], ['/contact/', '/en/contact/'],
@@ -12,8 +13,8 @@ const pairs = [
   ['/ressources/automatisation/relance-devis/', '/en/guides/quote-follow-up/'],
   ['/journal/assistant-ia-interne-entreprise/', '/en/guides/internal-ai-assistant/'],
 ];
-const standaloneGuides = ['/en/guides/website-project-brief/','/en/guides/application-project-brief/'];
-const newRoutes = ['/crm-automatisation-entreprise/', ...pairs.map(pair=>pair[1]), ...standaloneGuides];
+const newFrenchGuides = ['/guides/preparer-projet-site-internet/','/guides/preparer-projet-application-mobile/'];
+const newRoutes = ['/crm-automatisation-entreprise/', ...pairs.map(pair=>pair[1]), ...newFrenchGuides];
 const attribute = (node, name) => node.attrs?.find(a=>a.name===name)?.value;
 function nodes(node) { return [node,...(node.childNodes||[]).flatMap(nodes)]; }
 function plain(node) { return node.nodeName==='#text' ? node.value : ['script','style'].includes(node.tagName) ? '' : (node.childNodes||[]).map(plain).join(' '); }
@@ -54,15 +55,6 @@ for (const pair of pairs) for (const route of pair) {
     if(route.includes('/guides/'))assert(schemas.some(s=>s['@type']==='Article'),`${route}: article`);
     if(['/en/crm/','/en/ai-automation/','/crm-automatisation-entreprise/','/en/websites/','/en/applications/'].includes(route))assert(schemas.some(s=>s['@type']==='Service'),`${route}: service`);
   }
-}
-for(const route of standaloneGuides){
- const all=nodes(parse(await readFile(htmlPath(route),'utf8')));
- assert.equal(all.filter(n=>n.tagName==='h1').length,1,`${route}: H1`);
- assert.equal(attribute(all.find(n=>n.tagName==='html'),'lang'),'en');
- assert.equal(attribute(all.find(n=>n.tagName==='link'&&attribute(n,'rel')==='canonical'),'href'),origin+route);
- assert(!all.some(n=>n.tagName==='link'&&attribute(n,'hreflang')),`${route}: no invented translation`);
- assert(all.some(n=>n.tagName==='script'&&attribute(n,'type')==='application/ld+json'&&n.childNodes.some(x=>(x.value||'').includes('"Article"'))));
- assert(all.filter(n=>n.tagName==='h2').length>=3);
 }
 const urls = await readSitemap(origin+'/sitemap.xml',url=>readFile(path.join(root,new URL(url).pathname),'utf8'));
 assert.equal(new Set(urls).size,urls.length,'Duplicate sitemap URL');

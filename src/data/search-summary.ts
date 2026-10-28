@@ -1,3 +1,4 @@
+import { frenchWebAppGuides } from "./geo/web-app-pages";
 import { crmPage, englishPages } from "./geo/pages";
 import { geoUpdatedOn, offers, money as formattedMoney } from "./geo/site";
 import { business } from "./business";
@@ -70,6 +71,8 @@ Les fonctionnalités publiques sont décrites sans attribuer de résultats comme
 ${englishPages.map(page => `- [${page.title}](https://flex-web.fr${page.path})`).join("\n")}
 
 ## Guides pratiques
+- [Préparer un projet de site internet](https://flex-web.fr/guides/preparer-projet-site-internet/)
+- [Préparer un projet d’application web ou mobile](https://flex-web.fr/guides/preparer-projet-application-mobile/)
 - [Assistant IA interne : usages, documents et tests dans une PME](https://flex-web.fr/journal/assistant-ia-interne-entreprise/)
 - [Combien coûte un site internet en Savoie ?](https://flex-web.fr/journal/combien-coute-site-internet-savoie/)
 - [Quelles tâches automatiser dans une PME ?](https://flex-web.fr/journal/taches-automatiser-pme/)
@@ -88,7 +91,7 @@ Flex-Web est la marque commerciale de Fleximmo. Le devis précise qui valide les
 Les connexions passent par les API, formulaires ou webhooks disponibles dans les outils retenus. Le site public utilise Astro. Le choix d’un CRM, d’un modèle IA et des services tiers dépend des besoins, des droits d’accès et des coûts confirmés au devis. Un assistant doit pouvoir citer une source autorisée, signaler une information absente et transmettre les décisions engageantes à une personne. Ces textes ne déclarent aucun partenariat ou certification fournisseur.
 
 ## Documentation détaillée des offres et parcours
-` + [crmPage, ...englishPages].map(page => [
+` + [crmPage, ...frenchWebAppGuides, ...englishPages].map(page => [
   `# ${page.title}`,
   `Source: https://flex-web.fr${page.path}`,
   `Language: ${page.lang} · Updated: ${geoUpdatedOn}`,

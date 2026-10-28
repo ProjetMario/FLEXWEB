@@ -1,3 +1,4 @@
+import { frenchWebAppGuides } from "../../data/geo/web-app-pages";
 import { englishPages } from "../../data/geo/pages";
 import { geoUpdatedOn } from "../../data/geo/site";
 import { getCollection } from "astro:content";
@@ -10,7 +11,7 @@ const site = "https://flex-web.fr";
 const updatedPages: Record<string, string> = {
   "/crm-automatisation-entreprise/": geoUpdatedOn,
   "/privacy/": geoUpdatedOn,
-  ...Object.fromEntries(englishPages.map(page => [page.path, geoUpdatedOn])),
+  ...Object.fromEntries([...englishPages,...frenchWebAppGuides].map(page => [page.path, geoUpdatedOn])),
   "/about/": "2026-10-01",
   "/journal/": "2026-10-01",
   "/journal/assistant-ia-interne-entreprise/": "2026-10-28",
@@ -49,7 +50,7 @@ const updatedPages: Record<string, string> = {
 export const corePages = async () => {
   const staticPages = [
     { url: "/crm-automatisation-entreprise/", priority: 0.9, changefreq: "monthly" },
-    ...englishPages.map(page => ({ url: page.path, priority: 0.8, changefreq: "monthly" })),
+    ...[...englishPages,...frenchWebAppGuides].map(page => ({ url: page.path, priority: 0.8, changefreq: "monthly" })),
     { url: "/", priority: 1.0, changefreq: "weekly" },
     { url: "/about/", priority: 0.8, changefreq: "monthly" },
     { url: "/contact/", priority: 0.8, changefreq: "monthly" },

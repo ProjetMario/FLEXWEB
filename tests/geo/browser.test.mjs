@@ -4,7 +4,7 @@ import { chromium } from 'playwright';
 import { mkdir } from 'node:fs/promises';
 const preview = new URL(process.env.FLEXWEB_TEST_URL || 'http://127.0.0.1:4321');
 if (!['127.0.0.1','localhost'].includes(preview.hostname)) throw new Error('Local mocked browser tests only');
-const routes = ['/creation-site-internet/','/creation-application-mobile/','/en/websites/','/en/applications/','/en/guides/website-project-brief/','/en/guides/application-project-brief/','/crm-automatisation-entreprise/','/automatisation-ia/','/en/','/en/crm/','/en/ai-automation/','/en/pricing/','/en/contact/','/en/about/','/en/guides/website-enquiries-to-crm/','/en/guides/quote-follow-up/','/en/guides/internal-ai-assistant/'];
+const routes = ['/guides/preparer-projet-site-internet/','/guides/preparer-projet-application-mobile/','/creation-site-internet/','/creation-application-mobile/','/en/websites/','/en/applications/','/en/guides/website-project-brief/','/en/guides/application-project-brief/','/crm-automatisation-entreprise/','/automatisation-ia/','/en/','/en/crm/','/en/ai-automation/','/en/pricing/','/en/contact/','/en/about/','/en/guides/website-enquiries-to-crm/','/en/guides/quote-follow-up/','/en/guides/internal-ai-assistant/'];
 const launch = () => chromium.launch({headless:true,...(process.env.PLAYWRIGHT_CHANNEL ? {channel:process.env.PLAYWRIGHT_CHANNEL} : {})});
 const blockExternal = context => context.route('**/*',route=>new URL(route.request().url()).origin===preview.origin&&!new URL(route.request().url()).pathname.startsWith('/api/') ? route.continue():route.abort());
 
@@ -25,8 +25,8 @@ test('CRM and English pages remain readable on mobile, tablet and desktop',async
     assert.equal(await page.locator('html').getAttribute('lang'),route.startsWith('/en/')?'en':'fr');
     assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'),'https://flex-web.fr'+route);
     const cta=page.locator('a[data-conversion-event="quote_click"]').first();
-    if(route==='/en/websites/' || route==='/en/guides/website-project-brief/') assert.equal(await cta.getAttribute('data-conversion-service'),'site');
-    if(route==='/en/applications/' || route==='/en/guides/application-project-brief/') assert.equal(await cta.getAttribute('data-conversion-service'),'application');
+    if(route==='/guides/preparer-projet-site-internet/' || route==='/en/websites/' || route==='/en/guides/website-project-brief/') assert.equal(await cta.getAttribute('data-conversion-service'),'site');
+    if(route==='/guides/preparer-projet-application-mobile/' || route==='/en/applications/' || route==='/en/guides/application-project-brief/') assert.equal(await cta.getAttribute('data-conversion-service'),'application');
     if(route==='/en/contact/') assert.equal(await cta.getAttribute('data-conversion-service'),'unknown');
     await cta.focus();assert.equal(await cta.evaluate(e=>e===document.activeElement),true);
     const faq=page.locator('details').first();if(await faq.count()){await faq.locator('summary').click();assert.equal(await faq.getAttribute('open'),'');}

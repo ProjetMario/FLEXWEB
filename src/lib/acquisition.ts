@@ -20,7 +20,7 @@ export function publicLanding(path: string): string | null {
   if (path === '/territoires/') return path;
   if (/^\/territoires\/(?:sites|automatisation)\/(?:page\/(?:[2-9]|[1-9][0-9]+)\/|[a-z0-9]+(?:-[a-z0-9]+)*-(?:[0-9]{5}|2[ab][0-9]{3})\/)?$/.test(path)) return path;
   if (/^\/territoires\/departements\/(?:0[1-9]|1[0-9]|2[1-9]|[3-8][0-9]|9[0-5]|2[ab]|97[1-8]|98[6-8])\/$/.test(path)) return path;
-  if (path === '/' || path === '/crm-automatisation-entreprise/') return path;
+  if (path === '/' || path === '/crm-automatisation-entreprise/' || /^\/guides\/(?:preparer-projet-site-internet|preparer-projet-application-mobile)\/$/.test(path)) return path;
   if (/^\/en\/(?:about\/|crm\/|websites\/|applications\/|ai-automation\/|pricing\/|contact\/|guides\/(?:website-enquiries-to-crm|quote-follow-up|internal-ai-assistant|website-project-brief|application-project-brief)\/)?$/.test(path)) return path;
   if (/^\/ressources(?:\/(?:sites|automatisation)(?:\/(?:[a-z0-9-]+|page\/[1-9][0-9]*))?)?\/$/.test(path)) return path;
   return /^\/(?:creation-site-internet(?:-[a-z-]+)?|creation-application-mobile(?:-[a-z-]+)?|automatisation-ia(?:-[a-z-]+)?|pricing|contact|about|journal(?:\/[a-z-]+)?|realisations(?:\/[a-z0-9-]+)?|specialites\/(?:artisans|immobilier|entreprises-services)|outils\/(?:calculateur-temps-economise|demo-crm))\/$/.test(path) ? path : null;

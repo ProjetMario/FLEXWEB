@@ -13,6 +13,8 @@ export const languagePairs = [
   { fr: '/about/', en: '/en/about/' },
   { fr: '/creation-site-internet/', en: '/en/websites/' },
   { fr: '/creation-application-mobile/', en: '/en/applications/' },
+  { fr: '/guides/preparer-projet-site-internet/', en: '/en/guides/website-project-brief/' },
+  { fr: '/guides/preparer-projet-application-mobile/', en: '/en/guides/application-project-brief/' },
   { fr: '/automatisation-ia/', en: '/en/ai-automation/' },
   { fr: '/crm-automatisation-entreprise/', en: '/en/crm/' },
   { fr: '/pricing/', en: '/en/pricing/' },

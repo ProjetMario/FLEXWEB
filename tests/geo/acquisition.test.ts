@@ -51,7 +51,7 @@ test('rejects private routes, forged stored categories and unknown English paths
   sessionStorage.setItem(key,JSON.stringify({channel:'Google naturel',landing:'/about/'})); assert.equal(leadSource(),'Google naturel | /about/');
 });
 test('website and application landing pages are eligible but unknown paths are not', () => {
- for (const path of ['/en/websites/','/en/applications/','/en/guides/website-project-brief/','/en/guides/application-project-brief/']) assert.equal(publicLanding(path),path);
+ for (const path of ['/guides/preparer-projet-site-internet/','/guides/preparer-projet-application-mobile/','/en/websites/','/en/applications/','/en/guides/website-project-brief/','/en/guides/application-project-brief/']) assert.equal(publicLanding(path),path);
  assert.equal(publicLanding('/en/guides/private-client/'),null);
 });
 test('storage failures do not interrupt the quote flow', () => {
