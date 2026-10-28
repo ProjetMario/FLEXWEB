@@ -35,6 +35,8 @@ const decisionRows = [
 ];
 
 const serviceFaq = [
+  { question: "Comment préparer un devis de site internet ?", answer: "Présentez votre activité, vos clients, les pages souhaitées, les contenus disponibles et l’action attendue du visiteur. Signalez votre nom de domaine, vos anciens liens et les outils à connecter. Flex-Web précise ensuite le périmètre, les coûts et le calendrier au devis." },
+  { question: "Une refonte conserve-t-elle les liens et les contenus existants ?", answer: "Les URL et contenus à conserver sont recensés lors du cadrage. Si une adresse doit changer, une redirection et des vérifications peuvent être prévues au devis. Le projet précise aussi qui fournit et valide les contenus." },
   {
     "question": "Combien coûte la création d'un site internet ?",
     "answer": `Le site vitrine simple coûte ${euros(simpleOffer.setupCents)} TTC et le site avec référencement SEO et IA ${euros(completeOffer.setupCents)} TTC, payés une seule fois. Le devis confirme les pages, les contenus et les fonctions retenus. La demande de devis est gratuite et le paiement intervient après sa validation.`
@@ -302,6 +304,14 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
       <h2 class="text-2xl font-semibold tracking-tight">Automatiser les tâches autour de votre projet</h2>
       <p class="mt-4 leading-relaxed">Découvrez le <a href="/automatisation-ia/" class="underline">cadrage d'une automatisation IA</a>, avec des parcours dédiés à la <a href="/automatisation-ia-savoie/" class="underline">Savoie</a> et à la <a href="/automatisation-ia-haute-savoie/" class="underline">Haute-Savoie</a>. Les demandes, les documents et le CRM peuvent être reliés selon vos outils et le périmètre du devis.</p>
       <p class="mt-4 leading-relaxed">Pour voir un parcours métier, consultez les spécialités <a href="/specialites/artisans/" class="underline">artisans</a>, <a href="/specialites/immobilier/" class="underline">immobilier</a> et <a href="/specialites/entreprises-services/" class="underline">entreprises de services</a>.</p>
+    </section>
+
+    <section class="mt-16 rounded-2xl border p-6" style="border-color: var(--color-border)">
+      <h2 class="text-2xl font-semibold tracking-tight">Comment transformer votre besoin en site utile ?</h2>
+      <p class="mt-4 leading-relaxed">Pour un artisan, une PME ou une entreprise de services, commencez par les questions des visiteurs : quelles prestations proposez-vous, dans quelle zone et comment vous contacter ? Le site présente ces réponses et conduit vers une demande adaptée à votre activité.</p>
+      <p class="mt-4 leading-relaxed">Votre devis précise les pages, les textes et photos fournis, les champs du formulaire, le domaine et l’hébergement, les contrôles avant mise en ligne et les frais éventuels. Pour une refonte, les adresses à conserver ou rediriger sont examinées. Flex-Web, marque de Fleximmo basée à Voglans en Savoie, réalise le périmètre convenu ; votre entreprise valide les contenus et les engagements affichés.</p>
+      <p class="mt-4 leading-relaxed">Consultez le <a href="/journal/combien-coute-site-internet-savoie/" class="underline">guide sur le coût d’un site</a>, le parcours pour <a href="/journal/connecter-demandes-crm/" class="underline">relier les demandes à un CRM</a> et nos <a href="/realisations/" class="underline">réalisations documentées</a>. Le calendrier est confirmé au devis et aucune position dans les résultats de recherche n’est garantie.</p>
+      <p class="mt-4 text-sm">Informations mises à jour le <time datetime="2026-10-28">28 octobre 2026</time>.</p>
     </section>
 
     <section id="faq" class="mt-16">

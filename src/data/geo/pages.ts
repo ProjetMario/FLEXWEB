@@ -1,4 +1,5 @@
 import { money, offers, type GeoPage } from './site';
+import { webAppPages } from './web-app-pages';
 const crmFr = `${money(offers.crm.setupCents)} TTC`;
 const crmEn = `${money(offers.crm.setupCents, 'en')} including French taxes`;
 const supportFr = `${money(offers.crmSupport.monthlyCents)} TTC/mois`;
@@ -13,7 +14,7 @@ const frGuides = [
   { label: 'Organiser la relance des devis', href: '/ressources/automatisation/relance-devis/' },
   { label: 'Préparer un assistant IA interne', href: '/journal/assistant-ia-interne-entreprise/' },
 ];
-const enServiceLinks = [ { label: 'CRM and workflow automation', href: '/en/crm/' }, { label: 'AI automation', href: '/en/ai-automation/' }, { label: 'Pricing and scope', href: '/en/pricing/' } ];
+const enServiceLinks = [ { label: 'Website creation', href: '/en/websites/' }, { label: 'Custom web and mobile applications', href: '/en/applications/' }, { label: 'CRM and workflow automation', href: '/en/crm/' }, { label: 'AI automation', href: '/en/ai-automation/' }, { label: 'Pricing and scope', href: '/en/pricing/' } ];
 const enProjectFaq = [
   { question: 'How long does implementation take?', answer: 'The schedule is confirmed in the quote after checking your tools, access permissions, available documents and testing requirements. There is no fixed delivery time for every project.' },
   { question: 'Who is responsible for the project?', answer: 'Flex-Web is the commercial brand of Fleximmo, based in Voglans, Savoie, France. Flex-Web handles the agreed implementation. Your company appoints the person who approves business rules, access rights and customer commitments.' },
@@ -49,6 +50,7 @@ export const crmPage: GeoPage = {
 };
 
 export const englishPages: GeoPage[] = [
+  ...webAppPages,
   {
     path: '/en/', lang: 'en', kind: 'page', title: 'Websites, CRM and AI automation for businesses in France',
     description: 'Flex-Web, based in Savoie, France: websites, custom applications, CRM and AI automation. Explore public prices, practical guides and project scope.',
@@ -117,7 +119,7 @@ export const englishPages: GeoPage[] = [
       { question: 'Does SEO or GEO work guarantee rankings or AI citations?', answer: 'No. Search engines and AI services decide which pages to crawl, index, rank and cite. The service improves the website structure, content and access for search; it cannot guarantee a position, citation or number of enquiries.' },
       { question: 'Is a monthly subscription required?', answer: 'No. The published setup packages are one-time payments. Support options are chosen separately. Any third-party recurring costs are disclosed in the quote.' },
       { question: 'When is the project delivered and paid for?', answer: 'The request for a quote is free. Scope, timeline and payment terms are agreed before ordering. Timing depends on the project and the information available.' },
-    ], related: enServiceLinks.slice(0, 2),
+    ], related: enServiceLinks.filter(link => ['/en/crm/','/en/ai-automation/'].includes(link.href)),
   },
   {
     path: '/en/contact/', lang: 'en', kind: 'contact', title: 'Contact Flex-Web about a website, CRM or AI project',
@@ -140,7 +142,7 @@ export const englishPages: GeoPage[] = [
       { title: 'How should retries and duplicates work?', paragraphs: ['A temporary connection failure may cause the same request to be sent again. Reuse its identifier so a second attempt does not create a second enquiry. Define which information may update an existing contact.', 'Use a visible error queue or another agreed alerting mechanism. Keep a manual recovery step. A successful form submission must not hide a failed CRM connection.'] },
       { title: 'When is AI useful?', paragraphs: ['AI may suggest a category or summary when requests arrive as text. A fixed routing rule can be enough for a structured form. Uncertain classifications should be reviewed.', 'An automated acknowledgement should not invent a price, appointment or acceptance of work. Drafts and important commitments need the checks agreed with your team.'] },
       { title: 'What should you test before launch?', table: { caption: 'Acceptance scenarios for an enquiry workflow.', columns: ['Scenario', 'Expected behaviour'], rows: [['Normal complete request', 'One record, correct owner and a visible next action.'], ['The same event is retried', 'No duplicate enquiry.'], ['CRM connection fails', 'Visible error and a documented recovery path.'], ['Required information is missing', 'Validation message or an explicit completion task.'], ['User has insufficient access', 'No unauthorised data exposure.']] } },
-      { title: 'What scope and budget should be agreed?', paragraphs: [`Flex-Web’s ${crmEn} package includes CRM and repetitive-task setup within the agreed scope. Existing tools, custom connectors and API usage can affect the quote. Optional support is ${supportEn}.`, 'Measure the current workflow before launch and compare similar requests later. This guide describes a possible method, not measured client results.'], links: enServiceLinks.slice(0, 2) },
+      { title: 'What scope and budget should be agreed?', paragraphs: [`Flex-Web’s ${crmEn} package includes CRM and repetitive-task setup within the agreed scope. Existing tools, custom connectors and API usage can affect the quote. Optional support is ${supportEn}.`, 'Measure the current workflow before launch and compare similar requests later. This guide describes a possible method, not measured client results.'], links: enServiceLinks.filter(link => ['/en/crm/','/en/ai-automation/'].includes(link.href)) },
     ], faq: [{ question: 'Can I keep my existing form and CRM?', answer: 'Often the first step is to check their APIs, exports, permissions and limits. A connection is confirmed only after those checks; replacement is not automatic.' }, { question: 'Can a form request trigger an email automatically?', answer: 'A factual acknowledgement may follow agreed rules. Prices, promises and uncertain AI content require the approval steps defined by your business.' }], related: enGuides.slice(1),
   },
   {

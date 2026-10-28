@@ -11,6 +11,8 @@ export const offers = { websites: websiteOffers, crm: crmOffer, crmSupport, webs
 export const languagePairs = [
   { fr: '/', en: '/en/' },
   { fr: '/about/', en: '/en/about/' },
+  { fr: '/creation-site-internet/', en: '/en/websites/' },
+  { fr: '/creation-application-mobile/', en: '/en/applications/' },
   { fr: '/automatisation-ia/', en: '/en/ai-automation/' },
   { fr: '/crm-automatisation-entreprise/', en: '/en/crm/' },
   { fr: '/pricing/', en: '/en/pricing/' },
@@ -22,6 +24,8 @@ export const languagePairs = [
 export const languagePairFor = (path: string) => languagePairs.find(pair => pair.fr === path || pair.en === path);
 
 export const englishNavigation = { links: [
+  { label: 'Websites', href: '/en/websites/' },
+  { label: 'Applications', href: '/en/applications/' },
   { label: 'CRM', href: '/en/crm/' },
   { label: 'AI automation', href: '/en/ai-automation/' },
   { label: 'Pricing', href: '/en/pricing/' },
@@ -31,7 +35,7 @@ export const englishNavigation = { links: [
 export type GeoLink = { label: string; href: string };
 export type GeoSection = { title: string; paragraphs?: string[]; items?: string[]; links?: GeoLink[]; table?: { caption: string; columns: string[]; rows: string[][] } };
 export type GeoPage = {
-  path: string; lang: 'fr' | 'en'; title: string; description: string; answer: string;
+  path: string; lang: 'fr' | 'en'; service?: 'site' | 'application' | 'automation'; title: string; description: string; answer: string;
   kind: 'service' | 'article' | 'page' | 'about' | 'contact';
   sections: GeoSection[]; faq: { question: string; answer: string }[];
   related: GeoLink[]; cta?: GeoLink;

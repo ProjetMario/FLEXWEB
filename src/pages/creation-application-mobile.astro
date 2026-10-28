@@ -5,6 +5,9 @@ import StructuredData from "../components/seo/StructuredData.astro";
 import { getEntry, render } from "astro:content";
 
 const serviceFaq = [
+  { question: "Comment préparer un devis d’application sur mesure ?", answer: "Décrivez les utilisateurs, le problème à résoudre, les écrans essentiels, les données et les outils à connecter. Le devis définit le premier lot, les droits d’accès, les tests, le calendrier et les coûts de fonctionnement." },
+  { question: "Quel délai prévoir pour créer une application ?", answer: "Le délai dépend du périmètre, des intégrations, des données disponibles et des tests à réaliser. Il est défini dans le devis après cadrage, avant commande." },
+  { question: "Qui possède les comptes et les données du projet ?", answer: "Les responsabilités, accès aux comptes, modalités de remise, hébergement et conservation des données sont précisés au devis. Les comptes de publication sur les stores et les frais associés sont également définis si une publication est retenue." },
   {
     "question": "Quel est le prix d'une application web ou mobile ?",
     "answer": "Chaque application est sur devis. Le prix dépend des parcours, des rôles, des intégrations et des données à reprendre. Le devis distingue le premier développement, l'hébergement, les services tiers, la maintenance et les évolutions."
@@ -258,6 +261,14 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
       <h2 class="text-2xl font-semibold tracking-tight">Automatiser les tâches autour de votre projet</h2>
       <p class="mt-4 leading-relaxed">Découvrez le <a href="/automatisation-ia/" class="underline">cadrage d'une automatisation IA</a>, avec des parcours dédiés à la <a href="/automatisation-ia-savoie/" class="underline">Savoie</a> et à la <a href="/automatisation-ia-haute-savoie/" class="underline">Haute-Savoie</a>. Les demandes, les documents et le CRM peuvent être reliés selon vos outils et le périmètre du devis.</p>
       <p class="mt-4 leading-relaxed">Avant de décider, vous pouvez comparer avec la <a href="/outils/demo-crm/" class="underline">démonstration CRM</a> et le guide <a href="/journal/automatisation-ou-application-sur-mesure/" class="underline">automatisation ou application sur mesure</a>.</p>
+    </section>
+
+    <section class="mt-16 rounded-2xl border p-6" style="border-color: var(--color-border)">
+      <h2 class="text-2xl font-semibold tracking-tight">Comment cadrer une première version utile ?</h2>
+      <p class="mt-4 leading-relaxed">Choisissez un parcours précis : par exemple, un client transmet une demande, un membre de votre équipe la traite et chacun voit uniquement les informations autorisées. Définissez les profils, les écrans, les données nécessaires et ce qui restera pour une version ultérieure. Cet exemple illustre un besoin possible, sans présenter de résultat client.</p>
+      <p class="mt-4 leading-relaxed">Le devis distingue la conception du premier lot, les connexions, l’hébergement, les licences, les éventuels frais des stores, la maintenance et les évolutions. Les tests couvrent notamment les droits d’accès, les données manquantes et les erreurs de connexion. La publication sur iOS ou Android dépend du projet, des comptes et des règles des stores ; elle n’est pas automatique.</p>
+      <p class="mt-4 leading-relaxed">Flex-Web, marque de Fleximmo à Voglans, intervient en Savoie et à distance en France. Votre entreprise désigne les personnes chargées des règles métier et de la validation. Consultez la <a href="/realisations/foot-nation/" class="underline">présentation des fonctionnalités publiques de Foot Nation</a> et le guide <a href="/journal/automatisation-ou-application-sur-mesure/" class="underline">application ou automatisation</a>.</p>
+      <p class="mt-4 text-sm">Informations mises à jour le <time datetime="2026-10-28">28 octobre 2026</time>.</p>
     </section>
 
     <section id="faq" class="mt-16">

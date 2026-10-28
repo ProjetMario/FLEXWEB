@@ -50,6 +50,10 @@ test('rejects private routes, forged stored categories and unknown English paths
   sessionStorage.setItem(key,JSON.stringify({channel:'Assistant IA',landing:'/en/crm/',aiSource:'private text'})); assert.deepEqual(acquisitionEventFields(),{ai_source:'unknown',landing_language:'en'});
   sessionStorage.setItem(key,JSON.stringify({channel:'Google naturel',landing:'/about/'})); assert.equal(leadSource(),'Google naturel | /about/');
 });
+test('website and application landing pages are eligible but unknown paths are not', () => {
+ for (const path of ['/en/websites/','/en/applications/','/en/guides/website-project-brief/','/en/guides/application-project-brief/']) assert.equal(publicLanding(path),path);
+ assert.equal(publicLanding('/en/guides/private-client/'),null);
+});
 test('storage failures do not interrupt the quote flow', () => {
   globalThis.localStorage.getItem = () => { throw new Error('storage denied'); };
   captureAcquisition(); assert.equal(leadSource(),'site'); assert.doesNotThrow(()=>trackLead('project_quote','automation'));

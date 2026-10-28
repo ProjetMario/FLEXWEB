@@ -4,7 +4,7 @@ import { chromium } from 'playwright';
 import { mkdir } from 'node:fs/promises';
 const preview = new URL(process.env.FLEXWEB_TEST_URL || 'http://127.0.0.1:4321');
 if (!['127.0.0.1','localhost'].includes(preview.hostname)) throw new Error('Local mocked browser tests only');
-const routes = ['/crm-automatisation-entreprise/','/automatisation-ia/','/en/','/en/crm/','/en/ai-automation/','/en/pricing/','/en/contact/','/en/about/','/en/guides/website-enquiries-to-crm/','/en/guides/quote-follow-up/','/en/guides/internal-ai-assistant/'];
+const routes = ['/creation-site-internet/','/creation-application-mobile/','/en/websites/','/en/applications/','/en/guides/website-project-brief/','/en/guides/application-project-brief/','/crm-automatisation-entreprise/','/automatisation-ia/','/en/','/en/crm/','/en/ai-automation/','/en/pricing/','/en/contact/','/en/about/','/en/guides/website-enquiries-to-crm/','/en/guides/quote-follow-up/','/en/guides/internal-ai-assistant/'];
 const launch = () => chromium.launch({headless:true,...(process.env.PLAYWRIGHT_CHANNEL ? {channel:process.env.PLAYWRIGHT_CHANNEL} : {})});
 const blockExternal = context => context.route('**/*',route=>new URL(route.request().url()).origin===preview.origin&&!new URL(route.request().url()).pathname.startsWith('/api/') ? route.continue():route.abort());
 
