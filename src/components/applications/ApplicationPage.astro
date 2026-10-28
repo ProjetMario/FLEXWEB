@@ -1,0 +1,39 @@
+---
+import ResourceLayout from '../seo/national/ResourceLayout.astro';
+import StructuredData from '../seo/StructuredData.astro';
+import { business, canonicalUrlFor } from '../../data/business';
+import { updated, pages, hubs, languages } from '../../data/applications/content.mjs';
+const { page } = Astro.props;
+const {lang,copy,topic,path,title,description,specific} = page;
+const url = canonicalUrlFor(path);
+const hub = hubs[lang];
+const subject = `${title} — ${topic.id === 4 ? 'entreprise' : topic.id === 5 ? 'particulier' : 'projet application'}`;
+const email = `mailto:${business.email}?subject=${encodeURIComponent(subject)}`;
+const schema = [
+  {'@type':'WebPage','@id':url,url,name:title,description,inLanguage:lang,isPartOf:{'@id':`${business.url}/#website`},about:{'@id':`${business.url}/#organization`},dateModified:updated},
+  {'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:copy.hub,item:canonicalUrlFor(hub)},...(path===hub?[]:[{'@type':'ListItem',position:2,name:title,item:url}])]},
+  topic.kind==='article' ? {'@type':'Article','@id':`${url}#article`,headline:title,description,inLanguage:lang,datePublished:updated,dateModified:updated,author:{'@id':`${business.url}/#organization`},publisher:{'@id':`${business.url}/#organization`},mainEntityOfPage:{'@id':url}} : {'@type':'Service','@id':`${url}#service`,name:title,description,url,provider:{'@id':`${business.url}/#organization`},areaServed:[{'@type':'Country',name:'France'},{'@type':'Country',name:'Switzerland'}],offers:{'@type':'Offer',name:copy.price,url:canonicalUrlFor('/pricing/')}},
+  {'@type':'FAQPage','@id':`${url}#faq`,mainEntity:[{q:copy.q1,a:copy.a1},{q:copy.q2,a:copy.a2}].map(({q,a})=>({'@type':'Question',name:q,acceptedAnswer:{'@type':'Answer',text:a}}))},
+];
+const names={fr:'Français',en:'English',de:'Deutsch',it:'Italiano'};
+---
+<ResourceLayout title={title} description={description} lang={lang} quoteHref={email}>
+ <StructuredData schemas={schema} slot="head" />
+ <article class="app-content">
+  <nav aria-label={copy.language} class="app-languages">{languages.map(language=><a href={topic.paths[language]} hreflang={language} lang={language} aria-current={language===lang?'page':undefined}>{names[language]}</a>)}</nav>
+  <nav aria-label={lang==='en'?'Breadcrumb':lang==='de'?'Brotkrumen':lang==='it'?'Percorso':'Fil d’Ariane'}><a href={hub}>{copy.hub}</a>{path!==hub&&<span aria-current="page">{title}</span>}</nav>
+  <header><p class="eyebrow">Flex-Web · Voglans, Savoie, France</p><h1>{title}</h1><p class="lead">{copy.lead}</p><p class="meta">{copy.updated} <time datetime={updated}>{updated}</time></p>
+   <a class="action" href={email} data-conversion-event="email_click" data-conversion-service="application">{copy.email}</a>
+   <a class="action" href={`tel:${business.telephone}`} data-conversion-event="phone_click" data-conversion-service="application">{copy.phone}</a>
+  </header>
+  <section><h2>{copy.scope}</h2><p>{specific[0]}</p></section>
+  <section><h2>{copy.example}</h2><p>{specific[1]}</p><p>{copy.notice}</p></section>
+  <section><h2>{copy.delivery}</h2><p>{specific[2]}</p></section>
+  <section><h2>{copy.price}</h2><p>{copy.priceText}</p></section>
+  <section><h2>{copy.start}</h2><p>{copy.startText}</p></section>
+  <section><h2>{copy.faq}</h2>{[[copy.q1,copy.a1],[copy.q2,copy.a2]].map(([question,answer])=><details><summary>{question}</summary><p>{answer}</p></details>)}</section>
+  <aside class="note"><h2>{copy.contact}</h2><a class="action" href={email} data-conversion-event="email_click" data-conversion-service="application">{copy.email}</a><a class="action" href={`tel:${business.telephone}`} data-conversion-event="phone_click" data-conversion-service="application">{copy.phone}</a><p><a href={`mailto:${business.email}`}>{business.email}</a> · <a href={`tel:${business.telephone}`}>07 57 83 02 62</a></p>{topic.id!==5&&<p><a href="/demarrer/?service=application" hreflang="fr">{copy.professional}</a></p>}</aside>
+  <section><h2>{copy.related}</h2><nav class="app-related">{pages.filter(item=>item.lang===lang&&item.path!==path).map(item=><a href={item.path}>{item.title} →</a>)}</nav><p><a href={lang==='en'?'/en/guides/application-project-brief/':'/guides/preparer-projet-application-mobile/'} hreflang={lang==='en'?'en':'fr'}>{copy.guide}</a> · <a href="/realisations/" hreflang="fr">{copy.evidence}</a></p></section>
+ </article>
+</ResourceLayout>
+<style>.app-content{max-width:900px}.app-content section{margin:48px 0}.app-content details{border-top:1px solid #dedee5;padding:20px 0}.app-content summary{font-weight:600;cursor:pointer}.app-languages a[aria-current=page]{font-weight:700;text-decoration:underline}.app-related{display:flex;flex-direction:column;align-items:flex-start}.app-content .action{margin-bottom:10px}</style>

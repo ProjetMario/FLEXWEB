@@ -5,7 +5,7 @@ document.addEventListener("click", (event) => {
   const target = event.target instanceof Element ? event.target.closest("[data-conversion-event]") : null;
   if (!target) return;
   const name = target.getAttribute("data-conversion-event");
-  if (!["quote_click", "crm_link_open", "appointment_click"].includes(name || "")) return;
+  if (!["quote_click", "crm_link_open", "appointment_click", "email_click", "phone_click"].includes(name || "")) return;
   trackConversionEvent(name, target.getAttribute("data-conversion-service") || "unknown");
 });
 document.addEventListener("input", (event) => {

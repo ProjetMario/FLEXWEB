@@ -5,7 +5,7 @@ export const business = {
   url: "https://flex-web.fr",
   email: "contact@flex-web.fr",
   telephone: "+33757830262",
-  description: "Flex-Web accompagne les entreprises dans l’automatisation des tâches avec l’IA, la création de sites internet et le développement d’applications. Basé à Voglans, en Savoie, le studio intervient en Haute-Savoie et à distance partout en France.",
+  description: "Flex-Web accompagne les entreprises et les particuliers en France et en Suisse dans la création de sites internet et d’applications web, iOS, Android, Windows et macOS. Basé à Voglans, en Savoie, le studio propose aussi l’automatisation et le CRM sur devis.",
 };
 export const canonicalUrlFor = (pathname: string) => {
   const path = pathname === "/" ? "/" : `${pathname.replace(/\/+$/, "")}/`;
@@ -19,6 +19,7 @@ export const organizationSchema = {
     { "@type": "AdministrativeArea", name: "Savoie" },
     { "@type": "AdministrativeArea", name: "Haute-Savoie" },
     { "@type": "Country", name: "France" },
+    { "@type": "Country", name: "Switzerland" },
   ],
-  knowsAbout: ["Automatisation de tâches avec l’IA", "Intégration CRM", "Création de sites internet", "Développement d’applications web et mobiles", "Référencement naturel"],
+  knowsAbout: ["Automatisation de tâches avec l’IA", "Intégration CRM", "Création de sites internet", "Développement d’applications web, iOS, Android, Windows et macOS", "Référencement naturel"],
 };

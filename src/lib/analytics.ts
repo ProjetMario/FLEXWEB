@@ -40,7 +40,7 @@ export function trackConversionEvent(eventName: string, service: string = "unkno
   try {
     const analyticsWindow = canTrack(eventName === "crm_link_open");
     if (!analyticsWindow) return false;
-    if (!["quote_click", "form_start", "crm_link_open", "appointment_click"].includes(eventName)) return false;
+    if (!["quote_click", "form_start", "crm_link_open", "appointment_click", "email_click", "phone_click"].includes(eventName)) return false;
     analyticsWindow.gtag("event", eventName, {
       ...acquisitionEventFields(),
       service_type: String(service || "unknown").slice(0, 40),

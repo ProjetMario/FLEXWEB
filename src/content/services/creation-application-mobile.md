@@ -1,7 +1,8 @@
 ---
 title: "Développement d'applications web et mobiles sur mesure"
-description: "FLEX-WEB accompagne les entreprises en France dans la création d'applications web, mobiles et SaaS. Depuis Voglans en Savoie, nous cadrons votre besoin métier, les parcours et les intégrations avant de proposer un devis."
+description: "FLEX-WEB accompagne les entreprises et particuliers en France et en Suisse dans la création d’applications web, iOS, Android, Windows et macOS. Depuis Voglans en Savoie, nous cadrons vos besoins avant devis, en français ou en anglais."
 targetAudience:
+  - "Particuliers qui souhaitent concrétiser une idée d’application"
   - "PME qui souhaitent organiser leurs dossiers, équipes ou interventions"
   - "Entreprises de services ayant besoin d'un portail client"
   - "Porteurs de produits SaaS et services numériques"
@@ -23,8 +24,8 @@ relatedLocations:
 relatedServices:
   - "automatisation-ia"
   - "creation-site-internet"
-seoTitle: "Développement application web, mobile & SaaS en France | FLEX-WEB"
-seoDescription: "Application métier, portail client ou SaaS sur mesure : cadrage et devis. FLEX-WEB accompagne les PME en France, en Savoie et Haute-Savoie."
+seoTitle: "Applications iOS, Android, web et logiciels sur mesure | FLEX-WEB"
+seoDescription: "Applications web, iOS, Android, Windows et macOS sur devis pour entreprises et particuliers en France et Suisse. Flex-Web, basé en Savoie."
 isDraft: false
 ---
 

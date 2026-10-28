@@ -1,7 +1,7 @@
 name: GEO French and English verified preview
 on:
   push:
-    branches: [codex/geo-fr-en-20261028, codex/sitemap-30000-fr-ch]
+    branches: [codex/geo-fr-en-20261028, codex/sitemap-30000-fr-ch, codex/applications-multilingues]
     paths: ['src/**', 'public/**', 'scripts/geo/**', 'tests/**', 'package*.json', '.github/workflows/geo-preview.yml']
 permissions:
   contents: read
@@ -39,6 +39,7 @@ jobs:
           node scripts/seo/quality.mjs --enforce-release
           node scripts/seo/audit-territorial-publication.mjs
           node scripts/geo/validate.mjs
+          node scripts/geo/validate-applications.mjs
           python3 scripts/geo/check-xml.py
           python3 scripts/seo/test-fr-ch-candidates.py
           node scripts/seo/verify-fr-ch-expansion.mjs

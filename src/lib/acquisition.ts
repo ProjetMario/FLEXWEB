@@ -17,6 +17,7 @@ const campaign = (query: URLSearchParams) => query.has('gclid') || query.has('ms
 // Only public editorial routes may be recorded; never query strings or client URLs.
 export function publicLanding(path: string): string | null {
   if (typeof path !== 'string' || path.length >= 120 || /[?#%\\\s]/.test(path)) return null;
+  if (/^\/applications\/(?:ios|android|windows|macos|entreprises|particuliers|prix|web-mobile-ou-logiciel)\/$/.test(path) || /^\/en\/applications\/(?:ios|android|windows|macos|businesses|individuals|cost|web-mobile-or-desktop)\/$/.test(path) || /^\/de\/anwendungen\/(?:(?:ios|android|windows|macos|unternehmen|privatpersonen|kosten|web-mobil-oder-desktop)\/)?$/.test(path) || /^\/it\/applicazioni\/(?:(?:ios|android|windows|macos|aziende|privati|costi|web-mobile-o-desktop)\/)?$/.test(path)) return path;
   if (path === '/territoires/') return path;
   if (/^\/territoires\/(?:sites|automatisation)\/(?:page\/(?:[2-9]|[1-9][0-9]+)\/|[a-z0-9]+(?:-[a-z0-9]+)*-(?:[0-9]{5}|2[ab][0-9]{3})\/)?$/.test(path)) return path;
   if (/^\/territoires\/departements\/(?:0[1-9]|1[0-9]|2[1-9]|[3-8][0-9]|9[0-5]|2[ab]|97[1-8]|98[6-8])\/$/.test(path)) return path;
@@ -89,7 +90,7 @@ export function captureAcquisition(): void {
     const landing = publicLanding(location.pathname) || territory;
     if (!landing) return;
     const documentLanguage = document.documentElement?.lang;
-    const language = territory && ['fr','de','it'].includes(documentLanguage) ? documentLanguage : undefined;
+    const language = (territory || landing) && ['fr','en','de','it'].includes(documentLanguage) ? documentLanguage : undefined;
     sessionStorage.setItem(KEY, JSON.stringify({
       channel: classifySource(document.referrer, location.origin, location.search),
       landing,

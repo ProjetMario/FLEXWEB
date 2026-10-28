@@ -1,3 +1,4 @@
+import { topics } from '../applications/content.mjs';
 import { automationOffers, websiteOffers, pricingOptions } from '../pricing';
 
 export const geoUpdatedOn = '2026-10-28';
@@ -12,7 +13,8 @@ export const languagePairs = [
   { fr: '/', en: '/en/' },
   { fr: '/about/', en: '/en/about/' },
   { fr: '/creation-site-internet/', en: '/en/websites/' },
-  { fr: '/creation-application-mobile/', en: '/en/applications/' },
+  { fr: '/creation-application-mobile/', en: '/en/applications/', de: '/de/anwendungen/', it: '/it/applicazioni/' },
+  ...topics.map(topic => topic.paths),
   { fr: '/guides/preparer-projet-site-internet/', en: '/en/guides/website-project-brief/' },
   { fr: '/guides/preparer-projet-application-mobile/', en: '/en/guides/application-project-brief/' },
   { fr: '/automatisation-ia/', en: '/en/ai-automation/' },
@@ -23,7 +25,7 @@ export const languagePairs = [
   { fr: '/ressources/automatisation/relance-devis/', en: '/en/guides/quote-follow-up/' },
   { fr: '/journal/assistant-ia-interne-entreprise/', en: '/en/guides/internal-ai-assistant/' },
 ] as const;
-export const languagePairFor = (path: string) => languagePairs.find(pair => pair.fr === path || pair.en === path);
+export const languagePairFor = (path: string) => languagePairs.find(pair => Object.values(pair).includes(path));
 
 export const englishNavigation = { links: [
   { label: 'Websites', href: '/en/websites/' },

@@ -1,3 +1,4 @@
+import { allPages as applicationPages } from './applications/content.mjs';
 import { frenchWebAppGuides } from "./geo/web-app-pages";
 import { crmPage, englishPages } from "./geo/pages";
 import { geoUpdatedOn, offers, money as formattedMoney } from "./geo/site";
@@ -25,6 +26,10 @@ Informations de service mises à jour le ${geoUpdatedOn}. Les dates de vérifica
 - Création de sites internet professionnels adaptés au mobile et aux demandes de contact.
 - Développement d’applications web et mobiles sur mesure : espace client, réservation, outil interne ou SaaS.
 - Référencement naturel, maintenance et accompagnement selon la prestation choisie.
+
+## Applications : plateformes et publics
+- Flex-Web développe des applications web, iOS, Android, Windows et macOS pour les entreprises et les particuliers en France et en Suisse. Les échanges ont lieu en français ou en anglais ; les taxes et conditions suisses sont définies au devis.
+${applicationPages.map(page => `- [${page.title}](https://flex-web.fr${page.path})`).join("\n")}
 
 ## Tarifs publics
 - Site vitrine jusqu’à 5 pages : ${money(offers.websites[0].setupCents)} TTC en paiement unique.

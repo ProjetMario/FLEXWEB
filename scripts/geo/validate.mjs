@@ -27,7 +27,8 @@ for (const pair of pairs) for (const route of pair) {
   const canonical = all.filter(n=>n.tagName==='link'&&attribute(n,'rel')==='canonical');
   assert.deepEqual(canonical.map(n=>attribute(n,'href')),[origin+route],`${route}: canonical`);
   const alternates = all.filter(n=>n.tagName==='link'&&attribute(n,'hreflang'));
-  assert.deepEqual(Object.fromEntries(alternates.map(n=>[attribute(n,'hreflang'),attribute(n,'href')])),{fr:origin+pair[0],en:origin+pair[1],'x-default':origin+pair[0]},`${route}: reciprocal alternates`);
+  const expected = {fr:origin+pair[0],en:origin+pair[1],...(pair[0]==='/creation-application-mobile/'?{de:origin+'/de/anwendungen/',it:origin+'/it/applicazioni/'}:{}),'x-default':origin+pair[0]};
+  assert.deepEqual(Object.fromEntries(alternates.map(n=>[attribute(n,'hreflang'),attribute(n,'href')])),expected,`${route}: reciprocal alternates`);
   assert.equal(attribute(all.find(n=>n.tagName==='html'),'lang'),route.startsWith('/en/')?'en':'fr');
   assert(!/noindex/.test(attribute(all.find(n=>n.tagName==='meta'&&attribute(n,'name')==='robots'),'content')||''));
   for (const name of ['og:title','og:description','og:url','og:image','og:image:alt','twitter:card','twitter:title','twitter:description','twitter:image']) {

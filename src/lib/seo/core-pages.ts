@@ -1,3 +1,4 @@
+import { allPages as applicationPages, updated as applicationsUpdated } from '../../data/applications/content.mjs';
 import { frenchWebAppGuides } from "../../data/geo/web-app-pages";
 import { englishPages } from "../../data/geo/pages";
 import { geoUpdatedOn } from "../../data/geo/site";
@@ -10,6 +11,7 @@ import { realizations } from "../../data/realizations";
 const site = "https://flex-web.fr";
 const updatedPages: Record<string, string> = {
   "/crm-automatisation-entreprise/": geoUpdatedOn,
+  ...Object.fromEntries(applicationPages.map(page => [page.path, applicationsUpdated])),
   "/privacy/": geoUpdatedOn,
   ...Object.fromEntries([...englishPages,...frenchWebAppGuides].map(page => [page.path, geoUpdatedOn])),
   "/about/": "2026-10-01",
@@ -50,6 +52,7 @@ const updatedPages: Record<string, string> = {
 export const corePages = async () => {
   const staticPages = [
     { url: "/crm-automatisation-entreprise/", priority: 0.9, changefreq: "monthly" },
+    ...applicationPages.map(page => ({ url: page.path, priority: 0.8, changefreq: "monthly" })),
     ...[...englishPages,...frenchWebAppGuides].map(page => ({ url: page.path, priority: 0.8, changefreq: "monthly" })),
     { url: "/", priority: 1.0, changefreq: "weekly" },
     { url: "/about/", priority: 0.8, changefreq: "monthly" },

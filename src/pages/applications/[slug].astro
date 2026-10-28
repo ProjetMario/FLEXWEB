@@ -1,0 +1,7 @@
+---
+import ApplicationPage from '../../components/applications/ApplicationPage.astro';
+import { pages } from '../../data/applications/content.mjs';
+export function getStaticPaths(){return pages.filter(page=>page.lang==='fr').map(page=>({params:{slug:page.path.split('/')[2]},props:{page}}));}
+const {page}=Astro.props;
+---
+<ApplicationPage page={page} />

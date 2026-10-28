@@ -1,4 +1,5 @@
 ---
+import ApplicationLinks from '../applications/ApplicationLinks.astro';
 import ResourceLayout from '../seo/national/ResourceLayout.astro';
 import StructuredData from '../seo/StructuredData.astro';
 import { business, canonicalUrlFor } from '../../data/business';
@@ -38,6 +39,8 @@ if (page.faq.length) schemas.push({ '@type': 'FAQPage', '@id': `${url}#questions
       {section.table && <div class="geo-table" tabindex="0" role="region" aria-label={section.table.caption}><table><caption>{section.table.caption}</caption><thead><tr>{section.table.columns.map(column => <th scope="col">{column}</th>)}</tr></thead><tbody>{section.table.rows.map(row => <tr>{row.map((cell, index) => index === 0 ? <th scope="row">{cell}</th> : <td>{cell}</td>)}</tr>)}</tbody></table></div>}
       {section.links && <ul class="geo-links">{section.links.map(link => <li><a href={link.href}>{link.label} →</a></li>)}</ul>}
     </section>)}
+    {page.path === "/en/applications/" && <ApplicationLinks lang="en" />}
+    {page.path === "/en/applications/" && <p>Businesses and individuals in France and Switzerland can contact Flex-Web by <a href="mailto:contact@flex-web.fr?subject=Application%20project" data-conversion-event="email_click" data-conversion-service="application">email</a> or <a href="tel:+33757830262" data-conversion-event="phone_click" data-conversion-service="application">telephone</a>. Project discussions are in French or English.</p>}
     {page.faq.length > 0 && <section id="questions" class="geo-section"><h2>{en ? 'Questions before you start' : 'Questions avant de démarrer'}</h2>{page.faq.map(item => <details><summary>{item.question}</summary><p>{item.answer}</p></details>)}</section>}
     <aside class="note"><h2>{en ? 'Prepare your project' : 'Préparer votre projet'}</h2><p>{en ? 'Describe one task, the tools involved and the result you need. We will clarify the scope, checks and costs before you order.' : 'Décrivez une tâche, les outils concernés et le résultat attendu. Le périmètre, les contrôles et le coût sont précisés avant votre commande.'}</p><a class="action" href={cta.href} data-conversion-event="quote_click" data-conversion-service={conversionService}>{cta.label} ↗</a></aside>
     <nav class="geo-related" aria-label={en ? 'Related services and guides' : 'Services et guides liés'}>{page.related.filter(link => link.href !== page.path).map(link => <a href={link.href}>{link.label} →</a>)}</nav>

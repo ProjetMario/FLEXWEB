@@ -1,4 +1,5 @@
 ---
+import ApplicationLinks from "../components/applications/ApplicationLinks.astro";
 import ProjectEvidence from "../components/seo/ProjectEvidence.astro";
 import BaseLayout from "../layout/BaseLayout.astro";
 import StructuredData from "../components/seo/StructuredData.astro";
@@ -89,6 +90,7 @@ const serviceSchema = {
     { "@type": "AdministrativeArea", name: "Savoie" },
     { "@type": "AdministrativeArea", name: "Haute-Savoie" },
     { "@type": "Country", name: "France" },
+    { "@type": "Country", name: "Switzerland" },
   ],
   audience: {
     "@type": "Audience",
@@ -146,7 +148,7 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
         En bref
       </h2>
       <p class="mt-3 leading-relaxed" style="color: var(--color-text-muted)">
-        FLEX-WEB développe des applications métier, des portails clients et des SaaS pour les entreprises en France, avec un accompagnement en Savoie et Haute-Savoie. Le devis précise le premier périmètre, les intégrations, le déploiement et les modalités de suivi.
+        FLEX-WEB développe des applications web, iOS, Android, Windows et macOS pour les entreprises et particuliers en France et en Suisse. Depuis Voglans en Savoie, nous accompagnons les projets en français ou en anglais. Le devis précise le périmètre, les intégrations, le déploiement et le suivi.
       </p>
     </section>
 
@@ -271,6 +273,8 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
       <p class="mt-4 text-sm">Informations mises à jour le <time datetime="2026-10-28">28 octobre 2026</time>.</p>
     </section>
 
+    <ApplicationLinks lang="fr" />
+
     <section id="faq" class="mt-16">
       <h2 class="text-2xl font-semibold tracking-tight">Questions fréquentes</h2>
       <div class="mt-6 space-y-4">
@@ -282,6 +286,8 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
         ))}
       </div>
     </section>
+
+    <p>Particulier ou entreprise : contactez-nous par <a href="mailto:contact@flex-web.fr?subject=Projet%20application" class="underline" data-conversion-event="email_click" data-conversion-service="application">e-mail</a> ou au <a href="tel:+33757830262" class="underline" data-conversion-event="phone_click" data-conversion-service="application">07 57 83 02 62</a>. Le formulaire ci-dessous est réservé aux professionnels.</p>
 
     <aside id="contact" class="mt-16 rounded-3xl p-8 text-center" style="background-color: var(--color-surface)">
       <h2 class="text-2xl font-semibold tracking-tight" style="color: var(--color-text)">
