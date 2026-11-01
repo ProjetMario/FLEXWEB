@@ -429,6 +429,9 @@ if (faqSchema) {
       <p class="mt-4" style="color: var(--color-text-muted)">
         Discutons de votre projet et obtenez un devis gratuit.
       </p>
+      <p class="mt-3" style="color: var(--color-text-muted)">
+        Entreprise ou particulier : contactez-nous par <a href="mailto:contact@flex-web.fr" class="underline" data-conversion-event="email_click" data-conversion-service={isMobile ? "application" : "site"}>e-mail</a> ou au <a href="tel:+33757830262" class="underline" data-conversion-event="phone_click" data-conversion-service={isMobile ? "application" : "site"}>07 57 83 02 62</a>.
+      </p>
       {isMobile && (
         <p class="mt-2 text-sm" style="color: var(--color-text-muted)">
           Vous cherchez plutôt un <a href={`/${data.slug}/`} class="underline" style="color: var(--color-accent)">site internet {preposition} {data.name}</a> ?
@@ -441,10 +444,12 @@ if (faqSchema) {
       )}
       <a
         href={isMobile ? "/demarrer/?service=application" : websiteOffers[0].href}
+        data-conversion-event="quote_click"
+        data-conversion-service={isMobile ? "application" : "site"}
         class="mt-6 inline-flex items-center justify-center rounded-full px-8 py-3 text-base font-medium text-white transition hover:opacity-90"
         style="background-color: var(--color-accent)"
       >
-        Demander un devis
+        Demander un devis professionnel
       </a>
     </aside>
   </div>
