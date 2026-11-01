@@ -1,7 +1,7 @@
 name: GEO French and English verified preview
 on:
   push:
-    branches: [codex/geo-fr-en-20261028, codex/sitemap-30000-fr-ch, codex/applications-multilingues]
+    branches: [codex/geo-fr-en-20261028, codex/sitemap-30000-fr-ch, codex/applications-multilingues, codex/seo-visibilite-vevey-20261101]
     paths: ['src/**', 'public/**', 'scripts/geo/**', 'tests/**', 'package*.json', '.github/workflows/geo-preview.yml']
 permissions:
   contents: read
