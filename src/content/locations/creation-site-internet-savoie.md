@@ -47,7 +47,7 @@ faq:
   - question: "FLEX-WEB développe-t-il aussi des applications mobiles en Savoie ?"
     answer: "Oui, en complément des sites internet, nous développons des applications mobiles et web sur mesure pour les entreprises et artisans savoyards : gestion, réservation, espace client ou outil interne."
 seoTitle: "Création de site internet en Savoie — FLEX-WEB"
-seoDescription: "FLEX-WEB crée des sites web professionnels pour artisans, commerçants et PME en Savoie. Chambéry, Aix-les-Bains, Albertville : demandez un devis gratuit."
+seoDescription: "Création de site internet en Savoie dès 299 € TTC : artisans, commerçants et PME. Flex-Web, basé à Voglans, étudie votre projet sur devis."
 isDraft: false
 ---
 

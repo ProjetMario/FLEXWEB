@@ -35,48 +35,36 @@ faq:
   - question: "FLEX-WEB travaille-t-il à Vevey ?"
     answer: "Oui, nous accompagnons les entreprises de Vevey et de la Riviera vaudoise."
   - question: "Le site sera-t-il visible localement ?"
-    answer: "Oui, chaque site est optimisé SEO avec un ciblage sur Vevey et le Léman."
+    answer: "Nous préparons le site pour les recherches pertinentes à Vevey et dans votre zone réelle d’activité. Google et Bing décident de l’indexation et du classement : aucune position ne peut être garantie."
+  - question: "Dans quelle langue se déroulent les échanges ?"
+    answer: "Nous accompagnons les projets en français et en anglais, à distance depuis Voglans en Savoie."
+  - question: "Quel délai prévoir ?"
+    answer: "Le calendrier dépend du périmètre et des contenus disponibles. Il est confirmé dans le devis après échange sur votre projet."
 seoTitle: "Création de site internet à Vevey — FLEX-WEB"
-seoDescription: "FLEX-WEB crée des sites web professionnels pour hôteliers, commerces et indépendants à Vevey. Devis gratuit et référencement local."
+seoDescription: "Création de site internet à Vevey pour entreprises et particuliers, dès 299 € TTC. Projet à distance en français ou en anglais, sur devis."
 isDraft: false
 ---
 
-## Création de sites internet à Vevey
+## Un site utile pour votre activité à Vevey
 
-Vevey est une ville charmante au bord du Léman, réputée pour sa culture, son vin et son tourisme. Les hôteliers, restaurateurs, commerçants et professionnels locaux peuvent bénéficier d'un site internet professionnel.
+Depuis Voglans en Savoie, Flex-Web accompagne à distance les entreprises et les particuliers de Vevey et de la Riviera vaudoise, en français ou en anglais. Nous créons des sites qui présentent une activité et facilitent la prise de contact. Le contenu, la zone desservie et les fonctionnalités sont définis avec vous.
 
-FLEX-WEB conçoit des sites modernes et adaptés au marché veveysan.
+Un restaurant peut par exemple présenter sa carte et ses horaires ; un artisan peut expliquer ses prestations et demander la commune d’intervention ; un indépendant peut détailler son offre et proposer un premier échange. Ces exemples illustrent des possibilités et ne sont pas des témoignages clients.
 
-## Pour quels professionnels à Vevey ?
+Pour examiner un projet publié, la fiche [Serrurier 73](/realisations/serrurier73/) présente un site de services avec des réalisations et des moyens de contact. Cette référence ne revendique ni implantation à Vevey ni résultat commercial chiffré.
 
-- Hôtels, restaurants et bars.
-- Commerçants et artisans du centre.
-- Professions libérales et consultants.
-- Organisateurs d'événements culturels.
-- Start-ups et services locaux.
+## Quel site et quel budget pour votre projet ?
 
-## Nos services à Vevey
+Le site vitrine jusqu’à cinq pages est proposé à **299 € TTC**. L’offre de cinq pages et plus avec référencement SEO et IA est à **590 € TTC**. Les options de suivi et les prestations complémentaires figurent dans nos [tarifs](/pricing/). Le devis précise le périmètre, les contenus, le domaine, l’hébergement et les éventuels outils tiers avant toute validation. Pour un projet en Suisse, les modalités applicables sont précisées au devis.
 
-### Site vitrine
+## Comment faciliter les demandes et le référencement local ?
 
-Présentez votre activité avec un site élégant et responsive.
+Nous organisons les pages autour de vos prestations, des questions de vos clients et des communes où vous intervenez réellement. Les coordonnées, les titres et les informations utiles doivent rester cohérents avec votre éventuelle fiche d’établissement. Les moteurs restent libres d’indexer et de classer le site : aucune place dans leurs résultats n’est garantie.
 
-### Site professionnel
+Une demande peut être suivie dans un [CRM avec automatisation](/crm-automatisation-entreprise/) lorsque votre organisation en a besoin. Les règles et intégrations sont définies dans le devis ; les décisions sensibles restent sous contrôle humain.
 
-Ajoutez des pages de services, un blog, un agenda et un formulaire de contact.
+## Comment démarrer depuis Vevey ?
 
-### Référencement local
+Décrivez votre activité ou votre projet personnel, vos objectifs, les pages souhaitées et les contenus dont vous disposez. Nous étudions le périmètre, puis convenons des étapes de conception, de validation et de publication. Le délai dépend notamment de la disponibilité des éléments nécessaires.
 
-Optimisez votre présence pour les recherches à Vevey, sur la Riviera et en Suisse romande.
-
-### Maintenance et hébergement
-
-Bénéficiez d'un hébergement fiable et d'un support réactif.
-
-## Pourquoi choisir FLEX-WEB ?
-
-Nous connaissons l'identité de la Riviera vaudoise : tourisme, culture, vin et proximité. Nos sites sont conçus pour séduire les locaux et les visiteurs.
-
-## Communes voisines
-
-Nous travaillons à Vevey et à **Montreux, Lausanne, Genève, Nyon, Aigle, Villeneuve, Château-d'Oex, Pully, Renens, Fribourg**.
+Découvrez aussi nos services de [création de site internet](/creation-site-internet/), de [développement d’applications](/creation-application-mobile/) et nos [réalisations vérifiables](/realisations/). Nous accompagnons également les projets à [Montreux](/creation-site-internet-montreux/) et à [Lausanne](/creation-site-internet-lausanne/).
