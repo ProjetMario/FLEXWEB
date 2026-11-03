@@ -3,7 +3,7 @@ import ApplicationLinks from '../applications/ApplicationLinks.astro';
 import ResourceLayout from '../seo/national/ResourceLayout.astro';
 import StructuredData from '../seo/StructuredData.astro';
 import { business, canonicalUrlFor, organizationSchema } from '../../data/business';
-import { geoUpdatedOn, type GeoPage } from '../../data/geo/site';
+import { geoUpdatedOn, offers, type GeoPage } from '../../data/geo/site';
 import { editorialDates } from '../../data/geo/editorial-dates';
 import { projectEmail } from '../../data/geo/service-context';
 interface Props { page: GeoPage }
@@ -17,12 +17,19 @@ const cta = page.cta ?? { label: 'Discuss your project', href: '/en/contact/' };
 const ctaEvent = cta.href.startsWith('mailto:') ? 'email_click' : cta.href.startsWith('tel:') ? 'phone_click' : 'quote_click';
 const updatedOn = page.updatedOn ?? editorialDates[page.path] ?? geoUpdatedOn;
 const newProjectPage = ['/creation-site-internet-pas-cher/', '/francophonie/', '/en/affordable-websites/', '/en/french-speaking-clients/'].includes(page.path);
+const budgetPage = ['/creation-site-internet-pas-cher/', '/en/affordable-websites/'].includes(page.path);
+const serviceOffers = budgetPage ? offers.websites.map(offer => ({
+  '@type': 'Offer', name: offer.name, description: offer.description,
+  price: String(offer.setupCents / 100), priceCurrency: 'EUR',
+  priceSpecification: { '@type': 'PriceSpecification', price: String(offer.setupCents / 100), priceCurrency: 'EUR', valueAddedTaxIncluded: true },
+  url: new URL(offer.href, business.url).toString(),
+})) : { '@type': 'Offer', name: en ? 'Scope agreed by quote' : 'Périmètre défini au devis', url: canonicalUrlFor(en ? '/en/pricing/' : '/pricing/') };
 const dateLabel = new Intl.DateTimeFormat(en ? 'en-GB' : 'fr-FR', { dateStyle: 'long', timeZone: 'Europe/Paris' }).format(new Date(`${updatedOn}T12:00:00Z`));
 const schemas: Record<string, unknown>[] = [
   { '@type': page.kind === 'about' ? 'AboutPage' : page.kind === 'contact' ? 'ContactPage' : 'WebPage', '@id': url, url, name: page.title, description: page.description, inLanguage: page.lang, isPartOf: { '@id': `${business.url}/#website` }, about: { '@id': `${business.url}/#organization` }, dateModified: updatedOn },
   { '@type': 'BreadcrumbList', itemListElement: [ { '@type': 'ListItem', position: 1, name: en ? 'Home' : 'Accueil', item: canonicalUrlFor(home) }, ...(page.path === home ? [] : [{ '@type': 'ListItem', position: 2, name: page.title, item: url }]) ] },
 ];
-if (page.kind === 'service') schemas.push({ '@type': 'Service', '@id': `${url}#service`, url, name: page.title, description: page.answer, provider: { '@id': `${business.url}/#organization` }, areaServed: organizationSchema.areaServed, offers: { '@type': 'Offer', name: en ? 'Scope agreed by quote' : 'Périmètre défini au devis', url: canonicalUrlFor(en ? '/en/pricing/' : '/pricing/') } });
+if (page.kind === 'service') schemas.push({ '@type': 'Service', '@id': `${url}#service`, url, name: page.title, description: page.answer, provider: { '@id': `${business.url}/#organization` }, areaServed: organizationSchema.areaServed, offers: serviceOffers });
 if (page.kind === 'article') schemas.push({ '@type': 'Article', '@id': `${url}#article`, headline: page.title, description: page.description, mainEntityOfPage: { '@id': url }, inLanguage: page.lang, datePublished: page.publishedOn ?? geoUpdatedOn, dateModified: updatedOn, author: { '@id': `${business.url}/#organization` }, publisher: { '@id': `${business.url}/#organization` } });
 if (page.faq.length) schemas.push({ '@type': 'FAQPage', '@id': `${url}#questions`, mainEntity: page.faq.map(faq => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })) });
 ---
