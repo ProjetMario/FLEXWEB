@@ -146,7 +146,9 @@ if (env.ENABLE_EMDASH_PUBLICATION !== 'true') {
         console.log('Release phase: build and local verification');
         env.CMS_SNAPSHOT_PATH = path.join(root, '.cms/snapshot.json');
         env.CONTEXT = 'production';
+        await command(node, ['scripts/geo/capture-homepages.mjs']);
         await command('npm', ['run', 'build']);
+        await command(node, ['scripts/geo/validate-homepages.mjs']);
         await command(node, ['scripts/check-seo.mjs']);
         await command(node, ['scripts/seo/quality.mjs', '--enforce-release']);
         await command(node, ['scripts/seo/audit-territorial-publication.mjs']);
