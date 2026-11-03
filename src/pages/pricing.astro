@@ -12,6 +12,7 @@ const euros = (cents: number) => new Intl.NumberFormat("fr-FR", {
   style: "currency", currency: "EUR", maximumFractionDigits: 0,
 }).format(cents / 100);
 const schemas = [
+  { "@type": "WebPage", "@id": canonicalUrl, url: canonicalUrl, name: "Tarifs Flex-Web", dateModified: "2026-11-03", isPartOf: {"@id": `${siteUrl}/#website`} },
   {
     "@type": "BreadcrumbList",
     itemListElement: [

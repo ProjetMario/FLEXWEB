@@ -6,7 +6,7 @@ const result=JSON.parse(await readFile('.cms/geo-preview.json','utf8'));
 const origin=new URL(result.deploy_url).origin;
 assert.match(origin,/^https:\/\/[a-z0-9-]+--flex-webb\.netlify\.app$/);
 assert.equal(result.site_id,'5f0ec4e5-fe16-4ef3-8380-9b8aff26edbb');
-const paths=['/guides/preparer-projet-site-internet/','/guides/preparer-projet-application-mobile/','/creation-site-internet/','/creation-application-mobile/','/en/websites/','/en/applications/','/en/guides/website-project-brief/','/en/guides/application-project-brief/','/','/pricing/','/contact/','/about/','/automatisation-ia/','/automatisation-ia-savoie/','/automatisation-ia-haute-savoie/','/crm-automatisation-entreprise/','/en/','/en/about/','/en/pricing/','/en/contact/','/en/crm/','/en/ai-automation/','/en/guides/website-enquiries-to-crm/','/en/guides/quote-follow-up/','/en/guides/internal-ai-assistant/','/journal/connecter-demandes-crm/','/journal/assistant-ia-interne-entreprise/','/ressources/automatisation/relance-devis/','/territoires/','/territoires/sites/montalieu-vercieu-38247/'];
+const paths=['/creation-site-internet-pas-cher/','/francophonie/','/en/affordable-websites/','/en/french-speaking-clients/','/guides/preparer-projet-site-internet/','/guides/preparer-projet-application-mobile/','/creation-site-internet/','/creation-application-mobile/','/en/websites/','/en/applications/','/en/guides/website-project-brief/','/en/guides/application-project-brief/','/','/pricing/','/contact/','/about/','/automatisation-ia/','/automatisation-ia-savoie/','/automatisation-ia-haute-savoie/','/crm-automatisation-entreprise/','/en/','/en/about/','/en/pricing/','/en/contact/','/en/crm/','/en/ai-automation/','/en/guides/website-enquiries-to-crm/','/en/guides/quote-follow-up/','/en/guides/internal-ai-assistant/','/journal/connecter-demandes-crm/','/journal/assistant-ia-interne-entreprise/','/ressources/automatisation/relance-devis/','/territoires/','/territoires/sites/montalieu-vercieu-38247/'];
 paths.push(...applicationPages.map(page=>page.path));
 for(const path of [...paths,'/robots.txt','/llms.txt','/llms-full.txt']){
  const response=await fetch(origin+path,{redirect:'error',signal:AbortSignal.timeout(30000)});assert.equal(response.status,200,path);
@@ -27,6 +27,9 @@ for(const route of ['/projets-sites/','/projets-sites/fr/page/1/','/projets-site
  assert.equal(noindex,route==='/projets-sites/'||route.includes('/page/'),route);
  if(!noindex)assert(urls.includes('https://flex-web.fr'+route),route);
 }
+const homes=JSON.parse(await readFile('.cms/geo-homepages-baseline.json','utf8'));
+const {homepageContent}=await import('./homepage-content.mjs');
+for(const route of ['/', '/en/']) assert.deepEqual(homepageContent(await fetch(origin+route).then(r=>r.text())), homes[route],route+': preview homepage changed');
 const before=JSON.parse(await readFile('.cms/geo-production-marker.json','utf8'));
 const after=await fetch('https://flex-web.fr/.well-known/flexweb-release.json').then(r=>r.json());assert.deepEqual(after,before,'Production marker changed during preview preparation');
 const report={status:'passed',deployId:result.deploy_id,preview:origin,sitemapUrls:urls.length,existingUrlsPreserved:baseline.length,newUrls:urls.length-baseline.length,strategicHttpPages:paths.length,productionCodeUnchanged:after.codeCommit};

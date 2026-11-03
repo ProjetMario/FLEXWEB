@@ -1,4 +1,7 @@
-import { allPages as applicationPages } from './applications/content.mjs';
+import { acquisitionPages } from './geo/acquisition-pages';
+import { editorialDates } from './geo/editorial-dates';
+import { serviceContext, interiorServiceRoutes } from './geo/service-context';
+import { allPages as applicationPages, updated as applicationsUpdated } from './applications/content.mjs';
 import { frenchWebAppGuides } from "./geo/web-app-pages";
 import { crmPage, englishPages } from "./geo/pages";
 import { geoUpdatedOn, offers, money as formattedMoney } from "./geo/site";
@@ -12,14 +15,15 @@ export const searchSummary = `# Flex-Web
 
 > ${business.description}
 
-Informations de service mises à jour le ${geoUpdatedOn}. Les dates de vérification des réalisations restent indiquées sur leurs fiches.
+Informations de service mises à jour le 2026-11-03. Les dates de vérification des réalisations restent indiquées sur leurs fiches.
 
 ## Identité et contact
 - Marque : Flex-Web, exploitée par Fleximmo.
 - Adresse : 93 chemin de la Combe, 73420 Voglans, France.
 - Téléphone : 07 57 83 02 62.
 - E-mail : contact@flex-web.fr.
-- Zone d’intervention : Savoie, Haute-Savoie ; accompagnement à distance partout en France.
+- Publics et zone d’intervention : entreprises et particuliers, en France et en Suisse. Les demandes des autres pays francophones sont étudiées à distance selon les conditions du devis.
+- Langues de travail : français et anglais. Flex-Web ne revendique aucun établissement étranger.
 
 ## Services
 - Automatisation de tâches avec l’IA : qualification des besoins, connexion des outils et du CRM, préparation de réponses et traitement de documents. Les contrôles, les accès et les coûts tiers sont définis au devis.
@@ -59,6 +63,9 @@ Les fonctionnalités publiques sont décrites sans attribuer de résultats comme
 - [Calculateur de temps économisé](https://flex-web.fr/outils/calculateur-temps-economise/)
 - [Démonstration CRM : demandes, relances et devis](https://flex-web.fr/outils/demo-crm/)
 
+## Petit budget et projets francophones
+${acquisitionPages.map(page => `- [${page.title}](https://flex-web.fr${page.path})`).join("\n")}
+
 ## Pages principales
 - [CRM et automatisation pour entreprise](https://flex-web.fr/crm-automatisation-entreprise/)
 - [Automatisation IA en France](https://flex-web.fr/automatisation-ia/)
@@ -96,11 +103,12 @@ Flex-Web est la marque commerciale de Fleximmo. Le devis précise qui valide les
 Les connexions passent par les API, formulaires ou webhooks disponibles dans les outils retenus. Le site public utilise Astro. Le choix d’un CRM, d’un modèle IA et des services tiers dépend des besoins, des droits d’accès et des coûts confirmés au devis. Un assistant doit pouvoir citer une source autorisée, signaler une information absente et transmettre les décisions engageantes à une personne. Ces textes ne déclarent aucun partenariat ou certification fournisseur.
 
 ## Documentation détaillée des offres et parcours
-` + [crmPage, ...frenchWebAppGuides, ...englishPages].map(page => [
+` + [crmPage, ...frenchWebAppGuides, ...englishPages, ...acquisitionPages].map(page => [
   `# ${page.title}`,
   `Source: https://flex-web.fr${page.path}`,
-  `Language: ${page.lang} · Updated: ${geoUpdatedOn}`,
+  `Language: ${page.lang} · Updated: ${page.updatedOn ?? editorialDates[page.path] ?? geoUpdatedOn}`,
   page.answer,
+  ...(Object.hasOwn(interiorServiceRoutes, page.path) ? [serviceContext[page.lang].heading, serviceContext[page.lang].description, serviceContext[page.lang].process] : []),
   ...page.sections.flatMap(section => [
     `## ${section.title}`,
     ...(section.paragraphs || []),
@@ -110,3 +118,15 @@ Les connexions passent par les API, formulaires ou webhooks disponibles dans les
   ]),
   ...page.faq.flatMap(item => [`## ${item.question}`, item.answer]),
 ].join('\n\n')).join('\n\n') + '\n';
+
+
+// Platform-specific answers use the same copy as the static application pages.
+export const applicationSearchSummary = applicationPages.map(page => [
+  `# ${page.title}`, `Source: https://flex-web.fr${page.path}`,
+  `Language: ${page.lang} · Updated: ${applicationsUpdated}`,
+  page.copy.lead, ...page.specific, page.copy.notice,
+  `## ${page.copy.price}`, page.copy.priceText,
+  `## ${page.copy.start}`, page.copy.startText,
+  `## ${page.copy.q1}`, page.copy.a1,
+  `## ${page.copy.q2}`, page.copy.a2,
+].join('\n\n')).join('\n\n');

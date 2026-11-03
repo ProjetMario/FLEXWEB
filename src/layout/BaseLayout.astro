@@ -6,8 +6,11 @@ import CookieConsent from "../components/global/CookieConsent.jsx";
 import Acquisition from "../components/seo/Acquisition.astro";
 import Analytics from "../components/seo/Analytics.astro";
 import ConversionEvents from "../components/seo/ConversionEvents.astro";
+import InteriorServiceContext from "../components/geo/InteriorServiceContext.astro";
+import { interiorServiceRoutes, serviceContext } from "../data/geo/service-context";
 
 import { englishNavigation, languagePairFor } from "../data/geo/site";
+import { editorialDates } from "../data/geo/editorial-dates";
 import navigationLinks from "../data/navigation.json";
 import footerData from "../data/footer.json";
 
@@ -37,8 +40,8 @@ const languageLink = pair ? { href: lang === "en" ? pair.fr : pair.en, label: la
     <div id="smooth-wrapper">
       <div id="smooth-content" class="flex flex-col min-h-svh">
         <Navbar data={lang === "en" ? englishNavigation : navByLanguage[lang] || navigationLinks} lang={lang} languageLink={languageLink} quoteHref={quoteHref} client:load />
-        <main class="grow"><slot /></main>
-        <Footer data={footerData} lang={lang} client:load />
+        <main class="grow"><slot />{Object.hasOwn(interiorServiceRoutes, Astro.url.pathname) && <InteriorServiceContext service={interiorServiceRoutes[Astro.url.pathname]} lang={lang} />}</main>
+        <Footer data={footerData} lang={lang} interiorDescription={(Object.hasOwn(editorialDates, Astro.url.pathname) || Astro.url.pathname.startsWith("/realisations/")) ? serviceContext[lang === "en" ? "en" : "fr"].description : undefined} client:load />
         <CookieConsent lang={lang} client:load />
       </div>
     </div>

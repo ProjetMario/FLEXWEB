@@ -1,4 +1,6 @@
 ---
+import { organizationSchema } from "../data/business";
+import { editorialDates } from "../data/geo/editorial-dates";
 import ProjectEvidence from "../components/seo/ProjectEvidence.astro";
 import BaseLayout from "../layout/BaseLayout.astro";
 import StructuredData from "../components/seo/StructuredData.astro";
@@ -58,8 +60,8 @@ const serviceFaq = [
     "answer": "Le calendrier est convenu dans le devis après validation du périmètre et réception des contenus. Les étapes de conception, de vérification et de publication sont organisées avec vous."
   },
   {
-    "question": "Pouvez-vous créer un site pour une entreprise ailleurs en France ?",
-    "answer": "Oui. FLEX-WEB est basé à Voglans en Savoie et accompagne les entreprises de Savoie, de Haute-Savoie et de toute la France. Les échanges, les démonstrations et les validations peuvent se faire à distance."
+    "question": "Pouvez-vous créer un site pour un particulier ou à distance ?",
+    "answer": "Oui. FLEX-WEB est basé à Voglans en Savoie et accompagne les entreprises et les particuliers en France et en Suisse. Les autres demandes francophones sont étudiées à distance selon le projet et les conditions du devis. Les échanges ont lieu en français ou en anglais."
   },
   {
     "question": "Un site peut-il être relié à mon CRM ?",
@@ -85,6 +87,7 @@ const webPageSchema = {
   url: canonicalUrl,
   name: data.seoTitle,
   description: data.seoDescription,
+  dateModified: editorialDates["/creation-site-internet/"],
   isPartOf: { "@id": `${siteUrl}/#website` },
 };
 
@@ -95,11 +98,7 @@ const serviceSchema = {
   url: canonicalUrl,
   description: data.description,
   provider: { "@id": `${siteUrl}/#organization` },
-  areaServed: [
-    { "@type": "AdministrativeArea", name: "Savoie" },
-    { "@type": "AdministrativeArea", name: "Haute-Savoie" },
-    { "@type": "Country", name: "France" },
-  ],
+  areaServed: organizationSchema.areaServed,
   audience: {
     "@type": "Audience",
     audienceType: data.targetAudience.join(", "),
@@ -311,7 +310,7 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
       <p class="mt-4 leading-relaxed">Pour un artisan, une PME ou une entreprise de services, commencez par les questions des visiteurs : quelles prestations proposez-vous, dans quelle zone et comment vous contacter ? Le site présente ces réponses et conduit vers une demande adaptée à votre activité.</p>
       <p class="mt-4 leading-relaxed">Votre devis précise les pages, les textes et photos fournis, les champs du formulaire, le domaine et l’hébergement, les contrôles avant mise en ligne et les frais éventuels. Pour une refonte, les adresses à conserver ou rediriger sont examinées. Flex-Web, marque de Fleximmo basée à Voglans en Savoie, réalise le périmètre convenu ; votre entreprise valide les contenus et les engagements affichés.</p>
       <p class="mt-4 leading-relaxed">Consultez le <a href="/guides/preparer-projet-site-internet/" class="underline">guide pour préparer votre site</a>, le <a href="/journal/combien-coute-site-internet-savoie/" class="underline">guide sur le coût d’un site</a>, le parcours pour <a href="/journal/connecter-demandes-crm/" class="underline">relier les demandes à un CRM</a> et nos <a href="/realisations/" class="underline">réalisations documentées</a>. Le calendrier est confirmé au devis et aucune position dans les résultats de recherche n’est garantie.</p>
-      <p class="mt-4 text-sm">Informations mises à jour le <time datetime="2026-10-28">28 octobre 2026</time>.</p>
+      <p class="mt-4 text-sm">Informations mises à jour le <time datetime={editorialDates["/creation-site-internet/"]}>{new Intl.DateTimeFormat("fr-FR", {dateStyle:"long",timeZone:"Europe/Paris"}).format(new Date(editorialDates["/creation-site-internet/"]+"T12:00:00Z"))}</time>.</p>
     </section>
 
     <section id="faq" class="mt-16">

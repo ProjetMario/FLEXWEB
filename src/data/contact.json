@@ -1,11 +1,19 @@
 {
   "label": "Contact",
   "title": "Parlez-nous de votre projet",
-  "description": "Présentez votre activité et votre besoin dans le parcours projet. Nous vérifions le périmètre avec vous avant de vous proposer un paiement.",
+  "description": "Site internet, application ou automatisation : expliquez votre besoin à Flex-Web. Entreprise ou particulier, la demande de devis est gratuite. Nous précisons le périmètre et les conditions avant tout paiement.",
   "details": [
     {
       "label": "Téléphone",
-      "value": "07 57 83 02 62"
+      "value": "07 57 83 02 62",
+      "href": "tel:+33757830262",
+      "event": "phone_click"
+    },
+    {
+      "label": "E-mail",
+      "value": "contact@flex-web.fr",
+      "href": "mailto:contact@flex-web.fr?subject=Mon%20projet%20avec%20Flex-Web",
+      "event": "email_click"
     },
     {
       "label": "Horaires",

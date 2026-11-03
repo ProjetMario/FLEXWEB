@@ -1,10 +1,16 @@
 ---
 import BaseLayout from "../layout/BaseLayout.astro";
 import ContactSection from "../components/ContactSection.jsx";
+import StructuredData from "../components/seo/StructuredData.astro";
 
 import contactData from "../data/contact.json";
 ---
 
-<BaseLayout title="Devis automatisation IA, site internet et application" description="Parlez de votre projet IA, site web ou application avec Flex-Web à Voglans. Savoie, Haute-Savoie et France : étude du besoin et devis personnalisé." keywords="contact agence web, devis site internet, devis application mobile, FLEX-WEB Voglans, agence web Savoie, contact développeur web">
+<BaseLayout title="Contact Flex-Web : devis site, application et automatisation" description="Entreprises et particuliers : contactez Flex-Web par e-mail ou téléphone. Projets en France et en Suisse, échanges en français ou en anglais, devis gratuit." keywords="contact agence web, devis site internet, devis application mobile, FLEX-WEB Voglans, agence web Savoie, contact développeur web">
+  <StructuredData slot="head" schemas={[
+    {"@type":"ContactPage","@id":"https://flex-web.fr/contact/",url:"https://flex-web.fr/contact/",name:"Contact Flex-Web : devis site, application et automatisation",inLanguage:"fr",dateModified:"2026-11-03",about:{"@id":"https://flex-web.fr/#organization"},isPartOf:{"@id":"https://flex-web.fr/#website"}},
+    {"@type":"BreadcrumbList",itemListElement:[{"@type":"ListItem",position:1,name:"Accueil",item:"https://flex-web.fr/"},{"@type":"ListItem",position:2,name:"Contact",item:"https://flex-web.fr/contact/"}]}
+  ]} />
   <ContactSection data={contactData} client:load />
+  <p class="mx-auto w-full max-w-8xl px-4 pb-10 text-sm text-gray-500">Informations révisées le <time datetime="2026-11-03">3 novembre 2026</time>.</p>
 </BaseLayout>
