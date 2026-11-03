@@ -1,0 +1,20 @@
+---
+import { business } from '../../data/business';
+import { serviceContext, projectEmail } from '../../data/geo/service-context';
+import { editorialDates } from '../../data/geo/editorial-dates';
+const { service = 'unknown', lang = 'fr' } = Astro.props;
+const en = lang === 'en';
+const copy = serviceContext[en ? 'en' : 'fr'];
+const topic = en ? ({site:'Website project',application:'Application project',automation:'CRM or automation project',unknown:'Project enquiry'})[service] : ({site:'Projet de site internet',application:'Projet d’application',automation:'Projet CRM ou automatisation',unknown:'Demande de projet'})[service];
+const date = editorialDates[Astro.url.pathname];
+---
+<section class="interior-context" aria-labelledby="interior-context-heading">
+  <h2 id="interior-context-heading">{copy.heading}</h2>
+  <p>{copy.description}</p><p>{copy.process}</p>
+  <p class="contacts"><a href={projectEmail(topic)} data-conversion-event="email_click" data-conversion-service={service}>{en ? 'Describe your project by email' : 'Décrire mon projet par e-mail'}</a><a href={`tel:${business.telephone}`} data-conversion-event="phone_click" data-conversion-service={service}>+33 7 57 83 02 62</a></p>
+  <nav aria-label={en ? 'Budget and remote projects' : 'Budget et projets à distance'}><a href={en ? '/en/affordable-websites/' : '/creation-site-internet-pas-cher/'}>{en ? 'Website on a small budget' : 'Créer un site avec un petit budget'}</a><a href={en ? '/en/french-speaking-clients/' : '/francophonie/'}>{en ? 'Projects across French-speaking countries' : 'Projets dans la francophonie'}</a></nav>
+  {date && <p class="review">{en ? 'Information reviewed on' : 'Informations revues le'} <time datetime={date}>{new Intl.DateTimeFormat(en ? 'en-GB' : 'fr-FR', {dateStyle:'long', timeZone:'Europe/Paris'}).format(new Date(date+'T12:00:00Z'))}</time></p>}
+</section>
+<style>
+.interior-context{max-width:960px;margin:0 auto 64px;padding:28px 24px;border-top:1px solid #dedee5;color:#1d1d1f;overflow-wrap:anywhere}.interior-context h2{font-size:1.6rem;font-weight:600;line-height:1.3;margin-bottom:18px}.interior-context p{line-height:1.8;margin:14px 0}.interior-context a{color:#0066cc;text-decoration:underline;text-underline-offset:4px}.interior-context .contacts,.interior-context nav{display:flex;flex-wrap:wrap;gap:14px 24px}.interior-context .review{font-size:.88rem;color:#666}.interior-context a:focus-visible{outline:3px solid #0071e3;outline-offset:4px}
+</style>

@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { websiteOffers, automationOffers, pricingOptions, publicQuoteVersion } from "../../data/pricing.ts";
 import { leadSource } from "../../lib/acquisition.ts";
-import { trackLead } from "../../lib/analytics.ts";
+import { trackLead, trackConversionEvent } from "../../lib/analytics.ts";
+import { declaredSources, quoteNeedMaxLength, buildQuoteMessage } from "../../lib/declared-source.mjs";
 import { isProspectSlug, validProspectContext } from "../../lib/prospect-context.mjs";
 import { api, createIdentity, money, saveToken } from "./api";
 
@@ -27,6 +28,7 @@ export default function StartProject() {
   const [sitePlan, setSitePlan] = useState("essentielle");
   const [automationPlan, setAutomationPlan] = useState("crm-automation");
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [declaredSource, setDeclaredSource] = useState("");
   const [prospectContext, setProspectContext] = useState(null);
   const [data, setData] = useState({
     companyName: "", contactName: "", email: "", phone: "", city: "", businessType: "",
@@ -34,6 +36,7 @@ export default function StartProject() {
     professional: false, websiteTrap: "", source: "site",
   });
   const form = useRef(null), identity = useRef(null), heading = useRef(null);
+  const formStarted = useRef(false);
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     const rawService = (query.get("service") || "").toLowerCase();
@@ -83,6 +86,17 @@ export default function StartProject() {
   const displayedOffer = offerChoices.find((o) => o.id === data.planId) || offerChoices[0];
   const bespoke = !displayedOffer.setupCents;
   const activeOptions = pricingOptions.filter((option) => selectedOptions.includes(option.id));
+  const quoteSummary = bespoke
+    ? `Demande de devis : ${displayedOffer.name}. Budget et périmètre à chiffrer, aucun forfait site sélectionné.`
+    : `Demande de devis : ${displayedOffer.name}, ${money(displayedOffer.setupCents)} TTC en paiement unique. Options demandées : ${activeOptions.length ? activeOptions.map((o) => `${o.name} (${money(o.monthlyCents)} TTC/mois)`).join(" ; ") : "aucune mensualité"}.`;
+  const messageContext = { summary: quoteSummary, prospectSlug: prospectContext?.slug, declaredSource };
+  const maxNeedLength = quoteNeedMaxLength(messageContext);
+  const startForm = (event) => {
+    // Refusal or a not-yet-ready analytics loader must not consume the event.
+    // A later input after consent can record the start, once for this journey.
+    const chosenService = event.target.name === "service" && ["site", "automation", "application"].includes(event.target.value) ? event.target.value : service;
+    if (!formStarted.current && trackConversionEvent("form_start", chosenService)) formStarted.current = true;
+  };
   const set = (e) => {
     if (e.target.name === "planId") {
       const nextService = prospectContext && e.target.value !== "achat"
@@ -113,15 +127,13 @@ export default function StartProject() {
     try {
       if (!identity.current) identity.current = createIdentity();
       try { sessionStorage.setItem("flexweb-intake-v2", JSON.stringify(identity.current)); } catch {}
-      const quoteSummary = bespoke
-        ? `Demande de devis : ${displayedOffer.name}. Budget et périmètre à chiffrer, aucun forfait site sélectionné.`
-        : `Demande de devis : ${displayedOffer.name}, ${money(displayedOffer.setupCents)} TTC en paiement unique. Options demandées : ${activeOptions.length ? activeOptions.map((o) => `${o.name} (${money(o.monthlyCents)} TTC/mois)`).join(" ; ") : "aucune mensualité"}.`;
+      const message = buildQuoteMessage(messageContext, data.message);
       await api("intake", {
         ...data, ...identity.current, source: leadSource(),
         publicQuote: bespoke
           ? { version: publicQuoteVersion, service }
           : { version: publicQuoteVersion, service, tier: displayedOffer.tier, options: selectedOptions },
-        message: `${quoteSummary}\nConditions à confirmer dans une proposition adaptée avant tout paiement.${prospectContext ? `\nMaquette consultée : https://flex-web.fr/${prospectContext.slug}/` : ""}\n\nBesoin du client :\n${data.message}`,
+        message,
       });
       saveToken(identity.current.accessToken);
       trackLead("project_quote", service);
@@ -153,7 +165,7 @@ export default function StartProject() {
       </ol>
       {prospectContext && <div className="flow-prospect-summary" role="status"><p>Votre demande concerne la maquette de <strong>{prospectContext.name}</strong>. Vous pouvez corriger les informations et préciser vos souhaits avant l’envoi.</p><p><strong>{packNames[displayedOffer.id] ? `Pack ${packNames[displayedOffer.id]}` : displayedOffer.name}</strong> · {bespoke ? "Sur devis" : `${money(displayedOffer.setupCents)} TTC en paiement unique`}{bespoke ? " · Budget et accompagnement à définir dans votre devis" : activeOptions.length ? ` · Options : ${money(activeOptions.reduce((total, option) => total + option.monthlyCents, 0))} TTC/mois` : " · Aucune option mensuelle sélectionnée"}.</p></div>}
       <div className="flow-columns">
-        <form ref={form} onSubmit={step === finalStep ? submit : next} className="flow-card" aria-busy={busy}>
+        <form ref={form} onInputCapture={startForm} onSubmit={step === finalStep ? submit : next} className="flow-card" aria-busy={busy}>
           <fieldset className="flow-fieldset" disabled={!ready || busy}>
             <h2 ref={heading} tabIndex={-1}>{prospectContext ? (step === 0 ? "Faisons connaissance" : "Votre pack, vos souhaits") : ["Faisons connaissance", bespoke ? "Votre prestation" : "Choisissez votre formule", "Ce que vous souhaitez accomplir"][step]}</h2>
             {step === 0 && <>
@@ -189,8 +201,12 @@ export default function StartProject() {
             </>}
             {step === finalStep && <>
               {prospectContext && <h3 className="flow-project-heading">Précisez votre projet</h3>}
-              <label>Votre besoin<textarea name="message" value={data.message} onChange={set} required minLength={15} maxLength={2400} rows={5}
+              <label>Votre besoin<textarea name="message" value={data.message} onChange={set} required minLength={15} maxLength={maxNeedLength} rows={5}
                 placeholder={service === "automation" ? "Quelles tâches répétez-vous ? Quels outils utilisez-vous ?" : service === "application" ? "Qui utilisera votre application et quelles fonctions sont nécessaires ?" : "Votre activité, vos clients et les demandes que vous souhaitez recevoir…"} /></label>
+              <label>Comment nous avez-vous connu ? <span className="flow-note">(facultatif)</span><select name="declaredSource" value={declaredSource} onChange={e => setDeclaredSource(e.target.value)}>
+                <option value="">Je préfère ne pas répondre</option>
+                {declaredSources.map(source => <option key={source.value} value={source.value}>{source.label}</option>)}
+              </select></label>
               <label>Quand souhaitez-vous démarrer ?<select name="timeline" value={data.timeline} onChange={set}>
                 <option value="a-definir">À définir ensemble</option><option value="rapidement">Dès que possible</option><option value="1-3-mois">Dans 1 à 3 mois</option>
               </select></label>

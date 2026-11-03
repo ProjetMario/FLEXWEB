@@ -5,6 +5,7 @@ import { parse } from 'parse5';
 import { readSitemap } from '../seo/read-sitemap.mjs';
 const root = path.resolve('dist'), origin = 'https://flex-web.fr';
 const pairs = [
+  ['/creation-site-internet-pas-cher/', '/en/affordable-websites/'], ['/francophonie/', '/en/french-speaking-clients/'],
   ['/guides/preparer-projet-site-internet/', '/en/guides/website-project-brief/'], ['/guides/preparer-projet-application-mobile/', '/en/guides/application-project-brief/'],
   ['/creation-site-internet/', '/en/websites/'], ['/creation-application-mobile/', '/en/applications/'],
   ['/', '/en/'], ['/about/', '/en/about/'], ['/automatisation-ia/', '/en/ai-automation/'],
@@ -13,7 +14,7 @@ const pairs = [
   ['/ressources/automatisation/relance-devis/', '/en/guides/quote-follow-up/'],
   ['/journal/assistant-ia-interne-entreprise/', '/en/guides/internal-ai-assistant/'],
 ];
-const newFrenchGuides = ['/guides/preparer-projet-site-internet/','/guides/preparer-projet-application-mobile/'];
+const newFrenchGuides = ['/creation-site-internet-pas-cher/','/francophonie/','/guides/preparer-projet-site-internet/','/guides/preparer-projet-application-mobile/'];
 const newRoutes = ['/crm-automatisation-entreprise/', ...pairs.map(pair=>pair[1]), ...newFrenchGuides];
 const attribute = (node, name) => node.attrs?.find(a=>a.name===name)?.value;
 function nodes(node) { return [node,...(node.childNodes||[]).flatMap(nodes)]; }
@@ -69,7 +70,7 @@ if(process.env.GEO_BASELINE_FILE){
 }
 for(const file of ['llms.txt','llms-full.txt']) {
   const summary=await readFile(path.join(root,file),'utf8');
-  for(const text of ['Fleximmo','Voglans','contact@flex-web.fr','2026-10-28','/en/crm/','/crm-automatisation-entreprise/'])assert(summary.includes(text),`${file}: ${text}`);
+  for(const text of ['Fleximmo','Voglans','contact@flex-web.fr','2026-11-03','/en/crm/','/crm-automatisation-entreprise/'])assert(summary.includes(text),`${file}: ${text}`);
   for(const match of summary.matchAll(/https:\/\/flex-web\.fr([^\s)]+)/g))await access(htmlPath(new URL(match[0]).pathname));
 }
 const robots=await readFile(path.join(root,'robots.txt'),'utf8');

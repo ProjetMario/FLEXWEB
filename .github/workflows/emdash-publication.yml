@@ -81,6 +81,8 @@ jobs:
             .cms/indexnow-state.json
             .cms/releases/*.json
             .cms/smoke/*.png
+            .cms/geo-homepages-baseline.json
+            .cms/geo-smoke/*.png
           include-hidden-files: true
           retention-days: 90
           if-no-files-found: ignore

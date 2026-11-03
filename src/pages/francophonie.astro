@@ -1,0 +1,6 @@
+---
+import GeoPage from '../components/geo/GeoPage.astro';
+import { frenchAcquisitionPages } from '../data/geo/acquisition-pages';
+const page = frenchAcquisitionPages.find(page => page.path === '/francophonie/')!;
+---
+<GeoPage page={page} />

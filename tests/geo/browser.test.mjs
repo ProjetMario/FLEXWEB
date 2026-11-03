@@ -24,7 +24,7 @@ test('CRM and English pages remain readable on mobile, tablet and desktop',async
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),true,`${width} ${route}`);
     assert.equal(await page.locator('html').getAttribute('lang'),route.startsWith('/en/')?'en':'fr');
     assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'),'https://flex-web.fr'+route);
-    const cta=page.locator('a[data-conversion-event="quote_click"]').first();
+    const cta=page.locator(route==='/en/contact/' ? 'a[data-conversion-event="email_click"]' : 'a[data-conversion-event="quote_click"]').first();
     if(route==='/guides/preparer-projet-site-internet/' || route==='/en/websites/' || route==='/en/guides/website-project-brief/') assert.equal(await cta.getAttribute('data-conversion-service'),'site');
     if(route==='/guides/preparer-projet-application-mobile/' || route==='/en/applications/' || route==='/en/guides/application-project-brief/') assert.equal(await cta.getAttribute('data-conversion-service'),'application');
     if(route==='/en/contact/') assert.equal(await cta.getAttribute('data-conversion-service'),'unknown');

@@ -78,7 +78,8 @@ test("pricing JSON-LD separates three one-time TTC prices from two monthly optio
 });
 
 test("local website schemas offer only 299/590 sites and visible copy names the 990 CRM", () => {
-  const locations = readdirSync(dist).filter((name) => name.startsWith("creation-site-internet-"));
+  // The budget guide shares this prefix, but is not a geographic landing page.
+  const locations = readdirSync(dist).filter((name) => name.startsWith("creation-site-internet-") && name !== "creation-site-internet-pas-cher");
   assert.ok(locations.length >= 200, "build must include local public landing pages");
   for (const name of locations) {
     const html = readPage(`${name}/index.html`);
@@ -89,6 +90,25 @@ test("local website schemas offer only 299/590 sites and visible copy names the 
     const text = visibleText(html);
     assert.match(text, /Installation d’un CRM.*?990\s*€\s*TTC/, name);
     assert.doesNotMatch(text, /site (?:vitrine )?complet (?:à |coûte )?990\s*€/i, name);
+  }
+});
+
+test("budget pages expose the current website prices separately from optional running costs", () => {
+  for (const route of ["creation-site-internet-pas-cher", "en/affordable-websites"]) {
+    const html = readPage(`${route}/index.html`);
+    const service = schemas(html).find((item) => item["@type"] === "Service");
+    assert.ok(service, `${route}: missing service`);
+    assert.deepEqual(service.offers.map((offer: any) => Number(offer.price)), [299, 590], route);
+    for (const offer of service.offers) {
+      assert.equal(offer.priceCurrency, "EUR");
+      assert.equal(offer.priceSpecification.valueAddedTaxIncluded, true);
+      assert.equal(new URL(offer.url).searchParams.get("service"), "site");
+    }
+    const text = visibleText(html);
+    assert.match(text, /299/); assert.match(text, /590/);
+    assert.match(text, /facultativ|optional/i);
+    assert.match(text, /hébergement|hosting/i);
+    assert.match(text, /séparément|separately/i);
   }
 });
 

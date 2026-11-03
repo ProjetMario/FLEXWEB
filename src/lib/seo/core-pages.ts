@@ -1,3 +1,5 @@
+import { acquisitionPages } from '../../data/geo/acquisition-pages';
+import { editorialDates, previouslyReviewedDates } from '../../data/geo/editorial-dates';
 import { allPages as applicationPages, updated as applicationsUpdated } from '../../data/applications/content.mjs';
 import { frenchWebAppGuides } from "../../data/geo/web-app-pages";
 import { englishPages } from "../../data/geo/pages";
@@ -53,6 +55,7 @@ export const corePages = async () => {
   const staticPages = [
     { url: "/crm-automatisation-entreprise/", priority: 0.9, changefreq: "monthly" },
     ...applicationPages.map(page => ({ url: page.path, priority: 0.8, changefreq: "monthly" })),
+    ...acquisitionPages.map(page => ({ url: page.path, priority: 0.8, changefreq: "monthly" })),
     ...[...englishPages,...frenchWebAppGuides].map(page => ({ url: page.path, priority: 0.8, changefreq: "monthly" })),
     { url: "/", priority: 1.0, changefreq: "weekly" },
     { url: "/about/", priority: 0.8, changefreq: "monthly" },
@@ -123,5 +126,5 @@ export const corePages = async () => {
   ];
   const allPages = Array.from(new Map(candidates.map(page => [page.url, page])).values());
 
-  return allPages.map(p=>({url:p.url,lastmod:updatedPages[p.url] ?? (p.url.startsWith('/realisations/')?'2026-09-15':undefined),family:p.url.startsWith('/en/')?'english':p.url.startsWith('/creation-site-internet-')?'territoires':'principal'}));
+  return allPages.map(p=>({url:p.url,lastmod:editorialDates[p.url] ?? previouslyReviewedDates[p.url] ?? (p.url === '/realisations/' ? realizations.map(p => p.updatedOn).sort().at(-1) : realizations.find(project => p.url === `/realisations/${project.slug}/`)?.updatedOn) ?? updatedPages[p.url] ?? (p.url.startsWith('/realisations/')?'2026-09-15':undefined),family:p.url.startsWith('/en/')?'english':p.url.startsWith('/creation-site-internet-')?'territoires':'principal'}));
 };

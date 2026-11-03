@@ -1,4 +1,5 @@
 ---
+import { editorialDates } from "../data/geo/editorial-dates";
 import ApplicationLinks from "../components/applications/ApplicationLinks.astro";
 import ProjectEvidence from "../components/seo/ProjectEvidence.astro";
 import BaseLayout from "../layout/BaseLayout.astro";
@@ -75,6 +76,7 @@ const webPageSchema = {
   url: canonicalUrl,
   name: data.seoTitle,
   description: data.seoDescription,
+  dateModified: editorialDates["/creation-application-mobile/"],
   isPartOf: { "@id": `${siteUrl}/#website` },
 };
 
@@ -270,7 +272,7 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
       <p class="mt-4 leading-relaxed">Choisissez un parcours précis : par exemple, un client transmet une demande, un membre de votre équipe la traite et chacun voit uniquement les informations autorisées. Définissez les profils, les écrans, les données nécessaires et ce qui restera pour une version ultérieure. Cet exemple illustre un besoin possible, sans présenter de résultat client.</p>
       <p class="mt-4 leading-relaxed">Le devis distingue la conception du premier lot, les connexions, l’hébergement, les licences, les éventuels frais des stores, la maintenance et les évolutions. Les tests couvrent notamment les droits d’accès, les données manquantes et les erreurs de connexion. La publication sur iOS ou Android dépend du projet, des comptes et des règles des stores ; elle n’est pas automatique.</p>
       <p class="mt-4 leading-relaxed">Flex-Web, marque de Fleximmo à Voglans, intervient en Savoie et à distance en France. Votre entreprise désigne les personnes chargées des règles métier et de la validation. Consultez le <a href="/guides/preparer-projet-application-mobile/" class="underline">guide pour préparer votre application</a>, la <a href="/realisations/foot-nation/" class="underline">présentation des fonctionnalités publiques de Foot Nation</a> et le guide <a href="/journal/automatisation-ou-application-sur-mesure/" class="underline">application ou automatisation</a>.</p>
-      <p class="mt-4 text-sm">Informations mises à jour le <time datetime="2026-10-28">28 octobre 2026</time>.</p>
+      <p class="mt-4 text-sm">Informations mises à jour le <time datetime={editorialDates["/creation-application-mobile/"]}>{new Intl.DateTimeFormat("fr-FR", {dateStyle:"long",timeZone:"Europe/Paris"}).format(new Date(editorialDates["/creation-application-mobile/"]+"T12:00:00Z"))}</time>.</p>
     </section>
 
     <ApplicationLinks lang="fr" />

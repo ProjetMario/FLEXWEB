@@ -1,6 +1,7 @@
 /** Descriptions limitées aux parcours observables ; aucun résultat commercial inventé. */
 export const realizations = [
   { slug: 'foot-nation', name: 'Foot Nation', category: 'Communauté football', href: 'https://www.foot-nation.com/', domain: 'foot-nation.com', image: 'foot-nation.jpg',
+    publishedOn: '2026-09-30', updatedOn: '2026-11-03', verifiedAt: '2026-11-03',
     title: 'Foot Nation : une plateforme autour du football',
     intro: 'Une plateforme qui rassemble plusieurs publics du football autour de profils et d’espaces dédiés. Ce projet illustre la différence entre présenter une activité et proposer un service en ligne.',
     need: 'Permettre à plusieurs publics de trouver leur place dans une même plateforme. Le besoin que le parcours public permet de comprendre : identifier son profil, s’inscrire puis accéder aux espaces adaptés.',
@@ -9,11 +10,18 @@ export const realizations = [
     features: ['Des entrées pour les joueurs, clubs, éducateurs, bénévoles et supporters.', 'Un parcours d’inscription par e-mail ou avec Google.', 'Des espaces et profils pour structurer la communauté et une recherche pour explorer la plateforme.'],
     stack: ['Plateforme web', 'Parcours multi-profils', 'Authentification visible', 'Recherche et profils publics'],
     limits: ['Les résultats commerciaux, l’activité des comptes et les données internes ne sont pas publiés.', 'Cette fiche décrit les parcours publics vérifiés, pas l’ensemble des écrans privés.'],
-    testimonial: 'Témoignage client à ajouter uniquement après autorisation écrite.',
-    measuredResults: 'Résultats chiffrés non publiés : aucune performance commerciale n’est revendiquée sans mesure confirmée.',
+    evidence: [
+      { label: 'Accueil et entrées par profil', href: 'https://www.foot-nation.com/', detail: 'Les entrées clubs, joueurs, bénévoles, éducateurs et fans ainsi que les options de connexion sont visibles sur l’accueil.' },
+      { label: 'Parcours pour trouver un club', href: 'https://www.foot-nation.com/trouver-un-club-de-football', detail: 'Cette page explique le parcours de recherche et propose des liens vers les clubs et la création d’un profil.' },
+    ],
+    faq: [
+      { question: 'Cette réalisation prouve-t-elle une publication sur iOS ou Android ?', answer: 'Cette fiche porte sur une plateforme web et ses pages publiques. Elle ne revendique pas une publication sur l’App Store ou Google Play. Un projet mobile natif fait l’objet d’un périmètre et de tests distincts.' },
+      { question: 'Puis-je demander une plateforme pour un autre domaine ?', answer: 'Oui. Entreprise ou particulier, décrivez les utilisateurs, leur première action et les informations à partager. Flex-Web étudie les écrans, les droits et les connexions nécessaires, puis établit un devis sur mesure.' },
+    ],
     takeaway: 'Lorsqu’un projet comporte plusieurs types d’utilisateurs, le cadrage doit préciser leurs droits, leurs parcours et les informations visibles. Ces décisions précèdent le choix des écrans.',
     service: 'application', servicePath: '/creation-application-mobile/', serviceLabel: 'Développer une application web ou mobile' },
   { slug: '2savoie-immo', name: '2 Savoie Immo', category: 'Immobilier en Savoie et Haute-Savoie', href: 'https://www.2savoie.immo/', domain: '2savoie.immo', image: '2savoie-immo.jpg',
+    publishedOn: '2026-09-30', updatedOn: '2026-11-03', verifiedAt: '2026-11-03',
     title: '2 Savoie Immo : des biens et un parcours d’estimation',
     intro: 'Un site immobilier destiné aux personnes qui souhaitent acheter, vendre ou investir en Pays de Savoie. Les biens et les demandes d’estimation donnent deux chemins distincts aux visiteurs.',
     need: 'Aider un visiteur à se diriger vers la recherche d’un bien ou vers un projet de vente. Ces deux intentions n’appellent pas les mêmes contenus ni la même demande de contact.',
@@ -22,11 +30,18 @@ export const realizations = [
     features: ['Un catalogue de biens avec des pages de présentation.', 'Un accès à la demande d’estimation depuis la navigation.', 'Un formulaire avec les coordonnées et le message du visiteur.', 'Une présentation des territoires et de l’agence pour situer son activité.'],
     stack: ['Site immobilier', 'Catalogue de biens', 'Formulaire de demande', 'Pages de territoire'],
     limits: ['Les volumes de prospects, ventes ou estimations ne sont pas affichés sans données confirmées.', 'Les connexions internes éventuelles au suivi commercial ne sont pas revendiquées dans cette fiche.'],
-    testimonial: 'Témoignage client à ajouter uniquement après autorisation écrite.',
-    measuredResults: 'Résultats chiffrés à confirmer : la fiche reste limitée aux fonctions publiquement observables.',
+    evidence: [
+      { label: 'Catalogue public des biens', href: 'https://2savoie.immo/biens/', detail: 'Le catalogue présente les caractéristiques, le statut et le prix des biens, avec un lien vers chaque annonce.' },
+      { label: 'Méthode et demande d’estimation', href: 'https://2savoie.immo/estimation/', detail: 'Le parcours distingue le motif, le lieu du bien et les conditions de l’estimation avant la demande.' },
+    ],
+    faq: [
+      { question: 'Le suivi commercial interne fait-il partie de cette preuve ?', answer: 'Non. Cette présentation vérifie le catalogue, les pages de service et les points d’entrée du site public. Elle ne démontre ni une connexion CRM privée ni un volume de demandes ou de ventes.' },
+      { question: 'Comment préparer un site avec plusieurs types de demandes ?', answer: 'Listez les principaux motifs de contact et les informations nécessaires pour chacun. Précisez aussi qui mettra les contenus à jour. Flex-Web propose ensuite des parcours distincts et chiffre les fonctions retenues au devis.' },
+    ],
     takeaway: 'Un site immobilier doit distinguer la recherche d’un bien et le projet de vente. Des appels à l’action adaptés permettent de recueillir une demande plus précise. Un raccordement au suivi commercial peut ensuite faire l’objet d’un cadrage séparé.',
     service: 'site', servicePath: '/creation-site-internet-haute-savoie/', serviceLabel: 'Créer un site en Haute-Savoie' },
   { slug: 'serrurier73', name: 'Serrurier 73', category: 'Artisan en Savoie', href: 'https://serrurier73.fr/', domain: 'serrurier73.fr', image: 'serrurier73.jpg',
+    publishedOn: '2026-09-30', updatedOn: '2026-11-03', verifiedAt: '2026-11-03',
     title: 'Serrurier 73 : montrer le savoir-faire et faciliter le contact',
     intro: 'Le site d’ALP’SERRURERIE MÉTALLERIE présente une activité artisanale à Chambéry. Il permet de découvrir les prestations avant de prendre contact pour un besoin précis.',
     need: 'Faire comprendre les ouvrages proposés et donner des repères visuels avant un appel ou une demande de devis. Pour un projet artisanal, le visiteur doit pouvoir reconnaître la prestation qui correspond à son besoin.',
@@ -35,8 +50,14 @@ export const realizations = [
     features: ['Des rubriques pour les portails, escaliers, garde-corps et travaux de serrurerie.', 'Un accès aux réalisations pour découvrir les ouvrages.', 'Des actions pour appeler ou demander un devis.', 'Des pages qui expliquent les prestations et leur contexte local.'],
     stack: ['Site vitrine artisan', 'Galerie de réalisations', 'Actions téléphone et devis', 'Pages prestations'],
     limits: ['Le nombre de demandes générées et les ventes ne sont pas publiés sans mesure validée.', 'Les informations décrivent le site public observé à la date de vérification.'],
-    testimonial: 'Témoignage client à ajouter uniquement après autorisation écrite.',
-    measuredResults: 'Résultats chiffrés non publiés : aucune promesse de demandes ou de chiffre d’affaires n’est associée à cette fiche.',
+    evidence: [
+      { label: 'Présentation des prestations', href: 'https://serrurier73.fr/services/', detail: 'Les portails, escaliers, garde-corps et travaux de serrurerie sont présentés dans des rubriques distinctes.' },
+      { label: 'Réalisations et accès au contact', href: 'https://serrurier73.fr/realisations/', detail: 'Les exemples d’ouvrages sont organisés par prestation et accompagnés d’un lien de demande de devis.' },
+    ],
+    faq: [
+      { question: 'Faut-il un site complexe pour présenter une activité artisanale ?', answer: 'Le point de départ est la liste de vos prestations, votre zone réelle et les photos que vous pouvez publier. Le nombre de pages et les fonctions dépendent de votre besoin ; cette réalisation ne définit pas à elle seule le contenu d’un forfait.' },
+      { question: 'Cette fiche confirme-t-elle l’envoi des demandes du formulaire ?', answer: 'La présence des liens d’appel et des points d’entrée de contact a été observée. Aucun envoi réel de formulaire n’a été effectué pour cette vérification. Le test de réception des demandes doit être organisé avec le destinataire lors d’un projet.' },
+    ],
     takeaway: 'Pour un artisan, des prestations faciles à identifier et des exemples visuels aident le visiteur à formuler sa demande. Le téléphone et le formulaire répondent à des situations différentes : ils doivent rester faciles à trouver sur mobile.',
     service: 'site', servicePath: '/creation-site-internet-savoie/', serviceLabel: 'Créer un site en Savoie' },
 ] as const;

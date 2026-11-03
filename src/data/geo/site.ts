@@ -21,6 +21,8 @@ export const languagePairs = [
   { fr: '/crm-automatisation-entreprise/', en: '/en/crm/' },
   { fr: '/pricing/', en: '/en/pricing/' },
   { fr: '/contact/', en: '/en/contact/' },
+  { fr: '/creation-site-internet-pas-cher/', en: '/en/affordable-websites/' },
+  { fr: '/francophonie/', en: '/en/french-speaking-clients/' },
   { fr: '/journal/connecter-demandes-crm/', en: '/en/guides/website-enquiries-to-crm/' },
   { fr: '/ressources/automatisation/relance-devis/', en: '/en/guides/quote-follow-up/' },
   { fr: '/journal/assistant-ia-interne-entreprise/', en: '/en/guides/internal-ai-assistant/' },
@@ -40,6 +42,7 @@ export type GeoLink = { label: string; href: string };
 export type GeoSection = { title: string; paragraphs?: string[]; items?: string[]; links?: GeoLink[]; table?: { caption: string; columns: string[]; rows: string[][] } };
 export type GeoPage = {
   path: string; lang: 'fr' | 'en'; service?: 'site' | 'application' | 'automation'; title: string; description: string; answer: string;
+  updatedOn?: string; publishedOn?: string; breadcrumbLabel?: string;
   kind: 'service' | 'article' | 'page' | 'about' | 'contact';
   sections: GeoSection[]; faq: { question: string; answer: string }[];
   related: GeoLink[]; cta?: GeoLink;
