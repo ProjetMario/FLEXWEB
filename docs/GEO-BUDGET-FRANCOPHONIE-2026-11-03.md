@@ -9,7 +9,8 @@
 - Déploiement `6aea18f7086129a2e0ea2c31`, état Netlify `ready`, contexte `deploy-preview`, aucune date de publication en production.
 - Validation complète : https://github.com/ProjetMario/FLEXWEB/actions/runs/41682703297 — réussie.
 - Contrôles complémentaires du dépôt : https://github.com/ProjetMario/FLEXWEB/actions/runs/41682711039 — réussis.
-- Aucune publication de ce lot en production. La validation de l’aperçu précède sa publication, conformément au plan accepté.
+- Production publiée après validation de l’utilisateur le 3 novembre 2026 : commit `eadac9fc8329b4436e89ca5049ba9db53d6622a7`, déploiement Netlify `6aea2732c7516e1b751ae971`, état `ready`, verrou de publication conservé.
+- La PR 44 a été fusionnée dans `main` et a déclenché automatiquement le workflow GitHub de publication : https://github.com/ProjetMario/FLEXWEB/actions/runs/41691256388 (réussi).
 
 ## Pages créées
 
@@ -94,13 +95,13 @@ Preuves locales téléchargées depuis la chaîne distante :
 - `.cms/geo-budget-evidence-final/geo-production-marker.json`
 - `.cms/geo-budget-evidence-final/geo-smoke/`
 
-Le marqueur de production est resté `838e62e18e3a300d48a5ba2affa986308cdd54d7`. Netlify a transféré 59 257 fichiers, dont de nombreux fichiers de pages existantes reconstruits : ce compteur de fichiers transférés n’est pas un compteur de nouvelles URL. Les seules nouvelles URL du sitemap sont les quatre pages ci-dessus.
+Pendant la préparation de l’aperçu initial, le marqueur de production est resté `838e62e18e3a300d48a5ba2affa986308cdd54d7`. Netlify a transféré 59 257 fichiers, dont de nombreux fichiers de pages existantes reconstruits : ce compteur de fichiers transférés n’est pas un compteur de nouvelles URL. Les seules nouvelles URL du sitemap sont les quatre pages ci-dessus.
 
 ## Sitemap et moteurs
 
 Baseline vérifiée : 31 sous-sitemaps valides, 50 644 URL uniques. Le build final et l’aperçu distant confirment les mêmes 31 fichiers, 50 648 URL et aucune URL initiale retirée. Le contrôle ciblé couvre 22 pages nouvelles ou enrichies et 342 liens internes.
 
-Après publication en production seulement, les nouvelles pages à inspecter dans Google Search Console sont :
+Les nouvelles pages maintenant publiées, à inspecter dans Google Search Console, sont :
 
 - https://flex-web.fr/creation-site-internet-pas-cher/
 - https://flex-web.fr/francophonie/
@@ -167,3 +168,24 @@ Comparer les périodes de 28 jours à périmètre constant. Les sources absentes
 - `tests/geo/quote-attribution.test.mjs`
 - `tests/seo/pricing.test.ts`
 - `docs/GEO-BUDGET-FRANCOPHONIE-2026-11-03.md`
+
+
+## Publication confirmée depuis GitHub
+
+L’aperçu a été validé par l’utilisateur. Avant fusion, le correctif `c9221f6` a intégré la capture et la comparaison des accueils au workflow de production, afin que le test dispose aussi de sa référence dans une exécution neuve. Les preuves de conservation sont archivées par GitHub. Aucun contenu de page n’a changé dans ce correctif.
+
+- 45 tests ciblés de publication réussis localement. Les tests locaux d’archives ont rencontré un manque d’espace disque ; la suite complète a été validée sur GitHub.
+- Contrôles avant fusion réussis : https://github.com/ProjetMario/FLEXWEB/actions/runs/41689910150.
+- Contrôles sur `main` réussis : https://github.com/ProjetMario/FLEXWEB/actions/runs/41691256381.
+- Publication contrôlée réussie : https://github.com/ProjetMario/FLEXWEB/actions/runs/41691256388.
+- Le workflow a récupéré le contenu publié du CMS, construit et vérifié son aperçu, puis publié les mêmes fichiers sans seconde compilation. Il a confirmé le marqueur public et conservé le verrou Netlify.
+- Vérification indépendante après publication : `node .cms/verify-geo-production.mjs eadac9fc8329b4436e89ca5049ba9db53d6622a7` — réussie le 3 novembre 2026 à 18:27 UTC.
+- Les quatre nouvelles pages sont en HTTP 200, sans blocage d’indexation détecté, avec canoniques propres, traductions réciproques, FAQ visibles conformes au balisage, contacts et tarifs vérifiés.
+- Le sitemap public contient 31 sous-sitemaps valides et 50 648 URL uniques : les 50 644 précédentes sont conservées, avec exactement quatre ajouts.
+- Le contenu des accueils `/` et `/en/` correspond à la référence antérieure ; robots.txt, llms.txt et llms-full.txt sont accessibles.
+- Le contrôle du formulaire reste un GET sans envoi de demande : réponse 405 attendue et absence de mise en cache. Les parcours de soumission ont été testés avec API simulée.
+- Le mécanisme IndexNow existant a notifié 11 pages intérieures modifiées, avec réponse HTTP 200. Les quatre nouvelles routes ne figurent pas dans cette sélection automatique : elles sont présentes dans le sitemap. Ce reçu ne confirme pas leur indexation et aucune soumission Google Search Console n’a été effectuée dans cette étape.
+
+Preuves locales : `.cms/geo-production-verified.json`, `.cms/geo-production-evidence/publication-report.json`, `.cms/geo-production-evidence/indexnow-report.json`. Les archives originales sont conservées dans le workflow GitHub.
+
+Fichiers complémentaires de préparation de la publication : `.github/workflows/emdash-publication.yml`, `scripts/cms/release.mjs`, `docs/EMDASH-PUBLICATION.md`. La documentation décrit désormais le circuit effectivement utilisé, sans restauration d’un ancien déploiement.
