@@ -3,6 +3,7 @@ import {readFile,access,writeFile,mkdir} from 'node:fs/promises';
 import {gunzipSync} from 'node:zlib';
 import path from 'node:path';
 import {readSitemap} from './read-sitemap.mjs';
+import {expectedLanguage} from './recovery-language.mjs';
 
 const origin='https://flex-web.fr';
 const root=path.resolve(process.env.RECOVERY_DIST || 'dist');
@@ -37,8 +38,7 @@ async function check(route){
   const file=path.join(root,route,'index.html');const html=await readFile(file,'utf8');
   assert(/<html\b/i.test(html)&&/<\/html>/i.test(html),'incomplete HTML');
   const language=html.match(/<html\b[^>]*\blang=["']([^"']+)["']/i)?.[1];
-  const expectedLanguage=route.startsWith('/en/')?'en':route.startsWith('/de/')?'de':route.startsWith('/it/')?'it':'fr';
-  assert.equal(language,expectedLanguage,'HTML language');
+  assert.equal(language,expectedLanguage(route),'HTML language');
   assert.equal([...html.matchAll(/<h1(?:\s|>)/gi)].length,1,'single H1');
   assert.equal([...html.matchAll(/<title\b[^>]*>[\s\S]*?<\/title>/gi)].length,1,'title');
   assert(/<meta\b(?=[^>]*\bname=["']description["'])(?=[^>]*\bcontent=["'][^"']+)[^>]*>/i.test(html),'meta description');
