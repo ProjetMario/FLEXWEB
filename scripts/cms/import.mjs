@@ -9,6 +9,8 @@ import path from 'node:path';
 
 const COLLECTIONS = ['pages', 'pages_commerciales', 'realisations', 'guides', 'communes', 'fiches_territoriales'];
 const MAX_LINE_BYTES = 10 * 1024 * 1024;
+const MAX_EXECUTABLE_RECORDS = 40000;
+const MAX_LOCAL_DRY_RUN_RECORDS = 250000;
 const HEX = /^[a-f0-9]{64}$/;
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 const canonical = value => JSON.stringify(sort(value));
@@ -97,7 +99,8 @@ async function* inputLines(filename, digest) {
   finally { lines.close(); input.destroy(); file.destroy(); }
 }
 
-export async function scanInput(filename) {
+export async function scanInput(filename, { maxRecords = MAX_EXECUTABLE_RECORDS } = {}) {
+  must(Number.isInteger(maxRecords) && maxRecords >= 1 && maxRecords <= MAX_LOCAL_DRY_RUN_RECORDS, 'INVALID_RECORD_LIMIT');
   const stat = await lstat(filename);
   must(stat.isFile() && !stat.isSymbolicLink(), 'INPUT_FILE_REQUIRED');
   const digest = createHash('sha256');
@@ -109,7 +112,7 @@ export async function scanInput(filename) {
     if (baseManifestHash) must(record.baseManifestHash === baseManifestHash, 'MIXED_BASE_MANIFESTS');
     baseManifestHash = record.baseManifestHash;
     collections.add(record.collection); count++; lastLine = line;
-    must(count <= 40000, 'TOO_MANY_RECORDS');
+    must(count <= maxRecords, 'TOO_MANY_RECORDS');
   }
   must(count > 0, 'EMPTY_INPUT');
   return { count, lastLine, collections: [...collections], inputHash: digest.digest('hex'), baseManifestHash, size: stat.size, mtimeMs: stat.mtimeMs };
@@ -228,7 +231,7 @@ export async function runImport({ input = '.cms/import.ndjson', origin, token, e
   must(shouldPause === undefined || typeof shouldPause === 'function', 'INVALID_PAUSE_CALLBACK');
   must(!publishBaseline || execute, 'PUBLISH_REQUIRES_EXECUTE');
   input = path.resolve(input); checkpoint = path.resolve(checkpoint);
-  const scan = await scanInput(input);
+  const scan = await scanInput(input, { maxRecords: !origin && !execute ? MAX_LOCAL_DRY_RUN_RECORDS : MAX_EXECUTABLE_RECORDS });
   if (!origin && !execute) return { mode: 'dry-run-local', inputRecords: scan.count, inputHash: scan.inputHash, baseManifestHash: scan.baseManifestHash, counts: contribution({ planned: scan.count }), remaining: scan.count };
   const normalizedOrigin = normalizeOrigin(origin), api = createApi({ origin: normalizedOrigin, token, fetchImpl, sleep, maxAttempts });
   const user = await api.request('GET', '/auth/me'); must(Number(user.role) >= 50, 'CMS_ADMIN_REQUIRED');
