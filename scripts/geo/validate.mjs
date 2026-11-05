@@ -65,8 +65,9 @@ for(const url of urls)assert(!/\/(?:api|admin|espace-projet|demarrer)\/|\.xml$|^
 if(process.env.GEO_BASELINE_FILE){
   const baseline=JSON.parse(await readFile(process.env.GEO_BASELINE_FILE,'utf8'));
   assert(Array.isArray(baseline));
-  assert.deepEqual(baseline.filter(url=>!urls.includes(url)),[],'Existing sitemap URLs removed');
-  console.log(JSON.stringify({baselineUrls:baseline.length,preserved:baseline.length,added:urls.filter(url=>!baseline.includes(url)).length}));
+  const urlsSet=new Set(urls),baselineSet=new Set(baseline);
+  assert.deepEqual(baseline.filter(url=>!urlsSet.has(url)),[],'Existing sitemap URLs removed');
+  console.log(JSON.stringify({baselineUrls:baseline.length,preserved:baseline.length,added:urls.filter(url=>!baselineSet.has(url)).length}));
 }
 for(const file of ['llms.txt','llms-full.txt']) {
   const summary=await readFile(path.join(root,file),'utf8');

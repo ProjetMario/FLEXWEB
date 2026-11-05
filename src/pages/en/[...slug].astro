@@ -1,10 +1,14 @@
 ---
+import LegacyEnglishPage from '../../components/geo/LegacyEnglishPage.astro';
+import { englishPages as historicalEnglishPages } from '../../data/english-pages.mjs';
 import GeoPage from '../../components/geo/GeoPage.astro';
 import { englishPages } from '../../data/geo/pages';
 import { englishAcquisitionPages } from '../../data/geo/acquisition-pages';
 export function getStaticPaths() {
-  return [...englishPages, ...englishAcquisitionPages].map(page => ({ params: { slug: page.path.slice('/en/'.length).replace(/\/$/, '') || undefined }, props: { page } }));
+  const current=[...englishPages,...englishAcquisitionPages];
+  const currentPaths=new Set(current.map(page=>page.path));
+  return [...current.map(page => ({ params: { slug: page.path.slice('/en/'.length).replace(/\/$/, '') || undefined }, props: { page } })),...historicalEnglishPages.filter(page=>!currentPaths.has(`/en/${page.slug?`${page.slug}/`:''}`)).map(page=>({params:{slug:page.slug||undefined},props:{page,legacy:true}}))];
 }
-const { page } = Astro.props;
+const { page, legacy=false } = Astro.props;
 ---
-<GeoPage page={page} />
+{legacy ? <LegacyEnglishPage page={page} /> : <GeoPage page={page} />}

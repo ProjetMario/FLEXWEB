@@ -1,8 +1,8 @@
 name: GEO French and English verified preview
 on:
   push:
-    branches: [codex/geo-francophonie-budget-20261103, codex/geo-fr-en-20261028, codex/sitemap-30000-fr-ch, codex/applications-multilingues, codex/seo-visibilite-vevey-20261101]
-    paths: ['src/**', 'public/**', 'scripts/geo/**', 'tests/**', 'package*.json', '.github/workflows/geo-preview.yml']
+    branches: [codex/geo-francophonie-budget-20261103, codex/geo-fr-en-20261028, codex/sitemap-30000-fr-ch, codex/applications-multilingues, codex/seo-visibilite-vevey-20261101, codex/recuperation-catalogues-20261105]
+    paths: ['src/**', 'public/**', 'scripts/geo/**', 'scripts/seo/**', 'seo/**', 'tests/**', 'package*.json', '.github/workflows/geo-preview.yml']
 permissions:
   contents: read
 concurrency:
@@ -32,14 +32,27 @@ jobs:
         run: |
           node scripts/geo/capture-baseline.mjs
           node scripts/geo/capture-homepages.mjs
+      - name: Retrieve published CMS content for this preview
+        env:
+          EMDASH_URL: ${{ vars.EMDASH_URL }}
+          EMDASH_READ_TOKEN: ${{ secrets.EMDASH_READ_TOKEN }}
+          EMDASH_WRITE_TOKEN: ${{ secrets.EMDASH_WRITE_TOKEN }}
+          CMS_SOURCE_COMMIT: ${{ github.sha }}
+        run: |
+          node scripts/cms/snapshot.mjs pull --mode published --output .cms/preview-snapshot.json
+          node scripts/cms/snapshot.mjs validate --input .cms/preview-snapshot.json
+          node scripts/cms/snapshot.mjs apply --input .cms/preview-snapshot.json
       - name: Build and validate every public route
         env:
           GEO_BASELINE_FILE: .cms/geo-baseline.json
+          EMDASH_URL: ${{ vars.EMDASH_URL }}
+          CMS_SOURCE_COMMIT: ${{ github.sha }}
         run: |
           npm run build
           node scripts/check-seo.mjs
           node scripts/seo/quality.mjs --enforce-release
           node scripts/seo/audit-territorial-publication.mjs
+          node scripts/seo/validate-recovered-inventory.mjs
           node scripts/geo/validate-homepages.mjs
           node scripts/geo/validate.mjs
           node scripts/geo/validate-budget.mjs
@@ -71,6 +84,7 @@ jobs:
           path: |
             .cms/geo-preview.json
             .cms/geo-validation.json
+            .cms/recovered-inventory-validation.json
             .cms/geo-production-marker.json
             .cms/geo-homepages-baseline.json
             .cms/geo-budget-validation.json

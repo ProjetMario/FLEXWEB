@@ -1,6 +1,8 @@
 ---
 import ResourceLayout from '../../../components/seo/national/ResourceLayout.astro';
-import {draftEntries,draftData,draftContent,draftPath,draftHubPath} from '../../../lib/seo/territorial-drafts.mjs';
+import {draftEntries,additionalEntries,draftData,draftContent,draftPath,draftHubPath,TERRITORY_AXIS_META} from '../../../lib/seo/territorial-drafts.mjs';
+import {franceData,franceNewEntries,franceHub} from '../../../lib/seo/france-communes.mjs';
+import StructuredData from '../../../components/seo/StructuredData.astro';
 import {enrichedTerritory,enrichmentData,localInsights,localQuestions} from '../../../lib/seo/territorial-insights.mjs';
 import ProjectGuides from '../../../components/seo/national/ProjectGuides.astro';
 import TerritoryPlanner from '../../../components/seo/national/TerritoryPlanner.astro';
@@ -9,13 +11,16 @@ import TerritorialBrief from '../../../components/seo/national/TerritorialBrief.
 import TerritorialLocalCase from '../../../components/seo/national/TerritorialLocalCase.astro';
 import {territorialDossier} from '../../../lib/seo/territorial-editorial.mjs';
 import {websiteOffers,automationOffers} from '../../../data/pricing';
-export function getStaticPaths(){return draftEntries().map(({axis,commune,slug})=>({params:{axe:axis,slug},props:{axis,commune}}));}
-const {axis,commune:c}=Astro.props;
-const content=draftContent(axis,c),data=draftData();
+export function getStaticPaths(){return [...draftEntries(),...additionalEntries(),...franceNewEntries()].map(({axis,commune,slug,national=false})=>({params:{axe:axis,slug},props:{axis,commune,national}}));}
+const {axis,commune:c,national=false}=Astro.props;
+const content=draftContent(axis,c),data=national?franceData():draftData();
 const editorial=territorialDossier(axis,c.code);
-const enrichment=enrichedTerritory(c.code),source=enrichmentData(),insights=localInsights(axis,c,enrichment),questions=localQuestions(axis,c,enrichment);
-const otherAxis=axis==='sites'?'automatisation':'sites';
-const offers=axis==='sites'?websiteOffers:automationOffers;
+const historicalZone=['applications','crm'].includes(axis)&&franceData().excludedNonCommuneRecords.some(record=>record.code===c.code);
+const enrichment=national?c.enrichment:enrichedTerritory(c.code),source=national?franceData():enrichmentData(),insights=localInsights(axis,c,enrichment),questions=localQuestions(axis,c,enrichment);
+const otherAxis={sites:'automatisation',automatisation:'sites',applications:'crm',crm:'applications'}[axis];
+const offers=axis==='sites'?websiteOffers:axis==='automatisation'?automationOffers:[];
+const axisLabel=TERRITORY_AXIS_META[axis]?.label||axis;
+const quoteHref=axis==='crm'?'/demarrer/?service=automation':axis==='applications'?'/demarrer/?service=application':offers[0].href;
 const localGuides=[
  {axis:'sites',codes:['74010'],slug:'annecy-adresse-communes-deleguees',title:'À Annecy, distinguer l’adresse de l’entreprise et le secteur d’intervention'},
  {axis:'automatisation',codes:['74072','74104','74123','74135','74147','74167','74234','74275'],slug:'zone-intervention-code-postal-74210',title:'Code postal 74210 : identifier la commune avant de qualifier une intervention'},
@@ -23,13 +28,14 @@ const localGuides=[
 ].filter(guide=>guide.axis===axis&&guide.codes.includes(c.code));
 const money=(n:number)=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(n/100);
 ---
-<ResourceLayout title={editorial?.seoTitle??editorial?.title??content.title} description={editorial?.description??`Trame de projet pour ${c.name} : ${axis==='sites'?'site internet et suivi des demandes':'automatisation des tâches et IA'}. Données officielles, diagnostic des adresses, simulateur et brief à adapter à votre entreprise.`}>
- <nav aria-label="Fil d’Ariane"><a href="/territoires/">Projets par commune</a><a href={draftHubPath(axis)}>{axis==='sites'?'Sites internet':'Automatisation IA'}</a><a href={'/territoires/departements/'+c.departmentCode.toLowerCase()+'/'}>{c.department}</a></nav>
+<ResourceLayout title={editorial?.seoTitle??editorial?.title??content.title} description={editorial?.description??(!national&&['sites','automatisation'].includes(axis)?`Trame de projet pour ${c.name} : ${axis==='sites'?'site internet et suivi des demandes':'automatisation des tâches et IA'}. Données officielles, diagnostic des adresses, simulateur et brief à adapter à votre entreprise.`:`${axisLabel} à ${c.name} (${c.departmentCode}) : cadrage, données officielles, tests et devis adapté aux besoins de votre entreprise.`)}>
+ <nav aria-label="Fil d’Ariane"><a href="/territoires/">Projets par commune</a><a href={draftHubPath(axis)}>{axisLabel}</a><a href={national?franceHub(c.departmentCode):'/territoires/departements/'+c.departmentCode.toLowerCase()+'/'}>{c.department}</a></nav>
  <aside class="note"><strong>Des repères pour votre projet à {c.name}.</strong><p>Cette fiche combine des données publiques, des diagnostics calculés et des outils de cadrage. Les méthodes sont partagées entre communes et doivent être adaptées à votre entreprise.</p></aside>
+ {historicalZone&&<aside class="note"><strong>Statut administratif :</strong> ce guide historique concerne une circonscription territoriale, et non une commune au sens du Code officiel géographique 2026. Son URL est conservée pour les parcours existants.</aside>}
  <h1>{editorial?.title??content.title}</h1><p class="lead">{editorial?.introduction??content.introduction}</p>
- <p><a class="action" href={offers[0].href}>Décrire mon projet</a><a href="#territory-planner">Tester la qualification d’une demande ↓</a></p>
+ <p><a class="action" href={quoteHref}>Décrire mon projet</a><a href="#territory-planner">Tester la qualification d’une demande ↓</a></p>
  {editorial&&<TerritorialLocalCase dossier={editorial}/>}
- <section class="note"><h2>Repères territoriaux vérifiés</h2><ul><li>Commune : {c.name} · code INSEE {c.code}</li><li>Département : {c.department} ({c.departmentCode})</li><li>Région : {c.region}</li><li>Codes postaux fournis : {c.postalCodes.length?c.postalCodes.join(', '):'Non renseignés dans la source'}</li><li>Population fournie par l’API : {c.population.toLocaleString('fr-FR')} habitants</li></ul><p class="meta">Extraction du {data.retrievedAt}. Le millésime de population n’est pas indiqué dans cette réponse API ; ce chiffre ne décrit pas un marché ni un volume de recherches.</p><a href={`https://geo.api.gouv.fr/communes/${c.code}`}>Consulter la fiche officielle</a></section>
+ <section class="note"><h2>Repères territoriaux vérifiés</h2><ul><li>Commune : {c.name} · code INSEE {c.code}</li><li>Département : {c.department} ({c.departmentCode})</li><li>Région : {c.region}</li><li>Codes postaux fournis : {c.postalCodes.length?c.postalCodes.join(', '):'Non renseignés dans la source'}</li><li>Population fournie par l’API : {Number.isInteger(c.population)?c.population.toLocaleString('fr-FR')+' habitants':'Non renseignée dans la source'}</li></ul><p class="meta">Extraction du {data.retrievedAt}. Le millésime de population n’est pas indiqué dans cette réponse API ; ce chiffre ne décrit pas un marché ni un volume de recherches.</p><a href={`https://geo.api.gouv.fr/communes/${c.code}`}>Consulter la fiche officielle</a></section>
  <section aria-labelledby="local-diagnostic"><h2 id="local-diagnostic">Ce que les données de {c.name} changent dans votre projet</h2>
  <p>Les faits viennent de l’API de l’État ; les actions proposées sont des recommandations Flex-Web. Elles servent à préparer un formulaire et des règles de suivi, sans déduire une demande commerciale locale.</p>
  {insights.map(item=><article class="local-insight"><h3>{item.title}</h3><p>{item.fact}</p><p><strong>À mettre en place :</strong> {item.action}</p><p class="note"><strong>Test concret :</strong> {item.check}</p></article>)}
@@ -39,16 +45,18 @@ const money=(n:number)=>new Intl.NumberFormat('fr-FR',{style:'currency',currency
  {enrichment.surfaceKm2!==null&&<p>Superficie administrative fournie pour {c.name} : {enrichment.surfaceKm2.toLocaleString('fr-FR')} km². Cette surface n’est pas un rayon d’intervention.</p>}
  </section>
  <TerritoryPlanner commune={c} enrichment={enrichment}/>
- <TerritorialDossier axis={axis} commune={c} enrichment={enrichment}/>
- <TerritorialBrief axis={axis} commune={c}/>
+ {['sites','automatisation'].includes(axis)&&<><TerritorialDossier axis={axis} commune={c} enrichment={enrichment}/><TerritorialBrief axis={axis} commune={c}/></>}
+ {['applications','crm'].includes(axis)&&<><section><h2>Définir votre projet</h2>{content.sections.map(([heading,text])=><article><h3>{heading}</h3><p>{text}</p></article>)}</section><section><h2>Préparer le devis</h2><ul>{content.checklist.map(item=><li>{item}</li>)}</ul><p>Le délai et les responsabilités sont définis selon le périmètre, les accès et les validations nécessaires.</p></section></>}
  {localGuides.length>0&&<section class="note"><h2>Un guide développé pour ce contexte local</h2><ul>{localGuides.map(guide=><li><a href={'/ressources/'+guide.axis+'/'+guide.slug+'/'}>{guide.title}</a></li>)}</ul></section>}
- <ProjectGuides axis={axis}/>
+ <ProjectGuides axis={axis==='sites'?'sites':'automatisation'}/>
 
- <section class="note"><h2>Cadre tarifaire à reprendre au devis</h2>{offers.map(o=><p><strong>{o.name} : {money(o.setupCents)} TTC.</strong> {o.description}</p>)}<p>Les automatisations IA avancées et applications sont sur devis. Le catalogue des options et les périmètres exacts sont disponibles sur la <a href="/pricing/">page tarifs</a>.</p></section>
+ <section class="note"><h2>Cadre tarifaire à reprendre au devis</h2>{offers.length?offers.map(o=><p><strong>{o.name} : {money(o.setupCents)} TTC.</strong> {o.description}</p>):<p>Le périmètre de cette prestation est établi sur devis après qualification du processus, des utilisateurs et des outils concernés.</p>}<p>Les automatisations IA avancées et applications sont sur devis. Le catalogue des options et les périmètres exacts sont disponibles sur la <a href="/pricing/">page tarifs</a>.</p></section>
  <section><h2>Questions pour préparer le projet à {c.name}</h2>{questions.map(f=><details><summary>{f.q}</summary><p>{f.a}</p></details>)}</section>
  <section class="note"><h2>Sources et méthode</h2><p>Données extraites le {source.retrievedAt} : <a href={`https://geo.api.gouv.fr/communes/${c.code}?fields=nom,code,codesPostaux,centre,surface,epci`}>fiche officielle de {c.name}</a> · <a href="https://geo.api.gouv.fr/decoupage-administratif/communes">documentation de l’API</a>.</p><p>Les rapprochements de codes postaux et d’homonymes utilisent toutes les communes présentes dans la même extraction. La proximité est calculée entre les centres fournis avec une distance sur la sphère terrestre. Les codes identifient des communes ; ils ne décrivent pas un fichier clients.</p><p>Le SEO et les réponses IA demandent un contenu utile et accessible. Références : <a href="https://developers.google.com/search/docs/fundamentals/creating-helpful-content">qualité des contenus selon Google</a> et <a href="https://developers.google.com/search/docs/appearance/ai-features">apparition dans les fonctionnalités IA</a>. Aucun moteur ne garantit l’indexation de cette fiche.</p></section>
+ {national&&<p><a href={franceHub()}>Parcourir toutes les communes du COG 2026 →</a></p>}
  <p>Flex-Web est basé à Voglans et accompagne les entreprises à distance en France. Cette page ne signale pas une agence implantée à {c.name}.</p>
- <p><a href={draftPath(otherAxis,c)}>Voir la fiche {otherAxis==='sites'?'site internet':'automatisation IA'} pour la même commune →</a></p><p><a href={content.related}>Lire une méthode développée →</a></p>
+ <p><a href={draftPath(otherAxis,c)}>Voir la fiche {TERRITORY_AXIS_META[otherAxis]?.label.toLowerCase()||otherAxis} pour la même commune →</a></p><p><a href={content.related}>Lire une méthode développée →</a></p>
+ {(['applications','crm'].includes(axis)||national)&&<StructuredData schemas={[{'@type':'WebPage',url:`https://flex-web.fr${draftPath(axis,c)}`,name:content.title,inLanguage:'fr',isPartOf:{'@id':'https://flex-web.fr/#website'}},{'@type':'Service',name:content.title,description:content.introduction,provider:{'@id':'https://flex-web.fr/#organization'},url:`https://flex-web.fr${draftPath(axis,c)}`},{'@type':'FAQPage',mainEntity:questions.map(f=>({'@type':'Question',name:f.q,acceptedAnswer:{'@type':'Answer',text:f.a}}))}]}/>}
 </ResourceLayout>
 
 <style>
