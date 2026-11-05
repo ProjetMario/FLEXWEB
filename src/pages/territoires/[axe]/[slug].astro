@@ -15,6 +15,7 @@ export function getStaticPaths(){return [...draftEntries(),...additionalEntries(
 const {axis,commune:c,national=false}=Astro.props;
 const content=draftContent(axis,c),data=national?franceData():draftData();
 const editorial=territorialDossier(axis,c.code);
+const historicalZone=['applications','crm'].includes(axis)&&franceData().excludedNonCommuneRecords.some(record=>record.code===c.code);
 const enrichment=national?c.enrichment:enrichedTerritory(c.code),source=national?franceData():enrichmentData(),insights=localInsights(axis,c,enrichment),questions=localQuestions(axis,c,enrichment);
 const otherAxis={sites:'automatisation',automatisation:'sites',applications:'crm',crm:'applications'}[axis];
 const offers=axis==='sites'?websiteOffers:axis==='automatisation'?automationOffers:[];
@@ -30,6 +31,7 @@ const money=(n:number)=>new Intl.NumberFormat('fr-FR',{style:'currency',currency
 <ResourceLayout title={editorial?.seoTitle??editorial?.title??content.title} description={editorial?.description??(!national&&['sites','automatisation'].includes(axis)?`Trame de projet pour ${c.name} : ${axis==='sites'?'site internet et suivi des demandes':'automatisation des tâches et IA'}. Données officielles, diagnostic des adresses, simulateur et brief à adapter à votre entreprise.`:`${axisLabel} à ${c.name} (${c.departmentCode}) : cadrage, données officielles, tests et devis adapté aux besoins de votre entreprise.`)}>
  <nav aria-label="Fil d’Ariane"><a href="/territoires/">Projets par commune</a><a href={draftHubPath(axis)}>{axisLabel}</a><a href={national?franceHub(c.departmentCode):'/territoires/departements/'+c.departmentCode.toLowerCase()+'/'}>{c.department}</a></nav>
  <aside class="note"><strong>Des repères pour votre projet à {c.name}.</strong><p>Cette fiche combine des données publiques, des diagnostics calculés et des outils de cadrage. Les méthodes sont partagées entre communes et doivent être adaptées à votre entreprise.</p></aside>
+ {historicalZone&&<aside class="note"><strong>Statut administratif :</strong> ce guide historique concerne une circonscription territoriale, et non une commune au sens du Code officiel géographique 2026. Son URL est conservée pour les parcours existants.</aside>}
  <h1>{editorial?.title??content.title}</h1><p class="lead">{editorial?.introduction??content.introduction}</p>
  <p><a class="action" href={quoteHref}>Décrire mon projet</a><a href="#territory-planner">Tester la qualification d’une demande ↓</a></p>
  {editorial&&<TerritorialLocalCase dossier={editorial}/>}

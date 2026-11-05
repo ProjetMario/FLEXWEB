@@ -4,6 +4,7 @@ import StructuredData from '../components/seo/StructuredData.astro';
 import CookieConsent from '../components/global/CookieConsent.jsx';
 import Analytics from '../components/seo/Analytics.astro';
 import Acquisition from '../components/seo/Acquisition.astro';
+import ConversionEvents from '../components/seo/ConversionEvents.astro';
 import {languagePair} from '../lib/seo/english.mjs';
 const {title,description,faq=[],service}=Astro.props;
 const canonical=`https://flex-web.fr${Astro.url.pathname}`;
@@ -14,7 +15,7 @@ const schemas=[{'@type':'WebPage','@id':canonical+'#page',url:canonical,name:tit
  ...(faq.length?[{'@type':'FAQPage',mainEntity:faq.map(({q,a})=>({'@type':'Question',name:q,acceptedAnswer:{'@type':'Answer',text:a}}))}]:[])];
 ---
 <html lang="en">
- <head><BaseHead title={title} description={description} lang="en" imageAlt="Flex-Web — websites, AI automation and business applications"/><StructuredData schemas={schemas}/><Analytics/><Acquisition/></head>
+ <head><BaseHead title={title} description={description} lang="en" imageAlt="Flex-Web — websites, AI automation and business applications"/><StructuredData schemas={schemas}/><Analytics/><Acquisition/><ConversionEvents/></head>
  <body>
   <a class="skip" href="#content">Skip to content</a>
   <header class="english-header"><nav aria-label="Main navigation"><a href="/en/" class="brand">Flex-Web</a><a href="/en/websites/">Websites</a><a href="/en/applications/">Applications</a><a href="/en/ai-automation/">AI automation</a><a href="/en/crm/">CRM</a><a href="/en/pricing/">Pricing</a><a href={pair?.fr??'/'} lang="fr" hreflang="fr">Français</a><a class="action" href="/en/contact/">Request a quote</a></nav></header>
@@ -22,7 +23,7 @@ const schemas=[{'@type':'WebPage','@id':canonical+'#page',url:canonical,name:tit
    {faq.length>0 && <section><h2>Frequently asked questions</h2>{faq.map(({q,a})=><details><summary>{q}</summary><p>{a}</p></details>)}</section>}
    <aside class="note"><h2>Start with a clear project brief</h2><p>Tell Flex-Web what you do, which process needs improving, the tools you use and your target date. The scope, price, delivery schedule and project responsibilities are confirmed in the quote.</p><a class="action" href="/en/contact/">Discuss your project</a></aside>
   </main>
-  <footer><nav aria-label="Footer navigation"><a href="/en/about/">About Flex-Web</a><a href="/en/how-we-work/">How we work</a><a href="/en/international-projects/">International projects</a><a href="/en/locations/">Location guides</a><a href="/en/faq/">FAQ</a><a href="/mentions-legales/" lang="fr">Legal notice (French)</a><a href="/privacy/" lang="fr">Privacy policy (French)</a><a href="/cgv/" lang="fr">Terms (French)</a><button id="english-cookie-settings" type="button">Cookie settings</button></nav><p>Flex-Web · Fleximmo · 93 chemin de la Combe, 73420 Voglans, France · <a href="mailto:contact@flex-web.fr">contact@flex-web.fr</a> · <a href="tel:+33757830262">+33 7 57 83 02 62</a></p></footer>
+  <footer><nav aria-label="Footer navigation"><a href="/en/about/">About Flex-Web</a><a href="/en/how-we-work/">How we work</a><a href="/en/international-projects/">International projects</a><a href="/en/locations/">Location guides</a><a href="/en/faq/">FAQ</a><a href="/mentions-legales/" lang="fr">Legal notice (French)</a><a href="/privacy/" lang="fr">Privacy policy (French)</a><a href="/cgv/" lang="fr">Terms (French)</a><button id="english-cookie-settings" type="button">Cookie settings</button></nav><p>Flex-Web · Fleximmo · 93 chemin de la Combe, 73420 Voglans, France · <a href="mailto:contact@flex-web.fr" data-conversion-event="email_click" data-conversion-service="unknown">contact@flex-web.fr</a> · <a href="tel:+33757830262" data-conversion-event="phone_click" data-conversion-service="unknown">+33 7 57 83 02 62</a></p></footer>
   <CookieConsent lang="en" client:load/>
   <script>document.getElementById('english-cookie-settings')?.addEventListener('click',()=>window.dispatchEvent(new Event('flexweb-cookie-settings')));</script>
  </body>
