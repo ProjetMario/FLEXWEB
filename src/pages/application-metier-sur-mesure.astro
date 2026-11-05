@@ -1,0 +1,19 @@
+---
+import ResourceLayout from '../components/seo/national/ResourceLayout.astro';
+import StructuredData from '../components/seo/StructuredData.astro';
+const title='Application métier sur mesure pour votre entreprise | Flex-Web';
+const description='Flex-Web conçoit des applications métier adaptées à vos processus : cadrage, développement, tests et accompagnement sur devis en France et en Suisse.';
+const faq=[{q:'Quel est le prix d’une application métier ?',a:'Le prix est établi sur devis après étude des fonctions, des utilisateurs, des intégrations et des contraintes de maintenance.'},{q:'Quel délai prévoir ?',a:'Le calendrier dépend du périmètre, des accès et des validations nécessaires. Il est confirmé dans le devis.'},{q:'Comment commencer ?',a:'Décrivez le processus à améliorer, les utilisateurs, les outils existants et les principales difficultés ; Flex-Web précise ensuite le périmètre avec vous.'}];
+---
+<ResourceLayout title={title} description={description}>
+<nav aria-label="Fil d’Ariane"><a href="/">Accueil</a><span>Application métier sur mesure</span></nav>
+<h1>Application métier sur mesure</h1>
+<p class="lead">Flex-Web conçoit des applications web, mobiles et des logiciels adaptés aux processus des entreprises, depuis Voglans en Savoie et à distance en France et en Suisse.</p>
+<p><a class="action" href="/demarrer/?service=application">Décrire mon projet et demander un devis</a></p>
+<section><h2>À quoi sert une application métier ?</h2><p>Elle rassemble les informations et les étapes d’un processus : dossiers clients, interventions, validations ou suivi interne. Le périmètre dépend de vos usages réels et des personnes qui utilisent l’outil.</p></section>
+<section><h2>Comment se déroule le projet ?</h2><p>Nous identifions les besoins, les rôles, les données et les outils à connecter. Une première version est définie au devis, puis testée avec des exemples avant sa mise en service.</p><p>Les fonctions, intégrations, hébergement, frais de tiers et maintenance sont précisés dans la proposition. Les applications sont réalisées sur devis.</p></section>
+<section><h2>Quelles limites pour l’automatisation ?</h2><p>Une règle simple suffit parfois. Si une IA est utile, ses réponses peuvent être inexactes : les actions sensibles doivent rester contrôlées par une personne et les erreurs pouvoir être corrigées.</p></section>
+<section><h2>Questions fréquentes</h2>{faq.map(item=><details><summary>{item.q}</summary><p>{item.a}</p></details>)}</section>
+<section><h2>Services complémentaires</h2><p><a href="/creation-application-mobile/">Applications web et mobiles</a> · <a href="/crm-automatisation-entreprise/">CRM et automatisation</a> · <a href="/automatisation-ia/">Automatisation IA</a> · <a href="/contact/">Nous contacter</a></p></section>
+<StructuredData schemas={[{'@type':'Service',name:title,description,provider:{'@id':'https://flex-web.fr/#organization'},url:'https://flex-web.fr/application-metier-sur-mesure/'},{'@type':'FAQPage',mainEntity:faq.map(item=>({'@type':'Question',name:item.q,acceptedAnswer:{'@type':'Answer',text:item.a}}))},{'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Accueil',item:'https://flex-web.fr/'},{'@type':'ListItem',position:2,name:'Application métier',item:'https://flex-web.fr/application-metier-sur-mesure/'}]}]}/>
+</ResourceLayout>

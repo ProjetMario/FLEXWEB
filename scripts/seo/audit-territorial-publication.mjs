@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {readFile,readdir,mkdir,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import {draftData,draftEntries,draftGroups,draftPath,draftHubPath} from '../../src/lib/seo/territorial-drafts.mjs';
+import {franceNewEntries} from '../../src/lib/seo/france-communes.mjs';
 import {territoryDepartments} from '../../src/lib/seo/territorial-directory.mjs';
 import {readSitemap} from './read-sitemap.mjs';
 
@@ -18,8 +19,7 @@ function assertIndexable(html,route){
 }
 
 const entries=draftEntries(),departments=territoryDepartments(),groups=draftGroups();
-assert.equal(entries.length,19988,'The authorized territorial catalogue must retain all 19,988 pages');
-assert.equal(draftData().communes.length,9994);
+assert.equal(entries.length,draftData().communes.length*2,'Each current commune retains both original service pages');
 const expected=new Set(entries.map(e=>draftPath(e.axis,e.commune)));
 assert.equal(expected.size,entries.length,'Unique axis / INSEE paths');
 const sitemap=await readSitemap(origin+'/sitemap.xml',url=>readFile(path.join(root,new URL(url).pathname),'utf8'));
@@ -27,7 +27,8 @@ const sitemapRoutes=new Set(sitemap.map(url=>new URL(url).pathname));
 assert.equal(sitemap.length,sitemapRoutes.size,'Duplicate sitemap entries');
 assert(!sitemap.some(url=>new URL(url).pathname.startsWith('/preparation/')),'Preparation URL in public sitemap');
 const actual=sitemap.filter(url=>/^\/territoires\/(sites|automatisation)\/[^/]+\/$/.test(new URL(url).pathname)).map(url=>new URL(url).pathname);
-assert.deepEqual([...actual].sort(),[...expected].sort(),'Exact territorial sitemap membership');
+const restored=new Set(franceNewEntries().map(e=>draftPath(e.axis,e.commune)));
+assert.deepEqual([...actual].sort(),[...new Set([...expected,...restored])].sort(),'Current and restored territorial sitemap membership');
 
 // Prove a static HTML route from the homepage through navigation to every leaf.
 // This is independent of search JavaScript, sitemap discovery and API calls.

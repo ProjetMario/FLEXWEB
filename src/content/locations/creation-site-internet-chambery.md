@@ -94,3 +94,10 @@ Nous connaissons Chambéry et son agglomération. Cette connaissance du territoi
 ## Communes proches de Chambéry
 
 Nous travaillons à Chambéry et à **La Motte-Servolex, Le Bourget-du-Lac, Montmélian, Aix-les-Bains, La Ravoire, Barberaz, Saint-Alban-Leysse, Bassens**.
+
+
+## Comparer les besoins avant de créer un site à Chambéry
+
+Une activité qui reçoit des clients à une adresse ne présente pas ses horaires et son accès comme une entreprise qui intervient chez eux. Décrivez votre fonctionnement réel, vos photos utilisables et le contact responsable ; le devis détaille les pages, fonctions, frais de domaine ou d’hébergement et options retenues.
+
+Pour une première présence simple, consultez notre [offre de site internet pas cher](/creation-site-internet-pas-cher/) et les [tarifs détaillés](/pricing/). Pour préciser votre besoin, [demandez un devis](/demarrer/?service=site).

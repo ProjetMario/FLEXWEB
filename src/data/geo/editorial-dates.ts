@@ -12,6 +12,8 @@ export const editorialDates: Record<string, string> = Object.fromEntries([
 
 // These edits were already published on 1 November; correct their stale sitemap dates.
 export const previouslyReviewedDates: Record<string, string> = {
-  '/creation-site-internet-savoie/': '2026-11-01',
+  '/creation-site-internet-chambery/': '2026-11-05',
+  '/creation-site-internet-annecy/': '2026-11-05',
+  '/creation-site-internet-savoie/': '2026-11-05',
   '/creation-site-internet-vevey/': '2026-11-01',
 };

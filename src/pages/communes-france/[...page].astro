@@ -1,0 +1,24 @@
+---
+import ResourceLayout from '../../components/seo/national/ResourceLayout.astro';
+import StructuredData from '../../components/seo/StructuredData.astro';
+import {franceData,franceDepartments,franceGroups,franceHub,franceServicePath} from '../../lib/seo/france-communes.mjs';
+export function getStaticPaths(){return [{params:{page:undefined},props:{group:null}},...franceGroups().map(group=>({params:{page:group.code.toLowerCase()+(group.page>1?`/page/${group.page}`:'')},props:{group}}))];}
+const {group}=Astro.props;
+const data=franceData(),departments=franceDepartments();
+const title=group?`Sites web, référencement et automatisation : ${group.name} (${group.code}), page ${group.page}`:'Création de site, référencement et automatisation par commune de France';
+const description=group?`Trouvez votre commune en ${group.name}, page ${group.page} : deux guides par commune pour créer un site, améliorer le référencement et organiser les demandes.`:`Parcourez les ${data.communes.length.toLocaleString('fr-FR')} communes du COG 2026 : création de site web, référencement et automatisation avec Flex-Web.`;
+const url='https://flex-web.fr'+franceHub(group?.code,group?.page);
+---
+<ResourceLayout title={title} description={description}>
+ <nav aria-label="Fil d’Ariane"><a href="/territoires/">Projets par commune</a>{group&&<a href="/communes-france/">Répertoire national</a>}</nav>
+ <h1>{title}</h1>
+ <p class="lead">Choisissez votre commune pour préparer deux besoins complémentaires : construire un site web utile et relier sa visibilité au traitement des demandes reçues.</p>
+ <p>Le répertoire reprend les {data.communes.length.toLocaleString('fr-FR')} communes ou unités classées COM dans le Code officiel géographique 2026, rapprochées de l’API géographique le {data.retrievedAt}. Il ne déclare aucune agence locale ni référence client. Les districts et circonscriptions non classés COM sont exclus. Les collectivités d’outre-mer sont distinguées des départements.</p>
+ {group?<>
+  <nav aria-label="Pagination du département">{group.page>1&&<a rel="prev" href={franceHub(group.code,group.page-1)}>Page précédente</a>}<span>Page {group.page} sur {group.total}</span>{group.page < group.total&&<a rel="next" href={franceHub(group.code,group.page+1)}>Page suivante</a>}</nav>
+  <section><h2>Communes de cette page</h2><div class="grid">{group.communes.map(c=><article class="card"><h3>{c.name}</h3><p>Code commune : {c.code} · {c.department}<br/>Codes postaux : {c.postalCodes.join(', ')||'non renseignés dans la source'}</p><nav aria-label={`Services pour ${c.name}`}><a href={franceServicePath('sites',c)}>Création de site web</a><a href={franceServicePath('automatisation',c)}>Référencement et automatisation</a></nav></article>)}</div></section>
+ </>:<section><h2>Choisir un département ou une collectivité</h2><div class="grid">{departments.map(d=><article class="card"><h3><a href={franceHub(d.code)}>{d.name} ({d.code})</a></h3><p>{d.communes.length.toLocaleString('fr-FR')} communes dans l’extraction · deux fiches par commune.</p></article>)}</div></section>}
+ <section class="note"><h2>Quel parcours choisir ?</h2><p><strong>Création de site :</strong> contenu, formulaire, affichage mobile, données de contact et préparation du lancement.</p><p><strong>Référencement et automatisation :</strong> accès des moteurs, contenus utiles, suivi des demandes, CRM et contrôles humains. Le nombre de pages ne garantit ni une place dans Google ni une demande de devis quotidienne.</p><a href="/creation-site-internet-pas-cher/">Comparer les offres de site internet</a> · <a href="/pricing/">Consulter les tarifs réels</a> · <a href="/demarrer/">Décrire mon projet</a></section>
+ <section><h2>D’où viennent les informations ?</h2><p><a href="https://geo.api.gouv.fr/decoupage-administratif/communes">API de découpage administratif de l’État</a> et <a href="https://www.insee.fr/fr/information/8740222">Code officiel géographique 2026 de l’INSEE</a>. Les noms et codes servent à identifier les communes. Une valeur manquante reste manquante, et les populations ne sont pas utilisées comme une mesure de demande commerciale.</p></section>
+ <StructuredData schemas={[{'@type':'WebPage',url,name:title,description,inLanguage:'fr',isPartOf:{'@id':'https://flex-web.fr/#website'}},{'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Projets par commune',item:'https://flex-web.fr/territoires/'},{'@type':'ListItem',position:2,name:'Répertoire national',item:'https://flex-web.fr/communes-france/'},...(group?[{'@type':'ListItem',position:3,name:title,item:url}]:[])]}]}/>
+</ResourceLayout>

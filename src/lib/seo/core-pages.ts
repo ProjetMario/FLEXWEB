@@ -53,6 +53,7 @@ const updatedPages: Record<string, string> = {
 
 export const corePages = async () => {
   const staticPages = [
+    { url: "/application-metier-sur-mesure/", priority: 0.8, changefreq: "monthly" },
     { url: "/crm-automatisation-entreprise/", priority: 0.9, changefreq: "monthly" },
     ...applicationPages.map(page => ({ url: page.path, priority: 0.8, changefreq: "monthly" })),
     ...acquisitionPages.map(page => ({ url: page.path, priority: 0.8, changefreq: "monthly" })),

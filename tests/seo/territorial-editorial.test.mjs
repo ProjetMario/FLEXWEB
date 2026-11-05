@@ -20,8 +20,8 @@ test('regional navigation keeps each department and all commune service routes',
 });
 
 test('one reviewed local addition changes only its own fiche lastmod',()=>{
- const fiches=territorialUrls().filter(entry=>entry.family.startsWith('fiches-'));
- assert.equal(fiches.length,19988);
+ const fiches=territorialUrls().filter(entry=>['fiches-sites','fiches-automatisation'].includes(entry.family));
+ assert.equal(fiches.length,draftEntries().length);
  const modified=fiches.filter(entry=>entry.lastmod!==territorialPublicationDate);
  assert.deepEqual(modified.map(entry=>entry.url),['/territoires/sites/montalieu-vercieu-38247/']);
  assert.equal(modified[0].lastmod,territorialDossier('sites','38247').verifiedAt);
@@ -40,10 +40,11 @@ test('curated local links point to published catalogue identities',()=>{
 
 test('navigation lastmod changes only for regional directory and promoted Isere dossier',()=>{
  const navigation=territorialUrls().filter(entry=>entry.family==='catalogue');
- assert.deepEqual(navigation.filter(entry=>entry.lastmod!==territorialPublicationDate).map(entry=>[entry.url,entry.lastmod]),[
-  ['/territoires/','2026-10-08'],
-  ['/territoires/departements/38/','2026-10-08'],
- ]);
+ const modified=new Map(navigation.filter(entry=>entry.lastmod!==territorialPublicationDate).map(entry=>[entry.url,entry.lastmod]));
+ assert.equal(modified.get('/territoires/'),'2026-11-05');
+ assert.equal(modified.get('/territoires/departements/38/'),'2026-10-08');
+ for(const group of navigation.filter(entry=>/^\/territoires\/sites\/(?:page\/\d+\/)?$/.test(entry.url)))assert.equal(group.lastmod,'2026-11-05');
+ for(const group of navigation.filter(entry=>/^\/territoires\/(?:applications|crm)\//.test(entry.url)))assert.equal(group.lastmod,'2026-11-05');
 });
 
 test('Montalieu metadata stays concise including the brand while retaining the detailed H1',()=>{

@@ -152,6 +152,7 @@ if (env.ENABLE_EMDASH_PUBLICATION !== 'true') {
         await command(node, ['scripts/check-seo.mjs']);
         await command(node, ['scripts/seo/quality.mjs', '--enforce-release']);
         await command(node, ['scripts/seo/audit-territorial-publication.mjs']);
+        await command(node, ['scripts/seo/validate-recovered-inventory.mjs']);
         if (env.FLEXWEB_FR_CH_EXPANSION === '1') await command(node, ['scripts/seo/verify-fr-ch-expansion.mjs']);
         await localTests();
       },

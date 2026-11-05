@@ -96,3 +96,10 @@ Nous connaissons les spécificités du territoire annécien : la saisonnalité t
 ## Communes proches d'Annecy desservies
 
 Nous travaillons à Annecy et dans les communes voisines : **Seynod, Poisy, Sillingy, Epagny-Metz-Tessy, Cran-Gevrier, Meythet, Pringy, Saint-Jorioz, Talloires-Montmin, Mûres**.
+
+
+## Préparer un projet de site à Annecy
+
+Précisez si votre activité reçoit sur place, se déplace ou travaille à distance, puis rassemblez vos prestations et vos contenus autorisés. Le devis confirme les pages, les fonctions, les frais éventuels de domaine et d’hébergement et le suivi choisi après publication.
+
+Pour une première présence simple, consultez notre [offre de site internet pas cher](/creation-site-internet-pas-cher/) et les [tarifs détaillés](/pricing/). Pour préciser votre besoin, [demandez un devis](/demarrer/?service=site).

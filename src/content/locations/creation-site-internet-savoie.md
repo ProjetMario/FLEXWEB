@@ -100,3 +100,10 @@ Si vos clients doivent consulter leur dossier ou si vos équipes ont besoin d'un
 Fournissez la description de votre activité, vos prestations, les coordonnées à publier, les contenus disponibles et un exemple de demande idéale. Nous cadrons ensuite la structure, les responsabilités et les étapes de validation. Le calendrier est confirmé après accord sur le périmètre et réception des éléments nécessaires.
 
 FLEX-WEB est basé à Voglans. Nous accompagnons notamment les entreprises de [Chambéry](/creation-site-internet-chambery/), [Aix-les-Bains](/creation-site-internet-aix-les-bains/) et [Albertville](/creation-site-internet-albertville/), avec des échanges à distance selon les besoins. Pour une activité qui dépasse le département, la [création de sites en France](/creation-site-internet/) permet de présenter une zone d'intervention nationale sans inventer d'implantation locale.
+
+
+## Préparer un devis de site en Savoie
+
+Indiquez les prestations à présenter, les communes réellement desservies, les contenus disponibles et la personne qui répondra aux demandes. Le devis précise le nombre de pages, les fonctions, les conditions de livraison et les éventuels frais de domaine, d’hébergement ou de services tiers. La maintenance est une option choisie séparément.
+
+Pour une première présence simple, consultez notre [offre de site internet pas cher](/creation-site-internet-pas-cher/) et les [tarifs détaillés](/pricing/). Pour préciser votre besoin, [demandez un devis](/demarrer/?service=site).

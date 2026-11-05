@@ -1,0 +1,16 @@
+---
+import EnglishLayout from '../../layout/EnglishLayout.astro';
+import {englishPages,commonQuestions} from '../../data/english-pages.mjs';
+import {englishAxes,englishLabels,englishHub,englishDate} from '../../lib/seo/english.mjs';
+import quotes from '../../../apps/saas-platform/lib/automation/public-quotes.json';
+const {page}=Astro.props;
+const price=(cents)=>new Intl.NumberFormat('en-GB',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(cents/100);
+const names={'essentielle':'Business website — up to 5 pages','visibilite':'Website and SEO / AI search visibility — 5 or more pages, as scoped','crm-automation':'CRM setup and automation','maintenance':'Website maintenance and content updates','crm':'CRM, automation and search follow-up'};
+---
+<EnglishLayout title={page.title} description={page.description} faq={commonQuestions} service={page.axis?englishLabels[page.axis]:undefined}>
+ <h1>{page.title}</h1><p class="lead">{page.lead}</p><p class="meta">Content reviewed: <time datetime={englishDate}>{englishDate}</time></p>
+ {page.slug==='contact' && <div class="note"><h2>Send your brief</h2><p><a class="action" href="mailto:contact@flex-web.fr?subject=Flex-Web%20project%20enquiry">Email contact@flex-web.fr</a></p><p>This opens your email application. Review your message and send it there; this page does not submit it automatically.</p><p><a href="tel:+33757830262">Call +33 7 57 83 02 62</a></p><p>Prefer a structured questionnaire? <a href="/demarrer/" lang="fr">Open the detailed project form in French</a>.</p></div>}
+ {page.slug==='pricing' && <section><h2>Current public catalogue</h2><div class="grid">{[...quotes.websiteOffers,...quotes.automationOffers].map(offer=><article class="card"><h3>{names[offer.id]}</h3><p><strong>{price(offer.setupCents)} including tax</strong> · initial setup</p><p>Scope confirmed in the quote. No mandatory monthly option is implied.</p></article>)}</div><h2>Optional monthly services</h2><ul>{quotes.options.map(option=><li>{names[option.id]}: <strong>{price(option.monthlyCents)} / month including tax</strong>, within the agreed scope.</li>)}</ul><p class="meta">Catalogue version: {quotes.version}. <a href="/pricing/" lang="fr">Original pricing in French</a>.</p></section>}
+ {page.sections.map(([title,text])=><section><h2>{title}</h2><p>{text}</p></section>)}
+ {page.slug==='locations' ? <section><h2>Choose a service</h2><div class="grid">{Object.keys(englishAxes).map(axis=><a class="card" href={englishHub(axis)}>{englishLabels[axis]} location guides</a>)}</div></section>:<section><h2>Explore related services</h2><nav>{Object.entries(englishAxes).map(([axis,slug])=><a href={`/en/${slug}/`}>{englishLabels[axis]}</a>)}<a href="/en/pricing/">Pricing</a><a href="/en/locations/">Location guides</a></nav></section>}
+</EnglishLayout>

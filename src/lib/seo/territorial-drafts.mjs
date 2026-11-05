@@ -7,8 +7,26 @@ let cached;
 export function draftData(){return cached??=JSON.parse(readFileSync(path.resolve('src/data/national/territorial-drafts.json'),'utf8'));}
 export function draftEntries(){return ['sites','automatisation'].flatMap(axis=>draftData().communes.map(commune=>({axis,commune,slug:`${slugify(commune.name)}-${commune.code.toLowerCase()}`})));}
 export function draftGroups(){const data=draftData(),size=100,total=Math.ceil(data.communes.length/size);return ['sites','automatisation'].flatMap(axis=>Array.from({length:total},(_,i)=>({axis,page:i+1,total,items:data.communes.slice(i*size,(i+1)*size)})));}
+export const TERRITORY_COMMUNE_TARGET=5000;
+export const TERRITORY_AXES=['sites','automatisation','applications','crm'];
+export const TERRITORY_AXIS_META={
+ sites:{label:'Sites internet',description:'Création et refonte de sites internet locaux.'},
+ automatisation:{label:'Référencement et automatisation IA',description:'Visibilité SEO, suivi des demandes et automatisations avec contrôle humain.'},
+ applications:{label:'Applications métier',description:'Applications métier sur mesure pour les processus internes.'},
+ crm:{label:'CRM et automatisation',description:'CRM, suivi commercial et automatisations pour entreprises.'},
+};
+export function catalogueData(){const data=draftData();return {...data,communes:data.communes.slice(0,TERRITORY_COMMUNE_TARGET),publishedCommunes:TERRITORY_COMMUNE_TARGET,publishedPages:TERRITORY_COMMUNE_TARGET*2,selection:'Top communes by official population, then INSEE code; this is a publishing rule, not a measure of commercial demand.'};}
+export function additionalEntries(){return ['applications','crm'].flatMap(axis=>draftData().communes.map(commune=>({axis,commune,slug:`${slugify(commune.name)}-${commune.code.toLowerCase()}`})));}
+export function additionalGroups(){const data=draftData(),size=100,total=Math.ceil(data.communes.length/size);return ['applications','crm'].flatMap(axis=>Array.from({length:total},(_,i)=>({axis,page:i+1,total,items:data.communes.slice(i*size,(i+1)*size)})));}
+export function allTerritoryEntries(){return [...legacyBaseEntries(),...additionalEntries()];}
+export function allTerritoryGroups(){return [...legacyBaseGroups(),...additionalGroups()];}
+export function legacyBaseEntries(){return ['sites','automatisation'].flatMap(axis=>catalogueData().communes.map(commune=>({axis,commune,slug:`${slugify(commune.name)}-${commune.code.toLowerCase()}`})));}
+export function legacyBaseGroups(){const data=catalogueData(),size=100,total=Math.ceil(data.communes.length/size);return ['sites','automatisation'].flatMap(axis=>Array.from({length:total},(_,i)=>({axis,page:i+1,total,items:data.communes.slice(i*size,(i+1)*size)})));}
 export function draftContent(axis,c){
  const area=`${c.name} (${c.department}), en ${c.region}`;
+ if(axis==='applications')return {title:`Application métier sur mesure à ${c.name} (${c.departmentCode})`,introduction:`Concevez une application métier adaptée à une entreprise intervenant à ${area}, avec un périmètre validé au devis.`,sections:[['Décrire le processus','Cartographiez les utilisateurs, les données, les étapes et les validations humaines avant de choisir une technologie.'],['Choisir un périmètre livrable','Un premier module peut couvrir un formulaire, un tableau de suivi ou un espace sécurisé. Les évolutions sont planifiées séparément.'],['Prévoir les connexions','Les API, exports, droits et sauvegardes sont vérifiés avec les outils réellement utilisés par l’entreprise.'],['Tester avant ouverture','Une recette sur des données de test vérifie les rôles, erreurs, accès et reprises avant mise en production.']],checklist:['Processus documenté','Utilisateurs et rôles identifiés','Données de test disponibles','Responsable de recette nommé'],related:'/application-metier-sur-mesure/'};
+ if(axis==='crm')return {title:`CRM et automatisation à ${c.name} (${c.departmentCode})`,introduction:`Structurez le suivi commercial et les automatisations d’une entreprise située dans la zone ${area}, sans supposer son activité ni ses outils.`,sections:[['Qualifier les demandes','Définissez les sources, champs obligatoires et situations qui nécessitent une validation humaine.'],['Organiser le pipeline','Les étapes, responsables et règles de relance sont documentés avant toute synchronisation.'],['Automatiser avec prudence','L’IA peut préparer une synthèse ou un brouillon ; l’envoi, la suppression et les décisions sensibles restent contrôlés.'],['Mesurer la qualité','Suivez les doublons, erreurs, demandes incomplètes et délais réels avec des données vérifiables.']],checklist:['Étapes commerciales définies','Logiciels et accès listés','Règles de validation écrites','Exemples anonymisés pour la recette'],related:'/crm-automatisation-entreprise/'};
+
  return axis==='sites'?{
  title:`Site internet à ${c.name} (${c.departmentCode}) : préparer votre projet`,
  introduction:`Pour préparer un site destiné à une entreprise intervenant à ${area}, commencez par préciser ses prestations et son périmètre réel. Cette trame propose un parcours de travail à personnaliser ; elle ne décrit pas une réalisation locale de Flex-Web.`,
