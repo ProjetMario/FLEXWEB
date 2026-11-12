@@ -1,4 +1,5 @@
 ---
+import { entrepreneurPages } from '../data/geo/entrepreneurs';
 import { organizationSchema } from "../data/business";
 import { editorialDates } from "../data/geo/editorial-dates";
 import ProjectEvidence from "../components/seo/ProjectEvidence.astro";
@@ -311,6 +312,12 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
       <p class="mt-4 leading-relaxed">Votre devis précise les pages, les textes et photos fournis, les champs du formulaire, le domaine et l’hébergement, les contrôles avant mise en ligne et les frais éventuels. Pour une refonte, les adresses à conserver ou rediriger sont examinées. Flex-Web, marque de Fleximmo basée à Voglans en Savoie, réalise le périmètre convenu ; votre entreprise valide les contenus et les engagements affichés.</p>
       <p class="mt-4 leading-relaxed">Consultez le <a href="/guides/preparer-projet-site-internet/" class="underline">guide pour préparer votre site</a>, le <a href="/journal/combien-coute-site-internet-savoie/" class="underline">guide sur le coût d’un site</a>, le parcours pour <a href="/journal/connecter-demandes-crm/" class="underline">relier les demandes à un CRM</a> et nos <a href="/realisations/" class="underline">réalisations documentées</a>. Le calendrier est confirmé au devis et aucune position dans les résultats de recherche n’est garantie.</p>
       <p class="mt-4 text-sm">Informations mises à jour le <time datetime={editorialDates["/creation-site-internet/"]}>{new Intl.DateTimeFormat("fr-FR", {dateStyle:"long",timeZone:"Europe/Paris"}).format(new Date(editorialDates["/creation-site-internet/"]+"T12:00:00Z"))}</time>.</p>
+    </section>
+
+    <section class="mt-16" aria-labelledby="entrepreneurs-guides">
+      <h2 id="entrepreneurs-guides" class="text-2xl font-semibold tracking-tight">Vous lancez votre activité ?</h2>
+      <p class="mt-4 leading-relaxed">Explorez nos conseils pour préparer votre site et les besoins propres à votre métier.</p>
+      <ul class="mt-6 grid gap-3 md:grid-cols-2">{entrepreneurPages.map(page => <li><a class="underline" href={page.path}>{page.title}</a></li>)}</ul>
     </section>
 
     <section id="faq" class="mt-16">

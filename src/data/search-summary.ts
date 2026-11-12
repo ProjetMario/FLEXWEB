@@ -1,3 +1,4 @@
+import { entrepreneurPages } from './geo/entrepreneurs';
 import { acquisitionPages } from './geo/acquisition-pages';
 import { editorialDates } from './geo/editorial-dates';
 import { serviceContext, interiorServiceRoutes } from './geo/service-context';
@@ -65,6 +66,9 @@ Les fonctionnalités publiques sont décrites sans attribuer de résultats comme
 
 ## Petit budget et projets francophones
 ${acquisitionPages.map(page => `- [${page.title}](https://flex-web.fr${page.path})`).join("\n")}
+
+## Ressources pour les créateurs d’activité
+${entrepreneurPages.map(page => `- [${page.title}](https://flex-web.fr${page.path})`).join("\n")}
 
 ## Pages principales
 - [CRM et automatisation pour entreprise](https://flex-web.fr/crm-automatisation-entreprise/)
