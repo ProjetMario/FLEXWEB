@@ -1,0 +1,12 @@
+---
+import GeoPage from '../../../components/geo/GeoPage.astro';
+import { entrepreneurPages } from '../../../data/geo/entrepreneurs';
+export function getStaticPaths() {
+  return entrepreneurPages.map(page => {
+    const [, , kind, slug] = page.path.split('/');
+    return { params: { kind, slug }, props: { page } };
+  });
+}
+const { page } = Astro.props;
+---
+<GeoPage page={page} />

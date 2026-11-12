@@ -591,3 +591,15 @@ test('CLI keeps credentials in environment and requires explicit execution for b
   const options = await fixture(t, [record()]);
   await assert.rejects(runImport({ ...options, publishBaseline: true }), { code: 'PUBLISH_REQUIRES_EXECUTE' });
 });
+
+
+test('a large local dry run validates the whole export without increasing the write limit', async t => {
+  const entries = Array.from({ length: 40001 }, (_, index) => record(`large-${index}`));
+  const options = await fixture(t, entries, true);
+  const result = await runImport({ input: options.input });
+  assert.equal(result.mode, 'dry-run-local');
+  assert.equal(result.inputRecords, 40001);
+  let called = false;
+  await assert.rejects(runImport({ ...options, execute: true, fetchImpl: async () => { called = true; throw Error('unexpected network'); } }), /TOO_MANY_RECORDS/);
+  assert.equal(called, false, 'The execution limit must be enforced before any network call');
+});

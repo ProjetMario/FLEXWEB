@@ -1,7 +1,7 @@
 name: GEO French and English verified preview
 on:
   push:
-    branches: [codex/geo-francophonie-budget-20261103, codex/geo-fr-en-20261028, codex/sitemap-30000-fr-ch, codex/applications-multilingues, codex/seo-visibilite-vevey-20261101, codex/recuperation-catalogues-20261105]
+    branches: [codex/entrepreneurs-30-pages, codex/geo-francophonie-budget-20261103, codex/geo-fr-en-20261028, codex/sitemap-30000-fr-ch, codex/applications-multilingues, codex/seo-visibilite-vevey-20261101, codex/recuperation-catalogues-20261105]
     paths: ['src/**', 'public/**', 'scripts/geo/**', 'scripts/seo/**', 'seo/**', 'tests/**', 'package*.json', '.github/workflows/geo-preview.yml']
 permissions:
   contents: read
@@ -69,6 +69,7 @@ jobs:
             if curl --fail --silent http://127.0.0.1:4321/ > /dev/null; then break; fi
             sleep 1
           done
+          TEST_ORIGIN=http://127.0.0.1:4321 npx tsx scripts/entrepreneurs/verify.ts
           node --import tsx --test tests/geo/*.test.* tests/seo/*.test.*
           node --test tests/quote-flow.test.mjs tests/analytics.test.mjs tests/automation-proxy.test.mjs
       - name: Create a draft Netlify deployment only

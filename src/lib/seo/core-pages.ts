@@ -1,3 +1,4 @@
+import { entrepreneurPages } from '../../data/geo/entrepreneurs';
 import { acquisitionPages } from '../../data/geo/acquisition-pages';
 import { editorialDates, previouslyReviewedDates } from '../../data/geo/editorial-dates';
 import { allPages as applicationPages, updated as applicationsUpdated } from '../../data/applications/content.mjs';
@@ -12,6 +13,7 @@ import { realizations } from "../../data/realizations";
 
 const site = "https://flex-web.fr";
 const updatedPages: Record<string, string> = {
+  ...Object.fromEntries(entrepreneurPages.map(page => [page.path, page.updatedOn])),
   "/crm-automatisation-entreprise/": geoUpdatedOn,
   ...Object.fromEntries(applicationPages.map(page => [page.path, applicationsUpdated])),
   "/privacy/": geoUpdatedOn,
@@ -53,6 +55,7 @@ const updatedPages: Record<string, string> = {
 
 export const corePages = async () => {
   const staticPages = [
+    ...entrepreneurPages.map(page => ({ url: page.path, priority: 0.8, changefreq: "monthly" })),
     { url: "/application-metier-sur-mesure/", priority: 0.8, changefreq: "monthly" },
     { url: "/crm-automatisation-entreprise/", priority: 0.9, changefreq: "monthly" },
     ...applicationPages.map(page => ({ url: page.path, priority: 0.8, changefreq: "monthly" })),
