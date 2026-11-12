@@ -16,7 +16,7 @@ export default function Footer({ data = {}, lang = "fr", interiorDescription }) 
           <div className="lg:col-span-2">
             <Logo className="h-14 md:h-[5.25rem]" />
             <p className="mt-3 max-w-sm text-sm font-light leading-relaxed text-[#6e6e73]">
-              {interiorDescription || data.description}
+              {interiorDescription ? interiorDescription.replace(' Les projets des autres pays francophones sont étudiés à distance selon les besoins et les conditions du devis. Les échanges se font en français ou en anglais ; aucun bureau à l’étranger n’est revendiqué.', '') : data.description}
             </p>
           </div>
 
