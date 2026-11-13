@@ -1,4 +1,4 @@
-name: EmDash form-only production hotfix
+name: EmDash scoped SEO discovery publication
 on:
   workflow_dispatch:
 permissions:
@@ -9,9 +9,9 @@ concurrency:
   cancel-in-progress: false
 jobs:
   publish:
-    if: github.ref == 'refs/heads/codex/form-only-production-hotfix'
+    if: github.ref == 'refs/heads/codex/seo-discovery-only-hotfix'
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 50
     environment: emdash-publication
     env:
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
@@ -32,41 +32,74 @@ jobs:
           cache: npm
       - name: Install locked dependencies
         run: npm ci
-      - name: Install browser for isolated form tests
+      - name: Install browser for responsive checks
         run: npx playwright install --with-deps chromium
+      - name: Test scope and notification safeguards
+        run: node --test scripts/cms/seo-discovery-hotfix.test.mjs scripts/cms/production-upload.test.mjs scripts/seo/indexnow-submit.test.mjs
       - name: Retrieve published immutable snapshot
         run: |
           gh run download 43240669026 --repo ProjetMario/FLEXWEB --name emdash-publication-43240669026-1 --dir "$RUNNER_TEMP/published-evidence"
           mkdir -p .cms
           cp "$RUNNER_TEMP/published-evidence/releases/bb776963c9ca620d92c53047210d5f2b838d67d06555a4e9a5aabf98812beeeb.json" .cms/snapshot.json
-      - name: Reproduce and verify the currently published files
+      - name: Reproduce original files and verify the currently published form patch
         run: |
           git reset --hard c2a9eaae945a93d5afa9dd070d8aa825b8270667
           npm run build > "$RUNNER_TEMP/baseline-build.log" 2>&1
           mv dist "$HOTFIX_BASELINE_DIR"
           git reset --hard "$GITHUB_SHA"
           node scripts/cms/form-hotfix.mjs baseline
-      - name: Build the correction and select only its two pages and assets
+          node scripts/cms/seo-discovery-hotfix.mjs baseline
+      - name: Build the SEO correction and select only authorized files
         run: |
           npm run build > "$RUNNER_TEMP/candidate-build.log" 2>&1
-          node --import tsx --test tests/analytics.test.mjs tests/openai-pixel.test.mjs
-          node scripts/cms/form-hotfix.mjs prepare
-      - name: Verify the scoped artifact with mocked form submissions
+          node scripts/cms/seo-discovery-hotfix.mjs prepare
+          mv dist "$RUNNER_TEMP/seo-candidate-dist"
+          mv "$HOTFIX_BASELINE_DIR" dist
+          echo "HOTFIX_BASELINE_DIR=$GITHUB_WORKSPACE/dist" >> "$GITHUB_ENV"
+      - name: Validate every retained URL and XML file
         run: |
-          python3 -m http.server 4321 --bind 127.0.0.1 --directory "$HOTFIX_BASELINE_DIR" > "$RUNNER_TEMP/preview.log" 2>&1 &
+          node scripts/seo/validate-recovered-inventory.mjs
+          python3 scripts/geo/check-xml.py
+          node --test tests/seo/priority-discovery.test.mjs
+      - name: Verify responsive pages without contacting customers
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4321 > "$RUNNER_TEMP/preview.log" 2>&1 &
           PREVIEW_PID=$!
           trap 'kill "$PREVIEW_PID"' EXIT
-          node --test tests/quote-flow.test.mjs
-      - name: Publish only the verified changed files
-        run: node scripts/cms/form-hotfix.mjs publish
-      - name: Archive file scope and deployment evidence
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4321/ > /dev/null; then break; fi
+            sleep 1
+          done
+          node --test tests/seo/scoped-discovery-responsive.test.mjs
+      - name: Restore IndexNow receipt ledger
+        uses: actions/cache/restore@v4
+        with:
+          path: .cms/indexnow-state.json
+          key: flexweb-indexnow-v2-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: flexweb-indexnow-v2-
+      - name: Publish the verified scoped artifact
+        run: node scripts/cms/seo-discovery-hotfix.mjs publish
+      - name: Notify only changed and verified priority URLs
+        run: node scripts/seo/indexnow-submit.mjs
+      - name: Persist notification receipts
+        if: always() && hashFiles('.cms/indexnow-state.json') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: .cms/indexnow-state.json
+          key: flexweb-indexnow-v2-${{ github.run_id }}-${{ github.run_attempt }}
+      - name: Archive scope and deployment evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: form-only-hotfix-${{ github.run_id }}
+          name: seo-discovery-hotfix-${{ github.run_id }}
           path: |
-            .cms/form-hotfix-report.json
+            .cms/seo-discovery-hotfix-report.json
+            .cms/publication-report.json
+            .cms/indexnow-report.json
+            .cms/indexnow-state.json
+            .cms/recovered-inventory-validation.json
+            .cms/seo-discovery-smoke/*.png
             ${{ runner.temp }}/baseline-build.log
             ${{ runner.temp }}/candidate-build.log
           include-hidden-files: true
-          retention-days: 30
+          retention-days: 90
