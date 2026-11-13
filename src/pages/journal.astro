@@ -2,11 +2,16 @@
 import BaseLayout from "../layout/BaseLayout.astro";
 import StructuredData from "../components/seo/StructuredData.astro";
 import JournalListing from "../components/JournalListing.jsx";
+import { entrepreneurPages } from "../data/geo/entrepreneurs";
+import { frenchWebAppGuides } from "../data/geo/web-app-pages";
+import { editorialDates } from "../data/geo/editorial-dates";
 
 import journalData from "../data/journalArticles.json";
 
 const featured = journalData[0];
 const rest = journalData.slice(1);
+const projectGuides = [...frenchWebAppGuides, ...entrepreneurPages.filter(page => page.kind === 'article')];
+const listedGuides = [...journalData.map(item => ({title:item.title,path:`/journal/${item.slug}/`})), ...projectGuides];
 ---
 
 <BaseLayout
@@ -14,8 +19,15 @@ const rest = journalData.slice(1);
   description="Guides pratiques pour automatiser les tâches de votre PME, connecter votre CRM et choisir votre site ou application. Savoie, Haute-Savoie et France."
 >
   <StructuredData slot="head" schemas={[
-    { "@type": "CollectionPage", "@id": "https://flex-web.fr/journal/", url: "https://flex-web.fr/journal/", name: "Guides pratiques Flex-Web", inLanguage: "fr-FR", isPartOf: { "@id": "https://flex-web.fr/#website" }, mainEntity: { "@id": "https://flex-web.fr/journal/#guides" } },
-    { "@type": "ItemList", "@id": "https://flex-web.fr/journal/#guides", itemListElement: journalData.map((item, index) => ({ "@type": "ListItem", position: index + 1, name: item.title, url: `https://flex-web.fr/journal/${item.slug}/` })) },
+    { "@type": "CollectionPage", "@id": "https://flex-web.fr/journal/", url: "https://flex-web.fr/journal/", name: "Guides pratiques Flex-Web", inLanguage: "fr-FR", dateModified: editorialDates['/journal/'], isPartOf: { "@id": "https://flex-web.fr/#website" }, mainEntity: { "@id": "https://flex-web.fr/journal/#guides" } },
+    { "@type": "ItemList", "@id": "https://flex-web.fr/journal/#guides", itemListElement: listedGuides.map((item, index) => ({ "@type": "ListItem", position: index + 1, name: item.title, url: `https://flex-web.fr${item.path}` })) },
   ]} />
   <JournalListing data={rest} featured={featured} client:load />
+  <section class="mx-auto max-w-6xl px-6 pb-16" aria-labelledby="project-guides">
+    <h2 id="project-guides" class="text-2xl font-semibold tracking-tight">Préparer un premier site ou une application</h2>
+    <p class="mt-4 leading-relaxed">Choisissez le guide correspondant à votre prochaine décision : budget, contenus, fonctionnalités ou lancement. Chaque guide aide à préparer les informations nécessaires au devis.</p>
+    <ul class="mt-6 grid gap-4 md:grid-cols-2">{projectGuides.map(page => <li><a class="underline underline-offset-4" href={page.path}>{page.title}</a></li>)}</ul>
+    <p class="mt-6">Pour comparer les prestations, consultez les <a class="underline" href="/creation-site-internet-pas-cher/">offres de site internet à budget maîtrisé</a>, les <a class="underline" href="/creation-application-mobile/">applications sur mesure</a> et le <a class="underline" href="/crm-automatisation-entreprise/">CRM avec automatisation</a>.</p>
+    <p class="mt-4 text-sm">Sélection mise à jour le <time datetime={editorialDates['/journal/']}>13 novembre 2026</time>.</p>
+  </section>
 </BaseLayout>

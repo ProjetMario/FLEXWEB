@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, writeFile, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { runIndexNow, candidateURLs, normalizedURL, pageFingerprint, ORIGIN, DEFAULT_KEY } from './indexnow-submit.mjs';
+import { runIndexNow, candidateURLs, normalizedURL, pageFingerprint, ORIGIN, DEFAULT_KEY, MAX_URLS, priorityRoutes } from './indexnow-submit.mjs';
+import { editorialRoutes, editorialDependencies } from './indexnow-priority-routes.mjs';
 
 const route = '/creation-site-internet/';
 const url = ORIGIN + route;
@@ -42,8 +43,29 @@ test('routes are bounded, first party HTML only, and include shared regional sou
   assert.deepEqual(candidateURLs([], Array.from({ length: 20000 }, (_, i) => `/territoires/sites/ville-${i}/`)), []);
   assert.ok(candidateURLs(['src/pages/[slug].astro']).includes(ORIGIN + '/creation-site-internet-savoie/'));
   assert.deepEqual(candidateURLs(['src/pages/journal/assistant-ia-interne-entreprise.astro']), [ORIGIN + '/journal/assistant-ia-interne-entreprise/']);
-  assert.throws(() => candidateURLs([], Array.from({ length: 51 }, (_, i) => `/journal/guide-${i}/`)), /TOO_MANY/);
-  assert.deepEqual(candidateURLs([], Array.from({ length: 51 }, (_, i) => `/journal/guide-${i}/`), [route]), [url]);
+  assert.throws(() => candidateURLs([], Array.from({ length: MAX_URLS + 1 }, (_, i) => `/journal/guide-${i}/`)), /TOO_MANY/);
+  assert.deepEqual(candidateURLs([], Array.from({ length: MAX_URLS + 1 }, (_, i) => `/journal/guide-${i}/`), [route]), [url]);
+});
+
+test('current editorial collections are eligible and dynamic source edits select their real routes', async () => {
+  for (const route of editorialRoutes) assert.equal(normalizedURL(route), ORIGIN + route);
+  assert(priorityRoutes.size <= MAX_URLS);
+  for (const source of editorialDependencies.keys()) await readFile(new URL('../../' + source, import.meta.url));
+  const entrepreneurs = candidateURLs(['src/pages/entrepreneurs/[kind]/[slug].astro']);
+  assert.equal(entrepreneurs.length, 30);
+  assert(entrepreneurs.includes(ORIGIN + '/entrepreneurs/guides/preparer-devis-site/'));
+  const applications = candidateURLs(['src/data/applications/content.mjs']);
+  for (const prefix of ['/applications/', '/en/applications/', '/de/anwendungen/', '/it/applicazioni/']) {
+    assert(applications.some(url => url.startsWith(ORIGIN + prefix)));
+  }
+  const multiple = candidateURLs([...editorialDependencies.keys()]);
+  assert(multiple.length > 50 && multiple.length <= MAX_URLS);
+  assert(multiple.includes(ORIGIN + '/crm-automatisation-entreprise/'));
+  assert(multiple.includes(ORIGIN + '/creation-site-internet-pas-cher/'));
+  assert(!multiple.some(url => /\/(fiches|global|territoires|france)\//.test(url)));
+  assert.throws(() => normalizedURL('/entrepreneurs/guides/inexistant/'), /OUT_OF_SCOPE/);
+  assert.throws(() => normalizedURL('/en/applications/admin/'), /OUT_OF_SCOPE/);
+  assert.deepEqual(candidateURLs(['src/pages/en/applications/[slug].astro']), applications.filter(url => url.startsWith(ORIGIN + '/en/applications/')));
 });
 
 test('shared regional brief and guide dependencies select their bounded page sets', () => {
