@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { websiteOffers, automationOffers, pricingOptions, publicQuoteVersion } from "../../data/pricing.ts";
 import { leadSource } from "../../lib/acquisition.ts";
-import { trackLead, trackConversionEvent } from "../../lib/analytics.ts";
+import { trackConversionEvent } from "../../lib/analytics.ts";
+import { trackLead } from "../../lib/quote-analytics.ts";
 import { declaredSources, quoteNeedMaxLength, buildQuoteMessage } from "../../lib/declared-source.mjs";
 import { isProspectSlug, validProspectContext } from "../../lib/prospect-context.mjs";
 import { api, createIdentity, money, saveToken } from "./api";

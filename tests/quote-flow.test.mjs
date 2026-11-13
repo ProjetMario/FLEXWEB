@@ -18,7 +18,10 @@ async function filledQuote(consent = 'accepted', selection = {service:'site', id
     if (url.pathname.startsWith('/espace-projet/')) return route.fulfill({status: 200, contentType:'text/html', body:'<html lang="fr"><body>Projet reçu en simulation locale</body></html>'});
     return route.continue();
   });
-  await context.addInitScript(value => localStorage.setItem('flex-web-cookie-consent', value), consent);
+  await context.addInitScript(value => {
+    localStorage.setItem('flex-web-cookie-consent', value);
+    localStorage.setItem('flex-web-openai-consent', value);
+  }, consent);
   const page = await context.newPage();
   page.setDefaultTimeout(15000); page.setDefaultNavigationTimeout(20000);
   await page.goto(new URL(`/demarrer/?service=${selection.service}&offre=${selection.id}`, preview).href);
