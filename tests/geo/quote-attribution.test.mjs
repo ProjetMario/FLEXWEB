@@ -20,7 +20,10 @@ async function openQuote(consent = 'accepted') {
     return route.continue();
   });
   await context.addInitScript(value => {
-    if (value) localStorage.setItem('flex-web-cookie-consent', value);
+    if (value) {
+      localStorage.setItem('flex-web-cookie-consent', value);
+      localStorage.setItem('flex-web-openai-consent', value);
+    }
     sessionStorage.setItem('test-quote-events', '[]');
   }, consent);
   const page = await context.newPage();
