@@ -1,0 +1,32 @@
+<script is:inline>
+  (() => {
+    if (location.pathname.replace(/\/$/, '') !== '/demarrer') return;
+    function update() {
+      let accepted = false;
+      try {
+        accepted = localStorage.getItem('flex-web-cookie-consent') === 'accepted'
+          && localStorage.getItem('flex-web-openai-consent') === 'accepted';
+      } catch {}
+      if (!accepted) {
+        if (window.oaiq) window.oaiq('consent', false);
+        return;
+      }
+      if (!window.oaiq) {
+        const q = function () { q.q.push(arguments); };
+        q.q = [];
+        window.oaiq = q;
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://bzrcdn.openai.com/sdk/oaiq.min.js';
+        document.head.append(script);
+      }
+      window.oaiq('consent', true);
+      if (!window.flexwebOpenAIPixelStarted) {
+        window.flexwebOpenAIPixelStarted = true;
+        window.oaiq('init', { pixelId: '81CNK3kYSfq7irfRADpKNh' });
+      }
+    }
+    window.addEventListener('flexweb-consent-change', update);
+    update();
+  })();
+</script>
