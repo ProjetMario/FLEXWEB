@@ -53,6 +53,10 @@ for(const variant of variants) {
     const a=await h.fn(input()),b=await h.fn(input({email:'second@example.invalid',accessToken:'b'.repeat(64)}));
     assert.notEqual(a.id,b.id);assert.equal(h.records.size,2);assert.equal(h.prospects.length,0);
   });
+  test(`${variant.label}: an individual with an organization stays out of professional prospecting`,async()=>{
+    const h=harness(variant),row=await h.fn(input({companyName:'Association test',phone:'0600000000'}));
+    assert.equal(row.clientType,'INDIVIDUAL');assert.equal(row.prospectId,null);assert.equal(h.prospects.length,0);
+  });
   test(`${variant.label}: complete professional requests retain the existing follow-up`,async()=>{
     const h=harness(variant),data=input({professional:true,companyName:'Entreprise test',phone:'0600000000',city:'Chambéry',businessType:'Artisan'});
     const row=await h.fn(data);

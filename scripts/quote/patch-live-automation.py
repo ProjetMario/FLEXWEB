@@ -18,7 +18,7 @@ with zipfile.ZipFile(base) as archive:
     changed = original[:start] + schema + original[end:]
     start, end = changed.index('async function createIntake(input) {'), changed.index('async function submitBrief(')
     intake = changed[start:end]
-    intake = once(intake, 'const prospect = await tx.prospect.upsert({', 'const prospect = data.phone && data.companyName ? await tx.prospect.upsert({')
+    intake = once(intake, 'const prospect = await tx.prospect.upsert({', 'const prospect = data.professional && data.phone && data.companyName ? await tx.prospect.upsert({')
     intake = once(intake, '      });\n      const project = await tx.salesProject.create({', '      }) : null;\n      const project = await tx.salesProject.create({')
     intake = once(intake, '          requestKey: data.requestKey,', '          clientType: data.professional ? "PROFESSIONAL" : "INDIVIDUAL",\n          requestKey: data.requestKey,')
     # Company/name fallback applies to the project only, not the prospect deduplication.

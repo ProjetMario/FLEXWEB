@@ -80,7 +80,7 @@ export async function createIntake(input: unknown) {
     return await prisma.$transaction(async (tx) => {
       // The prospect list is keyed by phone/company. Keep requests with missing
       // contact details in SalesProject, without inventing data or merging namesakes.
-      const prospect = data.phone && data.companyName ? await tx.prospect.upsert({
+      const prospect = data.professional && data.phone && data.companyName ? await tx.prospect.upsert({
         where: {
           phone_companyName: {
             phone: data.phone,
