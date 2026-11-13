@@ -59,6 +59,10 @@ test('French and English homepages preserve all baseline content and are capture
           return [origin.origin,'https://flex-web.fr'].includes(url.origin) && !url.pathname.startsWith('/api/') ? request.continue() : request.abort();
         });
         const page = await context.newPage();
+        if (route === '/') {
+          await page.goto(new URL(route, origin).href);
+          assert.equal(await page.locator('.m-hero .hero-content > .m-eyebrow:first-child').evaluate(node => getComputedStyle(node).display), 'none');
+        }
         const visible = [];
         for (const [version, base] of [['before','https://flex-web.fr'],['after',origin.origin]]) {
           await page.goto(base + route);

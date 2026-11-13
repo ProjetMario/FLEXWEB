@@ -2,6 +2,11 @@ import { Logo } from "./Logo.jsx";
 
 export default function Footer({ data = {}, lang = "fr", interiorDescription }) {
 
+  const frenchDescription = interiorDescription || data.description;
+  const cleanedFrenchDescription = typeof frenchDescription === "string"
+    ? frenchDescription.replace(" Les projets des autres pays francophones sont étudiés à distance selon les besoins et les conditions du devis. Les échanges se font en français ou en anglais ; aucun bureau à l’étranger n’est revendiqué.", "")
+    : frenchDescription;
+
   if (lang === "de" || lang === "it") {
     const de = lang === "de";
     return <footer className="border-t border-black/[0.08] bg-[#f5f5f7] py-12 text-sm text-[#424245]"><div className="mx-auto grid max-w-6xl gap-8 px-6 md:grid-cols-3"><div><Logo href="/" label={de ? "Flex-Web – Startseite (Französisch)" : "Flex-Web – Home (francese)"} className="h-14" /><p className="mt-4 leading-relaxed">Flex-Web · Fleximmo<br />Voglans · Savoie · France</p></div><nav aria-label={de ? "Dienstleistungen und Kontakt" : "Servizi e contatti"} className="flex flex-col gap-3"><a href="/creation-site-internet/" hrefLang="fr">{de ? "Websites (Französisch)" : "Siti web (francese)"}</a><a href="/creation-application-mobile/" hrefLang="fr">{de ? "Anwendungen (Französisch)" : "Applicazioni (francese)"}</a><a href="mailto:contact@flex-web.fr">contact@flex-web.fr</a><a href="/" hrefLang="fr">{de ? "Website auf Französisch" : "Sito in francese"}</a></nav><nav aria-label={de ? "Rechtliche Informationen" : "Informazioni legali"} className="flex flex-col gap-3"><a href="/privacy/" hrefLang="fr">{de ? "Datenschutz (Französisch)" : "Privacy (francese)"}</a><a href="/mentions-legales/" hrefLang="fr">{de ? "Impressum (Französisch)" : "Note legali (francese)"}</a><button type="button" className="text-left" onClick={() => window.dispatchEvent(new Event("flexweb-cookie-settings"))}>{de ? "Cookie-Einstellungen" : "Impostazioni cookie"}</button><span>© {new Date().getFullYear()} Flex-Web</span></nav></div></footer>;
@@ -16,7 +21,7 @@ export default function Footer({ data = {}, lang = "fr", interiorDescription }) 
           <div className="lg:col-span-2">
             <Logo className="h-14 md:h-[5.25rem]" />
             <p className="mt-3 max-w-sm text-sm font-light leading-relaxed text-[#6e6e73]">
-              {interiorDescription ? interiorDescription.replace(' Les projets des autres pays francophones sont étudiés à distance selon les besoins et les conditions du devis. Les échanges se font en français ou en anglais ; aucun bureau à l’étranger n’est revendiqué.', '') : data.description}
+              {cleanedFrenchDescription}
             </p>
           </div>
 
