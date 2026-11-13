@@ -20,8 +20,9 @@ jobs:
       NODE_OPTIONS: --max-old-space-size=6144
       FLEXWEB_FR_CH_EXPANSION: '1'
       CONTEXT: production
-      HOTFIX_BASELINE_DIR: ${{ runner.temp }}/published-dist
     steps:
+      - name: Set isolated artifact directory
+        run: echo "HOTFIX_BASELINE_DIR=$RUNNER_TEMP/published-dist" >> "$GITHUB_ENV"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0

@@ -54,7 +54,8 @@ export async function copyAssetClosure(candidateDir, targetDir, entryFiles) {
     const matches=[...source.matchAll(/["'`]([^"'`\s<>]+)["'`]/g)].map(match=>match[1]);
     for(const match of source.matchAll(/url\(([^)'"\s]+)\)/g)) matches.push(match[1]);
     for(const value of matches) {
-      if(!value.startsWith('/_astro/') && !(/\.(?:js|css)$/.test(relative) && value.startsWith('.'))) continue;
+      if(!value.startsWith('/_astro/') && !(/\.(?:js|css)$/.test(relative) && /^\.{1,2}\//.test(value))) continue;
+      if(!/\.(?:m?js|css|svg|png|jpe?g|webp|avif|woff2?|ttf|ico|gif)(?:[?#].*)?$/.test(value)) continue;
       const url=new URL(value,'https://assets.invalid/'+relative);
       if(url.origin!=='https://assets.invalid' || !url.pathname.startsWith('/_astro/')) continue;
       await visit(url.pathname.slice(1));
