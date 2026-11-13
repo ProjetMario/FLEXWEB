@@ -56,3 +56,32 @@ test('storage, loader and analytics failures never block a confirmed request', (
   window.localStorage.getItem = () => { throw new Error('storage unavailable'); };
   assert.equal(trackLead('project_quote', 'application'), false);
 });
+
+test('OpenAI receives one lead without Google Analytics and survives its failure', () => {
+  mockWindow();
+  const events = [];
+  window.oaiq = (...args) => events.push(args);
+  delete window.gtag;
+  assert.equal(trackLead('project_quote', 'site'), true);
+  assert.deepEqual(events, [['measure', 'lead_created', {type: 'customer_action'}]]);
+  window.gtag = () => { throw new Error('Google unavailable'); };
+  assert.equal(trackLead('project_quote', 'automation'), true);
+  assert.equal(events.length, 2);
+  assert.doesNotMatch(JSON.stringify(events), /email|phone|private|secret|page_location/);
+});
+
+test('OpenAI requires its disclosed consent and never measures private pages', () => {
+  for (const adConsent of [null, 'refused']) {
+    const google = mockWindow();
+    window.localStorage.getItem = key => key === 'flex-web-cookie-consent' ? 'accepted' : adConsent;
+    window.oaiq = () => assert.fail('Unexpected advertising event');
+    assert.equal(trackLead('project_quote', 'site'), true);
+    assert.equal(google.length, 1);
+  }
+  for (const consent of ['refused', null, 'accepted']) {
+    mockWindow(consent);
+    if (consent === 'accepted') window.location.pathname = '/espace-projet/';
+    window.oaiq = () => assert.fail('Unexpected advertising event');
+    assert.equal(trackLead('project_quote', 'site'), false);
+  }
+});

@@ -2,6 +2,7 @@ import { acquisitionEventFields } from "./acquisition.ts";
 type LeadService = "site" | "automation" | "application";
 type AnalyticsWindow = Window & {
   gtag?: (...args: unknown[]) => void;
+  oaiq?: (...args: unknown[]) => void;
 };
 
 function canTrack(allowProjectPortal = false): AnalyticsWindow | null {
@@ -10,7 +11,7 @@ function canTrack(allowProjectPortal = false): AnalyticsWindow | null {
     if (window.localStorage.getItem("flex-web-cookie-consent") !== "accepted") return null;
     if (!allowProjectPortal && window.location.pathname.startsWith("/espace-projet")) return null;
     const analyticsWindow = window as AnalyticsWindow;
-    return typeof analyticsWindow.gtag === "function" ? analyticsWindow : null;
+    return analyticsWindow;
   } catch {
     return null;
   }
@@ -22,14 +23,27 @@ export function trackLead(formId: "project_quote", service: LeadService): boolea
     const analyticsWindow = canTrack();
     if (!analyticsWindow) return false;
     if (formId !== "project_quote" || !["site", "automation", "application"].includes(service)) return false;
-    analyticsWindow.gtag("event", "generate_lead", {
-      ...acquisitionEventFields(),
-      form_id: formId,
-      service_type: service,
-      page_location: window.location.origin + window.location.pathname,
-      transport_type: "beacon",
-    });
-    return true;
+    let recorded = false;
+    try {
+      if (typeof analyticsWindow.oaiq === "function"
+        && window.localStorage.getItem('flex-web-openai-consent') === 'accepted') {
+        analyticsWindow.oaiq("measure", "lead_created", { type: "customer_action" });
+        recorded = true;
+      }
+    } catch {}
+    try {
+      if (typeof analyticsWindow.gtag === "function") {
+        analyticsWindow.gtag("event", "generate_lead", {
+          ...acquisitionEventFields(),
+          form_id: formId,
+          service_type: service,
+          page_location: window.location.origin + window.location.pathname,
+          transport_type: "beacon",
+        });
+        recorded = true;
+      }
+    } catch {}
+    return recorded;
   } catch {
     // Analytics must never prevent a successfully recorded quote request.
     return false;
@@ -39,7 +53,7 @@ export function trackLead(formId: "project_quote", service: LeadService): boolea
 export function trackConversionEvent(eventName: string, service: string = "unknown"): boolean {
   try {
     const analyticsWindow = canTrack(eventName === "crm_link_open");
-    if (!analyticsWindow) return false;
+    if (!analyticsWindow || typeof analyticsWindow.gtag !== "function") return false;
     if (!["quote_click", "form_start", "crm_link_open", "appointment_click", "email_click", "phone_click"].includes(eventName)) return false;
     analyticsWindow.gtag("event", eventName, {
       ...acquisitionEventFields(),

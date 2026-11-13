@@ -66,7 +66,7 @@ jobs:
           done
           node --import tsx --test tests/seo/*.test.*
           node scripts/cms/release-smoke.mjs http://127.0.0.1:4321
-          node --test tests/quote-flow.test.mjs tests/analytics.test.mjs tests/automation-proxy.test.mjs
+          node --test tests/quote-flow.test.mjs tests/analytics.test.mjs tests/openai-pixel.test.mjs tests/automation-proxy.test.mjs
       - name: Prepare and validate complete migration without writing to a CMS
         run: |
           npm run cms:export

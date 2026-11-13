@@ -50,7 +50,10 @@ test('French and English homepages preserve all baseline content and are capture
   try {
     for (const route of ['/', '/en/']) {
       const html = await fetch(new URL(route, origin)).then(r => r.text());
-      assert.deepEqual(homepageContent(html), baseline[route], route);
+      const expected = structuredClone(baseline[route]);
+      // Match the already approved removal used by validate-homepages.mjs.
+      if (route === '/') expected.text = expected.text.replace('FLEX-WEB · SAVOIE, HAUTE-SAVOIE & FRANCE ', '');
+      assert.deepEqual(homepageContent(html), expected, route);
       for (const width of [375,1440]) {
         const context = await browser.newContext({viewport:{width,height:900}});
         await context.addInitScript(() => localStorage.setItem('flex-web-cookie-consent','refused'));
@@ -61,14 +64,16 @@ test('French and English homepages preserve all baseline content and are capture
         const page = await context.newPage();
         if (route === '/') {
           await page.goto(new URL(route, origin).href);
-          assert.equal(await page.locator('.m-hero .hero-content > .m-eyebrow:first-child').evaluate(node => getComputedStyle(node).display), 'none');
+          assert.equal(await page.locator('.m-hero .hero-content > .m-eyebrow:first-child').isVisible(), false);
         }
         const visible = [];
         for (const [version, base] of [['before','https://flex-web.fr'],['after',origin.origin]]) {
           await page.goto(base + route);
           // Stabilise the existing entrance animations without changing content.
           await page.waitForTimeout(1200);
-          visible.push((await page.locator('body').innerText()).replace(/\s+/g,' ').trim());
+          let text = (await page.locator('body').innerText()).replace(/\s+/g,' ').trim();
+          if (route === '/' && version === 'before') text = text.replace('FLEX-WEB · SAVOIE, HAUTE-SAVOIE & FRANCE ', '');
+          visible.push(text);
           await page.screenshot({path:`.cms/geo-smoke/home-${route === '/' ? 'fr' : 'en'}-${version}-${width}.png`, fullPage:true});
         }
         assert.equal(visible[1], visible[0], `${route} rendered content at ${width}`);

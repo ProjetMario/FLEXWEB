@@ -1,5 +1,5 @@
 {
-  "updated": "28 octobre 2026",
+  "updated": "13 novembre 2026",
   "sections": [
     {
       "title": "1. Responsable du traitement et engagement de confidentialité",
@@ -35,7 +35,7 @@
     {
       "title": "5. Utilisation des cookies",
       "content": [
-        "Le stockage local mémorise votre choix de confidentialité. Google Analytics est chargé uniquement après votre accord pour mesurer les visites et les demandes de devis enregistrées. Aucun nom, e-mail, téléphone ou texte de formulaire n’est envoyé dans nos événements de mesure ; les paramètres et fragments des URL sont exclus. Vous pouvez refuser ou modifier ce choix via « Choix des cookies » en bas de page.",
+        "Le stockage local mémorise votre choix de confidentialité. Google Analytics est chargé uniquement après votre accord pour mesurer les visites et les demandes de devis enregistrées. Sur la page de demande de devis, un choix mentionnant également OpenAI autorise le chargement du pixel publicitaire OpenAI. Un ancien accord limité à Google Analytics ne l’active pas. Après confirmation de la demande, notre code envoie l’événement lead_created sans recopier les champs du formulaire. Le SDK OpenAI peut traiter des identifiants publicitaires et de navigation et, selon la configuration du pixel, des données de rapprochement hachées. Les événements Google Analytics excluent les paramètres et fragments des URL. Vous pouvez refuser ou modifier ce choix via « Choix des cookies » en bas de page.",
         "Le formulaire de demande utilise le stockage de session pour éviter les doublons et conserver l’accès à votre projet. La confirmation d’une demande peut être mesurée avec votre accord. L’espace privé /espace-projet/ ne charge aucun outil publicitaire ou analytique."
       ]
     },
