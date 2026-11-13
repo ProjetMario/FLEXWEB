@@ -957,6 +957,8 @@ model Notification {
 
 // Funnel data is internal to FLEX-WEB; client access uses expiring hashed tokens.
 model SalesProject {
+  // Already present in production for requests from the ChatGPT plugin.
+  clientType           String   @default("PROFESSIONAL")
   id                   String   @id @default(uuid())
   requestKey           String   @unique
   accessTokenHash      String   @unique

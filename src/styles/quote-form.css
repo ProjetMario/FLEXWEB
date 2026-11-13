@@ -1,0 +1,22 @@
+/* Loaded only by the quote form; the project portal keeps its existing styles. */
+.project-flow .quote-simple{max-width:720px;margin:0 auto}
+.project-flow .quote-simple h1{font-size:clamp(34px,5vw,48px);margin-bottom:12px}
+.project-flow .quote-simple .flow-intro{margin-bottom:24px}
+.project-flow .quote-simple .flow-card{padding:28px}
+.project-flow .quote-simple .flow-fields{gap:18px}
+.project-flow .quote-simple .flow-fields label{margin-bottom:14px}
+.project-flow .quote-simple label{margin-bottom:16px}
+.project-flow .quote-profile{display:flex;gap:12px;border:0;padding:0;margin:0 0 18px}
+.project-flow .quote-profile legend{font-size:14px;font-weight:500;margin-bottom:9px}
+.project-flow .quote-profile label{display:flex;align-items:center;gap:9px;padding:9px 17px;border:1px solid #d2d2d7;border-radius:10px;margin:0;cursor:pointer}
+.project-flow .quote-profile label:has(input:checked){border-color:#0071e3;background:#f1f7ff}
+.project-flow .quote-optional{color:#6e6e73;font-weight:400;font-size:13px}
+.project-flow .quote-details{border-top:1px solid #e5e5e7;margin:6px 0 20px;padding-top:15px}
+.project-flow .quote-details summary{font-size:14px;cursor:pointer;color:#0066cc;padding:3px 0}
+.project-flow .quote-details[open] summary{margin-bottom:18px}
+.project-flow .quote-details summary:focus-visible{outline:3px solid #0071e3;outline-offset:4px}
+.project-flow .quote-consent{font-size:13px}
+.project-flow .quote-submit{width:100%;font-size:16px}
+.project-flow .quote-reassurance{text-align:center;margin-bottom:0}
+.project-flow .quote-context{margin-bottom:20px;font-size:14px;color:#294362}
+@media(max-width:760px){.project-flow .quote-simple .flow-card{padding:20px}.project-flow .quote-simple .flow-fields{gap:0}}

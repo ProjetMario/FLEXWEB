@@ -75,26 +75,22 @@ test('all three mockup offers prefill company and persist reference through mock
       await context.route('**/*',route=>{
         const url=new URL(route.request().url());
         if(url.origin!==preview.origin) return route.abort();
+        if(url.pathname===`/maquettes/contexte/${p.slug}.json`) return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(publicProspectContext(p))});
         if(url.pathname==='/api/automation/intake') {request=route.request().postDataJSON();return route.fulfill({status:201,contentType:'application/json',body:'{"projectId":"mock-prospect"}'});}
         if(url.pathname.startsWith('/api/')) return route.fulfill({status:503,contentType:'application/json',body:'{}'});
         if(url.pathname.startsWith('/espace-projet/')) return route.fulfill({status:200,contentType:'text/html',body:'<html lang="fr"><body>Simulation</body></html>'});
         return route.continue();
       });
       const page=await context.newPage(); page.setDefaultTimeout(15000); page.setDefaultNavigationTimeout(20000);
-      await page.goto(new URL(`/${p.slug}/`,preview).href);
-      await page.locator(`.offer-card a[href*="offre=${offer}"]`).click();
+      await page.goto(new URL(`/demarrer/?service=${service}&offre=${offer}&maquette=${p.slug}`,preview).href);
       await page.waitForFunction(()=>document.querySelector('fieldset')&&!document.querySelector('fieldset').disabled);
       await page.getByRole('button',{name:'Je refuse',exact:true}).click();
-      assert.equal(await page.getByLabel('Entreprise',{exact:true}).inputValue(),p.name);
-      assert.equal(await page.getByLabel('Ville',{exact:true}).inputValue(),p.city);
-      assert.equal(await page.locator('.flow-steps li').count(),2);
-      for(const [label,value] of [['Votre nom','Test local'],['E-mail professionnel','test@example.invalid'],['Téléphone','0600000000']]) await page.getByLabel(label,{exact:true}).fill(value);
-      await page.getByLabel('Je fais cette demande pour mon activité professionnelle.').check();
-      await page.getByRole('button',{name:'Continuer',exact:true}).click();
-      assert(await page.locator(`input[name="planId"][value="${offer}"]`).isChecked());
-      assert.equal(await page.locator('input[name="maintenance"]').isChecked(),false);
-      assert.equal(await page.locator('input[name="crm"]').isChecked(),false);
-      assert.equal(await page.locator('input[name="planId"]').count(),3);
+      assert.equal(await page.locator('input[name="companyName"]').inputValue(),p.name);
+      assert.equal(await page.getByRole('button',{name:'Continuer',exact:true}).count(),0);
+      for(const [label,value] of [['Votre nom','Test local'],['Votre e-mail','test@example.invalid'],['Téléphone (facultatif)','0600000000']]) await page.getByLabel(label,{exact:true}).fill(value);
+      await page.getByRole('radio',{name:'Pro',exact:true}).check();
+      assert.equal(await page.locator('select[name="planId"]').inputValue(),offer);
+      assert.equal(await page.locator('select[name="planId"] option').count(),3);
       // React keeps the prefilled textarea value in its text node; target the field by name.
       await page.locator('textarea[name="message"]').fill('Je veux adapter cette maquette à mon entreprise.');
       await page.locator('input[name="privacyConsent"]').check();
@@ -111,7 +107,7 @@ test('all three mockup offers prefill company and persist reference through mock
 });
 
 
-test('short prospect flow preserves edits and options while switching packs; consent and retry remain safe', async () => {
+test('single-page prospect flow preserves edits and pack selection; consent and retry remain safe', async () => {
   const browser=await chromium.launch({headless:true, ...(process.env.FLEXWEB_CHROME_PATH ? {executablePath:process.env.FLEXWEB_CHROME_PATH} : {})});
   const p=prospects.find(p=>p.batch==='pilot-10');
   try {
@@ -121,6 +117,7 @@ test('short prospect flow preserves edits and options while switching packs; con
       await context.route('**/*',route=>{
         const url=new URL(route.request().url());
         if(url.origin!==preview.origin) return route.abort();
+        if(url.pathname===`/maquettes/contexte/${p.slug}.json`) return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(publicProspectContext(p))});
         if(url.pathname==='/api/automation/intake') {
           calls.push(route.request().postDataJSON());
           return route.fulfill({status:calls.length===1?503:201,contentType:'application/json',body:calls.length===1?'{"error":"Simulation : connexion interrompue"}':'{"projectId":"mock-pack"}'});
@@ -133,29 +130,20 @@ test('short prospect flow preserves edits and options while switching packs; con
       await page.goto(new URL(`/demarrer/?service=site&offre=essentielle&maquette=${p.slug}`,preview).href);
       await page.waitForFunction(()=>document.querySelector('fieldset')&&!document.querySelector('fieldset').disabled);
       await page.getByRole('button',{name:'Je refuse',exact:true}).click();
-      await page.getByLabel('Entreprise',{exact:true}).fill('Entreprise corrigée');
-      for(const [label,value] of [['Votre nom','Test local'],['E-mail professionnel','test@example.invalid'],['Téléphone','0600000000']]) await page.getByLabel(label,{exact:true}).fill(value);
-      await page.getByLabel('Je fais cette demande pour mon activité professionnelle.').check();
-      await page.getByRole('button',{name:'Continuer',exact:true}).click();
-      await page.locator('input[name="planId"][value="crm-automation"]').check();
-      await page.locator('input[name="maintenance"]').check();
-      await page.locator('input[name="crm"]').check();
+      await page.locator('summary').click();
+      await page.locator('input[name="companyName"]').fill('Entreprise corrigée');
+      for(const [label,value] of [['Votre nom','Test local'],['Votre e-mail','test@example.invalid'],['Téléphone (facultatif)','0600000000']]) await page.getByLabel(label,{exact:true}).fill(value);
+      await page.getByRole('radio',{name:'Pro',exact:true}).check();
+      await page.locator('select[name="planId"]').selectOption('crm-automation');
       await page.locator('textarea[name="message"]').fill('Personnaliser le site et le suivi client de mon entreprise.');
       assert.equal(await page.locator('input[name="privacyConsent"]').isChecked(),false);
       await page.getByRole('button',{name:'Recevoir mon devis',exact:true}).click();
       assert.equal(calls.length,0,'Consent is mandatory');
-      await page.getByRole('button',{name:'Retour',exact:true}).click();
-      assert.equal(await page.getByLabel('Entreprise',{exact:true}).inputValue(),'Entreprise corrigée');
-      await page.getByRole('button',{name:'Continuer',exact:true}).click();
-      assert(await page.locator('input[name="planId"][value="crm-automation"]').isChecked());
-      assert(await page.locator('input[name="maintenance"]').isChecked());
-      assert(await page.locator('input[name="crm"]').isChecked());
-      await page.getByRole('button',{name:'Retour',exact:true}).click();
+      assert.equal(await page.locator('input[name="companyName"]').inputValue(),'Entreprise corrigée');
       await page.locator('select[name="service"]').selectOption('application');
-      assert(!/49|99|148/.test(await page.locator('.flow-prospect-summary').innerText()),'Bespoke must not display fixed monthly options');
+      assert.equal(await page.locator('select[name="planId"]').inputValue(),'achat');
       await page.locator('select[name="service"]').selectOption('automation');
-      await page.getByRole('button',{name:'Continuer',exact:true}).click();
-      assert(await page.locator('input[name="crm"]').isChecked(),'Returning to the pack preserves selected options');
+      assert.equal(await page.locator('select[name="planId"]').inputValue(),'crm-automation');
       assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Short form overflow '+width);
       await page.locator('input[name="privacyConsent"]').check();
       await page.screenshot({path:`.cms/smoke/prospect-signup-${width}.png`,fullPage:true});
@@ -169,14 +157,14 @@ test('short prospect flow preserves edits and options while switching packs; con
       assert.equal(calls[1].companyName,'Entreprise corrigée');
       assert.equal(calls[1].publicQuote.service,'automation');
       assert.equal(calls[1].publicQuote.tier,'crm');
-      assert.deepEqual(calls[1].publicQuote.options,['maintenance','crm']);
+      assert.deepEqual(calls[1].publicQuote.options,[]);
       assert(calls[1].message.includes(`https://flex-web.fr/${p.slug}/`));
       await context.close();
     }
   } finally {await browser.close();}
 });
 
-test('missing or invalid prospect context falls back to the regular three-step form', async () => {
+test('missing or invalid prospect context keeps the simple form available', async () => {
   const browser=await chromium.launch({headless:true, ...(process.env.FLEXWEB_CHROME_PATH ? {executablePath:process.env.FLEXWEB_CHROME_PATH} : {})});
   const p=prospects[0];
   try {
@@ -192,8 +180,8 @@ test('missing or invalid prospect context falls back to the regular three-step f
       await page.goto(new URL(`/demarrer/?service=seo&offre=visibilite&maquette=${p.slug}`,preview).href);
       await page.waitForFunction(()=>document.querySelector('fieldset')&&!document.querySelector('fieldset').disabled);
       await page.getByRole('button',{name:'Je refuse',exact:true}).click();
-      assert.equal(await page.locator('.flow-steps li').count(),3);
-      assert.equal(await page.getByLabel('Entreprise',{exact:true}).inputValue(),'');
+      assert.equal(await page.getByRole('button',{name:'Continuer',exact:true}).count(),0);
+      assert.equal(await page.locator('input[name="companyName"]').inputValue(),'');
       await context.close();
     }
   } finally {await browser.close();}

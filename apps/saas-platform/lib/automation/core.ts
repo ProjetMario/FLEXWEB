@@ -117,7 +117,7 @@ export function assertStandardQuote(snapshot: unknown): void {
 export const intakeSchema = z.object({
   requestKey: z.string().uuid(),
   accessToken: z.string().regex(/^[a-f0-9]{64}$/),
-  companyName: text(160),
+  companyName: z.string().trim().max(160).default(""),
   contactName: text(120),
   email: z
     .email()
@@ -126,15 +126,16 @@ export const intakeSchema = z.object({
   phone: z
     .string()
     .trim()
-    .regex(/^\+?[\d\s().-]{8,25}$/),
-  city: text(100),
-  businessType: text(100),
+    .refine((value) => value === "" || /^\+?[\d\s().-]{8,25}$/.test(value), "Téléphone invalide.")
+    .default(""),
+  city: z.string().trim().max(100).default(""),
+  businessType: z.string().trim().max(100).default(""),
   planId: z.enum(["essentielle", "professionnelle", "croissance", "achat", "visibilite", "crm-automation"]),
   publicQuote: publicQuoteSchema.optional(),
   message: z.string().trim().min(15).max(3000),
   timeline: z.enum(["rapidement", "1-3-mois", "a-definir"]),
   privacyConsent: z.literal(true),
-  professional: z.literal(true),
+  professional: z.boolean(),
   websiteTrap: z.string().max(0).default(""),
   source: z.string().max(160).default("site"),
 }).superRefine((data, context) => {

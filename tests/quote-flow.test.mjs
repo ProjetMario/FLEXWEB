@@ -26,16 +26,13 @@ async function filledQuote(consent = 'accepted', selection = {service:'site', id
   page.setDefaultTimeout(15000); page.setDefaultNavigationTimeout(20000);
   await page.goto(new URL(`/demarrer/?service=${selection.service}&offre=${selection.id}`, preview).href);
   await page.waitForFunction(() => document.querySelector('fieldset') && !document.querySelector('fieldset').disabled);
-  for (const [label, value] of [['Entreprise', 'Entreprise simulation'], ['Votre nom', 'Test local'], ['E-mail professionnel', 'test@example.invalid'], ['Téléphone', '0600000000'], ['Ville', 'Chambéry'], ['Métier / activité', 'Test']]) {
-    await page.getByLabel(label, {exact: true}).fill(value);
+  await page.getByRole('radio', {name:'Particulier', exact:true}).check();
+  for (const [label, value] of [['Votre nom', 'Test local'], ['Votre e-mail', 'test@example.invalid']]) {
+    await page.getByLabel(label, {exact:true}).fill(value);
   }
-  await page.getByLabel('Je fais cette demande pour mon activité professionnelle.').check();
-  await page.getByRole('button', {name:'Continuer', exact:true}).click();
-  assert.equal(await page.locator(`input[name="planId"][value="${selection.id}"]`).isChecked(), true);
-  assert.equal(await page.locator('input[name="maintenance"]').isChecked(), false);
-  assert.equal(await page.locator('input[name="crm"]').isChecked(), false);
-  for (const option of selection.options) await page.locator(`input[name="${option}"]`).check();
-  await page.getByRole('button', {name:'Continuer', exact:true}).click();
+  assert.equal(await page.locator('select[name="planId"]').inputValue(), selection.id);
+  assert.equal(await page.getByRole('button', {name:'Continuer', exact:true}).count(), 0);
+  assert.equal(await page.locator('input[name="phone"]').inputValue(), '');
   await page.getByLabel('Votre besoin', {exact:true}).fill('Demande locale de vérification sans soumission réelle.');
   await page.locator('input[name="privacyConsent"]').check();
   // Persist event calls across the mocked private-page navigation.
@@ -71,6 +68,9 @@ test('successful double click records one mocked request and one conversion', as
     await page.waitForFunction(() => document.querySelector('form').getAttribute('aria-busy') === 'true');
     assert.equal(attempts, 1);
     assert.equal(records.size, 1);
+    assert.equal(body.professional, false);
+    assert.equal(body.companyName, '');
+    assert.equal(body.phone, '');
     assert.deepEqual(body.publicQuote, {version:'2026-09-24-ttc', service:'site', tier:'simple', options:[]});
     assert.deepEqual(await recordedEvents(page), []);
     release();
@@ -83,11 +83,11 @@ test('successful double click records one mocked request and one conversion', as
   } finally { release(); await context.close(); }
 });
 
-test('three advertised offers preserve their selection, TTC budgets and optional charges through mocked intake', async () => {
+test('three advertised offers preserve their selection and TTC budgets without monthly upsells', async () => {
   const cases = [
     {service:'site', id:'essentielle', tier:'simple', euros:299, options:[], monthly:0},
-    {service:'site', id:'visibilite', tier:'visibility', euros:590, options:['maintenance','crm'], monthly:148},
-    {service:'automation', id:'crm-automation', tier:'crm', euros:990, options:['crm'], monthly:99},
+    {service:'site', id:'visibilite', tier:'visibility', euros:590, options:[], monthly:0},
+    {service:'automation', id:'crm-automation', tier:'crm', euros:990, options:[], monthly:0},
   ];
   for (const selection of cases) {
     const {page, context} = await filledQuote('accepted', selection);
@@ -97,9 +97,9 @@ test('three advertised offers preserve their selection, TTC budgets and optional
       return route.fulfill({status:201,contentType:'application/json',body:'{"projectId":"local-test"}'});
     });
     try {
-      const summary = (await page.locator('.flow-aside .flow-total').innerText()).normalize('NFKC');
+      await page.locator('summary').click();
+      const summary = (await page.locator('select[name="planId"] option:checked').textContent()).normalize('NFKC');
       assert.match(summary, new RegExp(`${selection.euros}\\s*€ TTC`));
-      assert.match(summary, new RegExp(`Options mensuelles\\s+${selection.monthly}\\s*€ TTC / mois`));
       await page.getByRole('button', {name:'Recevoir mon devis'}).click();
       await page.waitForURL('**/espace-projet/**');
       assert.equal(submitted.planId, selection.id);
@@ -111,6 +111,30 @@ test('three advertised offers preserve their selection, TTC budgets and optional
       assert.equal(Object.hasOwn(submitted.publicQuote, 'monthlyCents'), false);
     } finally { await context.close(); }
   }
+});
+
+test('professional request keeps optional contact details and fits small screens', async () => {
+  const {page, context} = await filledQuote();
+  let submitted;
+  await page.route('**/api/automation/intake', route => {
+    submitted = route.request().postDataJSON();
+    return route.fulfill({status:201,contentType:'application/json',body:'{"projectId":"local-test"}'});
+  });
+  try {
+    await page.getByRole('radio', {name:'Pro', exact:true}).check();
+    await page.locator('input[name="phone"]').fill('0600000000');
+    await page.locator('summary').click();
+    await page.locator('input[name="companyName"]').fill('Entreprise simulation');
+    for (const width of [320,390,768,1440]) {
+      await page.setViewportSize({width,height:900});
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    }
+    await page.getByRole('button', {name:'Recevoir mon devis'}).click();
+    await page.waitForURL('**/espace-projet/**');
+    assert.equal(submitted.professional, true);
+    assert.equal(submitted.phone, '0600000000');
+    assert.equal(submitted.companyName, 'Entreprise simulation');
+  } finally { await context.close(); }
 });
 
 test('rejected request emits no conversion; retry reuses its identity and records once', async () => {

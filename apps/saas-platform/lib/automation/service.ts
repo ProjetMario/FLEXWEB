@@ -78,7 +78,9 @@ export async function createIntake(input: unknown) {
   }
   try {
     return await prisma.$transaction(async (tx) => {
-      const prospect = await tx.prospect.upsert({
+      // The prospect list is keyed by phone/company. Keep requests with missing
+      // contact details in SalesProject, without inventing data or merging namesakes.
+      const prospect = data.phone && data.companyName ? await tx.prospect.upsert({
         where: {
           phone_companyName: {
             phone: data.phone,
@@ -98,13 +100,14 @@ export async function createIntake(input: unknown) {
           setupFee: offer.setupCents / 100,
           monthlyPrice: offer.monthlyCents / 100,
         },
-      });
+      }) : null;
       const project = await tx.salesProject.create({
         data: {
+          clientType: data.professional ? "PROFESSIONAL" : "INDIVIDUAL",
           requestKey: data.requestKey,
           accessTokenHash: hash,
           accessExpiresAt: new Date(Date.now() + 180 * day),
-          companyName: data.companyName,
+          companyName: data.companyName || data.contactName,
           contactName: data.contactName,
           email: data.email,
           phone: data.phone,
@@ -117,17 +120,17 @@ export async function createIntake(input: unknown) {
           monthlyCents: offer.monthlyCents,
           setupCents: offer.setupCents,
           offerSnapshot: offer,
-          prospectId: prospect.id,
+          prospectId: prospect?.id || null,
         },
       });
-      await tx.followUp.create({
+      if (prospect) await tx.followUp.create({
         data: {
           prospectId: prospect.id,
           dueAt: new Date(Date.now() + day),
           note: `Qualifier la demande ${project.id} (${offer.name}).`,
         },
       });
-      await tx.prospectInteraction.create({
+      if (prospect) await tx.prospectInteraction.create({
         data: {
           prospectId: prospect.id,
           type: "PROSPECT_AJOUTE",
@@ -139,7 +142,9 @@ export async function createIntake(input: unknown) {
           projectId: project.id,
           type: "INTAKE",
           detail:
-            "Demande professionnelle reçue ; information relative aux données acceptée.",
+            data.professional
+              ? "Demande professionnelle reçue ; information relative aux données acceptée."
+              : "Demande de particulier reçue ; information relative aux données acceptée.",
         },
       });
       await tx.automationMessage.create({
