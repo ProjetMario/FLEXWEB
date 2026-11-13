@@ -21,9 +21,7 @@ const node = process.execPath;
 
 async function command(file, args, extraEnv = {}) {
   console.log('Release command:',path.basename(file),args[0]||'');
-  // Shared client assets can change all 122,000+ generated HTML pages. Allow
-  // their upload to finish within the workflow's existing 90-minute limit.
-  const timeout=file==='npx'?60*60*1000:file==='git'?60000:20*60*1000;
+  const timeout=file==='npx'?30*60*1000:file==='git'?60000:20*60*1000;
   try {
     const running=exec(file,args,{cwd:root,env:{...env,...extraEnv},maxBuffer:64*1024*1024,timeout});
     running.child?.stdin?.end(); // A CI command must fail rather than wait for an invisible prompt.

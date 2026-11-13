@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test, { afterEach } from 'node:test';
-import { trackLead } from '../src/lib/analytics.ts';
+import { trackLead } from '../src/lib/quote-analytics.ts';
 
 afterEach(() => { delete globalThis.window; });
 const mockWindow = (consent = 'accepted') => {
