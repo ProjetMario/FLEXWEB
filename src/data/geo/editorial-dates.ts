@@ -8,7 +8,7 @@ export const editorialDates: Record<string, string> = Object.fromEntries([
   '/pricing/', '/about/', '/contact/',
   '/en/websites/', '/en/applications/', '/en/ai-automation/', '/en/crm/',
   '/en/pricing/', '/en/about/', '/en/contact/',
-].map(path => [path, '2026-11-03']).concat([['/creation-site-internet/', '2026-11-12']]));
+].map(path => [path, '2026-11-03']).concat([['/creation-site-internet/', '2026-11-13'], ['/journal/', '2026-11-13']]));
 
 // These edits were already published on 1 November; correct their stale sitemap dates.
 export const previouslyReviewedDates: Record<string, string> = {

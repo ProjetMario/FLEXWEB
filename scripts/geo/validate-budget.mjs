@@ -2,6 +2,9 @@ import assert from 'node:assert/strict';
 import { readFile, writeFile, access } from 'node:fs/promises';
 import { parse } from 'parse5';
 import { readSitemap } from '../seo/read-sitemap.mjs';
+import { tsImport } from 'tsx/esm/api';
+
+const { editorialDates } = await tsImport('../../src/data/geo/editorial-dates.ts', import.meta.url);
 
 const origin = 'https://flex-web.fr';
 const newPaths = ['/creation-site-internet-pas-cher/', '/francophonie/', '/en/affordable-websites/', '/en/french-speaking-clients/'];
@@ -26,7 +29,7 @@ for (const route of changedPaths) {
   assert.doesNotMatch(visible,/Témoignage client à ajouter|Résultats chiffrés à confirmer|Deux fiches seront publiées/);
   const schemas=all.filter(n=>n.tagName==='script'&&attrs(n,'type')==='application/ld+json').flatMap(n=>{const data=JSON.parse(n.childNodes.map(c=>c.value||'').join(''));return data['@graph']||[data];});
   for(const schema of schemas.filter(s=>s['@type']==='FAQPage'))for(const q of schema.mainEntity){assert(visible.includes(norm(q.name)),route+': visible FAQ question');assert(visible.includes(norm(q.acceptedAnswer.text)),route+': visible FAQ answer');}
-  for(const schema of schemas.filter(s=>s.dateModified))assert.equal(schema.dateModified,route === '/creation-site-internet/' ? '2026-11-12' : '2026-11-03',route+': reviewed date');
+  for(const schema of schemas.filter(s=>s.dateModified))assert.equal(schema.dateModified,editorialDates[route] ?? '2026-11-03',route+': reviewed date');
   for(const link of nodes(main).filter(n=>n.tagName==='a'&&attrs(n,'href'))){
     const target = new URL(attrs(link,'href'),origin+route);
     if(target.origin !== origin)continue;
