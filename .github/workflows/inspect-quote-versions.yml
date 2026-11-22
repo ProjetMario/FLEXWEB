@@ -22,6 +22,17 @@ jobs:
             ['last_success','https://6b033560dd766682f3ea02a4--flex-webb.netlify.app/demarrer/?service=application'],
             ['original','https://6af791098269e8f08591ce03--flex-webb.netlify.app/demarrer/?service=application']
           ];
+          for (const [name,base] of [
+            ['current-immutable','https://6b0351ea3487f53fe092430a--flex-webb.netlify.app'],
+            ['previous-immutable','https://6b033560dd766682f3ea02a4--flex-webb.netlify.app'],
+            ['public','https://flex-web.fr']]) {
+            try {
+              const res=await fetch(base+'/api/automation/intake',{method:'GET',signal:AbortSignal.timeout(20000),redirect:'manual'});
+              const raw=await res.text();
+              let parsed;try{parsed=JSON.parse(raw)}catch{}
+              console.log(JSON.stringify({test:'GET no mutation',name,status:res.status,contentType:res.headers.get('content-type'),location:res.headers.get('location'),cacheControl:res.headers.get('cache-control'),errorText:parsed?.error?.slice(0,180)||null,rawLength:raw.length}));
+            } catch(e){ console.log(JSON.stringify({test:'GET no mutation',name,error:e.name,detail:e.message})); }
+          }
           for (const [name,url] of sites){
             try {
               const res=await fetch(url,{signal:AbortSignal.timeout(25000)});
