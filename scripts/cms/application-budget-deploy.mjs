@@ -236,7 +236,7 @@ function ruleCounts(deploy) {
   const titles = deploy.summary?.messages?.map(message => message.title) || [];
   return {
     redirects: Number(titles.find(title => /^\d+ redirect rules processed$/.test(title))?.match(/^\d+/)?.[0]),
-    headers: Number(titles.find(title => /^\d+ header rules processed$/.test(title))?.match(/^\d+/)?.[0]),
+    headers: Number(titles.find(title => /^\d+ header rules? processed$/.test(title))?.match(/^\d+/)?.[0]),
   };
 }
 
