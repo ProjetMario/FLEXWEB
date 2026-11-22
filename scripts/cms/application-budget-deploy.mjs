@@ -237,15 +237,30 @@ async function waitForDeploy(id, states) {
 }
 
 async function createSnapshot(files, functions, blobs, draft) {
+  // Follow Netlify CLI's two-phase API flow: reserve a deploy, then submit the
+  // immutable file/function digest. Send only source-declared function config;
+  // effective region and memory defaults from a previous response are not
+  // configuration overrides. verifySnapshot still checks every effective value.
+  const functions_config = Object.fromEntries(Object.entries(functions.functions_config).map(([name, config]) => {
+    assert(config.priority === 10, `UNEXPECTED_SOURCE_FUNCTION_PRIORITY:${name}`);
+    return [name, { priority: 10, ...(config.routes ? { routes: config.routes } : {}) }];
+  }));
   const deploy = await api('POST', `/sites/${SITE_ID}/deploys?title=${encodeURIComponent(`Budget application dès 1 990 € — page démarrer uniquement${draft ? ' — vérification' : ''}`)}`, {
-    files, ...functions, draft, async: true, branch: 'main',
+    draft, branch: 'main',
   });
   assert(/^[a-f0-9]{24}$/.test(deploy.id), 'NEW_DEPLOY_ID_MISSING');
   report[draft ? 'previewId' : 'productionId'] = deploy.id;
   await saveReport();
+  const initialized = await api('PUT', `/sites/${SITE_ID}/deploys/${deploy.id}`, {
+    files, ...functions, functions_config, draft, async: true, branch: 'main',
+  });
+  assert(initialized.id === deploy.id && initialized.site_id === SITE_ID, 'DEPLOY_UPDATE_TARGET_MISMATCH');
   const diff = await waitForDeploy(deploy.id, ['prepared','uploading','uploaded','ready']);
   assert(Array.isArray(diff.required), 'DEPLOY_FILE_DIFF_MISSING');
-  assert(!diff.required_functions?.length && !diff.required_edge_functions?.length && !diff.required_server?.length, 'CACHED_FUNCTION_OR_SERVER_NOT_REUSABLE');
+  assert(Array.isArray(diff.required_functions), 'DEPLOY_FUNCTION_DIFF_MISSING');
+  report[draft ? 'previewRequiredFunctions' : 'productionRequiredFunctions'] = diff.required_functions;
+  await saveReport();
+  assert(diff.required_functions.length === 0 && !diff.required_edge_functions?.length && !diff.required_server?.length, 'CACHED_FUNCTION_OR_SERVER_NOT_REUSABLE');
   const byDigest = new Map([...blobs].map(([name, buffer]) => [sha1(buffer), { name, buffer }]));
   for (const digest of diff.required) assert(byDigest.has(digest), `UNEXPECTED_UPLOAD_REQUIRED:${digest}`);
   for (const digest of new Set(diff.required)) {
