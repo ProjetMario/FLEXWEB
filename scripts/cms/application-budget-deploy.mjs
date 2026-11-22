@@ -46,7 +46,7 @@ export function normalizeFiles(entries) {
   assert(Array.isArray(entries) && entries.length > 100, 'INCOMPLETE_SITE_FILE_MANIFEST');
   const result = Object.create(null);
   for (const entry of entries) {
-    const name = relativePath(entry.path);
+    const name = relativePath(entry.path).toLowerCase();
     assert(/^[a-f0-9]{40}$/.test(entry.sha) && !Object.hasOwn(result, name), 'INVALID_SITE_FILE_MANIFEST');
     result[name] = entry.sha;
   }
@@ -88,8 +88,15 @@ export async function prepareOverlay(baselineHtml, candidateDir, baselineFiles =
     assert(stat.isFile() && !stat.isSymbolicLink(), 'INVALID_CANDIDATE_ASSET');
     const body = await fs.readFile(file);
     const digest = sha1(body);
-    if (baselineFiles[name]) assert(baselineFiles[name] === digest, `SHARED_ASSET_CHANGED:${name}`);
-    else blobs.set(name, body);
+    // Netlify's file inventory canonicalizes paths to lowercase; Astro keeps
+    // mixed-case content hashes in its imports. Preserve local filenames for
+    // reading, but use Netlify's canonical key for the deployment manifest.
+    const deployName = name.toLowerCase();
+    if (baselineFiles[deployName]) assert(baselineFiles[deployName] === digest, `SHARED_ASSET_CHANGED:${name}`);
+    else {
+      assert(!blobs.has(deployName) || sha1(blobs.get(deployName)) === digest, 'CANDIDATE_ASSET_CASE_COLLISION');
+      blobs.set(deployName, body);
+    }
     if (/\.(?:js|mjs|css)$/.test(name)) {
       const source = body.toString('utf8');
       const references = [
@@ -120,7 +127,7 @@ export async function prepareOverlay(baselineHtml, candidateDir, baselineFiles =
   assert(restored === baselineHtml, 'HTML_CHANGED_OUTSIDE_FORM');
   blobs.set(PAGE, Buffer.from(html));
   assert(blobs.size > 1 && blobs.size <= 40, 'UNEXPECTED_FORM_ASSET_COUNT');
-  return { blobs, cssName, assetClosure: [...visited].sort() };
+  return { blobs, cssName, assetClosure: [...new Set([...visited].map(name => name.toLowerCase()))].sort() };
 }
 
 function routeConfig(route) {
@@ -140,7 +147,9 @@ export function functionPayload(deploy) {
     assert(fn.r === 'nodejs22.x' && fn.im === 'stream', `UNEXPECTED_FUNCTION_RUNTIME:${fn.n}`);
     functions[fn.n] = fn.d;
     const config = { memory: fn.mo ?? fn.m, priority: fn.p };
-    const region = deploy.functions_region_overrides?.find(entry => entry.name === fn.n)?.region || fn.rgo || fn.rg;
+    // Reuse the original configured AWS region, not the API's normalized
+    // airport-code alias, to retain the function's exact deployment identity.
+    const region = fn.rgo || fn.rg || deploy.functions_region_overrides?.find(entry => entry.name === fn.n)?.region;
     if (region) config.region = region;
     if (fn.ro) config.routes = fn.ro.map(routeConfig);
     for (const [source, target] of [['dn','display_name'],['g','generator'],['bd','build_data']]) {
