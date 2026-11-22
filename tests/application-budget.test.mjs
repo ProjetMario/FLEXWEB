@@ -10,14 +10,18 @@ let browser;
 before(async () => { browser = await chromium.launch({headless:true,executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || undefined}); });
 after(async () => { await browser?.close(); });
 
-async function openForm(service) {
+async function openForm(service, { intakeFailures = [] } = {}) {
   const context = await browser.newContext({viewport:{width:390,height:844}});
   const submitted = [];
+  const pendingFailures = [...intakeFailures];
   await context.route('**/*', route => {
     const request = route.request(), url = new URL(request.url());
     if (url.origin !== preview.origin) return route.abort();
     if (url.pathname === '/api/automation/intake' && request.method() === 'POST') {
       submitted.push(request.postDataJSON());
+      const failure = pendingFailures.shift();
+      if (failure === "html504") return route.fulfill({status:504,contentType:"text/html",body:"<html><body>Gateway Timeout</body></html>"});
+      if (failure === "json400") return route.fulfill({status:400,contentType:"application/json",body:'{"error":"Données invalides"}'});
       return route.fulfill({status:201,contentType:'application/json',body:'{"projectId":"local-test"}'});
     }
     if (url.pathname.startsWith('/api/')) return route.fulfill({status:503,contentType:'application/json',body:'{"error":"Unexpected mocked API"}'});
@@ -144,5 +148,52 @@ test('changing from site to application removes details and checkbox and explain
     assert.equal(submitted[0].planId, 'achat');
     assert.equal(submitted[0].privacyConsent, true);
     assert.ok(submitted[0].message.includes(`Budget prévu : ${budgets[1]}.`));
+  } finally { await context.close(); }
+});
+
+
+test('a transient 504 automatically retries application intake with identical request identity', async () => {
+  const {context,page,submitted} = await openForm('application', {intakeFailures:['html504']});
+  try {
+    await page.getByRole('radio', {name:budgets[0],exact:true}).check();
+    await page.getByRole('button', {name:'Recevoir mon devis'}).click();
+    await page.waitForURL('**/espace-projet/**');
+    assert.equal(submitted.length, 2);
+    assert.deepEqual(submitted[1], submitted[0]);
+    assert.ok(submitted[0].requestKey);
+    assert.ok(submitted[0].accessToken);
+  } finally { await context.close(); }
+});
+
+test('application validation errors are not retried', async () => {
+  const {context,page,submitted} = await openForm('application', {intakeFailures:['json400']});
+  try {
+    await page.getByRole('radio', {name:budgets[1],exact:true}).check();
+    await page.getByRole('button', {name:'Recevoir mon devis'}).click();
+    await page.getByRole('alert').getByText('Données invalides').waitFor();
+    assert.equal(submitted.length, 1);
+    assert.equal(await page.getByRole('button', {name:'Recevoir mon devis'}).isEnabled(), true);
+  } finally { await context.close(); }
+});
+
+test('unrelated site offers do not automatically retry an intake 504', async () => {
+  const {context,page,submitted} = await openForm('site', {intakeFailures:['html504']});
+  try {
+    await page.getByRole('button', {name:'Recevoir mon devis'}).click();
+    await page.getByRole('alert').waitFor();
+    assert.equal(submitted.length, 1);
+  } finally { await context.close(); }
+});
+
+test('after two transient failures the application form preserves user inputs for a manual retry', async () => {
+  const {context,page,submitted} = await openForm('application', {intakeFailures:['html504','html504']});
+  try {
+    await page.getByRole('radio', {name:budgets[2],exact:true}).check();
+    await page.getByRole('button', {name:'Recevoir mon devis'}).click();
+    await page.getByRole('alert').getByText(/pas pu confirmer l’envoi/).waitFor();
+    assert.equal(submitted.length, 2);
+    assert.deepEqual(submitted[0], submitted[1]);
+    assert.equal(await page.getByLabel('Votre e-mail').inputValue(), 'test@example.invalid');
+    assert.equal(await page.getByRole('radio', {name:budgets[2],exact:true}).isChecked(), true);
   } finally { await context.close(); }
 });

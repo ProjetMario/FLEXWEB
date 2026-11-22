@@ -22,6 +22,8 @@ const bespokeOffers = {
   },
 };
 
+const isTemporaryIntakeFailure = (error) => error?.name === "TimeoutError" || error?.name === "AbortError" || error?.name === "TypeError" || /^(Le parcours en ligne est indisponible\.|Connexion interrompue\.|Le service est momentanément indisponible\.)/.test(error?.message || "");
+
 const applicationBudgets = [
   { value: "1990-5000", label: "1 990 à 5 000 €" },
   { value: "5000-10000", label: "5 000 à 10 000 €" },
@@ -30,7 +32,7 @@ const applicationBudgets = [
 
 export default function StartProject() {
   const [ready, setReady] = useState(false);
-  const [busy, setBusy] = useState(false), [error, setError] = useState("");
+  const [busy, setBusy] = useState(false), [error, setError] = useState(""), [retrying, setRetrying] = useState(false);
   const [service, setService] = useState("site");
   const [sitePlan, setSitePlan] = useState("essentielle");
   const [automationPlan, setAutomationPlan] = useState("crm-automation");
@@ -135,22 +137,39 @@ export default function StartProject() {
       const message = buildQuoteMessage(messageContext, data.message);
       // Application requests accept the visible contact notice by submitting;
       // the other forms retain their explicit checkbox requirement.
-      await api("intake", {
+      const request = {
         ...data, ...identity.current, professional: data.professional === "pro", source: leadSource(),
         privacyConsent: service === "application" ? true : data.privacyConsent,
         publicQuote: bespoke
           ? { version: publicQuoteVersion, service }
           : { version: publicQuoteVersion, service, tier: displayedOffer.tier, options: selectedOptions },
         message,
-      });
+      };
+      try {
+        await api("intake", request);
+      } catch (firstError) {
+        // Retry only transient application submission failures. The exact same
+        // requestKey/accessToken and payload are reused to preserve deduplication.
+        if (service !== "application" || !isTemporaryIntakeFailure(firstError)) throw firstError;
+        setRetrying(true);
+        try {
+          await new Promise(resolve => setTimeout(resolve, 750));
+          await api("intake", request);
+        } finally {
+          setRetrying(false);
+        }
+      }
       saveToken(identity.current.accessToken);
       trackLead("project_quote", service);
       try { sessionStorage.removeItem("flexweb-intake-v2"); } catch {}
       window.location.assign(`/espace-projet/#cle=${identity.current.accessToken}`);
     } catch (err) {
-      setError(err.name === "TimeoutError"
-        ? "La connexion a pris trop de temps. Réessayez : votre demande ne sera pas dupliquée."
-        : err.message);
+      setRetrying(false);
+      setError(service === "application" && isTemporaryIntakeFailure(err)
+        ? "Nous n’avons pas pu confirmer l’envoi. Vous pouvez réessayer sans perdre vos informations, ou écrire à contact@flex-web.fr."
+        : err.name === "TimeoutError"
+          ? "La connexion a pris trop de temps. Réessayez : votre demande ne sera pas dupliquée."
+          : err.message);
       setBusy(false);
     }
   }
@@ -201,7 +220,7 @@ export default function StartProject() {
           {service !== "application" && <label className="flow-check quote-consent"><input name="privacyConsent" type="checkbox" checked={data.privacyConsent} onChange={set} required /><span>J’accepte d’être recontacté pour cette demande. <a href="/privacy/" target="_blank" rel="noreferrer">Confidentialité</a>.</span></label>}
           {error && <p className="flow-error" role="alert">{error}</p>}
           {service === "application" && <p className="flow-note quote-contact-notice">En envoyant votre demande, vous acceptez d’être recontacté à son sujet. <a href="/privacy/" target="_blank" rel="noreferrer">Confidentialité</a>.</p>}
-          <button className="flow-button quote-submit" disabled={busy} type="submit">{busy ? "Envoi en cours…" : "Recevoir mon devis"}</button>
+          <button className="flow-button quote-submit" disabled={busy} type="submit">{busy ? (retrying ? "Nouvelle tentative…" : "Envoi en cours…") : "Recevoir mon devis"}</button>
           <p className="flow-note quote-reassurance">Gratuit et sans engagement. Aucun paiement à cette étape.</p>
         </fieldset>
       </form>

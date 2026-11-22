@@ -14,7 +14,7 @@ import { verifyAutomationProxy } from './automation-probe.mjs';
 // Netlify CLI uploads its resolved redirects/headers as a netlify.toml file:
 // https://github.com/netlify/cli/blob/main/src/utils/deploy/hash-config.ts
 export const SITE_ID = '5f0ec4e5-fe16-4ef3-8380-9b8aff26edbb';
-export const BASELINE_ID = '6b02c2a45950df733ff5a331';
+export const BASELINE_ID = '6b02d907b5f3d769618f7659';
 export const RELEASE_BRANCH = 'codex/application-budget-live-20261122';
 const PAGE = 'demarrer/index.html';
 const LIVE_ORIGIN = 'https://flex-web.fr';
