@@ -1,0 +1,49 @@
+name: Pin verified previous quote form
+on:
+  push:
+    branches: [ops/pin-restored-form-20261122]
+    paths: ['.github/workflows/pin-restored-form.yml']
+permissions:
+  contents: read
+jobs:
+  pin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    environment: emdash-publication
+    steps:
+      - uses: actions/setup-node@v4
+        with: 
+          node-version: '24'
+      - name: Lock only the verified current restored form deployment
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          node --input-type=module <<'NODE'
+          const SITE='5f0ec4e5-fe16-4ef3-8380-9b8aff26edbb';
+          const expectedTitle='Formulaire application simplifié — page démarrer uniquement';
+          if(!process.env.NETLIFY_AUTH_TOKEN)throw Error('TOKEN_MISSING');
+          const api=async(method,path)=>{
+            const r=await fetch('https://api.netlify.com/api/v1'+path,{method,redirect:'error',signal:AbortSignal.timeout(20000),headers:{Authorization:'Bearer '+process.env.NETLIFY_AUTH_TOKEN}});
+            if(!r.ok) throw Error('NETLIFY_'+method+'_'+r.status);
+            return r.json();
+          };
+          const site=await api('GET','/sites/'+SITE);
+          const id=site.published_deploy?.id;
+          if(!/^[a-f0-9]{24}$/.test(id||''))throw Error('NOT_PUBLISHED');
+          const deploy=await api('GET','/deploys/'+id);
+          if(deploy.site_id!==SITE||deploy.state!=='ready'||deploy.title!==expectedTitle||deploy.deploy_source!=='api') throw Error('ANOTHER_DEPLOY_IS_LIVE');
+          const res=await fetch('https://flex-web.fr/demarrer/?service=application',{signal:AbortSignal.timeout(20000),cache:'no-store'});
+          const html=await res.text();
+          if(res.status!==200||!html.includes('Votre devis gratuit.')||html.includes('Votre projet, étape par étape')||!html.includes('StartProject.DKYgJC2L.js'))throw Error('FORM_NOT_RESTORED');
+          const lock=await api('POST','/deploys/'+id+'/lock');
+          if(lock.id && lock.id!==id)throw Error('LOCK_WRONG_DEPLOY');
+          let verified=false;
+          for(let i=0;i<10;i++){
+            const fresh=await api('GET','/sites/'+SITE);
+            if(fresh.published_deploy?.id!==id)throw Error('PUBLISHED_DEPLOY_CHANGED');
+            if(fresh.published_deploy?.locked===true){verified=true;break;}
+            await new Promise(r=>setTimeout(r,1000));
+          }
+          if(!verified)throw Error('LOCK_NOT_VERIFIED');
+          console.log(JSON.stringify({locked:true,deployId:id,page:'https://flex-web.fr/demarrer/?service=application',message:'Current restored form pinned; new auto deploys remain unpublished'}));
+          NODE
