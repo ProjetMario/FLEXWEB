@@ -1,0 +1,41 @@
+name: Inspect current and previous quote forms
+on:
+  push:
+    branches: [codex/application-budget-live-20261122]
+    paths: ['.github/workflows/inspect-quote-versions.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Inspect published and old form HTML, read-only
+        run: |
+          node --input-type=module <<'NODE'
+          import { createHash } from 'node:crypto';
+          const sites = [
+            ['live','https://flex-web.fr/demarrer/?service=application'],
+            ['last_success','https://6b033560dd766682f3ea02a4--flex-webb.netlify.app/demarrer/?service=application'],
+            ['original','https://6af791098269e8f08591ce03--flex-webb.netlify.app/demarrer/?service=application']
+          ];
+          for (const [name,url] of sites){
+            try {
+              const res=await fetch(url,{signal:AbortSignal.timeout(25000)});
+              const html=await res.text();
+              const script=[...html.matchAll(/(?:src|component-url)="([^"]*StartProject[^"]*)"/g)].map(x=>x[1]);
+              const text=html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,' ').replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi,' ').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').slice(0,800);
+              const summary={name,status:res.status,url:res.url,bytes:html.length,sha256:createHash('sha256').update(html).digest('hex').slice(0,16),astro:html.includes('astro-island'),app:html.includes('StartProject'),head:html.slice(0,220),scripts:script.slice(0,3),text,strings: Object.fromEntries(['Votre devis gratuit','Votre budget','Précisions et offre','privacyConsent','Votre nom','Votre besoin','applicationBudget','Étape 2'].map(k=>[k,html.includes(k)]))};
+              console.log(JSON.stringify(summary));
+              for(const s of script.slice(0,1)){
+                const assetUrl=new URL(s,url).href;
+                const ar=await fetch(assetUrl,{signal:AbortSignal.timeout(25000)});
+                const js=await ar.text();
+                console.log(JSON.stringify({name,asset:assetUrl,status:ar.status,bytes:js.length,strings:Object.fromEntries(['Votre devis gratuit.','Précisions et offre','Votre budget','J’accepte d’être recontacté','Recevoir mon devis','Continuer','Étape 2'].map(k=>[k,js.includes(k)]))}));
+              }
+            }catch(e){console.log(JSON.stringify({name,error:e.message}))}
+          }
+          NODE
