@@ -380,7 +380,17 @@ export async function main() {
   const baseline = await api('GET', `/deploys/${BASELINE_ID}`);
   const rebuilt = await loadRebuiltFunctions(baseline);
   report.rebuiltFunctions = rebuilt.evidence;
-  report.baselineProxy = await verifyAutomationProxy(BASELINE_ORIGIN);
+  // The latest CLI production deploy returns 405 on its immutable URL,
+  // unlike the previous API deploy. Treat this read-only probe as baseline
+  // evidence rather than changing or weakening its routing.
+  const baselineResponse = await fetch(`${BASELINE_ORIGIN}/api/automation/intake`, {
+    method: 'GET', redirect: 'error', signal: AbortSignal.timeout(20000),
+  });
+  const baselineResponseBody = await baselineResponse.json();
+  assert(baselineResponse.status === 405 && baselineResponseBody.error === 'Méthode non acceptée.'
+    && baselineResponse.headers.get('content-type')?.includes('application/json')
+    && baselineResponse.headers.get('cache-control')?.includes('no-store'), 'BASELINE_PROXY_UNEXPECTED');
+  report.baselineProxy = {status:405, method:'GET', error:baselineResponseBody.error};
   const baselineFiles = normalizeFiles(await api('GET', `/sites/${SITE_ID}/files`));
   await requireBaseline();
   const baselineBody = await immutableBytes(BASELINE_ORIGIN, PAGE);
