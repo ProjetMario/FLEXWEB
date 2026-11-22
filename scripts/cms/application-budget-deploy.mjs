@@ -264,7 +264,7 @@ async function requireBaseline() {
   const site = await api('GET', `/sites/${SITE_ID}`);
   assert(site.id === SITE_ID && site.ssl_url === LIVE_ORIGIN, 'UNEXPECTED_TARGET_SITE');
   assert(site.published_deploy?.id === BASELINE_ID && site.published_deploy?.state === 'ready', 'PRODUCTION_BASELINE_CHANGED');
-  assert(site.published_deploy.locked === false, 'PRODUCTION_DEPLOY_LOCKED');
+  assert([false, null].includes(site.published_deploy.locked), 'PRODUCTION_DEPLOY_LOCKED');
   report.gitBuildsStopped = site.build_settings?.stop_builds === true;
   assert(site.prevent_non_git_prod_deploys !== true, 'MANUAL_PRODUCTION_DEPLOYS_FORBIDDEN');
   return site;
@@ -428,7 +428,7 @@ export async function main() {
   report.productionUrl = await verifySnapshot(production, baseline, blobs, assetClosure, files, rebuilt);
   const site = await api('GET', `/sites/${SITE_ID}`);
   assert(site.published_deploy?.id === production.id, 'NEW_PRODUCTION_NOT_PUBLISHED');
-  assert(site.published_deploy.locked === false, 'LOCK_STATE_CHANGED');
+  assert([false, null].includes(site.published_deploy.locked), 'LOCK_STATE_CHANGED');
   const publishedFiles = normalizeFiles(await api('GET', `/sites/${SITE_ID}/files`));
   assert(manifestDigest(publishedFiles) === manifestDigest(files), 'PUBLISHED_MANIFEST_MISMATCH');
   assert(sha1(await immutableBytes(LIVE_ORIGIN, PAGE)) === files[PAGE], 'CUSTOM_DOMAIN_PAGE_MISMATCH');
