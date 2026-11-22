@@ -7,6 +7,12 @@ import { declaredSources, quoteNeedMaxLength, buildQuoteMessage } from "../../li
 import { isProspectSlug, validProspectContext } from "../../lib/prospect-context.mjs";
 import { api, createIdentity, money, saveToken } from "./api";
 
+const applicationBudgets = [
+  { value: "1990-5000", label: "1 990 à 5 000 €" },
+  { value: "5000-10000", label: "5 000 à 10 000 €" },
+  { value: "10000-plus", label: "Plus de 10 000 €" },
+];
+
 const packNames = { essentielle: "Standard", visibilite: "Medium", "crm-automation": "Premium" };
 
 const bespokeOffers = {
@@ -33,7 +39,7 @@ export default function StartProject() {
   const [prospectContext, setProspectContext] = useState(null);
   const [data, setData] = useState({
     companyName: "", contactName: "", email: "", phone: "", city: "", businessType: "",
-    planId: "essentielle", message: "", timeline: "a-definir", privacyConsent: false,
+    planId: "essentielle", applicationBudget: "", message: "", timeline: "a-definir", privacyConsent: false,
     professional: false, websiteTrap: "", source: "site",
   });
   const form = useRef(null), identity = useRef(null), heading = useRef(null);
@@ -87,8 +93,9 @@ export default function StartProject() {
   const displayedOffer = offerChoices.find((o) => o.id === data.planId) || offerChoices[0];
   const bespoke = !displayedOffer.setupCents;
   const activeOptions = pricingOptions.filter((option) => selectedOptions.includes(option.id));
+  const applicationBudgetLabel = applicationBudgets.find((budget) => budget.value === data.applicationBudget)?.label;
   const quoteSummary = bespoke
-    ? `Demande de devis : ${displayedOffer.name}. Budget et périmètre à chiffrer, aucun forfait site sélectionné.`
+    ? `Demande de devis : ${displayedOffer.name}. ${service === "application" ? `Budget prévisionnel : ${applicationBudgetLabel || "non renseigné"}. Tarif à partir de 1 990 € selon la complexité, les options et le temps de développement.` : "Budget et périmètre à chiffrer"}, aucun forfait site sélectionné.`
     : `Demande de devis : ${displayedOffer.name}, ${money(displayedOffer.setupCents)} TTC en paiement unique. Options demandées : ${activeOptions.length ? activeOptions.map((o) => `${o.name} (${money(o.monthlyCents)} TTC/mois)`).join(" ; ") : "aucune mensualité"}.`;
   const messageContext = { summary: quoteSummary, prospectSlug: prospectContext?.slug, declaredSource };
   const maxNeedLength = quoteNeedMaxLength(messageContext);
@@ -190,6 +197,14 @@ export default function StartProject() {
                   ? o.description && <span className="flow-note">{o.description}</span>
                   : <ul className="flow-list">{o.features.map((f) => <li key={f}>{f}</li>)}</ul>}
               </label>)}
+              {service === "application" && <fieldset className="flow-fieldset">
+                <legend>Quel budget avez-vous prévu pour votre application ? *</legend>
+                <p className="flow-note">Tarifs à partir de 1 990 €. Le prix final dépend de la complexité de l’application, des options choisies et du temps de développement nécessaire.</p>
+                {applicationBudgets.map((budget) => <label className="flow-offer" key={budget.value}>
+                  <input type="radio" name="applicationBudget" value={budget.value} checked={data.applicationBudget === budget.value} onChange={set} required />
+                  {budget.label}
+                </label>)}
+              </fieldset>}
               {!bespoke && <fieldset className="flow-fieldset">
                 <legend>Options facultatives</legend>
                 <p className="flow-note">Choisissez l’une, les deux ou aucune. Les interventions et limites seront précisées au devis.</p>
@@ -229,8 +244,8 @@ export default function StartProject() {
           <p className="flow-eyebrow">Votre récapitulatif</p>
           <h2>{prospectContext && packNames[displayedOffer.id] ? `Pack ${packNames[displayedOffer.id]}` : displayedOffer.name}</h2>
           {prospectContext && packNames[displayedOffer.id] && <p className="flow-note">{displayedOffer.name}</p>}
-          <p className="flow-price">{bespoke ? "Sur devis" : `${money(displayedOffer.setupCents)} TTC`}</p>
-          <p className="flow-note">{bespoke ? "Le budget dépend des fonctionnalités, intégrations et outils nécessaires." : service === "automation" ? "Mise en place en paiement unique. Outils, licences et périmètre des automatisations précisés au devis." : "Création en paiement unique. Hébergement et nom de domaine précisés au devis."}</p>
+          <p className="flow-price">{bespoke ? (service === "application" ? "À partir de 1 990 €" : "Sur devis") : `${money(displayedOffer.setupCents)} TTC`}</p>
+          <p className="flow-note">{bespoke ? (service === "application" ? `Le prix dépend de la complexité de l’application, des options et du temps de développement.${applicationBudgetLabel ? ` Budget prévu : ${applicationBudgetLabel}.` : ""}` : "Le budget dépend des fonctionnalités, intégrations et outils nécessaires.") : service === "automation" ? "Mise en place en paiement unique. Outils, licences et périmètre des automatisations précisés au devis." : "Création en paiement unique. Hébergement et nom de domaine précisés au devis."}</p>
           {!bespoke && (activeOptions.length ? <ul className="flow-list">{activeOptions.map((o) => <li key={o.id}>{o.name} : +{money(o.monthlyCents)} TTC / mois</li>)}</ul> : <p className="flow-note">Aucune option mensuelle sélectionnée.</p>)}
           {!bespoke && <div className="flow-total"><span>{service === "automation" ? "Mise en place du CRM" : "Création du site"}</span><strong>{money(displayedOffer.setupCents)} TTC</strong><span>Options mensuelles</span><strong>{money(activeOptions.reduce((total, option) => total + option.monthlyCents, 0))} TTC / mois</strong></div>}
           <p className="flow-note">Prix toutes taxes comprises. Le devis confirme les prestations et le total avant paiement.</p>
