@@ -1,0 +1,40 @@
+name: Inspect existing application deployment
+on:
+  push:
+    branches: [codex/application-budget-live-20261122]
+    paths: ['.github/workflows/application-budget-inspect.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    environment: emdash-publication
+    steps:
+      - name: Read published manifest and function identities
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          node --input-type=module <<'JS'
+          const siteId = '5f0ec4e5-fe16-4ef3-8380-9b8aff26edbb';
+          const get = async suffix => {
+            const response = await fetch('https://api.netlify.com/api/v1' + suffix, {headers:{authorization:`Bearer ${process.env.NETLIFY_AUTH_TOKEN}`},signal:AbortSignal.timeout(60000)});
+            if (!response.ok) throw new Error(`Read failed: ${response.status} ${suffix}`);
+            return response.json();
+          };
+          const site = await get(`/sites/${siteId}`);
+          console.log(JSON.stringify({publishedId:site.published_deploy?.id,deployId:site.deploy_id,lastDeployId:site.last_deploy?.id,gitBuildsStopped:site.build_settings?.stop_builds}));
+          const functions = await get(`/sites/${siteId}/functions`);
+          const safeKeys = new Set(['name','n','id','sha','sha256','digest','d','code_sha','function_sha','original_id','oid','runtime','r','invocation_mode','im','created_at','branch','log_type','provider']);
+          const describe = value => {
+            if (Array.isArray(value)) return value.map(describe);
+            if (value && typeof value === 'object') return {keys:Object.keys(value),...Object.fromEntries(Object.entries(value).filter(([k,v]) => safeKeys.has(k) && ['string','number','boolean'].includes(typeof v))),...(value.functions ? {functions:describe(value.functions)} : {})};
+            return typeof value;
+          };
+          console.log(JSON.stringify({functionIdentities:describe(functions)}));
+          const files = await get(`/sites/${siteId}/files`);
+          const names = /(?:StartProject\.|client\.DIQWfPlE|analytics\.CexFF_rL|netlify\.toml|demarrer\/index)/i;
+          console.log(JSON.stringify({fileCount:files.length,samples:files.filter(file=>names.test(file.path)).map(({path,sha})=>({path,sha}))}));
+          const current = await get(`/sites/${siteId}`);
+          console.log(JSON.stringify({publishedIdAfterRead:current.published_deploy?.id}));
+          JS
