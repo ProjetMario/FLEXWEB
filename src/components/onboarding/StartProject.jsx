@@ -22,12 +22,19 @@ const bespokeOffers = {
   },
 };
 
+const applicationBudgets = [
+  { value: "1990-5000", label: "1 990 à 5 000 €" },
+  { value: "5000-10000", label: "5 000 à 10 000 €" },
+  { value: "10000-plus", label: "Plus de 10 000 €" },
+];
+
 export default function StartProject() {
   const [ready, setReady] = useState(false);
   const [busy, setBusy] = useState(false), [error, setError] = useState("");
   const [service, setService] = useState("site");
   const [sitePlan, setSitePlan] = useState("essentielle");
   const [automationPlan, setAutomationPlan] = useState("crm-automation");
+  const [budget, setBudget] = useState("");
   const selectedOptions = [];
   const declaredSource = "";
   const [prospectContext, setProspectContext] = useState(null);
@@ -42,7 +49,7 @@ export default function StartProject() {
     const query = new URLSearchParams(window.location.search);
     const rawService = (query.get("service") || "").toLowerCase();
     const requestedService = ["automation", "ia"].includes(rawService) || query.get("offre") === "crm-automation"
-      ? "automation" : ["application", "app"].includes(rawService) ? "application" : "site";
+      ? "automation" : ["application", "app", "application.", "app."].includes(rawService) ? "application" : "site";
     // The versioned quote selection lets the server derive new prices while
     // keeping existing CRM identifiers and historical contracts intact.
     const planId = requestedService === "application" ? "achat"
@@ -84,7 +91,10 @@ export default function StartProject() {
     : service === "site" ? websiteOffers : service === "automation" ? [...automationOffers, bespokeOffers.automation] : [bespokeOffers.application];
   const displayedOffer = offerChoices.find((o) => o.id === data.planId) || offerChoices[0];
   const bespoke = !displayedOffer.setupCents;
-  const quoteSummary = bespoke
+  const applicationBudget = applicationBudgets.find(option => option.value === budget);
+  const quoteSummary = service === "application"
+    ? `Demande de devis : ${displayedOffer.name}. Budget prévu : ${applicationBudget?.label || ""}. À partir de 1 990 €. Le prix dépend de la complexité de l’application, des options choisies et du temps de développement. Aucun forfait site sélectionné.`
+    : bespoke
     ? `Demande de devis : ${displayedOffer.name}. Budget et périmètre à chiffrer, aucun forfait site sélectionné.`
     : `Demande de devis : ${displayedOffer.name}, ${money(displayedOffer.setupCents)} TTC en paiement unique. Options demandées : aucune mensualité.`;
   const messageContext = { summary: quoteSummary, prospectSlug: prospectContext?.slug, declaredSource };
@@ -113,6 +123,10 @@ export default function StartProject() {
   async function submit(e) {
     e.preventDefault();
     if (busy || !form.current.reportValidity()) return;
+    if (service === "application" && !applicationBudget) {
+      setError("Sélectionnez votre budget pour recevoir un devis adapté à votre application.");
+      return;
+    }
     setBusy(true);
     setError("");
     try {
@@ -155,6 +169,19 @@ export default function StartProject() {
             <label>Votre e-mail<input name="email" type="email" value={data.email} onChange={set} required maxLength={254} autoComplete="email" /></label>
           </div>
           <label>Votre besoin<textarea name="message" value={data.message} onChange={set} required minLength={15} maxLength={maxNeedLength} rows={3} placeholder="Un site, une application, une tâche à automatiser… Dites-nous ce que vous souhaitez." /></label>
+          {service === "application" && <div className="quote-application-budget">
+            <p className="quote-budget-price">À partir de 1 990 €</p>
+            <p id="application-price-note" className="quote-budget-note">Le prix dépend de la complexité de l’application, des options choisies et du temps de développement.</p>
+            <fieldset className="quote-budget" aria-describedby="application-price-note">
+              <legend>Votre budget <span className="quote-optional">(obligatoire)</span></legend>
+              <div className="quote-budget-choices">
+                {applicationBudgets.map(option => <label key={option.value}>
+                  <input type="radio" name="applicationBudget" value={option.value} checked={budget === option.value} onChange={e => setBudget(e.target.value)} required />
+                  <span>{option.label}</span>
+                </label>)}
+              </div>
+            </fieldset>
+          </div>}
           <label>Téléphone <span className="quote-optional">(facultatif)</span><input name="phone" type="tel" value={data.phone} onChange={set} maxLength={25} autoComplete="tel" /></label>
           <details className="quote-details">
             <summary>Précisions et offre <span className="quote-optional">(facultatif)</span></summary>
