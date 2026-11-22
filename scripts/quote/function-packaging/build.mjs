@@ -84,7 +84,7 @@ for (const entry of packaged) {
   });
 }
 functions.sort((a, b) => a.name.localeCompare(b.name));
-assert(new Set(functions.map(entry => entry.name)).size === 3, 'Duplicate packaged function');
+assert(new Set(functions.map(entry => entry.name)).size === 2, 'Duplicate packaged function');
 assert(functions.find(entry => entry.name === 'automation-clock').schedule === '*/10 * * * *', 'Automation schedule changed');
 assert(functions.filter(entry => entry.schedule).length === 1, 'Unexpected function schedule');
 assert(JSON.stringify(await verifySources()) === JSON.stringify(sourceBlobHashes), 'Function source changed while packaging');
