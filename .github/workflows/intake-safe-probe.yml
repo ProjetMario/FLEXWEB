@@ -1,0 +1,35 @@
+name: Intake backend safe diagnostic
+on:
+  push:
+    branches: [codex/application-budget-live-20261122]
+    paths: ['.github/workflows/intake-safe-probe.yml']
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Test production intake with malformed JSON (no lead can be created)
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          const started=Date.now();
+          try {
+            const res=await fetch('https://flex-web.fr/api/automation/intake',{
+              method:'POST',redirect:'error',signal:AbortSignal.timeout(26000),
+              headers:{'origin':'https://flex-web.fr','content-type':'application/json'},
+              body:'{'
+            });
+            const body=await res.text();
+            let isJson=false; try { JSON.parse(body); isJson=true; } catch {}
+            console.log(JSON.stringify({status:res.status,contentType:res.headers.get('content-type'),json:isJson,ms:Date.now()-started}));
+            if (!isJson || res.status>=500 || res.status<400) process.exitCode=1;
+          } catch (e) {
+            console.error(JSON.stringify({error:e?.name||'Unknown',ms:Date.now()-started}));
+            process.exitCode=1;
+          }
+          NODE
