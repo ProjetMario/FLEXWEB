@@ -8,6 +8,7 @@ on:
       - 'src/styles/quote-form.css'
       - 'tests/application-budget.test.mjs'
       - 'scripts/cms/application-budget-deploy.mjs'
+      - 'scripts/quote/function-packaging/**'
       - '.github/workflows/application-budget-deploy.yml'
 
 permissions:
@@ -32,12 +33,20 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '24.22.2'
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            scripts/quote/function-packaging/package-lock.json
       - name: Install locked dependencies and isolated browser
         run: |
           npm ci
           npx playwright install --with-deps chromium
+      - name: Repackage the unchanged server functions with locked tooling
+        run: |
+          npm ci --prefix scripts/quote/function-packaging --ignore-scripts --no-audit --no-fund
+          node scripts/quote/function-packaging/build.mjs
+          node --test tests/automation-proxy.test.mjs tests/seo/retired-content.test.ts
       - name: Compile only the quote form page
         shell: bash
         run: |
@@ -58,7 +67,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: application-budget-${{ github.run_id }}-${{ github.run_attempt }}
-          path: .cms/application-budget-deploy-report.json
+          path: |
+            .cms/application-budget-deploy-report.json
+            .cms/application-budget-functions.json
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 90

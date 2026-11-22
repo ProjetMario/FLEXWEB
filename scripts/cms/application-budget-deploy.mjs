@@ -5,9 +5,11 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
 import { parse } from 'parse5';
+import { verifyAutomationProxy } from './automation-probe.mjs';
 
 // A one-page, forward-only release. The complete published file manifest is
-// reused; neither the repository's other pages nor its functions are rebuilt.
+// reused. The three existing functions are repackaged from their verified,
+// unchanged source files with a pinned toolchain and their original contract.
 // API contracts: https://open-api.netlify.com/#operation/createSiteDeploy
 // Netlify CLI uploads its resolved redirects/headers as a netlify.toml file:
 // https://github.com/netlify/cli/blob/main/src/utils/deploy/hash-config.ts
@@ -23,6 +25,12 @@ const EXPECTED_FUNCTIONS = {
   automation: '62d4a525642c0902ffb9ab5497ef323990c1168157b4d947cb500f78f184eec9',
   'retired-content': 'ae29644b7e24d22f86ca1c1d3597c02bdad45e507a0261f7548264221cd0a48e',
 };
+const EXPECTED_FUNCTION_SOURCES = {
+  'netlify/functions/automation-clock.ts': '4f7f639af5d13e16c17a61a261928c5524a5f0a3',
+  'netlify/functions/automation.ts': '0bcdf362121f0ff4485a2ea8c30bfe85baf15898',
+  'netlify/functions/retired-content.mts': '35e8117ed50ca65a7c622c2538e189d9b6f6dfb6',
+};
+const FAILED_RELEASE_DRAFTS = ['6b02bbbbcb423a1305db1bb9', '6b02bd692636b18a29827957', '6b02bf3ef459afbe9a1ba461'];
 const report = { baselineId: BASELINE_ID, siteId: SITE_ID, codeCommit: process.env.GITHUB_SHA, startedAt: new Date().toISOString() };
 const assert = (condition, code) => { if (!condition) throw new Error(code); };
 const sha1 = value => createHash('sha1').update(value).digest('hex');
@@ -139,11 +147,11 @@ function routeConfig(route) {
   return result;
 }
 
-export function functionPayload(deploy) {
+export function functionPayload(deploy, expectedDigests = EXPECTED_FUNCTIONS) {
   const functions = Object.create(null), functions_config = Object.create(null);
   assert(Array.isArray(deploy.available_functions) && deploy.available_functions.length === 3, 'UNEXPECTED_FUNCTION_INVENTORY');
   for (const fn of deploy.available_functions) {
-    assert(EXPECTED_FUNCTIONS[fn.n] === fn.d, `UNEXPECTED_FUNCTION_DIGEST:${fn.n}`);
+    assert(Object.hasOwn(EXPECTED_FUNCTIONS, fn.n) && expectedDigests[fn.n] === fn.d, `UNEXPECTED_FUNCTION_DIGEST:${fn.n}`);
     assert(fn.r === 'nodejs22.x' && fn.im === 'stream', `UNEXPECTED_FUNCTION_RUNTIME:${fn.n}`);
     functions[fn.n] = fn.d;
     const config = { memory: fn.mo ?? fn.m, priority: fn.p };
@@ -157,18 +165,58 @@ export function functionPayload(deploy) {
     }
     functions_config[fn.n] = config;
   }
-  assert(JSON.stringify(sorted(functions)) === JSON.stringify(sorted(EXPECTED_FUNCTIONS)), 'FUNCTION_INVENTORY_CHANGED');
+  assert(JSON.stringify(sorted(functions)) === JSON.stringify(sorted(expectedDigests)), 'FUNCTION_INVENTORY_CHANGED');
   assert(JSON.stringify(deploy.function_schedules) === '[{"name":"automation-clock","cron":"*/10 * * * *"}]', 'FUNCTION_SCHEDULE_CHANGED');
   assert(!deploy.edge_functions_present && !deploy.server, 'UNEXPECTED_SERVER_OR_EDGE_FUNCTIONS');
   return { functions, functions_config, function_schedules: deploy.function_schedules };
 }
 
-export function functionFingerprint(deploy) {
-  const payload = functionPayload(deploy);
+export function functionFingerprint(deploy, expectedDigests = EXPECTED_FUNCTIONS) {
+  const payload = functionPayload(deploy, expectedDigests);
   for (const config of Object.values(payload.functions_config)) {
     if (config.region === 'us-east-1') config.region = 'iad';
   }
-  return JSON.stringify({ functions: sorted(payload.functions), functions_config: sorted(payload.functions_config), function_schedules: payload.function_schedules });
+  return JSON.stringify({ names: Object.keys(payload.functions).sort(), functions_config: sorted(payload.functions_config), function_schedules: payload.function_schedules });
+}
+
+export async function loadRebuiltFunctions(baseline) {
+  const manifest = JSON.parse(await fs.readFile('.cms/application-budget-functions.json', 'utf8'));
+  assert(manifest.schemaVersion === 1, 'INVALID_FUNCTION_BUILD_MANIFEST');
+  assert(manifest.packaging?.zisi === '14.3.1' && manifest.packaging?.bootstrap === '2.24.0', 'UNPINNED_FUNCTION_TOOLCHAIN');
+  assert(JSON.stringify(sorted(manifest.sourceBlobHashes || {})) === JSON.stringify(sorted(EXPECTED_FUNCTION_SOURCES)), 'FUNCTION_SOURCE_MANIFEST_CHANGED');
+  for (const [name, expected] of Object.entries(EXPECTED_FUNCTION_SOURCES)) {
+    const source = await fs.readFile(name);
+    const digest = sha1(Buffer.concat([Buffer.from(`blob ${source.length}\0`), source]));
+    assert(digest === expected, `FUNCTION_SOURCE_CHANGED:${name}`);
+  }
+  const baselinePayload = functionPayload(baseline);
+  assert(Array.isArray(manifest.functions) && manifest.functions.length === 3, 'INVALID_BUILT_FUNCTION_INVENTORY');
+  const digests = Object.create(null), bundles = new Map();
+  for (const fn of manifest.functions) {
+    assert(Object.hasOwn(EXPECTED_FUNCTIONS, fn.name) && !bundles.has(fn.name), 'UNEXPECTED_BUILT_FUNCTION_NAME');
+    assert(fn.runtime === 'nodejs22.x' && fn.invocationMode === 'stream', `BUILT_FUNCTION_RUNTIME_CHANGED:${fn.name}`);
+    assert(fn.bootstrapVersion === '2.24.0' && fn.runtimeAPIVersion === 2 && fn.priority === 10, `BUILT_FUNCTION_PACKAGING_CHANGED:${fn.name}`);
+    const expectedPaths = (baselinePayload.functions_config[fn.name].routes || []).map(route => route.pattern).sort();
+    const builtPaths = (fn.routes || []).map(route => route.pattern).sort();
+    assert(JSON.stringify(builtPaths) === JSON.stringify(expectedPaths), `BUILT_FUNCTION_ROUTES_CHANGED:${fn.name}`);
+    const schedule = baselinePayload.function_schedules.find(entry => entry.name === fn.name)?.cron || null;
+    assert((fn.schedule || null) === schedule, `BUILT_FUNCTION_SCHEDULE_CHANGED:${fn.name}`);
+    assert(fn.path === `.cms/application-budget-functions/${fn.name}.zip` && /^[a-f0-9]{64}$/.test(fn.sha256), 'INVALID_FUNCTION_BUNDLE_PATH_OR_HASH');
+    const stat = await fs.lstat(fn.path);
+    assert(stat.isFile() && !stat.isSymbolicLink() && stat.size > 1000 && stat.size < 10 * 1024 * 1024, 'INVALID_FUNCTION_BUNDLE_FILE');
+    const body = await fs.readFile(fn.path);
+    assert(sha256(body) === fn.sha256, `FUNCTION_BUNDLE_HASH_MISMATCH:${fn.name}`);
+    digests[fn.name] = fn.sha256;
+    bundles.set(fn.name, { name: fn.name, digest: fn.sha256, body });
+  }
+  assert(JSON.stringify(Object.keys(digests).sort()) === JSON.stringify(Object.keys(EXPECTED_FUNCTIONS).sort()), 'BUILT_FUNCTION_INVENTORY_CHANGED');
+  return {
+    payload: { ...baselinePayload, functions: digests }, digests, bundles,
+    evidence: {
+      sourceBlobHashes: EXPECTED_FUNCTION_SOURCES, packaging: manifest.packaging,
+      functions: [...bundles.values()].map(({ name, digest, body }) => ({ name, previousSha256: EXPECTED_FUNCTIONS[name], sha256: digest, size: body.length, runtime: 'nodejs22.x', invocationMode: 'stream' })),
+    },
+  };
 }
 
 function ruleCounts(deploy) {
@@ -236,15 +284,10 @@ async function waitForDeploy(id, states) {
   throw new Error(`DEPLOY_TIMEOUT:${id}`);
 }
 
-async function createSnapshot(files, functions, blobs, draft) {
+async function createSnapshot(files, rebuilt, blobs, draft) {
+  const functions = rebuilt.payload;
   // Follow Netlify CLI's two-phase API flow: reserve a deploy, then submit the
-  // immutable file/function digest. Send only source-declared function config;
-  // effective region and memory defaults from a previous response are not
-  // configuration overrides. verifySnapshot still checks every effective value.
-  const functions_config = Object.fromEntries(Object.entries(functions.functions_config).map(([name, config]) => {
-    assert(config.priority === 10, `UNEXPECTED_SOURCE_FUNCTION_PRIORITY:${name}`);
-    return [name, { priority: 10, ...(config.routes ? { routes: config.routes } : {}) }];
-  }));
+  // immutable digest with the baseline's full function deployment contract.
   const deploy = await api('POST', `/sites/${SITE_ID}/deploys?title=${encodeURIComponent(`Budget application dès 1 990 € — page démarrer uniquement${draft ? ' — vérification' : ''}`)}`, {
     draft, branch: 'main',
   });
@@ -252,7 +295,7 @@ async function createSnapshot(files, functions, blobs, draft) {
   report[draft ? 'previewId' : 'productionId'] = deploy.id;
   await saveReport();
   const initialized = await api('PUT', `/sites/${SITE_ID}/deploys/${deploy.id}`, {
-    files, ...functions, functions_config, draft, async: true, branch: 'main',
+    files, ...functions, draft, async: true, branch: 'main',
   });
   assert(initialized.id === deploy.id && initialized.site_id === SITE_ID, 'DEPLOY_UPDATE_TARGET_MISMATCH');
   const diff = await waitForDeploy(deploy.id, ['prepared','uploading','uploaded','ready']);
@@ -260,9 +303,21 @@ async function createSnapshot(files, functions, blobs, draft) {
   assert(Array.isArray(diff.required_functions), 'DEPLOY_FUNCTION_DIFF_MISSING');
   report[draft ? 'previewRequiredFunctions' : 'productionRequiredFunctions'] = diff.required_functions;
   await saveReport();
-  assert(diff.required_functions.length === 0 && !diff.required_edge_functions?.length && !diff.required_server?.length, 'CACHED_FUNCTION_OR_SERVER_NOT_REUSABLE');
+  assert(!diff.required_edge_functions?.length && !diff.required_server?.length, 'UNEXPECTED_EDGE_OR_SERVER_UPLOAD');
+  const functionsByDigest = new Map([...rebuilt.bundles.values()].map(bundle => [bundle.digest, bundle]));
+  for (const digest of diff.required_functions) assert(functionsByDigest.has(digest), `UNEXPECTED_FUNCTION_UPLOAD_REQUIRED:${digest}`);
   const byDigest = new Map([...blobs].map(([name, buffer]) => [sha1(buffer), { name, buffer }]));
   for (const digest of diff.required) assert(byDigest.has(digest), `UNEXPECTED_UPLOAD_REQUIRED:${digest}`);
+  const functionUploads = [];
+  report[draft ? 'previewFunctionUploads' : 'productionFunctionUploads'] = functionUploads;
+  for (const digest of new Set(diff.required_functions)) {
+    const { name, body } = functionsByDigest.get(digest);
+    assert(Object.hasOwn(EXPECTED_FUNCTIONS, name) && sha256(body) === digest, 'FUNCTION_UPLOAD_BYTES_CHANGED');
+    const parameters = new URLSearchParams({ runtime: 'nodejs22.x', invocation_mode: 'stream', size: String(body.length) });
+    await api('PUT', `/deploys/${deploy.id}/functions/${encodeURIComponent(name)}?${parameters}`, body, true);
+    functionUploads.push({ name, sha256: digest, bytes: body.length });
+    await saveReport();
+  }
   for (const digest of new Set(diff.required)) {
     const { name, buffer } = byDigest.get(digest);
     const encoded = name.split('/').map(encodeURIComponent).join('/');
@@ -271,8 +326,8 @@ async function createSnapshot(files, functions, blobs, draft) {
   return waitForDeploy(deploy.id, ['ready']);
 }
 
-async function verifySnapshot(deploy, baseline, blobs, assetClosure, files) {
-  assert(functionFingerprint(deploy) === functionFingerprint(baseline), 'DEPLOY_FUNCTION_CONTRACT_CHANGED');
+async function verifySnapshot(deploy, baseline, blobs, assetClosure, files, rebuilt) {
+  assert(functionFingerprint(deploy, rebuilt.digests) === functionFingerprint(baseline), 'DEPLOY_FUNCTION_CONTRACT_CHANGED');
   const expectedRules = ruleCounts(baseline), actualRules = ruleCounts(deploy);
   assert(expectedRules.redirects === 445 && expectedRules.headers === 4, 'UNEXPECTED_BASELINE_RULE_COUNTS');
   assert(JSON.stringify(actualRules) === JSON.stringify(expectedRules), 'DEPLOY_REDIRECT_OR_HEADER_COUNT_CHANGED');
@@ -288,6 +343,39 @@ async function verifySnapshot(deploy, baseline, blobs, assetClosure, files) {
   return origin;
 }
 
+async function retiredResponse(origin) {
+  const response = await fetch(`${origin}/journal/dyson-pencilvac`, {
+    method: 'GET', redirect: 'error', credentials: 'omit', cache: 'no-store', signal: AbortSignal.timeout(20000),
+  });
+  assert(response.status === 410, 'RETIRED_CONTENT_STATUS_CHANGED');
+  const body = Buffer.from(await response.arrayBuffer());
+  assert(body.length > 0 && body.length < 65536, 'RETIRED_CONTENT_BODY_INVALID');
+  const headers = Object.fromEntries([
+    'content-type', 'cache-control', 'netlify-cdn-cache-control', 'x-robots-tag',
+    'x-content-type-options', 'x-frame-options', 'referrer-policy',
+  ].map(name => [name, response.headers.get(name)?.replace(/\s*,\s*/g, ',').trim() || null]));
+  assert(headers['content-type']?.startsWith('text/html') && headers['x-robots-tag']?.includes('noindex'), 'RETIRED_CONTENT_HEADERS_INVALID');
+  return { status: response.status, bodySha256: sha256(body), headers };
+}
+
+async function cleanupFailedDrafts(publishedId) {
+  const results = [];
+  for (const id of FAILED_RELEASE_DRAFTS) {
+    try {
+      const deploy = await api('GET', `/deploys/${id}`);
+      const owned = deploy.site_id === SITE_ID && deploy.context === 'deploy-preview'
+        && id !== publishedId && !deploy.published_at && deploy.title?.startsWith('Budget application dès 1 990 €');
+      if (!owned || !['new', 'preparing', 'prepared', 'uploading'].includes(deploy.state)) {
+        results.push({ id, skipped: true, state: deploy.state });
+        continue;
+      }
+      await api('POST', `/deploys/${id}/cancel`);
+      results.push({ id, cancelled: true });
+    } catch (error) { results.push({ id, error: error.message }); }
+  }
+  return results;
+}
+
 export async function main() {
   assert(process.env.GITHUB_REF_NAME === RELEASE_BRANCH, 'WRONG_RELEASE_BRANCH');
   assert(process.env.GITHUB_REPOSITORY === 'ProjetMario/FLEXWEB', 'WRONG_RELEASE_REPOSITORY');
@@ -295,7 +383,11 @@ export async function main() {
   assert(process.env.NETLIFY_SITE_ID === SITE_ID, 'WRONG_NETLIFY_SITE_ID');
   await requireBaseline();
   const baseline = await api('GET', `/deploys/${BASELINE_ID}`);
-  const functions = functionPayload(baseline);
+  const rebuilt = await loadRebuiltFunctions(baseline);
+  report.rebuiltFunctions = rebuilt.evidence;
+  report.baselineProxy = await verifyAutomationProxy(BASELINE_ORIGIN);
+  const baselineRetired = await retiredResponse(BASELINE_ORIGIN);
+  report.baselineRetiredContent = baselineRetired;
   const baselineFiles = normalizeFiles(await api('GET', `/sites/${SITE_ID}/files`));
   await requireBaseline();
   const baselineBody = await immutableBytes(BASELINE_ORIGIN, PAGE);
@@ -313,12 +405,16 @@ export async function main() {
     baselineFileCount: Object.keys(baselineFiles).length, candidateFileCount: Object.keys(files).length,
     baselineManifestSha256: manifestDigest(baselineFiles), candidateManifestSha256: manifestDigest(files),
     changedExistingFiles: changed, newFiles: [...blobs.keys()].filter(name => name !== PAGE).sort(),
-    stylesheet: cssName, preservedConfigSha1: files['netlify.toml'], preservedFunctions: functions.functions,
+    stylesheet: cssName, preservedConfigSha1: files['netlify.toml'], rebuiltFunctionDigests: rebuilt.digests,
     changedFileHashes: Object.fromEntries([...blobs].map(([name, body]) => [name, sha1(body)])),
   });
   await saveReport();
-  const preview = await createSnapshot(files, functions, blobs, true);
-  report.previewUrl = await verifySnapshot(preview, baseline, blobs, assetClosure, files);
+  const preview = await createSnapshot(files, rebuilt, blobs, true);
+  report.previewUrl = await verifySnapshot(preview, baseline, blobs, assetClosure, files, rebuilt);
+  report.previewProxy = await verifyAutomationProxy(report.previewUrl);
+  const previewRetired = await retiredResponse(report.previewUrl);
+  assert(JSON.stringify(previewRetired) === JSON.stringify(baselineRetired), 'PREVIEW_RETIRED_CONTENT_CHANGED');
+  report.previewRetiredContent = previewRetired;
   await requireBaseline();
   const testEnv = { ...process.env, APPLICATION_BUDGET_ORIGIN: report.previewUrl };
   delete testEnv.NETLIFY_AUTH_TOKEN;
@@ -328,15 +424,17 @@ export async function main() {
   await requireBaseline();
   // A new production deploy uses the exact verified snapshot. No restoration,
   // lock/unlock, site configuration change, or branch switch is performed.
-  const production = await createSnapshot(files, functions, blobs, false);
-  report.productionUrl = await verifySnapshot(production, baseline, blobs, assetClosure, files);
+  const production = await createSnapshot(files, rebuilt, blobs, false);
+  report.productionUrl = await verifySnapshot(production, baseline, blobs, assetClosure, files, rebuilt);
   const site = await api('GET', `/sites/${SITE_ID}`);
   assert(site.published_deploy?.id === production.id, 'NEW_PRODUCTION_NOT_PUBLISHED');
   assert(site.published_deploy.locked === false, 'LOCK_STATE_CHANGED');
   const publishedFiles = normalizeFiles(await api('GET', `/sites/${SITE_ID}/files`));
   assert(manifestDigest(publishedFiles) === manifestDigest(files), 'PUBLISHED_MANIFEST_MISMATCH');
   assert(sha1(await immutableBytes(LIVE_ORIGIN, PAGE)) === files[PAGE], 'CUSTOM_DOMAIN_PAGE_MISMATCH');
+  report.liveProxy = await verifyAutomationProxy(LIVE_ORIGIN);
   report.publishedAt = new Date().toISOString();
+  report.failedDraftCleanup = await cleanupFailedDrafts(production.id);
   await saveReport();
   console.log(JSON.stringify({ published: true, url: `${LIVE_ORIGIN}/demarrer/?service=application`, deployId: production.id, changedExistingFiles: changed, report: REPORT }));
 }

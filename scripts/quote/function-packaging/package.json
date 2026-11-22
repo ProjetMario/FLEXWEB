@@ -1,0 +1,9 @@
+{
+  "name": "flexweb-function-packaging",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@netlify/serverless-functions-api": "2.24.0",
+    "@netlify/zip-it-and-ship-it": "14.3.1"
+  }
+}
