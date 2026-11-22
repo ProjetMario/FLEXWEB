@@ -116,7 +116,7 @@ test('changing from application to site does not leak a selected budget or block
   try {
     await page.getByRole('radio', {name:budgets[1],exact:true}).check();
     await page.locator('summary').click();
-    await page.getByLabel('Type de projet', {exact:true}).selectOption('site');
+    await page.locator('select[name="service"]').selectOption('site');
     assert.equal(await page.locator('.quote-application-budget').count(), 0);
     await page.getByRole('button', {name:'Recevoir mon devis'}).click();
     await page.waitForURL('**/espace-projet/**');
