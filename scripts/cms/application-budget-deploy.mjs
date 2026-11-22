@@ -121,13 +121,13 @@ export async function prepareOverlay(baselineHtml, candidateDir, baselineFiles =
   }
   // Keep every original stylesheet and script tag. Only this page loads this
   // small, scoped stylesheet, so portal/marketing styles remain byte-identical.
-  const cssHref = candidateHtml.match(/<link\\b[^>]*href="(\\/_astro\\/application-budget\\.[A-Za-z0-9]+\\.css)"/i)?.[1];
+  const cssHref = candidateHtml.match(/<link\b[^>]*href="(\/_astro\/application-budget\.[A-Za-z0-9]+\.css)"/i)?.[1];
   assert(cssHref, 'OLDER_FORM_STYLESHEET_MISSING');
   const cssResponse = await fetch(`${PREVIOUS_FORM_ORIGIN}${cssHref}`, { redirect: 'error', signal: AbortSignal.timeout(30000) });
   assert(cssResponse.status === 200, 'OLDER_FORM_STYLESHEET_UNAVAILABLE');
   const stylesheet = Buffer.from(await cssResponse.arrayBuffer());
   assert(stylesheet.length > 0 && stylesheet.length < 1000000, 'OLDER_FORM_STYLESHEET_SIZE');
-  assert(!/@import\\b|url\\s*\\(/i.test(stylesheet.toString('utf8')), 'FORM_STYLESHEET_MUST_BE_SELF_CONTAINED');
+  assert(!/@import\b|url\s*\(/i.test(stylesheet.toString('utf8')), 'FORM_STYLESHEET_MUST_BE_SELF_CONTAINED');
   const cssName = cssHref.slice(1);
   assert(!baselineFiles[cssName] || baselineFiles[cssName] === sha1(stylesheet), 'FORM_STYLESHEET_COLLISION');
   if (!baselineFiles[cssName]) blobs.set(cssName, stylesheet);
