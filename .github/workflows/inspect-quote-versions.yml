@@ -19,7 +19,7 @@ jobs:
           import { createHash } from 'node:crypto';
           const sites = [
             ['live','https://flex-web.fr/demarrer/?service=application'],
-            ['current-published','https://6b03654e815fff5fe5725f11--flex-webb.netlify.app/demarrer/?service=application'],
+            ['current-published','https://6b03658a06eef596f3bc4ad8--flex-webb.netlify.app/demarrer/?service=application'],
             ['restored-success','https://6b036426d5b362f70c354147--flex-webb.netlify.app/demarrer/?service=application'],
             ['last_success','https://6b033560dd766682f3ea02a4--flex-webb.netlify.app/demarrer/?service=application'],
             ['original','https://6af791098269e8f08591ce03--flex-webb.netlify.app/demarrer/?service=application']
