@@ -14,23 +14,22 @@ import { verifyAutomationProxy } from './automation-probe.mjs';
 // Netlify CLI uploads its resolved redirects/headers as a netlify.toml file:
 // https://github.com/netlify/cli/blob/main/src/utils/deploy/hash-config.ts
 export const SITE_ID = '5f0ec4e5-fe16-4ef3-8380-9b8aff26edbb';
-export const BASELINE_ID = '6af791098269e8f08591ce03';
+export const BASELINE_ID = '6b02c2a45950df733ff5a331';
 export const RELEASE_BRANCH = 'codex/application-budget-live-20261122';
 const PAGE = 'demarrer/index.html';
 const LIVE_ORIGIN = 'https://flex-web.fr';
 const BASELINE_ORIGIN = `https://${BASELINE_ID}--flex-webb.netlify.app`;
 const REPORT = '.cms/application-budget-deploy-report.json';
 const EXPECTED_FUNCTIONS = {
-  'automation-clock': '447551103e0eeb9893bdf361cac40d58e4a8e738dcfe2a7bb8f79a663fb6c2ed',
-  automation: '62d4a525642c0902ffb9ab5497ef323990c1168157b4d947cb500f78f184eec9',
-  'retired-content': 'ae29644b7e24d22f86ca1c1d3597c02bdad45e507a0261f7548264221cd0a48e',
+  'automation-clock': 'f58e4f3910d4870ffc2dfc8da2991b2c28d6c7a27bc13f545c8e5b9fe0899233',
+  automation: 'e47889d0b76941594d82612ce832ce07661f883f312ab5904b05c73b9a3332ec',
+  'retired-content': 'edf67bafaa6440fb10e7fe04f4a58139c7bfc893740f1aad672aad4b7d1e6c04',
 };
 const EXPECTED_FUNCTION_SOURCES = {
   'netlify/functions/automation-clock.ts': '4f7f639af5d13e16c17a61a261928c5524a5f0a3',
   'netlify/functions/automation.ts': '0bcdf362121f0ff4485a2ea8c30bfe85baf15898',
   'netlify/functions/retired-content.mts': '35e8117ed50ca65a7c622c2538e189d9b6f6dfb6',
 };
-const FAILED_RELEASE_DRAFTS = ['6b02bbbbcb423a1305db1bb9', '6b02bd692636b18a29827957', '6b02bf3ef459afbe9a1ba461'];
 const report = { baselineId: BASELINE_ID, siteId: SITE_ID, codeCommit: process.env.GITHUB_SHA, startedAt: new Date().toISOString() };
 const assert = (condition, code) => { if (!condition) throw new Error(code); };
 const sha1 = value => createHash('sha1').update(value).digest('hex');
@@ -125,13 +124,19 @@ export async function prepareOverlay(baselineHtml, candidateDir, baselineFiles =
   assert(!baselineFiles[cssName] || baselineFiles[cssName] === sha1(stylesheet), 'FORM_STYLESHEET_COLLISION');
   if (!baselineFiles[cssName]) blobs.set(cssName, stylesheet);
   const link = `<link rel="stylesheet" href="/${cssName}">`;
+  const existingStylesheets = nodes(parse(baselineHtml)).filter(node => node.tagName === 'link'
+    && node.attrs?.some(attr => attr.name === 'href' && /^\/_astro\/application-budget\.[^/]+\.css$/.test(attr.value)));
+  assert(existingStylesheets.length <= 1, 'DUPLICATE_FORM_STYLESHEET');
+  assert(!existingStylesheets.length || existingStylesheets[0].attrs.some(attr => attr.name === 'href' && attr.value === `/${cssName}`), 'EXISTING_FORM_STYLESHEET_CHANGED');
+  const addStylesheet = existingStylesheets.length === 0;
   let html = baselineHtml.slice(0, before.start) + after.source + baselineHtml.slice(before.end);
-  assert(html.includes('</head>') && !html.includes('application-budget.'), 'INVALID_BASELINE_HTML');
-  html = html.replace('</head>', `${link}</head>`);
+  assert(html.includes('</head>'), 'INVALID_BASELINE_HTML');
+  if (addStylesheet) html = html.replace('</head>', `${link}</head>`);
   // This check proves that everything outside the form island and its style
   // link is the original deployed HTML, including consent and analytics tags.
   const changedIsland = startProjectIsland(html);
-  const restored = (html.slice(0, changedIsland.start) + before.source + html.slice(changedIsland.end)).replace(link, '');
+  const restoredIsland = html.slice(0, changedIsland.start) + before.source + html.slice(changedIsland.end);
+  const restored = addStylesheet ? restoredIsland.replace(link, '') : restoredIsland;
   assert(restored === baselineHtml, 'HTML_CHANGED_OUTSIDE_FORM');
   blobs.set(PAGE, Buffer.from(html));
   assert(blobs.size > 1 && blobs.size <= 40, 'UNEXPECTED_FORM_ASSET_COUNT');
@@ -288,7 +293,7 @@ async function createSnapshot(files, rebuilt, blobs, draft) {
   const functions = rebuilt.payload;
   // Follow Netlify CLI's two-phase API flow: reserve a deploy, then submit the
   // immutable digest with the baseline's full function deployment contract.
-  const deploy = await api('POST', `/sites/${SITE_ID}/deploys?title=${encodeURIComponent(`Budget application dès 1 990 € — page démarrer uniquement${draft ? ' — vérification' : ''}`)}`, {
+  const deploy = await api('POST', `/sites/${SITE_ID}/deploys?title=${encodeURIComponent(`Formulaire application simplifié — page démarrer uniquement${draft ? ' — vérification' : ''}`)}`, {
     draft, branch: 'main',
   });
   assert(/^[a-f0-9]{24}$/.test(deploy.id), 'NEW_DEPLOY_ID_MISSING');
@@ -358,24 +363,6 @@ async function retiredResponse(origin) {
   return { status: response.status, bodySha256: sha256(body), headers };
 }
 
-async function cleanupFailedDrafts(publishedId) {
-  const results = [];
-  for (const id of FAILED_RELEASE_DRAFTS) {
-    try {
-      const deploy = await api('GET', `/deploys/${id}`);
-      const owned = deploy.site_id === SITE_ID && deploy.context === 'deploy-preview'
-        && id !== publishedId && !deploy.published_at && deploy.title?.startsWith('Budget application dès 1 990 €');
-      if (!owned || !['new', 'preparing', 'prepared', 'uploading'].includes(deploy.state)) {
-        results.push({ id, skipped: true, state: deploy.state });
-        continue;
-      }
-      await api('POST', `/deploys/${id}/cancel`);
-      results.push({ id, cancelled: true });
-    } catch (error) { results.push({ id, error: error.message }); }
-  }
-  return results;
-}
-
 export async function main() {
   assert(process.env.GITHUB_REF_NAME === RELEASE_BRANCH, 'WRONG_RELEASE_BRANCH');
   assert(process.env.GITHUB_REPOSITORY === 'ProjetMario/FLEXWEB', 'WRONG_RELEASE_REPOSITORY');
@@ -434,7 +421,6 @@ export async function main() {
   assert(sha1(await immutableBytes(LIVE_ORIGIN, PAGE)) === files[PAGE], 'CUSTOM_DOMAIN_PAGE_MISMATCH');
   report.liveProxy = await verifyAutomationProxy(LIVE_ORIGIN);
   report.publishedAt = new Date().toISOString();
-  report.failedDraftCleanup = await cleanupFailedDrafts(production.id);
   await saveReport();
   console.log(JSON.stringify({ published: true, url: `${LIVE_ORIGIN}/demarrer/?service=application`, deployId: production.id, changedExistingFiles: changed, report: REPORT }));
 }

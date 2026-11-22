@@ -1,10 +1,14 @@
-name: Application budget — production verification
+name: Simplified application form — one-page publication
 
 on:
   push:
     branches: [codex/application-budget-live-20261122]
     paths:
-      - 'scripts/cms/application-budget-verify.mjs'
+      - 'src/components/onboarding/StartProject.jsx'
+      - 'src/styles/quote-form.css'
+      - 'tests/application-budget.test.mjs'
+      - 'scripts/cms/application-budget-deploy.mjs'
+      - 'scripts/quote/function-packaging/**'
       - '.github/workflows/application-budget-deploy.yml'
 
 permissions:
@@ -15,10 +19,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  verify:
+  publish:
     if: github.repository == 'ProjetMario/FLEXWEB' && github.ref == 'refs/heads/codex/application-budget-live-20261122'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     environment: emdash-publication
     env:
       NODE_OPTIONS: --max-old-space-size=4096
@@ -31,22 +35,41 @@ jobs:
         with:
           node-version: '24.22.2'
           cache: npm
-          cache-dependency-path: package-lock.json
-      - name: Install locked verification dependencies
-        run: npm ci --ignore-scripts --no-audit --no-fund
-      # Production 6b02c2a45950df733ff5a331 is already published. This final
-      # workflow only reads it; it cannot trigger another Netlify deployment.
-      - name: Verify the published page and every preserved file
+          cache-dependency-path: |
+            package-lock.json
+            scripts/quote/function-packaging/package-lock.json
+      - name: Install locked dependencies and isolated browser
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Repackage the unchanged server functions with locked tooling
+        run: |
+          npm ci --prefix scripts/quote/function-packaging --ignore-scripts --no-audit --no-fund
+          node scripts/quote/function-packaging/build.mjs
+          node --test tests/automation-proxy.test.mjs tests/seo/retired-content.test.ts
+      - name: Compile only the quote form page
+        shell: bash
+        run: |
+          set -euo pipefail
+          pages_backup="$RUNNER_TEMP/application-budget-pages-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
+          mv src/pages "$pages_backup"
+          mkdir src/pages
+          cp "$pages_backup/demarrer.astro" src/pages/demarrer.astro
+          trap 'rm src/pages/demarrer.astro; rmdir src/pages; mv "$pages_backup" src/pages' EXIT
+          npx astro build
+      - name: Verify scoped draft and publish the same complete snapshot
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: 5f0ec4e5-fe16-4ef3-8380-9b8aff26edbb
-        run: node scripts/cms/application-budget-verify.mjs
-      - name: Archive publication verification
+        run: node scripts/cms/application-budget-deploy.mjs
+      - name: Archive release evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: application-budget-verification-${{ github.run_id }}-${{ github.run_attempt }}
-          path: .cms/application-budget-verification-report.json
+          name: application-budget-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            .cms/application-budget-deploy-report.json
+            .cms/application-budget-functions.json
           include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 90

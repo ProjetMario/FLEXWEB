@@ -133,8 +133,11 @@ export default function StartProject() {
       if (!identity.current) identity.current = createIdentity();
       try { sessionStorage.setItem("flexweb-intake-v2", JSON.stringify(identity.current)); } catch {}
       const message = buildQuoteMessage(messageContext, data.message);
+      // Application requests accept the visible contact notice by submitting;
+      // the other forms retain their explicit checkbox requirement.
       await api("intake", {
         ...data, ...identity.current, professional: data.professional === "pro", source: leadSource(),
+        privacyConsent: service === "application" ? true : data.privacyConsent,
         publicQuote: bespoke
           ? { version: publicQuoteVersion, service }
           : { version: publicQuoteVersion, service, tier: displayedOffer.tier, options: selectedOptions },
@@ -183,7 +186,7 @@ export default function StartProject() {
             </fieldset>
           </div>}
           <label>Téléphone <span className="quote-optional">(facultatif)</span><input name="phone" type="tel" value={data.phone} onChange={set} maxLength={25} autoComplete="tel" /></label>
-          <details className="quote-details">
+          {service !== "application" && <details className="quote-details">
             <summary>Précisions et offre <span className="quote-optional">(facultatif)</span></summary>
             <label>Entreprise ou organisation <span className="quote-optional">(facultatif)</span><input name="companyName" value={data.companyName} onChange={set} maxLength={160} autoComplete="organization" /></label>
             <label>Type de projet<select name="service" value={service} onChange={e => changeService(e.target.value)}>
@@ -193,10 +196,11 @@ export default function StartProject() {
               {offerChoices.map(o => <option key={o.id} value={o.id}>{o.name}{o.setupCents ? ` — ${money(o.setupCents)} TTC` : " — Sur devis"}</option>)}
             </select></label>
             <p className="flow-note">Le devis confirme les prestations et le prix avant tout paiement. Aucune option mensuelle ajoutée.</p>
-          </details>
+          </details>}
           <div hidden aria-hidden="true"><label>Votre deuxième site<input name="websiteTrap" value={data.websiteTrap} onChange={set} autoComplete="off" tabIndex={-1} /></label></div>
-          <label className="flow-check quote-consent"><input name="privacyConsent" type="checkbox" checked={data.privacyConsent} onChange={set} required /><span>J’accepte d’être recontacté pour cette demande. <a href="/privacy/" target="_blank" rel="noreferrer">Confidentialité</a>.</span></label>
+          {service !== "application" && <label className="flow-check quote-consent"><input name="privacyConsent" type="checkbox" checked={data.privacyConsent} onChange={set} required /><span>J’accepte d’être recontacté pour cette demande. <a href="/privacy/" target="_blank" rel="noreferrer">Confidentialité</a>.</span></label>}
           {error && <p className="flow-error" role="alert">{error}</p>}
+          {service === "application" && <p className="flow-note quote-contact-notice">En envoyant votre demande, vous acceptez d’être recontacté à son sujet. <a href="/privacy/" target="_blank" rel="noreferrer">Confidentialité</a>.</p>}
           <button className="flow-button quote-submit" disabled={busy} type="submit">{busy ? "Envoi en cours…" : "Recevoir mon devis"}</button>
           <p className="flow-note quote-reassurance">Gratuit et sans engagement. Aucun paiement à cette étape.</p>
         </fieldset>
