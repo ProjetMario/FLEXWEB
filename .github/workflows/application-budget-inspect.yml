@@ -38,3 +38,60 @@ jobs:
           const current = await get(`/sites/${siteId}`);
           console.log(JSON.stringify({publishedIdAfterRead:current.published_deploy?.id}));
           JS
+      - name: Locate immutable source archives for the existing functions
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          node --input-type=module <<'JS'
+          const siteId = '5f0ec4e5-fe16-4ef3-8380-9b8aff26edbb';
+          const expected = {
+            'automation-clock': '447551103e0eeb9893bdf361cac40d58e4a8e738dcfe2a7bb8f79a663fb6c2ed',
+            automation: '62d4a525642c0902ffb9ab5497ef323990c1168157b4d947cb500f78f184eec9',
+            'retired-content': 'ae29644b7e24d22f86ca1c1d3597c02bdad45e507a0261f7548264221cd0a48e',
+          };
+          const get = async suffix => {
+            const response = await fetch('https://api.netlify.com/api/v1' + suffix, {
+              redirect: 'error', headers: {authorization: `Bearer ${process.env.NETLIFY_AUTH_TOKEN}`},
+              signal: AbortSignal.timeout(60000),
+            });
+            if (!response.ok) throw new Error(`Read failed: ${response.status} ${suffix}`);
+            return response.json();
+          };
+          const history = [];
+          let exhausted = false;
+          for (let page = 1; page <= 10; page++) {
+            const entries = await get(`/sites/${siteId}/deploys?per_page=100&page=${page}`);
+            if (!Array.isArray(entries)) throw new Error('Invalid deploy list');
+            history.push(...entries);
+            if (entries.length < 100) { exhausted = true; break; }
+            if (entries.at(-1)?.created_at < '2026-10-27T00:00:00Z') break;
+          }
+          const describe = deploy => ({
+            id: deploy.id, created_at: deploy.created_at, state: deploy.state,
+            build_id: deploy.build_id, has_source_zip: deploy.has_source_zip,
+            commit_ref: deploy.commit_ref, branch: deploy.branch,
+            functions: (deploy.available_functions || []).map(fn => ({n: fn.n, d: fn.d, id: fn.id, oid: fn.oid, c: fn.c, r: fn.r})),
+          });
+          const matching = history.filter(deploy => deploy.available_functions?.some(fn => expected[fn.n] === fn.d));
+          const aroundCreation = history.filter(deploy => deploy.created_at >= '2026-10-27T00:00:00Z' && deploy.created_at <= '2026-10-30T00:00:00Z');
+          const earliestMatches = Object.fromEntries(Object.entries(expected).map(([name, digest]) => [name,
+            matching.filter(deploy => deploy.available_functions.some(fn => fn.n === name && fn.d === digest))
+              .sort((a, b) => a.created_at.localeCompare(b.created_at)).slice(0, 2).map(describe),
+          ]));
+          const archiveCandidates = matching.filter(deploy => deploy.build_id || deploy.has_source_zip)
+            .sort((a, b) => a.created_at.localeCompare(b.created_at)).slice(0, 12).map(describe);
+          console.log(JSON.stringify({historyCount: history.length, exhausted, oldestDate: history.at(-1)?.created_at,
+            earliestMatches, aroundCreation: aroundCreation.slice(0, 40).map(describe), archiveCandidates}));
+          // This is the exact source-download contract used by Netlify's public
+          // DeployCardContainer client. Never print its signed response URL.
+          const candidate = archiveCandidates[0];
+          if (candidate) {
+            const suffix = candidate.build_id ? `/builds/${encodeURIComponent(candidate.build_id)}/download`
+              : `/deploys/${encodeURIComponent(candidate.id)}/download`;
+            const download = await get(suffix);
+            console.log(JSON.stringify({sourceArchive: {deployId: candidate.id, buildId: candidate.build_id,
+              responseKeys: Object.keys(download), hasDownloadUrl: typeof download.url === 'string'}}));
+          }
+          const current = await get(`/sites/${siteId}`);
+          console.log(JSON.stringify({publishedIdAfterArchiveRead: current.published_deploy?.id}));
+          JS
