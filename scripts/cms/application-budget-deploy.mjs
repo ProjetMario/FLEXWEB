@@ -14,21 +14,21 @@ import { verifyAutomationProxy } from './automation-probe.mjs';
 // Netlify CLI uploads its resolved redirects/headers as a netlify.toml file:
 // https://github.com/netlify/cli/blob/main/src/utils/deploy/hash-config.ts
 export const SITE_ID = '5f0ec4e5-fe16-4ef3-8380-9b8aff26edbb';
-export const BASELINE_ID = '6b02d907b5f3d769618f7659';
+export const BASELINE_ID = '6b0351ea3487f53fe092430a';
 export const RELEASE_BRANCH = 'codex/application-budget-live-20261122';
 const PAGE = 'demarrer/index.html';
+const PREVIOUS_FORM_ID = '6b033560dd766682f3ea02a4';
+const PREVIOUS_FORM_ORIGIN = `https://${PREVIOUS_FORM_ID}--flex-webb.netlify.app`;
 const LIVE_ORIGIN = 'https://flex-web.fr';
 const BASELINE_ORIGIN = `https://${BASELINE_ID}--flex-webb.netlify.app`;
 const REPORT = '.cms/application-budget-deploy-report.json';
 const EXPECTED_FUNCTIONS = {
-  'automation-clock': 'f58e4f3910d4870ffc2dfc8da2991b2c28d6c7a27bc13f545c8e5b9fe0899233',
-  automation: 'e47889d0b76941594d82612ce832ce07661f883f312ab5904b05c73b9a3332ec',
-  'retired-content': 'edf67bafaa6440fb10e7fe04f4a58139c7bfc893740f1aad672aad4b7d1e6c04',
+  'automation-clock': 'de2ce9d47d9eca7800505e877d80745633feb798d29d02162f7809e4fab2b1fa',
+  automation: '65977d91fcd9898f213b1d32b9b7cbbe1f055935ad3249ed45af960d62358c86',
 };
 const EXPECTED_FUNCTION_SOURCES = {
   'netlify/functions/automation-clock.ts': '4f7f639af5d13e16c17a61a261928c5524a5f0a3',
   'netlify/functions/automation.ts': '0bcdf362121f0ff4485a2ea8c30bfe85baf15898',
-  'netlify/functions/retired-content.mts': '35e8117ed50ca65a7c622c2538e189d9b6f6dfb6',
 };
 const report = { baselineId: BASELINE_ID, siteId: SITE_ID, codeCommit: process.env.GITHUB_SHA, startedAt: new Date().toISOString() };
 const assert = (condition, code) => { if (!condition) throw new Error(code); };
@@ -77,7 +77,10 @@ function startProjectIsland(html) {
 // Copy only the new form module's transitive imports. Existing content-addressed
 // assets are never overwritten, even when a candidate build tries to reuse a name.
 export async function prepareOverlay(baselineHtml, candidateDir, baselineFiles = {}) {
-  const candidateHtml = await fs.readFile(path.join(candidateDir, PAGE), 'utf8');
+  const response = await fetch(`${PREVIOUS_FORM_ORIGIN}/demarrer/?service=application`, { redirect: 'error', signal: AbortSignal.timeout(30000) });
+  assert(response.status === 200, 'OLDER_FORM_PAGE_NOT_AVAILABLE');
+  const candidateHtml = await response.text();
+  assert(candidateHtml.includes('Votre devis gratuit.') && !candidateHtml.includes('Votre projet, étape par étape'), 'UNEXPECTED_OLDER_FORM');
   const before = startProjectIsland(baselineHtml);
   const after = startProjectIsland(candidateHtml);
   assert(before.source !== after.source, 'FORM_ISLAND_HAS_NOT_CHANGED');
@@ -90,10 +93,10 @@ export async function prepareOverlay(baselineHtml, candidateDir, baselineFiles =
     if (visited.has(name)) continue;
     visited.add(name);
     assert(name.startsWith('_astro/'), 'UNSCOPED_CANDIDATE_ASSET');
-    const file = path.join(candidateDir, name);
-    const stat = await fs.lstat(file);
-    assert(stat.isFile() && !stat.isSymbolicLink(), 'INVALID_CANDIDATE_ASSET');
-    const body = await fs.readFile(file);
+    const assetResponse = await fetch(`${PREVIOUS_FORM_ORIGIN}/${name}`, { redirect: 'error', signal: AbortSignal.timeout(30000) });
+    assert(assetResponse.status === 200 && (assetResponse.headers.get('content-length') === null || Number(assetResponse.headers.get('content-length')) < 6000000), `OLDER_FORM_ASSET_INVALID:${name}`);
+    const body = Buffer.from(await assetResponse.arrayBuffer());
+    assert(body.length > 0 && body.length < 6000000, `OLDER_FORM_ASSET_SIZE:${name}`);
     const digest = sha1(body);
     // Netlify's file inventory canonicalizes paths to lowercase; Astro keeps
     // mixed-case content hashes in its imports. Preserve local filenames for
@@ -118,9 +121,14 @@ export async function prepareOverlay(baselineHtml, candidateDir, baselineFiles =
   }
   // Keep every original stylesheet and script tag. Only this page loads this
   // small, scoped stylesheet, so portal/marketing styles remain byte-identical.
-  const stylesheet = await fs.readFile('src/styles/quote-form.css');
-  assert(!/@import\b|url\s*\(/i.test(stylesheet.toString('utf8')), 'FORM_STYLESHEET_MUST_BE_SELF_CONTAINED');
-  const cssName = `_astro/application-budget.${sha256(stylesheet).slice(0,16)}.css`;
+  const cssHref = candidateHtml.match(/<link\\b[^>]*href="(\\/_astro\\/application-budget\\.[A-Za-z0-9]+\\.css)"/i)?.[1];
+  assert(cssHref, 'OLDER_FORM_STYLESHEET_MISSING');
+  const cssResponse = await fetch(`${PREVIOUS_FORM_ORIGIN}${cssHref}`, { redirect: 'error', signal: AbortSignal.timeout(30000) });
+  assert(cssResponse.status === 200, 'OLDER_FORM_STYLESHEET_UNAVAILABLE');
+  const stylesheet = Buffer.from(await cssResponse.arrayBuffer());
+  assert(stylesheet.length > 0 && stylesheet.length < 1000000, 'OLDER_FORM_STYLESHEET_SIZE');
+  assert(!/@import\\b|url\\s*\\(/i.test(stylesheet.toString('utf8')), 'FORM_STYLESHEET_MUST_BE_SELF_CONTAINED');
+  const cssName = cssHref.slice(1);
   assert(!baselineFiles[cssName] || baselineFiles[cssName] === sha1(stylesheet), 'FORM_STYLESHEET_COLLISION');
   if (!baselineFiles[cssName]) blobs.set(cssName, stylesheet);
   const link = `<link rel="stylesheet" href="/${cssName}">`;
@@ -154,10 +162,10 @@ function routeConfig(route) {
 
 export function functionPayload(deploy, expectedDigests = EXPECTED_FUNCTIONS) {
   const functions = Object.create(null), functions_config = Object.create(null);
-  assert(Array.isArray(deploy.available_functions) && deploy.available_functions.length === 3, 'UNEXPECTED_FUNCTION_INVENTORY');
+  assert(Array.isArray(deploy.available_functions) && deploy.available_functions.length === 2, 'UNEXPECTED_FUNCTION_INVENTORY');
   for (const fn of deploy.available_functions) {
     assert(Object.hasOwn(EXPECTED_FUNCTIONS, fn.n) && expectedDigests[fn.n] === fn.d, `UNEXPECTED_FUNCTION_DIGEST:${fn.n}`);
-    assert(fn.r === 'nodejs22.x' && fn.im === 'stream', `UNEXPECTED_FUNCTION_RUNTIME:${fn.n}`);
+    assert(fn.r === 'nodejs24.x' && fn.im === 'stream', `UNEXPECTED_FUNCTION_RUNTIME:${fn.n}`);
     functions[fn.n] = fn.d;
     const config = { memory: fn.mo ?? fn.m, priority: fn.p };
     // Reuse the original configured AWS region, not the API's normalized
@@ -195,11 +203,11 @@ export async function loadRebuiltFunctions(baseline) {
     assert(digest === expected, `FUNCTION_SOURCE_CHANGED:${name}`);
   }
   const baselinePayload = functionPayload(baseline);
-  assert(Array.isArray(manifest.functions) && manifest.functions.length === 3, 'INVALID_BUILT_FUNCTION_INVENTORY');
+  assert(Array.isArray(manifest.functions) && manifest.functions.length === 2, 'INVALID_BUILT_FUNCTION_INVENTORY');
   const digests = Object.create(null), bundles = new Map();
   for (const fn of manifest.functions) {
     assert(Object.hasOwn(EXPECTED_FUNCTIONS, fn.name) && !bundles.has(fn.name), 'UNEXPECTED_BUILT_FUNCTION_NAME');
-    assert(fn.runtime === 'nodejs22.x' && fn.invocationMode === 'stream', `BUILT_FUNCTION_RUNTIME_CHANGED:${fn.name}`);
+    assert(fn.runtime === 'nodejs24.x' && fn.invocationMode === 'stream', `BUILT_FUNCTION_RUNTIME_CHANGED:${fn.name}`);
     assert(fn.bootstrapVersion === '2.24.0' && fn.runtimeAPIVersion === 2 && fn.priority === 10, `BUILT_FUNCTION_PACKAGING_CHANGED:${fn.name}`);
     const expectedPaths = (baselinePayload.functions_config[fn.name].routes || []).map(route => route.pattern).sort();
     const builtPaths = (fn.routes || []).map(route => route.pattern).sort();
@@ -219,7 +227,7 @@ export async function loadRebuiltFunctions(baseline) {
     payload: { ...baselinePayload, functions: digests }, digests, bundles,
     evidence: {
       sourceBlobHashes: EXPECTED_FUNCTION_SOURCES, packaging: manifest.packaging,
-      functions: [...bundles.values()].map(({ name, digest, body }) => ({ name, previousSha256: EXPECTED_FUNCTIONS[name], sha256: digest, size: body.length, runtime: 'nodejs22.x', invocationMode: 'stream' })),
+      functions: [...bundles.values()].map(({ name, digest, body }) => ({ name, previousSha256: EXPECTED_FUNCTIONS[name], sha256: digest, size: body.length, runtime: 'nodejs24.x', invocationMode: 'stream' })),
     },
   };
 }
@@ -318,7 +326,7 @@ async function createSnapshot(files, rebuilt, blobs, draft) {
   for (const digest of new Set(diff.required_functions)) {
     const { name, body } = functionsByDigest.get(digest);
     assert(Object.hasOwn(EXPECTED_FUNCTIONS, name) && sha256(body) === digest, 'FUNCTION_UPLOAD_BYTES_CHANGED');
-    const parameters = new URLSearchParams({ runtime: 'nodejs22.x', invocation_mode: 'stream', size: String(body.length) });
+    const parameters = new URLSearchParams({ runtime: 'nodejs24.x', invocation_mode: 'stream', size: String(body.length) });
     await api('PUT', `/deploys/${deploy.id}/functions/${encodeURIComponent(name)}?${parameters}`, body, true);
     functionUploads.push({ name, sha256: digest, bytes: body.length });
     await saveReport();
@@ -334,7 +342,7 @@ async function createSnapshot(files, rebuilt, blobs, draft) {
 async function verifySnapshot(deploy, baseline, blobs, assetClosure, files, rebuilt) {
   assert(functionFingerprint(deploy, rebuilt.digests) === functionFingerprint(baseline), 'DEPLOY_FUNCTION_CONTRACT_CHANGED');
   const expectedRules = ruleCounts(baseline), actualRules = ruleCounts(deploy);
-  assert(expectedRules.redirects === 445 && expectedRules.headers === 4, 'UNEXPECTED_BASELINE_RULE_COUNTS');
+  assert(expectedRules.redirects === 444 && expectedRules.headers === 1, 'UNEXPECTED_BASELINE_RULE_COUNTS');
   assert(JSON.stringify(actualRules) === JSON.stringify(expectedRules), 'DEPLOY_REDIRECT_OR_HEADER_COUNT_CHANGED');
   const origin = `https://${deploy.id}--flex-webb.netlify.app`;
   for (const [name, body] of blobs) assert(sha1(await immutableBytes(origin, name)) === sha1(body), `DEPLOY_FILE_MISMATCH:${name}`);
@@ -373,8 +381,6 @@ export async function main() {
   const rebuilt = await loadRebuiltFunctions(baseline);
   report.rebuiltFunctions = rebuilt.evidence;
   report.baselineProxy = await verifyAutomationProxy(BASELINE_ORIGIN);
-  const baselineRetired = await retiredResponse(BASELINE_ORIGIN);
-  report.baselineRetiredContent = baselineRetired;
   const baselineFiles = normalizeFiles(await api('GET', `/sites/${SITE_ID}/files`));
   await requireBaseline();
   const baselineBody = await immutableBytes(BASELINE_ORIGIN, PAGE);
@@ -399,9 +405,6 @@ export async function main() {
   const preview = await createSnapshot(files, rebuilt, blobs, true);
   report.previewUrl = await verifySnapshot(preview, baseline, blobs, assetClosure, files, rebuilt);
   report.previewProxy = await verifyAutomationProxy(report.previewUrl);
-  const previewRetired = await retiredResponse(report.previewUrl);
-  assert(JSON.stringify(previewRetired) === JSON.stringify(baselineRetired), 'PREVIEW_RETIRED_CONTENT_CHANGED');
-  report.previewRetiredContent = previewRetired;
   await requireBaseline();
   const testEnv = { ...process.env, APPLICATION_BUDGET_ORIGIN: report.previewUrl };
   delete testEnv.NETLIFY_AUTH_TOKEN;

@@ -1,4 +1,4 @@
-name: Simplified application form — one-page publication
+name: Restore previous one-page quote form
 
 on:
   push:
@@ -47,16 +47,6 @@ jobs:
           npm ci --prefix scripts/quote/function-packaging --ignore-scripts --no-audit --no-fund
           node scripts/quote/function-packaging/build.mjs
           node --test tests/automation-proxy.test.mjs tests/seo/retired-content.test.ts
-      - name: Compile only the quote form page
-        shell: bash
-        run: |
-          set -euo pipefail
-          pages_backup="$RUNNER_TEMP/application-budget-pages-$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
-          mv src/pages "$pages_backup"
-          mkdir src/pages
-          cp "$pages_backup/demarrer.astro" src/pages/demarrer.astro
-          trap 'rm src/pages/demarrer.astro; rmdir src/pages; mv "$pages_backup" src/pages' EXIT
-          npx astro build
       - name: Verify scoped draft and publish the same complete snapshot
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}

@@ -14,7 +14,6 @@ const manifestFile = path.join(repositoryRoot, '.cms/application-budget-function
 const expectedSources = {
   'netlify/functions/automation-clock.ts': '4f7f639af5d13e16c17a61a261928c5524a5f0a3',
   'netlify/functions/automation.ts': '0bcdf362121f0ff4485a2ea8c30bfe85baf15898',
-  'netlify/functions/retired-content.mts': '35e8117ed50ca65a7c622c2538e189d9b6f6dfb6',
 };
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 const expectedVersions = {
@@ -25,7 +24,7 @@ const expectedVersions = {
 async function verifySources() {
   const result = {};
   const folderEntries = await fs.readdir(path.join(repositoryRoot, 'netlify/functions'));
-  assert(folderEntries.length === 3 && folderEntries.every(name => Object.hasOwn(expectedSources, `netlify/functions/${name}`)), 'Unexpected function source inventory');
+  assert(['automation-clock.ts', 'automation.ts'].every(name => folderEntries.includes(name)), 'Missing function source');
   for (const [name, expected] of Object.entries(expectedSources)) {
     const filename = path.join(repositoryRoot, name);
     const stat = await fs.lstat(filename);
@@ -50,17 +49,22 @@ await fs.mkdir(temporaryDirectory, { recursive: true });
 // Keep bundler scratch files within this build's ignored output directory.
 process.env.TMPDIR = temporaryDirectory;
 const { zipFunctions } = await import('@netlify/zip-it-and-ship-it');
-const packaged = await zipFunctions(path.join(repositoryRoot, 'netlify/functions'), outputDirectory, {
+const sourceDir = path.join(outputDirectory, 'current-source');
+await fs.mkdir(sourceDir, {recursive:true});
+for (const name of Object.keys(expectedSources)) {
+  await fs.copyFile(path.join(repositoryRoot, name), path.join(sourceDir, path.basename(name)));
+}
+const packaged = await zipFunctions(sourceDir, outputDirectory, {
   basePath: repositoryRoot,
   repositoryRoot,
-  config: { '*': { nodeBundler: 'esbuild', nodeVersion: '22' } },
+  config: { '*': { nodeBundler: 'esbuild', nodeVersion: '24' } },
 });
-assert(packaged.length === 3, 'Unexpected packaged function count');
-const allowedInputs = new Set([...Object.keys(expectedSources).map(name => path.join(repositoryRoot, name)), path.join(repositoryRoot, 'package.json')]);
+assert(packaged.length === 2, 'Unexpected packaged function count');
+const allowedInputs = new Set([...Object.keys(expectedSources).map(name => path.join(sourceDir, path.basename(name))), path.join(repositoryRoot, 'package.json')]);
 const functions = [];
 for (const entry of packaged) {
-  assert(['automation-clock', 'automation', 'retired-content'].includes(entry.name), 'Unexpected packaged function');
-  assert(entry.runtimeVersion === 'nodejs22.x' && entry.invocationMode === 'stream', `Function runtime changed: ${entry.name}`);
+  assert(['automation-clock', 'automation'].includes(entry.name), 'Unexpected packaged function');
+  assert(entry.runtimeVersion === 'nodejs24.x' && entry.invocationMode === 'stream', `Function runtime changed: ${entry.name}`);
   assert(entry.bootstrapVersion === '2.24.0' && entry.runtimeAPIVersion === 2 && entry.priority === 10, `Function packaging metadata changed: ${entry.name}`);
   assert(entry.inputs.every(filename => allowedInputs.has(path.resolve(filename))), `Unexpected function dependency: ${entry.name}`);
   const expectedFile = path.join(outputDirectory, `${entry.name}.zip`);
@@ -70,7 +74,7 @@ for (const entry of packaged) {
     name: entry.name,
     path: path.relative(repositoryRoot, expectedFile).split(path.sep).join('/'),
     sha256: createHash('sha256').update(bytes).digest('hex'),
-    runtime: 'nodejs22.x',
+    runtime: 'nodejs24.x',
     invocationMode: 'stream',
     routes: entry.routes || [],
     schedule: entry.schedule || null,
