@@ -20,7 +20,7 @@ const navByLanguage = {
   it: { links: [{label:'Siti web (FR)',href:'/creation-site-internet/'},{label:'Applicazioni (FR)',href:'/creation-application-mobile/'},{label:'Prezzi (FR)',href:'/pricing/'},{label:'Contatti (FR)',href:'/contact/'}] },
 };
 const pair = languagePairFor(Astro.url.pathname);
-const languageLink = pair ? { href: lang === "en" ? pair.fr : pair.en, label: lang === "en" ? "FR" : "EN", lang: lang === "en" ? "fr" : "en" } : undefined;
+const languageLink = pair ? { href: lang === "en" ? pair.fr : pair.en, label: lang === "en" ? "Français" : "English", lang: lang === "en" ? "fr" : "en" } : undefined;
 ---
 
 <html

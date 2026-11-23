@@ -1,0 +1,10 @@
+---
+const { type, src, alt, priority = false } = Astro.props;
+const desktop = type === "desktop";
+---
+<div class:list={["atelier-device", desktop ? "atelier-monitor" : "atelier-handset"]} data-device={type}>
+  <div class="atelier-display">
+    <img src={src} alt={alt} srcset={desktop ? `/studio-redesign/2savoie-immo-small.webp 720w, ${src} 1440w` : undefined} sizes={desktop ? "(max-width: 700px) 78vw, (max-width: 1152px) 60vw, 695px" : undefined} loading={priority ? "eager" : "lazy"} fetchpriority={priority ? "high" : undefined} decoding="async" width={desktop ? 1440 : 423} height={desktop ? 840 : 920} />
+  </div>
+  {desktop && <div class="atelier-monitor-base" aria-hidden="true"></div>}
+</div>

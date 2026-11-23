@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {resolve,join} from 'node:path';
 import {parse} from 'parse5';
+import {protectDesign} from '../redesign/protect-build.mjs';
 import {pages,locations,origin} from './assemble.mjs';
 
 const dir=resolve(process.argv[2]||'dist');
@@ -44,5 +45,6 @@ if (response.status===200) {
   }
   const quote=await readFile(join(dir, 'demarrer/application/index.html'),'utf8');
   assert.ok(/<form\b/.test(quote) && /1\s*990\s*€/.test(quote),'Le devis applicatif n’est plus rendu côté serveur');
+  await protectDesign(dir, process.argv[3] || origin);
   console.log('Catalogue et parcours mobiles présents dans le prochain build.');
 }

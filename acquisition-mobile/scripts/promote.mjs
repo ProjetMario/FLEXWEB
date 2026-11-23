@@ -10,8 +10,10 @@ import { filesOf, rawFile, waitDeploy, netJSON, parallel, request } from '../cat
 const run = promisify(execFile);
 const [mode, approvedId] = process.argv.slice(2);
 assert.ok(['--check', '--publish'].includes(mode), 'Indiquer --check ou --publish et l’identifiant approuvé');
-const receipt = JSON.parse(await readFile(join(root, 'catalogue/release-candidate.json'), 'utf8'));
+const receipt = JSON.parse(await readFile(join(root, 'redesign/release-candidate.json'), 'utf8'));
 assert.equal(approvedId, receipt.id, 'Identifiant différent de l’aperçu contrôlé sur cette révision Git');
+const catalogue = JSON.parse(await readFile(join(root, 'catalogue/release-candidate.json'), 'utf8'));
+assert.equal(receipt.sourceCatalogueId, catalogue.id, 'Catalogue source différent du catalogue certifié');
 assert.equal(baseId, receipt.baseId);
 assert.equal(receipt.routes, 151507);
 assert.equal(receipt.sitemaps, 85);
@@ -28,7 +30,7 @@ const files = await filesOf(approvedId);
 assert.equal(Object.keys(files).length, receipt.files);
 assert.equal(digestOf(files), receipt.digest, 'Inventaire différent de l’aperçu validé');
 assertFunctions(base, preview);
-const title = 'Catalogue francophone et applications — ' + approvedId;
+const title = 'Atelier Flex-Web — ' + approvedId;
 assert.ok(live.id === baseId || live.title === title, 'Une autre version a été publiée. Réintégrer ses modifications avant de publier.');
 await run(process.execPath, [join(root, 'catalogue/check.mjs'), receipt.url, '--exact'], {timeout:240_000});
 
@@ -77,8 +79,8 @@ async function publicChecks() {
   const options = { timeout: 600_000 };
   console.log((await run(process.execPath,[join(root,'catalogue/check.mjs'),url,'--exact'],options)).stdout.trim());
   console.log((await run(process.execPath,[join(root,'catalogue/public.mjs')],options)).stdout.trim());
-  for (const script of ['verify-pages.mjs', 'verify-quote.mjs', 'verify-home.mjs']) {
-    const result = await run(process.execPath, [join(root, 'scripts', script), url], options);
+  for (const script of ['scripts/verify-pages.mjs', 'scripts/verify-quote.mjs', 'redesign/verify.mjs']) {
+    const result = await run(process.execPath, [join(root, script), url], options);
     console.log(result.stdout.trim());
   }
 }

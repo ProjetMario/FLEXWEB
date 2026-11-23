@@ -27,9 +27,11 @@ for (const path of ['/entrepreneurs/guides/choisir-premier-site/','/entrepreneur
   assert.ok(paths.has(path));
   if(!samples.has(path)) samples.set(path,path.split('/')[1]);
 }
+const design = process.argv.includes('--design');
+const viewports = design ? [390,768,1440] : [390,1440];
 const reports=[],errors=[];
 const browser=await chromium.launch();
-const queue=[...samples].flatMap(([path,label])=>[390,1440].map(width=>({path,label,width})));
+const queue=[...samples].flatMap(([path,label])=>viewports.map(width=>({path,label,width})));
 let next=0;
 async function inspect({path,label,width}) {
   const context=await browser.newContext({viewport:{width,height:width===390?844:900},reducedMotion:'reduce',serviceWorkers:'block'});
@@ -60,12 +62,13 @@ async function inspect({path,label,width}) {
         return visible(a) && href.startsWith('/') && !href.startsWith('//') && !href.includes('#') && !href.includes('?');
       }).map(a=>a.getAttribute('href'));
       const missingImages=[...document.images].filter(img=>img.src && visible(img) && img.getBoundingClientRect().top<innerHeight && img.complete && !img.naturalWidth).map(img=>img.src);
-      return {h1:heading?.textContent.trim(),h1Count:document.querySelectorAll('h1').length,h1Visible:heading&&visible(heading),
+      return {studio:getComputedStyle(document.documentElement).getPropertyValue('--flex-studio-release').trim(),h1:heading?.textContent.trim(),h1Count:document.querySelectorAll('h1').length,h1Visible:heading&&visible(heading),
         title:document.title,description:document.querySelector('meta[name="description"]')?.content,
         lang:document.documentElement.lang,canonical:document.querySelector('link[rel="canonical"]')?.href,
         robots:document.querySelector('meta[name="robots"]')?.content||'',
         bodyText:main.innerText.trim().length,scrollWidth:document.documentElement.scrollWidth,links,missingImages};
     });
+    if (design) assert.equal(report.studio,'atelier-1',path);
     assert.equal(report.h1Count,1); assert.ok(report.h1&&report.h1Visible);
     assert.ok(report.bodyText>=50 && report.title?.trim() && report.description?.trim(),'Texte ou métadonnées manquantes');
     assert.equal(report.canonical,xmlOrigin+path); assert.equal(report.lang,expectedLanguage(path));
@@ -93,9 +96,10 @@ try{
 }finally{await browser.close();}
 const langs=[...new Set(reports.map(r=>r.lang))].sort();
 const id=target.hostname.split('--')[0];
-const summary={origin:target.origin,finishedAt:new Date().toISOString(),families:families.size,pages:samples.size,viewports:[390,1440],languages:langs,passed:reports.length,reports,errors};
-await mkdir(join(defaultDirectory,'browser'),{recursive:true});
-await writeFile(join(defaultDirectory,'browser',id+'.json'),JSON.stringify(summary,null,2)+'\n');
+const summary={origin:target.origin,finishedAt:new Date().toISOString(),families:families.size,pages:samples.size,viewports,languages:langs,passed:reports.length,reports,errors};
+const output = design ? join(defaultDirectory,'..','redesign','qa','families') : join(defaultDirectory,'browser');
+await mkdir(output,{recursive:true});
+await writeFile(join(output,id+'.json'),JSON.stringify(summary,null,2)+'\n');
 console.log(target.origin, '—', reports.length+'/'+queue.length, 'affichages et navigations réussis pour',families.size,'familles ; langues :',langs.join(', '));
 if(errors.length)console.error(JSON.stringify(errors.slice(0,12)));
 assert.equal(errors.length,0);

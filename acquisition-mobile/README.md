@@ -2,9 +2,13 @@
 
 Le lot Astro porte sur les projets iOS et Android des entreprises et particuliers. La source de départ est le déploiement de flex-web.fr du 23 novembre 2026, `6b0452114b315390275a0f53`. GitHub contient aussi des catalogues d’autres versions. Ce lot reprend les pages mobiles ciblées et toutes les URL du sitemap de cette production.
 
-## Aperçu du catalogue complet
+## Refonte des pages publiques
 
-La version à valider pour la publication réunit **151 507 URL canoniques dans 85 sous-sitemaps**. Elle conserve les 275 URL de l’étape mobile et restaure 151 232 autres pages de la version publiée le 13 novembre. Les pages de navigation et les variantes linguistiques historiques marquées noindex sont comptées à part. [Sitemap de l’aperçu combiné](https://6b04922cb721fd1ae1c8d810--flex-webb.netlify.app/sitemap.xml) · [Rapport des vérifications](catalogue/VALIDATION.md)
+Le nouveau design réunit les accueils français et anglais, les offres, les tarifs et les gabarits du catalogue. [Aperçu et résultats de validation](redesign/VALIDATION.md)
+
+## Catalogue servant de base à la refonte
+
+La version qui sert de référence au nouveau design réunit **151 507 URL canoniques dans 85 sous-sitemaps**. Elle conserve les 275 URL de l’étape mobile et restaure 151 232 autres pages de la version publiée le 13 novembre. Les pages de navigation et les variantes linguistiques historiques marquées noindex sont comptées à part. [Sitemap de l’aperçu combiné](https://6b04922cb721fd1ae1c8d810--flex-webb.netlify.app/sitemap.xml) · [Rapport des vérifications](catalogue/VALIDATION.md)
 
 ## Parcours à examiner
 
@@ -61,6 +65,6 @@ Pour reproduire les contrôles distants, passer le même domaine d’aperçu à 
 
 Les contenus métier et traductions figurent dans `src/data/mobile.mjs`. Les pages et données structurées proviennent de `src/pages/` et de `src/components/`. Les images FootNation reprises dans l’étude de cas proviennent de la fiche Apple de l’éditeur FLEX IMMO. Les ressources textuelles destinées aux moteurs sont produites par `scripts/assemble.mjs` à partir de ces pages et du site publié.
 
-Le reçu de l’étape mobile se trouve dans `release-candidate.json`. Le reçu du catalogue complet est dans `catalogue/release-candidate.json`. Le workflow GitHub de publication accepte uniquement l’identifiant du catalogue complet approuvé, après fusion sur main. Il vérifie les empreintes de tous les fichiers et le contenu des 85 sous-sitemaps, publie les mêmes octets et revérifie le domaine public.
+Le reçu de l’étape mobile se trouve dans `release-candidate.json`. Le reçu du catalogue complet est dans `catalogue/release-candidate.json`. Le reçu de la refonte se trouve dans `redesign/release-candidate.json`. Après validation visuelle et fusion sur main, le workflow de publication accepte l’identifiant exact de cet aperçu. Il vérifie les empreintes de tous les fichiers et le contenu des 85 sous-sitemaps, publie les mêmes octets et revérifie le domaine public.
 
 Après ce contrôle, soumettre `https://flex-web.fr/sitemap.xml` à la propriété de domaine flex-web.fr dans Google Search Console et au site enregistré auprès de Bing Webmaster Tools. Conserver le dernier jour de données disponible et les reçus de soumission. À J+7 et J+28, relever les erreurs HTTP, les URL découvertes et indexées, les impressions et les clics par moteur. Compter les demandes effectivement reçues depuis le CRM et distinguer les clics e-mail et téléphone. Le [guide de mesure](measurement/SUIVI.md) complète ce suivi par les devis mobiles qualifiés et les citations des assistants.

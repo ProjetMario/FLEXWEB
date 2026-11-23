@@ -1,4 +1,5 @@
 ---
+import {projectFeature} from '../../redesign/shared/feature.mjs';
 import MobileLayout from '../components/MobileLayout.astro';
 import {mobilePages, relatedPages, topicLabels, updated} from '../data/mobile.mjs';
 
@@ -48,7 +49,8 @@ const tiers = [
 <nav class="crumbs" aria-label={t('Fil d’Ariane','Breadcrumb')}>{crumbs.map((crumb,index)=><>{index>0&&<span aria-hidden="true">/</span>}{index===crumbs.length-1?<span aria-current="page">{crumb.name}</span>:<a href={new URL(crumb.url).pathname}>{crumb.name}</a>}</>)}</nav>
 <div class="hero-grid">
   <div><h1>{title}</h1><p class="lead">{intro}</p><a class="action" href={quote} data-conversion-event="quote_click" data-conversion-service="application">{quoteLabel}</a></div>
-  <aside class="offer"><h2>{t('Votre première version','Your first release')}</h2><p class="amount">{t('Dès 1 990 € TTC','From €1,990 incl. VAT')}</p><p>{t('iOS et Android inclus. Le devis fixe les fonctionnalités, le calendrier, les essais sur appareils et les frais éventuels.','Both iOS and Android are included. Your quote details the features, schedule, device testing and any additional fees.')}</p><a href={id==='budget'?'#budgets':mobilePages.find(p=>p.lang===lang&&p.id==='budget').path}>{t('Comprendre le budget','Explore the costs')} →</a></aside>
+  {['hub','ios'].includes(id) && <Fragment set:html={projectFeature('app',lang)} />}
+<aside class="offer"><h2>{t('Votre première version','Your first release')}</h2><p class="amount">{t('Dès 1 990 € TTC','From €1,990 incl. VAT')}</p><p>{t('iOS et Android inclus. Le devis fixe les fonctionnalités, le calendrier, les essais sur appareils et les frais éventuels.','Both iOS and Android are included. Your quote details the features, schedule, device testing and any additional fees.')}</p><a href={id==='budget'?'#budgets':mobilePages.find(p=>p.lang===lang&&p.id==='budget').path}>{t('Comprendre le budget','Explore the costs')} →</a></aside>
 </div>
 </div></div>
 <div class="wrap body-grid">

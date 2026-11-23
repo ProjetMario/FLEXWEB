@@ -94,17 +94,17 @@ const schema = [
       <a class="source" href={mainStore}>{copy.app}</a>
       <p class="date">{copy.reviewed} <time datetime={publicationDate}>{copy.date}</time></p>
     </header>
+    <section class="gallery">
+      <h2>{copy.gallery}</h2>
+      <div class="screens">{images.map((src,i) =>
+        <figure><a href={src}><img src={src} width="423" height="920" loading="lazy" decoding="async" alt={copy.shots[i]} /></a><figcaption>{copy.shots[i]}</figcaption></figure>
+      )}</div>
+      <a class="source" href={mainStore}>{copy.source}</a>
+    </section>
     <div class="walkthrough">
       <section>
         <h2>{copy.journeys}</h2>
         {copy.steps.map(([heading, text]) => <div class="step"><h3>{heading}</h3><p>{text}</p></div>)}
-      </section>
-      <section class="gallery">
-        <h2>{copy.gallery}</h2>
-        <div class="screens">{images.map((src,i) =>
-          <figure><a href={src}><img src={src} width="423" height="920" loading="lazy" decoding="async" alt={copy.shots[i]} /></a><figcaption>{copy.shots[i]}</figcaption></figure>
-        )}</div>
-        <a class="source" href={mainStore}>{copy.source}</a>
       </section>
     </div>
     <section class="stores"><h2>{copy.distribution}</h2><ul>{Object.values(appLinks).map((href,i) => <li><a href={href}>{copy.countries[i]}</a></li>)}</ul></section>

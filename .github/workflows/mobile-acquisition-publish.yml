@@ -1,4 +1,4 @@
-name: Publier le catalogue et l’offre mobile validés
+name: Publier la refonte et le catalogue validés
 on:
   workflow_dispatch:
     inputs:
@@ -35,13 +35,13 @@ jobs:
         run: |
           node acquisition-mobile/catalogue/inventory.mjs
           node acquisition-mobile/scripts/promote.mjs --check "$APPROVED_PREVIEW"
-          preview_url=$(node -p 'require("./acquisition-mobile/catalogue/release-candidate.json").url')
+          preview_url=$(node -p 'require("./acquisition-mobile/redesign/release-candidate.json").url')
           node acquisition-mobile/catalogue/check.mjs "$preview_url" --exact
           node acquisition-mobile/catalogue/audit/verify.mjs "$APPROVED_PREVIEW"
-          node acquisition-mobile/catalogue/browser.mjs "$preview_url"
+          node acquisition-mobile/catalogue/browser.mjs "$preview_url" --design
           node acquisition-mobile/scripts/verify-pages.mjs "$preview_url"
           node acquisition-mobile/scripts/verify-quote.mjs "$preview_url"
-          node acquisition-mobile/scripts/verify-home.mjs "$preview_url"
+          node acquisition-mobile/redesign/verify.mjs "$preview_url"
       - name: Publier les mêmes octets, rétablir le verrou et tester flex-web.fr
         run: node acquisition-mobile/scripts/promote.mjs --publish "$APPROVED_PREVIEW"
       - uses: actions/upload-artifact@v4
@@ -50,6 +50,6 @@ jobs:
           name: mobile-acquisition-production-${{ github.run_id }}
           path: |
             acquisition-mobile/.release/production.json
-            acquisition-mobile/.release/home/*.png
+            acquisition-mobile/.release/redesign/qa/
           include-hidden-files: true
           retention-days: 14

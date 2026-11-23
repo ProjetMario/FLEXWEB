@@ -1,0 +1,62 @@
+name: Aperçu de la refonte Flex-Web
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: flexweb-design-preview
+  cancel-in-progress: false
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    environment: emdash-publication
+    timeout-minutes: 180
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npx --no-install playwright install --with-deps chromium
+      - run: npm install --prefix "$RUNNER_TEMP/flexweb-a11y" --no-save --no-package-lock --ignore-scripts axe-core@4.14.0
+      - name: Construire les pages et les feuilles de style
+        run: |
+          node --test acquisition-mobile/redesign/manifest.test.mjs
+          node acquisition-mobile/catalogue/inventory.mjs
+          node acquisition-mobile/redesign/home/build.mjs
+          node acquisition-mobile/redesign/shared/build.mjs
+      - name: Créer le brouillon Netlify et vérifier le manifeste publié sur son URL
+        run: node acquisition-mobile/redesign/preview.mjs
+      - name: Vérifier les sitemaps, les pages et le formulaire de devis
+        run: |
+          receipt=./acquisition-mobile/.release/redesign/candidate.json
+          preview_id=$(node -p "require('$receipt').id")
+          preview_url=$(node -p "require('$receipt').url")
+          node acquisition-mobile/redesign/assets.mjs "$preview_url"
+          node acquisition-mobile/catalogue/check.mjs "$preview_url" --exact
+          node acquisition-mobile/catalogue/audit/verify.mjs "$preview_id"
+          node acquisition-mobile/catalogue/audit/resources.mjs "$preview_id"
+          node acquisition-mobile/catalogue/browser.mjs "$preview_url" --design
+          node acquisition-mobile/redesign/verify.mjs "$preview_url"
+          node acquisition-mobile/redesign/accessibility.mjs "$preview_url" "$RUNNER_TEMP/flexweb-a11y/node_modules/axe-core/axe.min.js"
+          node acquisition-mobile/scripts/verify-pages.mjs "$preview_url"
+          node acquisition-mobile/scripts/verify-quote.mjs "$preview_url"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: refonte-flex-web-${{ github.sha }}
+          include-hidden-files: true
+          path: |
+            acquisition-mobile/.release/redesign/candidate.json
+            acquisition-mobile/.release/redesign/changes.json
+            acquisition-mobile/.release/redesign/shared-report.json
+            acquisition-mobile/.release/redesign/qa/**
+            !acquisition-mobile/.release/redesign/qa/tools/**
+            acquisition-mobile/.release/catalogue/audit/*.json
+            acquisition-mobile/.release/catalogue/browser/**
+          retention-days: 30

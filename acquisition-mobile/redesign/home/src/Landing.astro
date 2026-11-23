@@ -1,0 +1,138 @@
+---
+import { publishedContent } from "./baseline.mjs";
+import Device from "./Device.astro";
+
+const { lang } = Astro.props;
+const en = lang === "en";
+const t = (fr, english) => en ? english : fr;
+const original = publishedContent(lang);
+const assets = "/studio-redesign/";
+const website = t("/creation-site-internet/", "/en/websites/");
+const app = t("/creation-application-mobile/", "/en/applications/");
+const quoteWeb = t("/demarrer/?service=site", "mailto:contact@flex-web.fr?subject=Website%20quote%20request");
+const quoteApp = t("/demarrer/?service=application", "mailto:contact@flex-web.fr?subject=Custom%20app%20quote%20request");
+const automation = t("/automatisation-ia/", "mailto:contact@flex-web.fr?subject=Automation%20project%20enquiry");
+const footCase = t("/realisations/footnation/", "/en/case-studies/footnation/");
+const searchAlt = t("Écran de recherche FootNation avec profils de joueurs et de clubs.", "FootNation’s French search screen with player and club profiles.");
+const profileAlt = t("Profil de démonstration FootNation avec publications et espace joueur.", "FootNation’s French demo profile with a player account and a posts tab.");
+const homeAlt = t("Le site de 2 Savoie Immo, avec son chalet alpin et ses accès aux annonces et à l’estimation.", "The 2 Savoie Immo website, showing an Alpine chalet and links to listings and valuations.");
+const catalogueAlt = t("Catalogue de 2 Savoie Immo présentant les biens disponibles en Savoie.", "2 Savoie Immo’s catalogue of properties available in Savoie.");
+const projects = [
+  { name: "2 Savoie Immo", description: t("Catalogue immobilier et estimation", "Property listings and valuations"), image: "2savoie-immo.webp", alt: homeAlt, path: "/realisations/2savoie-immo/", style: "immo" },
+  { name: "FootNation", description: t("Application mobile pour le football", "Mobile app for the football community"), image: "footnation-recherche.webp", alt: searchAlt, path: footCase, style: "foot" },
+  { name: "Serrurier 73", description: t("Services et demandes de dépannage", "Locksmith services and call-outs"), image: "serrurier73.webp", alt: t("Le site de Serrurier 73 présente ses travaux de serrurerie et son contact d’urgence.", "The Serrurier 73 website displays locksmith services and the emergency contact."), path: "/realisations/serrurier73/", style: "artisan" },
+];
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <Fragment set:html={original.head} />
+    <link rel="stylesheet" href="/studio-redesign/atelier-home.css" />
+  </head>
+  <body class="studio atelier">
+    <a class="atelier-skip" href="#studio-title">{t("Aller au contenu", "Skip to content")}</a>
+    <Fragment set:html={original.header} />
+    <main>
+      <section class="atelier-hero" aria-labelledby="studio-title">
+        <div class="atelier-hero-copy">
+          <h1 id="studio-title">{t("Votre site internet.", "Your website.")}<br/><span>{t("Votre application.", "Your app.")}</span></h1>
+          <p>{t("Nous concevons des sites qui présentent votre savoir-faire et des applications qui facilitent la vie de vos clients.", "We design websites that show what you do best and apps that make life easier for your customers.")}</p>
+          <div class="atelier-actions">
+            <a class="atelier-primary" href="#contact">{t("Demander mon devis", "Get a free quote")}</a>
+            <a class="atelier-secondary" href="#avantages">{t("Voir les offres", "Explore services")} <span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+        <figure class="atelier-workbench">
+          <div class="atelier-hardware">
+            <Device type="desktop" src={assets + "2savoie-immo.webp"} alt={homeAlt} priority />
+            <Device type="phone" src={assets + "footnation-recherche.webp"} alt={searchAlt} priority />
+          </div>
+          <figcaption><span><b>2 Savoie Immo</b> {t("sur ordinateur", "on desktop")}</span><i aria-hidden="true">·</i><span><b>FootNation</b> {t("sur iPhone", "on iPhone")}</span></figcaption>
+        </figure>
+      </section>
+
+      <section id="avantages" class="atelier-services" aria-label={t("Nos offres", "Our services")}>
+        <article id="sites" class="atelier-panel atelier-web">
+          <div class="atelier-panel-copy">
+            <p class="atelier-label">{t("Sites internet", "Websites")}</p>
+            <h2>{t("Donnez envie de vous contacter.", "Turn a visit into an enquiry.")}</h2>
+            <p>{t("Présentez vos réalisations, expliquez vos services et donnez à vos futurs clients un moyen simple de vous joindre.", "Show your work, explain your services and give your next customer a clear way to get in touch.")}</p>
+            <strong>{t("Dès 299 € TTC", "From €299 including tax")}</strong>
+            <div class="atelier-actions">
+              <a class="atelier-primary" href={quoteWeb}>{t("Demander un devis site", "Request a website quote")}</a>
+              <a class="atelier-link" href={website}>{t("Découvrir la prestation", "Explore websites")} <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+          <div class="atelier-web-art"><div class="atelier-browser"><span class="atelier-browser-bar" aria-hidden="true"><i></i><i></i><i></i><small>2savoie.immo</small></span><img src={assets+"2savoie-catalogue.webp"} alt={catalogueAlt} loading="lazy" width="1440" height="840" /></div></div>
+        </article>
+
+        <article id="applications" class="atelier-panel atelier-apps">
+          <div class="atelier-panel-copy">
+            <p class="atelier-label">{t("Applications mobiles & web", "Mobile & web apps")}</p>
+            <h2>{t("Une idée qui tient dans la main.", "Put your idea in their hands.")}</h2>
+            <p>{t("Réserver un créneau, retrouver un dossier, échanger avec une équipe. Nous construisons votre application autour de ce que vos utilisateurs viennent faire.", "Book an appointment, track a project or talk to a team. We build your app around what people actually need to do.")}</p>
+            <strong>{t("Dès 1 990 € TTC · Sur devis", "From €1,990 including tax · Quoted per project")}</strong>
+            <div class="atelier-actions">
+              <a class="atelier-primary" href={quoteApp}>{t("Demander un devis application", "Request an app quote")}</a>
+              <a class="atelier-link" href={app}>{t("Découvrir la prestation", "Explore apps")} <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+          <div class="atelier-app-art">
+            <Device type="phone" src={assets + "footnation-recherche.webp"} alt={searchAlt} />
+            <Device type="phone" src={assets + "footnation-profil.webp"} alt={profileAlt} />
+          </div>
+        </article>
+
+        <article id="automation" class="atelier-panel atelier-flow">
+          <div class="atelier-panel-copy">
+            <p class="atelier-label">{t("Automatisation", "Automation")}</p>
+            <h2>{t("Une demande, moins de ressaisies.", "One enquiry. Less retyping.")}</h2>
+            <p>{t("Reliez votre formulaire à votre CRM. Définissons ensemble les données à transmettre et les étapes que votre équipe doit valider.", "Connect a form to your CRM. We help you decide which details to pass on and which steps your team should review.")}</p>
+            <div class="atelier-actions"><a class="atelier-primary" href={automation}>{t("Explorer l’automatisation", "Discuss automation")}</a>{en && <a class="atelier-link" href="/en/ai-automation/">Explore automation <span aria-hidden="true">↗</span></a>}</div>
+          </div>
+          <figure class="atelier-flow-art">
+            <ol><li><span aria-hidden="true">↙</span>{t("Formulaire reçu", "Enquiry received")}</li><li><span aria-hidden="true">↳</span>{t("Contact créé dans le CRM", "CRM contact created")}</li><li><span aria-hidden="true">✓</span>{t("Validation par l’équipe", "Team review")}</li></ol>
+            <figcaption>{t("Exemple de parcours", "Illustrative workflow")}</figcaption>
+          </figure>
+        </article>
+      </section>
+
+      <section class="atelier-projects" aria-labelledby="showcase-title">
+        <div class="atelier-projects-header"><div><p class="atelier-label">{t("Réalisations", "Selected work")}</p><h2 id="showcase-title">{t("Nos projets en pratique.", "Our work in action.")}</h2></div><a class="atelier-link" href="/realisations/">{t("Toutes les réalisations", "All projects (FR)")} <span aria-hidden="true">↗</span></a></div>
+        <div class="atelier-project-grid">
+          {projects.map(project => <a href={project.path} class={"atelier-project atelier-project-" + project.style}>
+            <div class="atelier-project-img"><img alt={project.alt} src={assets+project.image} loading="lazy" width={project.style === "foot" ? 423 : 1280} height={project.style === "foot" ? 920 : 840}/></div>
+            <div class="atelier-project-meta"><div><h3>{project.name}</h3><p>{project.description}</p></div><span aria-hidden="true">↗</span></div>
+          </a>)}
+        </div>
+        <details class="atelier-demos">
+          <summary>{t("Explorer les démonstrations de sites", "Explore website demos (FR)")}</summary>
+          <div><a href="/demo/make-peinture/">Make Peinture ↗</a><a href="/demo/haute-savoie-decor/">Haute-Savoie Décor ↗</a><a href="/demo/jmv-renovation/">JMV Rénovation ↗</a></div>
+        </details>
+      </section>
+      <Fragment set:html={original.contact} />
+      <Fragment set:html={original.faq} />
+    </main>
+    <Fragment set:html={original.footer} />
+    <Fragment set:html={original.scriptsAndConsent} />
+    <script is:inline>
+      (() => {
+        const nav = document.getElementById("studio-navigation");
+        const toggle = document.querySelector(".studio-menu-toggle");
+        function closeMenu() {
+          nav.classList.remove("is-open");
+          toggle.setAttribute("aria-expanded", "false");
+        }
+        nav.addEventListener("click", (event) => {
+          if (event.target.closest("a")) closeMenu();
+        });
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") {
+            closeMenu();
+            toggle.focus();
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
