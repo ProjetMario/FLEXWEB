@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import { promisify } from 'node:util';
 import { api, baseId, cache, put, root, sha, site } from './baseline.mjs';
 import { assertFunctions, digestOf, functionPayload } from './deploys.mjs';
-import { filesOf, rawFile, waitDeploy } from '../catalogue/netlify.mjs';
+import { filesOf, rawFile, waitDeploy, netJSON, parallel, request } from '../catalogue/netlify.mjs';
 
 const run = promisify(execFile);
 const [mode, approvedId] = process.argv.slice(2);
@@ -55,7 +55,7 @@ const head = (await run('gh', ['api', 'repos/' + process.env.GITHUB_REPOSITORY +
 assert.equal(head, process.env.GITHUB_SHA, 'main a changé depuis la demande de publication');
 
 async function waitPublished(id) {
-  for (let attempt = 0; attempt < 15; attempt++) {
+  for (let attempt = 0; attempt < 120; attempt++) {
     const status = await current();
     if (status.id === id) return status;
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -102,23 +102,35 @@ try {
       body: JSON.stringify({ async: true, draft: false, branch: 'main', files, ...functionPayload(preview) }),
     });
     assert.equal(candidate.site_id, site);
-    for (let i=0; ['new','preparing','getting_ready','enqueued'].includes(candidate.state); i++) {
-      assert.ok(i<720,'Préparation prolongée du déploiement '+candidate.id);
+    const id=candidate.id;
+    const byDigest=new Map(Object.entries(files).map(([path,hash])=>[hash,path]));
+    const uploaded=new Set();
+    // The site-scoped endpoint carries Netlify's authoritative missing-file list.
+    for (let i=0; i<720; i++) {
+      candidate=await netJSON('/sites/'+site+'/deploys/'+id);
+      assert.ok(!['error','rejected','canceled'].includes(candidate.state),candidate.error_message||candidate.state);
+      assert.deepEqual(candidate.required_functions||[],[]);
+      assert.deepEqual(candidate.required_edge_functions||[],[]);
+      if (['uploaded','processing','ready'].includes(candidate.state)) break;
+      if (['prepared','uploading'].includes(candidate.state)) {
+        const remaining=[...new Set(candidate.required||[])].filter(hash=>!uploaded.has(hash));
+        await parallel(remaining,5,async digest=>{
+          const path=byDigest.get(digest);
+          assert.ok(path,'Fichier absent de l’aperçu approuvé');
+          const bytes=await rawFile(approvedId,path);
+          assert.equal(sha(bytes),digest);
+          const remotePath=path.split('/').map(encodeURIComponent).join('/');
+          const res=await request('/deploys/'+id+'/files'+remotePath,{method:'PUT',headers:{'Content-Type':'application/octet-stream'},body:bytes});
+          await res.arrayBuffer();
+          uploaded.add(digest);
+        });
+      }
+      assert.ok(i<719,'Traitement Netlify prolongé, vérifier le déploiement '+id);
       await new Promise(resolve=>setTimeout(resolve,5000));
-      candidate=await fetchDeploy(candidate.id);
     }
-    assert.deepEqual(candidate.required_functions || [], []);
-    assert.deepEqual(candidate.required_edge_functions || [], []);
-    for (const digest of new Set(candidate.required || [])) {
-      const path = Object.keys(files).find(key => files[key] === digest);
-      assert.ok(path);
-      const bytes = await rawFile(approvedId, path);
-      assert.equal(sha(bytes), digest);
-      await api('/deploys/' + candidate.id + '/files' + path.split('/').map(encodeURIComponent).join('/'),
-        { method: 'PUT', headers: { 'Content-Type': 'application/octet-stream' }, body: bytes }, true);
-    }
-    candidate = await waitDeploy(candidate.id,3600);
-    await waitPublished(candidate.id);
+    candidate=await waitDeploy(id,3600);
+    await waitPublished(id);
+    await restoreLock(id);
     await verifyCopy(candidate);
   } else {
     candidate = live;
@@ -133,8 +145,8 @@ try {
   // Restore the prior auto-publishing policy even if the deploy or its public check failed.
   if (lockMayHaveChanged || candidate) {
     const actual=await current();
-    // After an unrelated concurrent publish, preserve that publisher’s lock choice.
-    assert.ok([baseId,candidate?.id].includes(actual.id),'Publication concurrente détectée');
+    // Reapply the initial site locking policy to the active version, even if Netlify
+    // published a queued release while unlocked. Never replace that release here.
     await restoreLock(actual.id);
   }
 }

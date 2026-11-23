@@ -66,6 +66,15 @@ test('pilot mockups are readable on phone, tablet and desktop', async () => {
   } finally {await browser.close();}
 });
 
+// The canonical form collects the same information in a single view. The
+// prospect's city and activity travel in the request, without extra inputs.
+async function fillContact(page) {
+  await page.getByRole('radio',{name:'Pro',exact:true}).check();
+  await page.locator('input[name="contactName"]').fill('Test local');
+  await page.locator('input[name="email"]').fill('test@example.invalid');
+  await page.locator('input[name="phone"]').fill('0600000000');
+}
+
 test('all three mockup offers prefill company and persist reference through mocked intake', async () => {
   const browser=await chromium.launch({headless:true, ...(process.env.FLEXWEB_CHROME_PATH ? {executablePath:process.env.FLEXWEB_CHROME_PATH} : {})}); const p=prospects.find(p=>p.batch==='pilot-10');
   try {
@@ -85,22 +94,25 @@ test('all three mockup offers prefill company and persist reference through mock
       await page.locator(`.offer-card a[href*="offre=${offer}"]`).click();
       await page.waitForFunction(()=>document.querySelector('fieldset')&&!document.querySelector('fieldset').disabled);
       await page.getByRole('button',{name:'Je refuse',exact:true}).click();
-      assert.equal(await page.getByLabel('Entreprise',{exact:true}).inputValue(),p.name);
-      assert.equal(await page.getByLabel('Ville',{exact:true}).inputValue(),p.city);
-      assert.equal(await page.locator('.flow-steps li').count(),2);
-      for(const [label,value] of [['Votre nom','Test local'],['E-mail professionnel','test@example.invalid'],['Téléphone','0600000000']]) await page.getByLabel(label,{exact:true}).fill(value);
-      await page.getByLabel('Je fais cette demande pour mon activité professionnelle.').check();
-      await page.getByRole('button',{name:'Continuer',exact:true}).click();
-      assert(await page.locator(`input[name="planId"][value="${offer}"]`).isChecked());
-      assert.equal(await page.locator('input[name="maintenance"]').isChecked(),false);
-      assert.equal(await page.locator('input[name="crm"]').isChecked(),false);
-      assert.equal(await page.locator('input[name="planId"]').count(),3);
-      // React keeps the prefilled textarea value in its text node; target the field by name.
+      assert.equal(await page.locator('form').count(),1);
+      assert((await page.locator('.quote-context').innerText()).includes(p.name));
+      assert((await page.locator('textarea[name="message"]').inputValue()).includes(p.name));
+      await page.locator('.quote-details summary').click();
+      assert.equal(await page.locator('input[name="companyName"]').inputValue(),p.name);
+      assert.equal(await page.locator('select[name="planId"]').inputValue(),offer);
+      assert.deepEqual(await page.locator('select[name="planId"] option').evaluateAll(opts=>opts.map(o=>o.value)),
+        ['essentielle','visibilite','crm-automation']);
+      await fillContact(page);
       await page.locator('textarea[name="message"]').fill('Je veux adapter cette maquette à mon entreprise.');
       await page.locator('input[name="privacyConsent"]').check();
       await page.getByRole('button',{name:'Recevoir mon devis'}).click();
       await page.waitForURL('**/espace-projet/**');
       assert.equal(request.companyName,p.name);
+      assert.equal(request.city,p.city);
+      assert.equal(request.businessType,p.activity);
+      assert.equal(request.professional,true);
+      assert.equal(request.privacyConsent,true);
+      assert.equal(request.publicQuote.service,service==='seo'?'site':service);
       assert.equal(request.publicQuote.tier,tier);
       assert.deepEqual(request.publicQuote.options,[]);
       assert(request.message.includes(`https://flex-web.fr/${p.slug}/`));
@@ -111,7 +123,7 @@ test('all three mockup offers prefill company and persist reference through mock
 });
 
 
-test('short prospect flow preserves edits and options while switching packs; consent and retry remain safe', async () => {
+test('one-page prospect form preserves edits and pack selection, requires consent and retries idempotently', async () => {
   const browser=await chromium.launch({headless:true, ...(process.env.FLEXWEB_CHROME_PATH ? {executablePath:process.env.FLEXWEB_CHROME_PATH} : {})});
   const p=prospects.find(p=>p.batch==='pilot-10');
   try {
@@ -133,30 +145,25 @@ test('short prospect flow preserves edits and options while switching packs; con
       await page.goto(new URL(`/demarrer/?service=site&offre=essentielle&maquette=${p.slug}`,preview).href);
       await page.waitForFunction(()=>document.querySelector('fieldset')&&!document.querySelector('fieldset').disabled);
       await page.getByRole('button',{name:'Je refuse',exact:true}).click();
-      await page.getByLabel('Entreprise',{exact:true}).fill('Entreprise corrigée');
-      for(const [label,value] of [['Votre nom','Test local'],['E-mail professionnel','test@example.invalid'],['Téléphone','0600000000']]) await page.getByLabel(label,{exact:true}).fill(value);
-      await page.getByLabel('Je fais cette demande pour mon activité professionnelle.').check();
-      await page.getByRole('button',{name:'Continuer',exact:true}).click();
-      await page.locator('input[name="planId"][value="crm-automation"]').check();
-      await page.locator('input[name="maintenance"]').check();
-      await page.locator('input[name="crm"]').check();
+      await fillContact(page);
+      await page.locator('.quote-details summary').click();
+      const company=page.locator('input[name="companyName"]');
+      const chosenPlan=page.locator('select[name="planId"]');
+      const service=page.locator('select[name="service"]');
+      assert.equal(await company.inputValue(),p.name);
+      await company.fill('Entreprise corrigée');
+      await chosenPlan.selectOption('crm-automation');
+      assert.equal(await service.inputValue(),'automation');
+      await service.selectOption('site');
+      assert.equal(await chosenPlan.inputValue(),'essentielle');
+      await service.selectOption('automation');
+      assert.equal(await chosenPlan.inputValue(),'crm-automation');
+      assert.equal(await company.inputValue(),'Entreprise corrigée');
       await page.locator('textarea[name="message"]').fill('Personnaliser le site et le suivi client de mon entreprise.');
       assert.equal(await page.locator('input[name="privacyConsent"]').isChecked(),false);
       await page.getByRole('button',{name:'Recevoir mon devis',exact:true}).click();
       assert.equal(calls.length,0,'Consent is mandatory');
-      await page.getByRole('button',{name:'Retour',exact:true}).click();
-      assert.equal(await page.getByLabel('Entreprise',{exact:true}).inputValue(),'Entreprise corrigée');
-      await page.getByRole('button',{name:'Continuer',exact:true}).click();
-      assert(await page.locator('input[name="planId"][value="crm-automation"]').isChecked());
-      assert(await page.locator('input[name="maintenance"]').isChecked());
-      assert(await page.locator('input[name="crm"]').isChecked());
-      await page.getByRole('button',{name:'Retour',exact:true}).click();
-      await page.locator('select[name="service"]').selectOption('application');
-      assert(!/49|99|148/.test(await page.locator('.flow-prospect-summary').innerText()),'Bespoke must not display fixed monthly options');
-      await page.locator('select[name="service"]').selectOption('automation');
-      await page.getByRole('button',{name:'Continuer',exact:true}).click();
-      assert(await page.locator('input[name="crm"]').isChecked(),'Returning to the pack preserves selected options');
-      assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Short form overflow '+width);
+      assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'Quote form overflow '+width);
       await page.locator('input[name="privacyConsent"]').check();
       await page.screenshot({path:`.cms/smoke/prospect-signup-${width}.png`,fullPage:true});
       await page.getByRole('button',{name:'Recevoir mon devis',exact:true}).click();
@@ -169,14 +176,19 @@ test('short prospect flow preserves edits and options while switching packs; con
       assert.equal(calls[1].companyName,'Entreprise corrigée');
       assert.equal(calls[1].publicQuote.service,'automation');
       assert.equal(calls[1].publicQuote.tier,'crm');
-      assert.deepEqual(calls[1].publicQuote.options,['maintenance','crm']);
+      assert.deepEqual(calls[1].publicQuote.options,[]);
+      assert.equal(calls[1].privacyConsent,true);
+      assert.equal(calls[1].city,p.city);
+      assert.equal(calls[1].businessType,p.activity);
+      assert.equal(calls[1].message,calls[0].message);
+      assert(calls[1].message.includes('Personnaliser le site et le suivi client de mon entreprise.'));
       assert(calls[1].message.includes(`https://flex-web.fr/${p.slug}/`));
       await context.close();
     }
   } finally {await browser.close();}
 });
 
-test('missing or invalid prospect context falls back to the regular three-step form', async () => {
+test('missing or invalid prospect context preserves the selected offer and opens a blank one-page form', async () => {
   const browser=await chromium.launch({headless:true, ...(process.env.FLEXWEB_CHROME_PATH ? {executablePath:process.env.FLEXWEB_CHROME_PATH} : {})});
   const p=prospects[0];
   try {
@@ -192,8 +204,13 @@ test('missing or invalid prospect context falls back to the regular three-step f
       await page.goto(new URL(`/demarrer/?service=seo&offre=visibilite&maquette=${p.slug}`,preview).href);
       await page.waitForFunction(()=>document.querySelector('fieldset')&&!document.querySelector('fieldset').disabled);
       await page.getByRole('button',{name:'Je refuse',exact:true}).click();
-      assert.equal(await page.locator('.flow-steps li').count(),3);
-      assert.equal(await page.getByLabel('Entreprise',{exact:true}).inputValue(),'');
+      assert.equal(await page.locator('form').count(),1);
+      assert.equal(await page.locator('.quote-context').count(),0);
+      assert.equal(await page.locator('textarea[name="message"]').inputValue(),'');
+      await page.locator('.quote-details summary').click();
+      assert.equal(await page.locator('input[name="companyName"]').inputValue(),'');
+      assert.equal(await page.locator('select[name="planId"]').inputValue(),'visibilite');
+      assert(await page.getByRole('button',{name:'Recevoir mon devis',exact:true}).isEnabled());
       await context.close();
     }
   } finally {await browser.close();}

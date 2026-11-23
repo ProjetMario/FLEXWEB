@@ -9,7 +9,7 @@ let browser;
 before(async () => { browser = await chromium.launch({headless: true}); });
 after(async () => { await browser?.close(); });
 
-async function filledQuote(consent = 'accepted', selection = {service:'site', id:'essentielle', options:[]}) {
+async function filledQuote(consent = 'accepted', selection = {service:'site', id:'essentielle'}) {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
   await context.route('**/*', route => {
     const url = new URL(route.request().url());
@@ -21,22 +21,23 @@ async function filledQuote(consent = 'accepted', selection = {service:'site', id
   await context.addInitScript(value => {
     localStorage.setItem('flex-web-cookie-consent', value);
     localStorage.setItem('flex-web-openai-consent', value);
+    // Simulate an earlier, consented public page visit in the same session.
+    if (value === 'accepted') sessionStorage.setItem('flexweb-acquisition-v1', JSON.stringify({
+      channel: 'Assistant IA', aiSource: 'chatgpt', landing: '/applications/ios/', language: 'fr',
+    }));
   }, consent);
   const page = await context.newPage();
   page.setDefaultTimeout(15000); page.setDefaultNavigationTimeout(20000);
   await page.goto(new URL(`/demarrer/?service=${selection.service}&offre=${selection.id}`, preview).href);
   await page.waitForFunction(() => document.querySelector('fieldset') && !document.querySelector('fieldset').disabled);
-  for (const [label, value] of [['Entreprise', 'Entreprise simulation'], ['Votre nom', 'Test local'], ['E-mail professionnel', 'test@example.invalid'], ['Téléphone', '0600000000'], ['Ville', 'Chambéry'], ['Métier / activité', 'Test']]) {
-    await page.getByLabel(label, {exact: true}).fill(value);
-  }
-  await page.getByLabel('Je fais cette demande pour mon activité professionnelle.').check();
-  await page.getByRole('button', {name:'Continuer', exact:true}).click();
-  assert.equal(await page.locator(`input[name="planId"][value="${selection.id}"]`).isChecked(), true);
-  assert.equal(await page.locator('input[name="maintenance"]').isChecked(), false);
-  assert.equal(await page.locator('input[name="crm"]').isChecked(), false);
-  for (const option of selection.options) await page.locator(`input[name="${option}"]`).check();
-  await page.getByRole('button', {name:'Continuer', exact:true}).click();
+  await page.getByRole('radio', {name:'Pro', exact:true}).check();
+  await page.getByLabel('Votre nom', {exact:true}).fill('Test local');
+  await page.getByLabel('Votre e-mail', {exact:true}).fill('test@example.invalid');
   await page.getByLabel('Votre besoin', {exact:true}).fill('Demande locale de vérification sans soumission réelle.');
+  await page.locator('.quote-details summary').click();
+  assert.equal(await page.locator('select[name="service"]').inputValue(), selection.service);
+  assert.equal(await page.locator('select[name="planId"]').inputValue(), selection.id);
+  assert.equal(await page.locator('input[name="privacyConsent"]').isChecked(),false);
   await page.locator('input[name="privacyConsent"]').check();
   // Persist event calls across the mocked private-page navigation.
   await page.evaluate(() => {
@@ -71,23 +72,26 @@ test('successful double click records one mocked request and one conversion', as
     await page.waitForFunction(() => document.querySelector('form').getAttribute('aria-busy') === 'true');
     assert.equal(attempts, 1);
     assert.equal(records.size, 1);
+    assert.equal(body.source, 'Assistant IA (chatgpt) | /applications/ios/');
     assert.deepEqual(body.publicQuote, {version:'2026-09-24-ttc', service:'site', tier:'simple', options:[]});
     assert.deepEqual(await recordedEvents(page), []);
     release();
     await page.waitForURL('**/espace-projet/**');
     const events = await recordedEvents(page);
     assert.equal(events.length, 1);
+    assert.equal(events[0][2].ai_source, 'chatgpt');
+    assert.equal(events[0][2].landing_language, 'fr');
     assert.equal(events[0][2].page_location, `${preview.origin}/demarrer/`);
     assert.doesNotMatch(JSON.stringify(events), /example.invalid|requestKey|accessToken|cle=/);
     assert.equal(await page.evaluate(() => sessionStorage.getItem('flexweb-intake-v2')), null);
   } finally { release(); await context.close(); }
 });
 
-test('three advertised offers preserve their selection, TTC budgets and optional charges through mocked intake', async () => {
+test('three advertised offers preserve the selected TTC price and do not add monthly charges', async () => {
   const cases = [
-    {service:'site', id:'essentielle', tier:'simple', euros:299, options:[], monthly:0},
-    {service:'site', id:'visibilite', tier:'visibility', euros:590, options:['maintenance','crm'], monthly:148},
-    {service:'automation', id:'crm-automation', tier:'crm', euros:990, options:['crm'], monthly:99},
+    {service:'site', id:'essentielle', tier:'simple', euros:299},
+    {service:'site', id:'visibilite', tier:'visibility', euros:590},
+    {service:'automation', id:'crm-automation', tier:'crm', euros:990},
   ];
   for (const selection of cases) {
     const {page, context} = await filledQuote('accepted', selection);
@@ -97,16 +101,17 @@ test('three advertised offers preserve their selection, TTC budgets and optional
       return route.fulfill({status:201,contentType:'application/json',body:'{"projectId":"local-test"}'});
     });
     try {
-      const summary = (await page.locator('.flow-aside .flow-total').innerText()).normalize('NFKC');
-      assert.match(summary, new RegExp(`${selection.euros}\\s*€ TTC`));
-      assert.match(summary, new RegExp(`Options mensuelles\\s+${selection.monthly}\\s*€ TTC / mois`));
+      const selected = await page.locator('select[name="planId"] option:checked').innerText();
+      assert.match(selected.normalize('NFKC'), new RegExp(`${selection.euros}\\s*€ TTC`));
+      await page.getByText('Aucune option mensuelle ajoutée.', {exact:false}).waitFor();
       await page.getByRole('button', {name:'Recevoir mon devis'}).click();
       await page.waitForURL('**/espace-projet/**');
       assert.equal(submitted.planId, selection.id);
       assert.deepEqual(submitted.publicQuote, {
-        version:'2026-09-24-ttc', service:selection.service, tier:selection.tier, options:selection.options,
+        version:'2026-09-24-ttc', service:selection.service, tier:selection.tier, options:[],
       });
       assert.match(submitted.message.normalize('NFKC'), new RegExp(`${selection.euros}\\s*€ TTC en paiement unique`));
+      assert.match(submitted.message, /aucune mensualité/i);
       assert.equal(Object.hasOwn(submitted.publicQuote, 'setupCents'), false);
       assert.equal(Object.hasOwn(submitted.publicQuote, 'monthlyCents'), false);
     } finally { await context.close(); }
@@ -145,6 +150,7 @@ test('successful request without analytics consent records the request but no co
   let records = 0;
   await page.route('**/api/automation/intake', route => {
     records++;
+    assert.equal(route.request().postDataJSON().source, 'site');
     return route.fulfill({status:201,contentType:'application/json',body:'{"projectId":"local-test"}'});
   });
   try {
