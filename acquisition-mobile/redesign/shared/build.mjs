@@ -13,7 +13,7 @@ import {filesOf, parallel, rawFile} from '../../catalogue/netlify.mjs';
 import {digestOf} from '../../scripts/deploys.mjs';
 import {mobilePages} from '../../src/data/mobile.mjs';
 import {projectFeature} from './feature.mjs';
-import {composeOffer, offerRoutes} from '../offers/compose.mjs';
+import {composeFragment, fragmentRoutes} from '../offers/compose.mjs';
 import {buildOffers} from '../offers/build.mjs';
 
 const release = fileURLToPath(new URL('../../.release/',import.meta.url));
@@ -41,7 +41,7 @@ const languageRoutes = new Set(languagePairs.flatMap(Object.values).filter(route
 const footerRoutes = Object.keys(manifest)
   .filter(path => /^\/(?:demarrer|realisations|en\/case-studies)\/(?:[a-z0-9-]+\/)?index\.html$/.test(path))
   .map(path => path.slice(0, -'index.html'.length));
-const routes = [...new Set([...visualRoutes, ...languageRoutes, ...offerRoutes.keys(), ...footerRoutes, '/contact/', '/mentions-legales/'])];
+const routes = [...new Set([...visualRoutes, ...languageRoutes, ...fragmentRoutes.keys(), ...footerRoutes, '/mentions-legales/'])];
 const styles = Object.keys(manifest).filter(path=>/^\/_astro\/global\.[^/]+\.css$/i.test(path)).sort();
 assert.equal(styles.length,3,'Catalogue must be checked again if the historical stylesheet set changes');
 assert.equal(inline.size,18);
@@ -154,7 +154,7 @@ await parallel(routes, 4, async route => {
   const visual = visualRoutes.has(route) ? transform(source, route) : source;
   const localized = languageRoutes.has(route) ? expandLanguageName(visual) : visual;
   if (localized !== visual) report.expandedLanguageNames.push(route);
-  const page = offerRoutes.has(route) ? await composeOffer(localized, route) : localized;
+  const page = fragmentRoutes.has(route) ? await composeFragment(localized, route) : localized;
   const complete = withPostalFooter(page);
   if (complete !== source) {
     await write(path, complete);

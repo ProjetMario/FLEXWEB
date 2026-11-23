@@ -24,12 +24,16 @@ export function publishedContent(lang) {
   const footer = tag("footer");
   const nav = markup(elements.find(node => attr(node, "class") === "studio-nav"));
   const toggle = markup(elements.find(node => attr(node, "class") === "studio-menu-toggle"));
-  // A keyboard visitor opening the service menu can tab directly to its links.
-  const header = markup(tag("header")).replace(toggle, "").replace(nav, toggle + " " + nav);
+  const english = lang === "en";
+  const menu = nav
+    .replace('class="studio-nav"', 'id="studio-navigation" class="studio-nav"')
+    .replace('aria-label="Services"', english ? 'aria-label="Main navigation"' : 'aria-label="Navigation principale"')
+    .replace("</nav>", `<a href="${english ? "/en/contact/" : "/contact/"}">Contact</a></nav>`);
+  // Keep the menu links immediately after the toggle in the tab order.
+  const header = markup(tag("header")).replace(toggle, "").replace(nav, toggle + " " + menu);
   return {
     head: source.slice(head.startTag.endOffset, head.endTag.startOffset),
     header: header
-      .replace('class="studio-nav"', 'id="studio-navigation" class="studio-nav"')
       .replace('aria-label="Français"', 'aria-label="FR – Français"')
       .replace('aria-label="English"', 'aria-label="EN – English"'),
     contact: markup(byId("contact")),

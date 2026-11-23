@@ -1,0 +1,81 @@
+---
+import {business, footerBrand, postalAddress} from '../../../src/data/business.ts';
+import contact from '../../../src/data/contact.json';
+
+const phone = contact.details.find(detail => detail.event === 'phone_click')!;
+const hours = contact.details.find(detail => detail.label === 'Horaires')!;
+const title = 'Contacter Flex-Web — Sites internet, applications et automatisation';
+const description = 'Contactez Flex-Web par e-mail ou téléphone pour un site internet, une application ou une automatisation. Retrouvez l’adresse à Voglans et demandez un devis gratuit.';
+const pageUrl = new URL('/contact/', business.url).href;
+const englishUrl = new URL('/en/contact/', business.url).href;
+---
+<!doctype html>
+<html lang="fr"><head>
+  <meta charset="utf-8"/>
+  <title>{title}</title>
+  <meta name="description" content={description}/>
+  <meta property="og:title" content={title}/>
+  <meta property="og:description" content={description}/>
+  <meta name="twitter:title" content={title}/>
+  <meta name="twitter:description" content={description}/>
+  <link rel="alternate" hreflang="fr" href={pageUrl} />
+  <link rel="alternate" hreflang="en" href={englishUrl} />
+  <link rel="alternate" hreflang="x-default" href={pageUrl} />
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context':'https://schema.org', '@type':'ContactPage', '@id':pageUrl+'#contact',
+    url:pageUrl, name:'Contacter Flex-Web', inLanguage:'fr', about:{'@id':business.url+'/#organization'}
+  })}></script>
+</head><body>
+<main class="contact-page" data-view="contact">
+  <div class="contact-inner">
+    <header>
+      <h1>Contacter Flex-Web</h1>
+      <p>Un site internet, une application ou une tâche à automatiser ? Parlez-nous de votre projet, que vous soyez une entreprise ou un particulier.</p>
+    </header>
+    <div class="contact-options">
+      <section class="contact-channels" aria-labelledby="contact-details-title">
+        <h2 id="contact-details-title">Nos coordonnées</h2>
+        <dl>
+          <dt>E-mail</dt>
+          <dd><a href={'mailto:'+business.email} data-conversion-event="email_click" data-conversion-service="unknown">{business.email}</a></dd>
+          <dt>Téléphone</dt>
+          <dd><a href={'tel:'+business.telephone} data-conversion-event="phone_click" data-conversion-service="unknown">{phone.value}</a><small>{hours.value}</small></dd>
+          <dt>Adresse postale</dt>
+          <dd><address>{footerBrand}<br/>{postalAddress.streetAddress}<br/>{postalAddress.postalCode} {postalAddress.addressLocality}, France</address></dd>
+        </dl>
+      </section>
+      <section class="contact-quote" aria-labelledby="contact-quote-title">
+        <h2 id="contact-quote-title">Demander un devis</h2>
+        <p>Indiquez ce que vous souhaitez créer, pour qui et dans quel délai. Nous préciserons avec vous les prestations et le budget.</p>
+        <a class="contact-action" href="/demarrer/" data-conversion-event="quote_click" data-conversion-service="unknown">Demander un devis gratuit <span aria-hidden="true">↗</span></a>
+      </section>
+    </div>
+    <a class="contact-language" href="/en/contact/" lang="en" hreflang="en">Contact us in English</a>
+  </div>
+</main>
+</body></html>
+<style>
+  .contact-page {margin:0;flex:1;color:#1d1d1f;background:#fff}
+  .contact-inner {max-width:69rem;margin:auto;padding:clamp(2.75rem,8vw,6.5rem) clamp(1.25rem,5vw,3.5rem) clamp(3rem,7vw,5rem)}
+  header {max-width:48rem}
+  h1,h2,p,dl,dd {margin:0}
+  h1 {font-size:clamp(2.55rem,6.5vw,5.5rem);font-weight:650;line-height:1.04;letter-spacing:-.055em}
+  header p {max-width:40rem;margin-top:1.2rem;color:#56565b;font-size:clamp(1.08rem,2vw,1.38rem);line-height:1.45}
+  .contact-options {display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,6vw,5.5rem);align-items:start;margin-top:clamp(2.5rem,5vw,4.5rem)}
+  h2 {font-size:clamp(1.55rem,2.6vw,2.25rem);font-weight:630;letter-spacing:-.035em;line-height:1.18}
+  dl {margin-top:1.65rem}
+  dt {font-size:.86rem;font-weight:600;color:#545459}
+  dt:not(:first-child) {margin-top:1.3rem}
+  dd {line-height:1.5}
+  dd a,.contact-language {display:inline-flex;align-items:center;min-height:2.75rem;color:#144b83;text-decoration:underline;text-underline-offset:.2em}
+  dd a {font-size:clamp(1.16rem,2.5vw,1.5rem);overflow-wrap:anywhere}
+  small {display:block;font-size:.9rem;color:#56565b}
+  address {margin-top:.35rem;font-style:normal}
+  .contact-quote {padding:clamp(1.45rem,3.4vw,2.65rem);border-radius:1.75rem;background:#f5f5f7}
+  .contact-quote p {margin-top:1rem;line-height:1.55;color:#48484c}
+  .contact-action {display:inline-flex;align-items:center;gap:.65rem;min-height:2.75rem;margin-top:1.65rem;padding:.72rem 1.2rem;border-radius:3rem;background:#1d1d1f;color:white;font-weight:600;line-height:1.35;text-decoration:none}
+  .contact-action:hover {background:#39393e}
+  .contact-language {margin-top:2rem;font-size:.95rem}
+  a:focus-visible {outline:3px solid #0066cc;outline-offset:3px}
+  @media(max-width:43rem){.contact-options {grid-template-columns:1fr}}
+</style>

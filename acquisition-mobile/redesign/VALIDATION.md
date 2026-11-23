@@ -1,6 +1,14 @@
 # Refonte Flex-Web du 23 novembre 2026
 
-## Pied de page du nouvel aperçu
+## Page Contact et menu de l’accueil
+
+« Contact » est la quatrième entrée du menu des accueils français et anglais. Le lien mène à la page dédiée de la langue choisie. En français, la page propose l’appel, l’e-mail, l’adresse postale, les horaires et le formulaire de devis général. [Accueil](https://6b04b0901a10a257d97f8a2a--flex-webb.netlify.app/) · [Contact en français](https://6b04b0901a10a257d97f8a2a--flex-webb.netlify.app/contact/) · [Contact en anglais](https://6b04b0901a10a257d97f8a2a--flex-webb.netlify.app/en/contact/)
+
+Le test navigateur de l’aperçu a réussi sur 41 affichages. Huit clics sur « Contact », dans les deux langues à 320, 390, 768 et 1 440 px, ont ouvert une page HTTP 200 avec les bons liens d’appel, d’e-mail et de devis. Le sitemap compte 151 507 URL dans 85 sous-sitemaps. Par rapport au brouillon précédent, seuls les HTML des deux accueils et de la page Contact française ont changé.
+
+Des essais répétés en local ont aussi révélé une erreur intermittente de mise en place du pied de page sur des modèles historiques du catalogue. L’erreur a été reproduite avec le brouillon précédent sur une fiche suisse auxiliaire. Les huit parcours Contact testés sur le nouvel aperçu ont abouti sans erreur.
+
+## Adresse du pied de page
 
 Le pied de page affiche « Flex Web by Flex Immo », 93 chemin de la Combe, 73420 Voglans, France. Les deux accueils, les offres et les devis servent les coordonnées dans leur HTML. Les modèles archivés utilisent leurs ressources communes pour afficher le même bloc, avec un affichage de repli quand JavaScript est désactivé. Les démonstrations de sites clients gardent leurs propres coordonnées. [Voir le pied de page](https://6b04aceb97d3a6cb2155e5c9--flex-webb.netlify.app/#coordonnees) · [Mentions légales](https://flex-web.fr/mentions-legales/)
 
