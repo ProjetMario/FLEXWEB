@@ -1,16 +1,18 @@
-name: Aperçu Netlify des applications mobiles
+name: Aperçu du catalogue francophone et de l’offre mobile
 on:
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: flexweb-mobile-acquisition-preview
+  group: flexweb-catalogue-preview
   cancel-in-progress: false
 jobs:
   preview:
     runs-on: ubuntu-latest
     environment: emdash-publication
-    timeout-minutes: 25
+    timeout-minutes: 180
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -21,31 +23,34 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx --no-install playwright install --with-deps chromium
-      - name: Construire les pages Astro
-        run: npx --no-install astro build --root acquisition-mobile
-      - name: Assembler et contrôler les fichiers modifiés
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      - name: Vérifier les sources et reconstituer les 85 XML
         run: |
-          node acquisition-mobile/scripts/assemble.mjs
-          node acquisition-mobile/scripts/verify.mjs
-      - name: Créer uniquement un aperçu sur la base publiée
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        run: node acquisition-mobile/scripts/preview.mjs
-      - name: Vérifier l’aperçu à distance et les demandes simulées
+          node --test acquisition-mobile/catalogue/*.test.mjs acquisition-mobile/catalogue/audit/*.test.mjs
+          node acquisition-mobile/catalogue/inventory.mjs
+          node acquisition-mobile/catalogue/translations.mjs
+          node acquisition-mobile/catalogue/check.mjs acquisition-mobile/.release/catalogue/xml --exact
+      - name: Publier l'aperçu Netlify
+        run: node acquisition-mobile/catalogue/preview.mjs
+      - name: Vérifier pages, routage et parcours sur l'artefact distant
         run: |
-          preview_url=$(node -p 'require("./acquisition-mobile/.release/preview.json").url')
-          node acquisition-mobile/scripts/verify.mjs "$preview_url"
+          receipt=./acquisition-mobile/.release/catalogue/candidate.json
+          preview_id=$(node -p "require('$receipt').id")
+          preview_url=$(node -p "require('$receipt').url")
+          node acquisition-mobile/catalogue/audit/verify.mjs "$preview_id"
+          node acquisition-mobile/catalogue/check.mjs "$preview_url" --exact
+          node acquisition-mobile/catalogue/browser.mjs "$preview_url"
           node acquisition-mobile/scripts/verify-pages.mjs "$preview_url"
           node acquisition-mobile/scripts/verify-quote.mjs "$preview_url"
           node acquisition-mobile/scripts/verify-home.mjs "$preview_url"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: mobile-acquisition-preview-${{ github.sha }}
+          name: catalogue-francophone-apercu-${{ github.sha }}
           include-hidden-files: true
           path: |
-            acquisition-mobile/.release/preview*.json
+            acquisition-mobile/.release/catalogue/candidate.json
+            acquisition-mobile/.release/catalogue/inventory-summary.json
+            acquisition-mobile/.release/catalogue/audit/*.json
+            acquisition-mobile/.release/catalogue/browser/*.json
             acquisition-mobile/.release/home/*.png
-          retention-days: 14
+          retention-days: 30

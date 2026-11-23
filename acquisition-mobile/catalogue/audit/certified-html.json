@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "currentPagesPreserved": 50648,
+  "historicalPagesRestored": 100825,
+  "historicalPagesAlreadyPresent": 20492,
+  "exceptions": [],
+  "expectedDistinct": 151473,
+  "sitemapUrls": 151503,
+  "newBeyondInventory": 30,
+  "sitemapChildren": 85,
+  "htmlChecked": 151503,
+  "structuredDataBlocks": 282501
+}

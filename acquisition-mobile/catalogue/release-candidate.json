@@ -1,0 +1,19 @@
+{
+  "baseId": "6b0452114b315390275a0f53",
+  "archiveId": "6af791098269e8f08591ce03",
+  "mobileId": "6b0485a09cae4d4dbe96caf4",
+  "digest": "03877c32a9885312ed3424d3c65ac5ff12580443",
+  "files": 160322,
+  "routes": 151507,
+  "supportingPages": 8592,
+  "sitemaps": 85,
+  "redirects": 453,
+  "headers": 2,
+  "functions": [
+    "automation",
+    "automation-clock"
+  ],
+  "productionLocked": true,
+  "id": "6b04922cb721fd1ae1c8d810",
+  "url": "https://6b04922cb721fd1ae1c8d810--flex-webb.netlify.app"
+}

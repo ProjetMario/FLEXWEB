@@ -1,4 +1,4 @@
-name: Publier l’aperçu mobile validé
+name: Publier le catalogue et l’offre mobile validés
 on:
   workflow_dispatch:
     inputs:
@@ -16,7 +16,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: emdash-publication
-    timeout-minutes: 25
+    timeout-minutes: 180
     env:
       APPROVED_PREVIEW: ${{ inputs.approved_preview_id }}
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
@@ -33,9 +33,12 @@ jobs:
       - run: npx --no-install playwright install --with-deps chromium
       - name: Recontrôler l’artefact approuvé
         run: |
+          node acquisition-mobile/catalogue/inventory.mjs
           node acquisition-mobile/scripts/promote.mjs --check "$APPROVED_PREVIEW"
-          preview_url=$(node -p 'require("./acquisition-mobile/release-candidate.json").url')
-          node acquisition-mobile/scripts/verify.mjs "$preview_url"
+          preview_url=$(node -p 'require("./acquisition-mobile/catalogue/release-candidate.json").url')
+          node acquisition-mobile/catalogue/check.mjs "$preview_url" --exact
+          node acquisition-mobile/catalogue/audit/verify.mjs "$APPROVED_PREVIEW"
+          node acquisition-mobile/catalogue/browser.mjs "$preview_url"
           node acquisition-mobile/scripts/verify-pages.mjs "$preview_url"
           node acquisition-mobile/scripts/verify-quote.mjs "$preview_url"
           node acquisition-mobile/scripts/verify-home.mjs "$preview_url"

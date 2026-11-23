@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build && node scripts/check-seo.mjs && node scripts/seo/quality.mjs --enforce-release && node scripts/seo/audit-territorial-publication.mjs"
+  command = "npm run build && node scripts/check-seo.mjs && node scripts/seo/quality.mjs --enforce-release && node scripts/seo/audit-territorial-publication.mjs && if [ \"$CONTEXT\" = production ]; then node acquisition-mobile/catalogue/check.mjs dist; fi"
   publish = "dist"
 
 [build.environment]
