@@ -42,6 +42,7 @@ jobs:
           node acquisition-mobile/scripts/verify-pages.mjs "$preview_url"
           node acquisition-mobile/scripts/verify-quote.mjs "$preview_url"
           node acquisition-mobile/redesign/verify.mjs "$preview_url"
+          node acquisition-mobile/redesign/offers/verify.mjs "$preview_url"
       - name: Publier les mêmes octets, rétablir le verrou et tester flex-web.fr
         run: node acquisition-mobile/scripts/promote.mjs --publish "$APPROVED_PREVIEW"
       - uses: actions/upload-artifact@v4

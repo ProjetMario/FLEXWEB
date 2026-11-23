@@ -10,6 +10,8 @@ import {filesOf, parallel, rawFile} from '../../catalogue/netlify.mjs';
 import {digestOf} from '../../scripts/deploys.mjs';
 import {mobilePages} from '../../src/data/mobile.mjs';
 import {projectFeature} from './feature.mjs';
+import {composeOffer, offerRoutes} from '../offers/compose.mjs';
+import {buildOffers} from '../offers/build.mjs';
 
 const release = fileURLToPath(new URL('../../.release/',import.meta.url));
 const output = join(release,'redesign/shared');
@@ -32,7 +34,7 @@ const inline = new Set([...mobile.keys(),...cases]);
 const visualRoutes = new Set([...inline,'/creation-site-internet/','/en/websites/','/pricing/']);
 const {languagePairs} = await tsImport('../../../src/data/geo/site.ts', import.meta.url);
 const languageRoutes = new Set(languagePairs.flatMap(Object.values).filter(route => route !== '/' && route !== '/en/'));
-const routes = [...new Set([...visualRoutes, ...languageRoutes])];
+const routes = [...new Set([...visualRoutes, ...languageRoutes, ...offerRoutes.keys()])];
 const styles = Object.keys(manifest).filter(path=>/^\/_astro\/global\.[^/]+\.css$/i.test(path)).sort();
 assert.equal(styles.length,3,'Catalogue must be checked again if the historical stylesheet set changes');
 assert.equal(inline.size,18);
@@ -103,6 +105,7 @@ function transform(source, route) {
   assert.notEqual(result,source,route+' received no changes');
   return result;
 }
+await buildOffers();
 // Only generated files within this task's ignored output directory are replaced.
 await rm(output,{recursive:true,force:true});
 await write(newStyle,style);
@@ -111,8 +114,9 @@ await parallel(routes, 4, async route => {
   const path = htmlPath(route);
   const source = (await original(path)).toString('utf8');
   const visual = visualRoutes.has(route) ? transform(source, route) : source;
-  const complete = languageRoutes.has(route) ? expandLanguageName(visual) : visual;
-  if (complete !== visual) report.expandedLanguageNames.push(route);
+  const localized = languageRoutes.has(route) ? expandLanguageName(visual) : visual;
+  if (localized !== visual) report.expandedLanguageNames.push(route);
+  const complete = offerRoutes.has(route) ? await composeOffer(localized, route) : localized;
   if (complete !== source) {
     await write(path, complete);
     report.changedHTML.push(path);

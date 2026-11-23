@@ -1,14 +1,32 @@
 # Refonte Flex-Web du 23 novembre 2026
 
+## Aperçu à valider avec les trois offres françaises
+
+Le brouillon Netlify `6b04a78f0f68c45095100b52` simplifie trois pages du premier aperçu. La comparaison des 160 330 fichiers hébergés confirme trois HTML modifiés et 160 327 empreintes identiques, dont celles des deux accueils, des formulaires et des 85 sous-sitemaps. Le sitemap compte 151 507 URL uniques. [Manifeste du nouvel aperçu](release-candidate.json) · [Sitemap](https://6b04a78f0f68c45095100b52--flex-webb.netlify.app/sitemap.xml)
+
+| Offre | Ce que le visiteur peut décider | Mots visibles sur mobile, avant → après |
+|---|---|---:|
+| [Application iOS et Android](https://6b04a78f0f68c45095100b52--flex-webb.netlify.app/creation-application-mobile/) | Examiner une vraie capture de FootNation, consulter les trois fourchettes de budget et préparer son devis dès 1 990 € TTC | 465 → 291 |
+| [Automatisation IA](https://6b04a78f0f68c45095100b52--flex-webb.netlify.app/automatisation-ia/) | Suivre un exemple de demande transmise au CRM avec validation humaine, puis décrire sa propre tâche pour un chiffrage sur devis | 752 → 239 |
+| [Création de site internet](https://6b04a78f0f68c45095100b52--flex-webb.netlify.app/creation-site-internet/) | Voir 2 Savoie Immo et choisir Essentielle à 299 € TTC, Business à 590 € TTC ou Premium dès 990 € TTC | 371 → 177 |
+
+Les mots sont comptés dans le contenu principal affiché à 390 px, accordéons fermés. Les trois pages ont chacune un seul titre H1. L’ancienne page de création de site contenait deux éléments main imbriqués, le nouvel HTML en contient un seul. Le contrôle Playwright a couvert quatre largeurs, le menu à 320 px, les FAQ au clavier, leurs données structurées, 28 liens et ancres et six entrées vers le devis. Les six affichent la prestation et le tarif attendus. Aucun formulaire de test n’a été envoyé. Axe a contrôlé 24 états, accordéons ouverts puis fermés, sans anomalie détectée dans l’échantillon.
+
+![Trois offres Flex-Web sur ordinateur et téléphone](offers/apercu.jpg)
+
+Les trois composants Astro se trouvent dans `offers/src/components/`. Le build partagé exécute leur compilation et intègre le contenu rendu et ses styles dans les documents du catalogue de référence. Le navigateur reçoit directement le HTML, avec les métadonnées, la navigation et les intégrations du site. Le circuit GitHub de la refonte utilise les formulaires et les tarifs du site hébergé. Le build CMS historique possède un autre catalogue de formules.
+
+## Premier aperçu de la refonte
+
 Les accueils français et anglais présentent les réalisations de Flex-Web dans une composition inspirée de la vitrine d’Apple France. Le premier écran met en scène le site de 2 Savoie Immo sur ordinateur et FootNation sur téléphone. Les offres de sites, d’applications et d’automatisation conduisent aux pages de service ou au devis. [Accueil français](https://6b04a05bc3647bd53a28174f--flex-webb.netlify.app/) · [Accueil anglais](https://6b04a05bc3647bd53a28174f--flex-webb.netlify.app/en/) · [Applications](https://6b04a05bc3647bd53a28174f--flex-webb.netlify.app/creation-application-mobile/)
 
 ![Accueil sur ordinateur et téléphone, offre applications et tarifs sur les écrans testés](apercu-mobile-ordinateur.jpg)
 
 ## Catalogue et gabarits
 
-Le brouillon Netlify est construit sur le catalogue complet `6b04922cb721fd1ae1c8d810`. L’assemblage reprend son manifeste de fichiers, remplace les deux accueils et les pages qui demandent du HTML spécifique, puis distribue les styles intérieurs aux gabarits historiques par leurs trois feuilles de style partagées. Les 41 sélecteurs de langue concernés affichent le nom complet, y compris après hydratation. Les trois démonstrations de sites clients conservent leurs identités graphiques. [Manifeste du candidat](release-candidate.json) · [Sitemap de l’aperçu](https://6b04a05bc3647bd53a28174f--flex-webb.netlify.app/sitemap.xml)
+Le brouillon Netlify est construit sur le catalogue complet `6b04922cb721fd1ae1c8d810`. L’assemblage reprend son manifeste de fichiers, remplace les deux accueils et les pages qui demandent du HTML spécifique, puis distribue les styles intérieurs aux gabarits historiques par leurs trois feuilles de style partagées. Les 41 sélecteurs de langue concernés affichent le nom complet, y compris après hydratation. Les trois démonstrations de sites clients conservent leurs identités graphiques. [Manifeste du premier aperçu](https://github.com/ProjetMario/FLEXWEB/blob/1dbd8f61c33fdc98dae0600e9b17a7e74e10a60d/acquisition-mobile/redesign/release-candidate.json) · [Sitemap de l’aperçu](https://6b04a05bc3647bd53a28174f--flex-webb.netlify.app/sitemap.xml)
 
-## Résultats sur l’aperçu final
+## Résultats du premier aperçu
 
 | Vérification | Résultat |
 |---|---|
@@ -42,12 +60,13 @@ Le workflow d’aperçu construit les accueils Astro, prépare les styles et les
 Après `npm ci` et l’installation du navigateur Playwright, ces commandes vérifient l’aperçu existant depuis la racine du dépôt. L’audit des fichiers a besoin de l’accès Netlify du projet.
 
 ```sh
-apercu=https://6b04a05bc3647bd53a28174f--flex-webb.netlify.app
+apercu=https://6b04a78f0f68c45095100b52--flex-webb.netlify.app
 node acquisition-mobile/catalogue/inventory.mjs
 node acquisition-mobile/catalogue/check.mjs "$apercu" --exact
-node acquisition-mobile/catalogue/audit/verify.mjs 6b04a05bc3647bd53a28174f
+node acquisition-mobile/catalogue/audit/verify.mjs 6b04a78f0f68c45095100b52
 node acquisition-mobile/catalogue/browser.mjs "$apercu" --design
 node acquisition-mobile/redesign/verify.mjs "$apercu"
+node acquisition-mobile/redesign/offers/verify.mjs "$apercu"
 node acquisition-mobile/scripts/verify-pages.mjs "$apercu"
 node acquisition-mobile/scripts/verify-quote.mjs "$apercu"
 node acquisition-mobile/redesign/performance.mjs "$apercu"

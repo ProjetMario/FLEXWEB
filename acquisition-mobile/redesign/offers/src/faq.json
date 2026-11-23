@@ -1,0 +1,42 @@
+{
+  "web": [
+    {
+      "question": "Combien coûte la création d'un site internet ?",
+      "answer": "Trois niveaux sont proposés : Essentielle à 299 € TTC pour un site vitrine jusqu’à 5 pages, Business à 590 € TTC avec le référencement Google et les moteurs IA, et Premium à partir de 990 € TTC avec CRM, back-office et automatisation selon le périmètre du devis."
+    },
+    {
+      "question": "Quel est le délai de création ?",
+      "answer": "Le calendrier est convenu dans le devis après validation du périmètre et réception des contenus. Les étapes de conception, de vérification et de publication sont organisées avec vous."
+    },
+    {
+      "question": "Pouvez-vous créer un site pour une entreprise ailleurs en France ?",
+      "answer": "Oui. FLEX-WEB est basé à Voglans en Savoie et accompagne les entreprises de Savoie, de Haute-Savoie et de toute la France. Les échanges, les démonstrations et les validations peuvent se faire à distance."
+    },
+    {
+      "question": "Un site peut-il être relié à mon CRM ?",
+      "answer": "Oui, selon les capacités de votre CRM et les accès disponibles. L'option à 99 € TTC/mois couvre le périmètre convenu au devis. Une intégration ou une automatisation métier spécifique est chiffrée séparément."
+    }
+  ],
+  "automation": [
+    {
+      "question": "Qu’est-ce que l’automatisation des tâches avec l’IA ?",
+      "answer": "Une automatisation exécute une suite d’actions à partir d’un événement, par exemple la réception d’une demande. L’IA peut compléter ce parcours en proposant un classement, un résumé ou un brouillon de réponse. Elle n’est pas nécessaire pour toutes les étapes."
+    },
+    {
+      "question": "Quels outils peut-on connecter ?",
+      "answer": "Un site, un formulaire, un CRM, une messagerie ou un tableau de suivi peuvent participer au projet. La faisabilité dépend des connexions disponibles, des accès accordés et des limites de chaque service. Nous vérifions ces points pendant le cadrage."
+    },
+    {
+      "question": "Combien coûte une automatisation sur mesure ?",
+      "answer": "Les projets d’automatisation IA sur mesure sont établis sur devis. Le coût dépend du parcours, des outils à connecter, des volumes, du contrôle attendu et du suivi. Les abonnements éventuels aux outils tiers sont précisés dans la proposition."
+    },
+    {
+      "question": "Faut-il remplacer mon site ou mon CRM ?",
+      "answer": "Pas nécessairement. Nous examinons d’abord les outils existants. Un remplacement n’est envisagé que si leurs possibilités ou leurs contraintes empêchent le parcours défini ensemble."
+    },
+    {
+      "question": "Intervenez-vous partout en France ?",
+      "answer": "Oui, le cadrage, les démonstrations et la prise en main peuvent être organisés à distance pour une entreprise en France. Des pages dédiées détaillent également les besoins des entreprises en Savoie et Haute-Savoie."
+    }
+  ]
+}

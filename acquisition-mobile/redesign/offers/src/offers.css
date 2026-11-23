@@ -1,0 +1,78 @@
+/* Only the three service offers opt into this layout. */
+.offer-page[data-offer] {
+  --ink: #1d1d1f;
+  --quiet: #515156;
+  --link: #005eb8;
+  --line: #d7d7dc;
+  --wash: #f5f5f7;
+  display: block;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  color: var(--ink);
+  background: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.offer-page *, .offer-page *::after, .offer-page *::before { box-sizing: border-box; }
+.offer-page :where(h1,h2,h3,p,figure) { margin: 0; }
+.offer-page :where([id]) { scroll-margin-block-start: 6rem; }
+.offer-page .offer-wrap { width: min(100% - clamp(2.5rem, 9vw, 9rem), 72rem); margin-inline: auto; }
+.offer-page .offer-hero { background: var(--wash); }
+.offer-page .offer-hero-grid {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .92fr);
+  align-items: center; gap: clamp(2.75rem, 6.4vw, 6rem);
+  padding-block: clamp(3.6rem, 6vw, 6.2rem);
+}
+.offer-page .offer-intro { min-width: 0; }
+.offer-page .offer-intro h1 {
+  margin: 0; max-width: 15ch; color: var(--ink); font-size: clamp(2.65rem, 4.75vw, 5.15rem);
+  letter-spacing: -.062em; line-height: 1.025; font-weight: 650; text-wrap: balance;
+}
+.offer-page .offer-intro > p:not(.offer-price) {
+  margin: 1.25rem 0 0; max-width: 47ch; color: var(--quiet);
+  font-size: clamp(1.03rem, 1.35vw, 1.24rem); line-height: 1.5;
+}
+.offer-page .offer-price { margin: 1.25rem 0 0; color: var(--ink); font-size: 1.06rem; font-weight: 650; }
+.offer-page .offer-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .55rem 1.2rem; margin-top: 1.35rem; }
+.offer-page a.offer-primary {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 46px; padding: .675rem 1.35rem; border-radius: 9999px; border: 1px solid transparent;
+  background: #0066c7; color: #fff; font-size: 1rem; font-weight: 590; text-decoration: none;
+}
+.offer-page a.offer-primary:hover { background: #004f9e; }
+.offer-page a.offer-link, .offer-page .offer-links a { color: var(--link); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .21em; font-weight: 550; }
+.offer-page a.offer-link:hover, .offer-page .offer-links a:hover { text-decoration-thickness: 2px; }
+.offer-page .offer-actions .offer-link { display: inline-flex; align-items: center; min-height: 44px; }
+.offer-page :is(a,summary):focus-visible { outline: 3px solid #005eb8; outline-offset: 4px; border-radius: 3px; }
+.offer-page .offer-section { padding-block: clamp(2.85rem, 5.6vw, 5.25rem); background: #fff; }
+.offer-page .offer-section + .offer-section { border-top: 1px solid #e6e6e9; }
+.offer-page .offer-section h2 { margin: 0 0 1.3rem; font-size: clamp(1.85rem,3.2vw,3.4rem); letter-spacing: -.048em; font-weight: 630; line-height: 1.09; color: var(--ink); }
+.offer-page .offer-section h3 { margin: 0 0 .45rem; color: var(--ink); font-size: clamp(1.18rem,1.5vw,1.45rem); letter-spacing: -.018em; line-height: 1.23; font-weight: 650; }
+.offer-page .offer-section p { max-width: 74ch; color: var(--quiet); }
+.offer-page .offer-section p + p { margin-top: .7rem; }
+.offer-page .offer-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: clamp(1rem,2.6vw,2.4rem); margin-block-start: 1.35rem; }
+.offer-page .offer-item { min-width: 0; padding-block: 1.15rem .3rem; border-top: 1px solid var(--line); }
+.offer-page .offer-item > a { display: inline-block; margin-top: .75rem; }
+.offer-page .offer-note { font-size: .96rem; color: var(--quiet); margin-top: .9rem; }
+.offer-page .offer-links { display: flex; gap: .4rem 1.25rem; flex-wrap: wrap; align-items: baseline; }
+.offer-page .offer-faq details { max-width: 54rem; margin: 0; padding: 0; border: 0; border-bottom: 1px solid var(--line); }
+.offer-page .offer-faq summary {
+  cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 1.05rem .25rem 1.05rem 0; font-size: 1.07rem; line-height: 1.4; font-weight: 580; color: var(--ink);
+}
+.offer-page .offer-faq summary::-webkit-details-marker { display: none; }
+.offer-page .offer-faq summary::after { content: ''; flex: none; width: .55em; height: .55em; color: var(--quiet); border: solid currentColor; border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
+.offer-page .offer-faq details[open] summary::after { transform: rotate(225deg); }
+.offer-page .offer-faq details p { margin: 0; padding-bottom: 1.1rem; max-width: 70ch; }
+@media (max-width:760px) {
+  .offer-page .offer-wrap { width: min(100% - 2.5rem, 36rem); }
+  .offer-page .offer-hero-grid { grid-template-columns: 1fr; gap: 1.7rem; padding-block: 2.65rem 2.1rem; }
+  .offer-page .offer-intro h1 { font-size: clamp(2.4rem,8.7vw,3.65rem); }
+  .offer-page .offer-intro > p:not(.offer-price) { margin-top: .9rem; }
+  .offer-page .offer-actions { gap: .35rem 1rem; }
+  .offer-page .offer-grid { grid-template-columns: 1fr; gap: .65rem; }
+}
