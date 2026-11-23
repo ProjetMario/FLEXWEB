@@ -70,6 +70,9 @@ if (destination) {
   await batch([...queue],async path=>{
     const res=await fetch(destination+path,{redirect:'manual',method:'HEAD',signal:AbortSignal.timeout(25000)});
     assert.equal(res.status,200,path);
+    if (destination===origin && inventory.has(origin+path)) {
+      assert.ok(!/\b(?:none|noindex)\b/i.test(res.headers.get('x-robots-tag')||''),path+' interdit par X-Robots-Tag');
+    }
   },6);
   for (const path of ['/','/en/','/robots.txt']){
     const live=await fetch(baseUrl+path);

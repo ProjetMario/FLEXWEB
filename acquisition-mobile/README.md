@@ -9,6 +9,21 @@ Le lot Astro porte sur les projets iOS et Android des entreprises et particulier
 - [Suisse romande](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/applications/suisse-romande/) et [Belgique francophone](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/applications/belgique-francophone/)
 - [Étude de cas FootNation](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/realisations/footnation/) et [formulaire mobile](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/demarrer/application/)
 
+## Adresses des 18 pages
+
+| Sujet | Français | Anglais |
+|---|---|---|
+| Applications mobiles | [/creation-application-mobile/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/creation-application-mobile/) | [/en/applications/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/en/applications/) |
+| Applications iOS | [/applications/ios/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/applications/ios/) | [/en/applications/ios/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/en/applications/ios/) |
+| Applications Android | [/applications/android/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/applications/android/) | [/en/applications/android/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/en/applications/android/) |
+| Pour les entreprises | [/applications/entreprises/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/applications/entreprises/) | [/en/applications/businesses/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/en/applications/businesses/) |
+| Pour les particuliers | [/applications/particuliers/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/applications/particuliers/) | [/en/applications/individuals/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/en/applications/individuals/) |
+| Prix d’une application | [/applications/prix/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/applications/prix/) | [/en/applications/cost/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/en/applications/cost/) |
+| Web, mobile ou logiciel installé | [/applications/web-mobile-ou-logiciel/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/applications/web-mobile-ou-logiciel/) | [/en/applications/web-mobile-or-desktop/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/en/applications/web-mobile-or-desktop/) |
+| Suisse romande | [/applications/suisse-romande/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/applications/suisse-romande/) | — |
+| Belgique francophone | [/applications/belgique-francophone/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/applications/belgique-francophone/) | — |
+| Étude de cas FootNation | [/realisations/footnation/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/realisations/footnation/) | [/en/case-studies/footnation/](https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app/en/case-studies/footnation/) |
+
 ## Reproduction
 
 Les commandes se lancent depuis la racine du dépôt avec les dépendances du fichier de verrouillage. Le premier contrôle interroge le déploiement de référence. L’environnement CI utilise le secret Netlify du projet. Le développement local peut utiliser la session Netlify CLI sur macOS.
@@ -34,7 +49,7 @@ L’assemblage compare par empreinte les entrées récupérées de la production
 | Accueil | HTML et ressources FR/EN identiques aux empreintes de production. Comparaison aux largeurs de 390 et 1 440 pixels. Seul écart sur les quatre captures, 20 pixels de lissage à faible contraste sur l’illustration mobile anglaise |
 | Devis | Sept scénarios de navigation avec API simulée, incluant consentement, refus, succès et échec. Un clic de contact et une demande reçue disposent de mesures distinctes |
 | Hébergement | 380 fichiers contrôlés, dont les 351 fichiers d’origine toujours présents. 452 règles de routage dont les 444 existantes, un jeu d’en-têtes, deux fonctions et leur planification |
-| Autres contrôles | 183 tests CMS, 14 tests du mécanisme IndexNow et 4 tests du suivi commercial réussis |
+| Autres contrôles | 183 tests CMS, 14 tests du mécanisme IndexNow et 5 tests du suivi commercial réussis |
 
 Pour reproduire les contrôles distants, passer le même domaine d’aperçu à `verify.mjs`, `verify-pages.mjs`, `verify-quote.mjs` et `verify-home.mjs`. Les deux tests Playwright des parcours bloquent les envois de test et les requêtes de mesure externes.
 
@@ -42,4 +57,4 @@ Pour reproduire les contrôles distants, passer le même domaine d’aperçu à 
 
 Les contenus métier et traductions figurent dans `src/data/mobile.mjs`. Les pages et données structurées proviennent de `src/pages/` et de `src/components/`. Les images FootNation reprises dans l’étude de cas proviennent de la fiche Apple de l’éditeur FLEX IMMO. Les ressources textuelles destinées aux moteurs sont produites par `scripts/assemble.mjs` à partir de ces pages et du site publié.
 
-Après approbation de l’aperçu, contrôler la production avant de soumettre le sitemap canonique à Google Search Console et Bing Webmaster Tools. Garder les accusés de réception et les dates des dernières lectures. Le [guide de mesure](measurement/SUIVI.md) détaille le bilan des devis qualifiés et le protocole de suivi des citations des assistants à J+30, J+60 et J+90.
+L’aperçu est identifié dans `release-candidate.json`. Le workflow GitHub « Publier l’aperçu mobile validé » reçoit son identifiant après validation et fusion sur main. Il compare les 380 empreintes, réutilise les fichiers approuvés puis teste le domaine public. Le sitemap canonique à soumettre ensuite à Google Search Console et Bing Webmaster Tools est https://flex-web.fr/sitemap.xml. Garder les accusés de réception et les dates des dernières lectures. Le [guide de mesure](measurement/SUIVI.md) détaille le bilan des devis qualifiés et le protocole de suivi des citations des assistants à J+30, J+60 et J+90.

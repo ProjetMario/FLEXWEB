@@ -48,6 +48,15 @@ python3 acquisition-mobile/measurement/measure.py panel --date 2026-11-23 \
 4. Si un assistant est inaccessible, noter « indisponible » et laisser les résultats vides. Garder « a_tester » tant que la question n’a pas été posée. Le dénominateur est le nombre de réponses observées. Publier la couverture séparément, par exemple 100 réponses observées sur 120 prévues.
 5. Par pays et assistant, diviser les mentions et les citations par les réponses observées. Comparer entre mois, à configuration comparable, et vérifier les URL que les assistants citent. Ce panel échantillonne les réponses à ces questions précises.
 
+Pour calculer les résultats d’une campagne, indiquer la date prévue du panel. La sortie JSON présente les totaux et les ventilations par pays et par assistant.
+
+```sh
+python3 acquisition-mobile/measurement/measure.py observations --date 2026-11-23 \
+  --csv ~/Documents/prive/panel-mobile-2026-11-23.csv
+```
+
+Une citation requiert un lien HTTP ou HTTPS vers flex-web.fr ou www.flex-web.fr. Une mention sans lien, une absence observée, un test en attente et un assistant indisponible ont chacun leur propre compteur. Le taux de citation utilise uniquement les réponses observées et reste indéterminé tant qu’il n’y en a aucune. Les copies d’un même résultat comptent une fois. Une réponse obtenue remplace un statut en attente ou indisponible. Si deux réponses au même test donnent des catégories contradictoires, le calcul s’arrête pour permettre la vérification de l’observation de référence.
+
 ## Références disponibles au démarrage
 
 Le contrôle privé de Flex-Web du 13 novembre 2026 a relevé les valeurs suivantes pour **tout le domaine**. Ces rapports constituent des points de référence historiques. La mesure propre aux pages mobiles et celle des demandes qualifiées nécessitent des exports correspondant à la période de publication.

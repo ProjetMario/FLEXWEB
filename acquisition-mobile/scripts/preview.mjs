@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import { parse } from 'smol-toml';
 import { api, baseId, cache, filePath, linkPages, output, sha, site, snapshot } from './baseline.mjs';
 import { pages } from './assemble.mjs';
+import { assertFunctions, digestOf, functionPayload, manifestOf, waitReady } from './deploys.mjs';
 
 const rawHeaders = { 'Content-Type': 'application/vnd.bitballoon.v1.raw' };
 const jsonHeaders = { 'Content-Type': 'application/json' };
@@ -78,12 +79,8 @@ for await (const path of walk(output)) {
 }
 assert.equal(files['/index.html'], manifest['/index.html']);
 assert.ok(Object.keys(manifest).every(key => Object.hasOwn(files, key)));
-const functions = Object.fromEntries(base.available_functions.map(f => [f.n, f.d]));
-const functions_config = Object.fromEntries(base.available_functions.map(f => [f.n, {
-  priority: f.p, build_data: f.bd, region: f.rgo, memory: f.mo,
-  routes: f.ro?.map(r => ({ pattern: r.p, literal: r.l, expression: r.e, methods: r.m || [], prefer_static: !!r.ps })),
-}]));
-const digest = sha(Buffer.from(JSON.stringify(Object.entries(files).sort(([a], [b]) => a.localeCompare(b)))));
+const { functions, functions_config } = functionPayload(base);
+const digest = digestOf(files);
 const pending = join(cache, 'preview-pending.json');
 let id;
 let required;
@@ -121,22 +118,8 @@ if (!['ready', 'processing', 'processed'].includes(deploy.state)) {
     await api('/deploys/' + id + '/files' + path, { method: 'PUT', headers: { 'Content-Type': 'application/octet-stream' }, body: source.bytes }, true);
   }
 }
-for (let attempt = 0; attempt < 90; attempt++) {
-  deploy = await api('/deploys/' + id);
-  if (deploy.state === 'ready' && deploy.summary?.status === 'ready') break;
-  assert.ok(!['error', 'rejected'].includes(deploy.state), deploy.error_message);
-  await new Promise(resolve => setTimeout(resolve, 1500));
-}
-assert.equal(deploy.state, 'ready');
-assert.deepEqual(deploy.function_schedules, base.function_schedules);
-assert.equal(deploy.available_functions.length, base.available_functions.length);
-for (const original of base.available_functions) {
-  const deployed = deploy.available_functions.find(f => f.n === original.n);
-  assert.ok(deployed);
-  for (const field of ['d', 'r', 'rg', 'm', 'im', 'bd', 'p']) assert.deepEqual(deployed[field], original[field]);
-  const routes = f => (f.ro || []).map(r => ({ ...r, m: r.m || [] }));
-  assert.deepEqual(routes(deployed), routes(original));
-}
+deploy = await waitReady(id);
+assertFunctions(base, deploy);
 const messages = deploy.summary.messages;
 for (const title of [routingConfig.config.redirects.length + ' redirect rules processed', '1 header rule processed', '2 functions deployed']) {
   assert.ok(messages.some(m => m.title === title && m.type === 'info'), title);
@@ -148,17 +131,7 @@ assert.equal(published.locked, current.locked);
 assert.equal(deploy.name, base.name);
 assert.match(id, /^[a-f\d]{24}$/);
 const url = 'https://' + id + '--' + base.name + '.netlify.app';
-const remoteFiles = {};
-for (let page = 1; page <= Math.ceil(Object.keys(files).length / 100) + 1; page++) {
-  const batch = await api('/deploys/' + id + '/files?per_page=100&page=' + page);
-  for (const asset of batch) {
-    assert.equal(asset.deploy_id, id);
-    assert.ok(!Object.hasOwn(remoteFiles, asset.path), 'Fichier répété : ' + asset.path);
-    remoteFiles[asset.path] = asset.sha;
-  }
-  if (batch.length < 100) break;
-}
-assert.deepEqual(remoteFiles, files, 'Inventaire complet de l’aperçu');
+assert.deepEqual(await manifestOf(id, Object.keys(files).length), files, 'Inventaire complet de l’aperçu');
 const configFile = await api('/deploys/' + id + '/files/netlify.toml', { headers: rawHeaders }, true);
 assert.equal(sha(configFile), sha(routingConfig.bytes), 'Configuration Netlify déployée');
 const home = await fetch(url + '/');
