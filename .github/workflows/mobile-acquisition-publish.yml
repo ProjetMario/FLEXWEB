@@ -1,0 +1,56 @@
+name: Publier la refonte et le catalogue validés
+on:
+  workflow_dispatch:
+    inputs:
+      approved_preview_id:
+        description: Identifiant Netlify de l’aperçu validé pour la mise en production
+        type: string
+        required: true
+permissions:
+  contents: read
+concurrency:
+  group: emdash-publication-flex-webb
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: emdash-publication
+    timeout-minutes: 180
+    env:
+      APPROVED_PREVIEW: ${{ inputs.approved_preview_id }}
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npx --no-install playwright install --with-deps chromium
+      - name: Recontrôler l’artefact approuvé
+        run: |
+          node acquisition-mobile/catalogue/inventory.mjs
+          node acquisition-mobile/scripts/promote.mjs --check "$APPROVED_PREVIEW"
+          preview_url=$(node -p 'require("./acquisition-mobile/redesign/release-candidate.json").url')
+          node acquisition-mobile/catalogue/check.mjs "$preview_url" --exact
+          node acquisition-mobile/catalogue/audit/verify.mjs "$APPROVED_PREVIEW"
+          node acquisition-mobile/catalogue/browser.mjs "$preview_url" --design
+          node acquisition-mobile/scripts/verify-pages.mjs "$preview_url"
+          node acquisition-mobile/scripts/verify-quote.mjs "$preview_url"
+          node acquisition-mobile/redesign/verify.mjs "$preview_url"
+          node acquisition-mobile/redesign/offers/verify.mjs "$preview_url"
+      - name: Publier les mêmes octets, rétablir le verrou et tester flex-web.fr
+        run: node acquisition-mobile/scripts/promote.mjs --publish "$APPROVED_PREVIEW"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-acquisition-production-${{ github.run_id }}
+          path: |
+            acquisition-mobile/.release/production.json
+            acquisition-mobile/.release/redesign/qa/
+          include-hidden-files: true
+          retention-days: 14

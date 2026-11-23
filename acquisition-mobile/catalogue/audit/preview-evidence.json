@@ -1,0 +1,70 @@
+{
+  "support": {
+    "preservedOutsideSitemap": 8592,
+    "noindexHTMLByCategory": [
+      {
+        "category": "ch/page",
+        "paths": 22,
+        "sampled": "/projets-sites/ch/page/2/"
+      },
+      {
+        "category": "fr/page",
+        "paths": 129,
+        "sampled": "/projets-sites/fr/page/40/"
+      },
+      {
+        "category": "hub",
+        "paths": 1,
+        "sampled": "/projets-sites/"
+      },
+      {
+        "category": "suisse/de/entreprises",
+        "paths": 736,
+        "sampled": "/projets-sites/suisse/de/entreprises/le-flon-ch-2337/"
+      },
+      {
+        "category": "suisse/de/particuliers",
+        "paths": 736,
+        "sampled": "/projets-sites/suisse/de/particuliers/le-flon-ch-2337/"
+      },
+      {
+        "category": "suisse/fr/entreprises",
+        "paths": 1489,
+        "sampled": "/projets-sites/suisse/fr/entreprises/luscherz-ch-497/"
+      },
+      {
+        "category": "suisse/fr/particuliers",
+        "paths": 1489,
+        "sampled": "/projets-sites/suisse/fr/particuliers/luscherz-ch-497/"
+      },
+      {
+        "category": "suisse/it/entreprises",
+        "paths": 1995,
+        "sampled": "/projets-sites/suisse/it/entreprises/liedertswil-ch-2890/"
+      },
+      {
+        "category": "suisse/it/particuliers",
+        "paths": 1995,
+        "sampled": "/projets-sites/suisse/it/particuliers/liedertswil-ch-2890/"
+      }
+    ],
+    "publicDirectoryRecords": 9994
+  },
+  "checkedAt": "2026-11-23T19:25:44.550Z",
+  "id": "6b04922cb721fd1ae1c8d810",
+  "origin": "https://6b04922cb721fd1ae1c8d810--flex-webb.netlify.app",
+  "certifiedDeployment": "6af79012972137a7ad14d158",
+  "certificationRun": "https://github.com/ProjetMario/FLEXWEB/actions/runs/43517431541",
+  "sitemapUrls": 151507,
+  "subSitemaps": 85,
+  "requiredHTML": 151507,
+  "checkedFileDigests": 151507,
+  "certifiedUnmodifiedHTML": 151232,
+  "changedOrNewHTMLDirectlyInspected": 275,
+  "directHTTP200andHTMLInspections": 355,
+  "routeFamilies": 19,
+  "initialEntrepreneurPages": 30,
+  "directAssetPathsInManifest": 45,
+  "failed": 0,
+  "method": "Contrôle exhaustif par appartenance aux XML, fichier HTML, règles de routage et indexation. La certification H1/canonique/robots/langue du HTML historique est transposable uniquement à chemin et empreinte Netlify identiques. Chaque différence est relue en HTTP, avec un échantillon de chaque famille. Les 151 507 URL ne sont pas toutes requêtées individuellement."
+}

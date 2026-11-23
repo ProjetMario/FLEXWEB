@@ -1,4 +1,6 @@
 ---
+import websitePreview from '../../acquisition-mobile/redesign/home/public/studio-redesign/2savoie-immo.webp?url';
+import { projectFeature } from '../../acquisition-mobile/redesign/shared/feature.mjs';
 import { entrepreneurPages } from '../data/geo/entrepreneurs';
 import { organizationSchema } from "../data/business";
 import { editorialDates } from "../data/geo/editorial-dates";
@@ -159,6 +161,7 @@ const schemas = [webPageSchema, serviceSchema, breadcrumbSchema, faqSchema];
     </div>
     <p class="mt-3 text-sm" style="color: var(--color-text-muted)">Savoie · Haute-Savoie · Toute la France à distance. Paiement après validation du devis.</p>
 
+    <Fragment set:html={projectFeature('website','fr',websitePreview)} />
     <section class="mt-10 rounded-2xl p-6" style="background-color: var(--color-surface)">
       <h2 class="text-xl font-semibold tracking-tight" style="color: var(--color-text)">
         En bref

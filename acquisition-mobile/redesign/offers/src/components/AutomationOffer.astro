@@ -1,0 +1,144 @@
+---
+import faqData from '../faq.json';
+
+const quote = '/demarrer/?service=automation';
+---
+
+<section class="offer-hero" aria-labelledby="automation-heading">
+  <div class="offer-wrap offer-hero-grid">
+    <div class="offer-intro">
+      <nav aria-label="Fil d’Ariane" class="auto-crumb"><a href="/">Accueil</a><span aria-hidden="true"> / </span><span aria-current="page">Automatisation IA</span></nav>
+      <h1 id="automation-heading">Automatisez vos tâches répétitives.</h1>
+      <p>Flex-Web relie votre formulaire, votre messagerie et votre CRM pour éviter les doubles saisies. L’IA peut préparer une réponse que votre équipe relit avant l’envoi.</p>
+      <p class="offer-price">Projet sur devis</p>
+      <div class="offer-actions">
+        <a class="offer-primary" href={quote} data-conversion-event="quote_click" data-conversion-service="automation">Demander un devis</a>
+        <a class="offer-link" href="#exemples">Voir les usages</a>
+      </div>
+    </div>
+    <figure class="offer-art auto-flow">
+      <figcaption>Exemple de suivi d’une demande</figcaption>
+      <ol class="auto-steps" role="list">
+        <li>
+          <span class="auto-icon letter" aria-hidden="true"><i></i></span>
+          <div><strong>Formulaire reçu</strong><p>Un prospect demande un rappel.</p></div>
+        </li>
+        <li>
+          <span class="auto-icon record" aria-hidden="true"><i></i></span>
+          <div><strong>Fiche CRM créée</strong><p>Ses coordonnées et sa demande sont réunies.</p></div>
+        </li>
+        <li>
+          <span class="auto-icon check" aria-hidden="true"><i></i></span>
+          <div><strong>Validation par l’équipe</strong><p>Vous vérifiez le besoin avant de répondre.</p></div>
+        </li>
+      </ol>
+    </figure>
+  </div>
+</section>
+
+<section class="offer-section" id="exemples" aria-labelledby="examples-title">
+  <div class="offer-wrap">
+    <h2 id="examples-title">Par quelle tâche commencer&nbsp;?</h2>
+    <div class="offer-grid">
+      <article class="offer-item">
+        <h3>Trier les e-mails entrants</h3>
+        <p>L’IA peut repérer le motif d’une demande et proposer un brouillon. Une question ambiguë ou un engagement commercial reste à traiter par une personne.</p>
+      </article>
+      <article class="offer-item">
+        <h3>Mettre un tableau à jour</h3>
+        <p>Une règle peut transférer les données de votre CRM vers un tableau de suivi et signaler les champs manquants. Ce type de tâche peut fonctionner sans IA.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="offer-section auto-scope" aria-labelledby="method-title">
+  <div class="offer-wrap">
+    <h2 id="method-title">Que couvre votre devis&nbsp;?</h2>
+    <p>Décrivez une tâche, sa fréquence et les outils utilisés. Nous vérifions leurs accès et leurs limites. Le devis précise les connexions, les tests, le suivi et les abonnements éventuels des outils tiers.</p>
+    <p id="context-title">Depuis la Savoie, Flex-Web accompagne les artisans, indépendants et PME partout en France. Le cadrage et la prise en main peuvent se faire à distance.</p>
+    <div class="offer-actions">
+      <a class="offer-primary" href={quote} data-conversion-event="quote_click" data-conversion-service="automation">Décrire ma tâche à automatiser</a>
+    </div>
+  </div>
+</section>
+
+<section class="offer-section" id="questions" aria-labelledby="faq-title">
+  <div class="offer-wrap">
+    <h2 id="faq-title">Questions sur l’automatisation</h2>
+    <div class="offer-faq">
+      {faqData.automation.map(({question, answer}) => <details><summary>{question}</summary><p>{answer}</p></details>)}
+    </div>
+    <details class="auto-resources">
+      <summary id="guides-title">Guides, services et accompagnement local</summary>
+      <div class="auto-resource-grid">
+        <div>
+          <h3>Guides pratiques</h3>
+          <ul>
+            <li><a href="/journal/taches-automatiser-pme/">Choisir les tâches à automatiser dans une PME</a></li>
+            <li><a href="/journal/connecter-demandes-crm/">Relier les demandes du site au CRM</a></li>
+            <li><a href="/journal/automatisation-ou-application-sur-mesure/">Choisir entre automatisation et application</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 id="ecosystem-title">Services associés</h3>
+          <ul>
+            <li><a href="/creation-site-internet/">Création de site internet</a></li>
+            <li><a href="/creation-application-mobile/">Développement d’application mobile</a></li>
+            <li><a href="/pricing/">Tarifs des offres</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Accompagnement local</h3>
+          <ul>
+            <li><a href="/automatisation-ia-savoie/">Automatisation en Savoie</a></li>
+            <li><a href="/automatisation-ia-haute-savoie/">Automatisation en Haute-Savoie</a></li>
+          </ul>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<style>
+  .auto-crumb { font-size: .82rem; line-height: 1.5; color: #50555c; margin-block: 0 1.2rem; }
+  .auto-crumb a { color: inherit; text-underline-offset: .18em; }
+  .auto-crumb span[aria-hidden] { margin-inline: .3rem; color: #758078; }
+  .offer-art.auto-flow {
+    display: grid; align-content: center; width: 100%; min-width: 0; min-height: 21.5rem;
+    margin: 0; padding: clamp(1.35rem, 3.8vw, 3.5rem); box-sizing: border-box;
+    background: radial-gradient(ellipse at 0 100%, #d6e6db 0%, transparent 66%), #edf4f0;
+    color: #16231f; border-radius: clamp(1.25rem, 2.7vw, 2rem);
+  }
+  .auto-flow figcaption { margin: 0 0 1.3rem; font-size: .92rem; line-height: 1.4; font-weight: 650; color: #364b42; }
+  .auto-steps { list-style: none; display: grid; gap: .8rem; padding: 0; margin: 0; }
+  .auto-steps li {
+    position: relative; isolation: isolate; display: grid; align-items: center; gap: .85rem;
+    grid-template-columns: 2.4rem minmax(0, 1fr); padding: .85rem 1rem;
+    border-radius: .9rem; background: #fff; box-shadow: 0 3px 10px #193c2810;
+  }
+  .auto-steps li + li::before { content: ""; position: absolute; left: 2.15rem; top: -.8rem; height: .8rem; width: 2px; background: #96ad9f; }
+  .auto-steps strong { display: block; line-height: 1.3; font-size: 1rem; font-weight: 650; color: #16231f; }
+  .auto-steps p { margin: .15rem 0 0; line-height: 1.4; font-size: .85rem; color: #49574f; }
+  .auto-icon { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; background: #eaf0f7; color: #375974; border-radius: .65rem; }
+  .auto-icon i { position: relative; display: block; box-sizing: border-box; }
+  .letter i { width: 1.15rem; height: .85rem; border: 1.7px solid; border-radius: .19rem; overflow: hidden; }
+  .letter i::after { content: ""; position: absolute; width: .65rem; height: .65rem; top: -.39rem; left: .17rem; border-bottom: 1.7px solid; border-right: 1.7px solid; transform: rotate(45deg); }
+  .record { color: #3c5548; background: #e5eee8; }
+  .record i { width: 1.16rem; height: .94rem; border: 1.7px solid; border-radius: .18rem; }
+  .record i::before,.record i::after { content: ""; position: absolute; height: 1.5px; left: .14rem; background: currentColor; }
+  .record i::before { width: .68rem; top: .22rem; }
+  .record i::after { width: .44rem; top: .47rem; }
+  .check { color: #fff; background: #325f4a; }
+  .check i { width: 1.04rem; height: .58rem; border: solid currentColor; border-width: 0 0 2px 2px; transform: translateY(-.09rem) rotate(-45deg); }
+  .auto-scope { background: #f4f6f4; }
+  .auto-scope .offer-wrap > p { max-width: 67ch; }
+  .auto-resources { margin-top: 2.4rem; padding-block: .85rem; }
+  .auto-resources summary { width: fit-content; cursor: pointer; font-size: 1rem; line-height: 1.5; font-weight: 600; color: #37433c; }
+  .auto-resource-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 1.25rem; margin-block: 1.1rem 0; }
+  .auto-resource-grid h3 { margin: 0; font-size: .95rem; line-height: 1.4; }
+  .auto-resource-grid ul { list-style: none; margin: .5rem 0 0; padding: 0; }
+  .auto-resource-grid li + li { margin-top: .4rem; }
+  .auto-resource-grid a { font-size: .9rem; text-decoration: underline; text-underline-offset: .15em; }
+  @media (max-width: 42rem) { .offer-art.auto-flow { min-height: auto; } }
+</style>

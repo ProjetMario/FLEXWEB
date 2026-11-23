@@ -1,0 +1,144 @@
+---
+import MobileLayout from './MobileLayout.astro';
+
+interface Props { lang: 'fr' | 'en' }
+const { lang } = Astro.props;
+const paths = { fr: '/realisations/footnation/', en: '/en/case-studies/footnation/' };
+const appLinks = {
+  fr: 'https://apps.apple.com/fr/app/footnation-football-clubs/id6803557829',
+  ch: 'https://apps.apple.com/ch/app/footnation-football-clubs/id6803557829',
+  be: 'https://apps.apple.com/be/app/footnation-soccer-football/id6803557829',
+  ca: 'https://apps.apple.com/ca/app/footnation-soccer-football/id6803557829'
+};
+const copy = {
+  fr: {
+    title: 'FootNation, une application pour joueurs et clubs de football | Flex-Web',
+    description: 'Découvrez FootNation, développée par Flex-Web et publiée par FLEX IMMO pour iPhone et iPad. Du profil joueur à la recherche de clubs et à la messagerie.',
+    home: 'Accueil', applications: 'Applications mobiles', crumb: 'Fil d’Ariane',
+    service: '/creation-application-mobile/', date: '23 novembre 2026', reviewed: 'Mis à jour le',
+    headline: 'FootNation met en relation joueurs, clubs et recruteurs',
+    intro: 'Comment un joueur peut-il présenter son parcours à un recruteur qui ne le connaît pas encore ? Flex-Web a développé FootNation pour relier ces deux usages. Le joueur dispose d’un profil, le recruteur peut le découvrir et tous deux peuvent engager une conversation dans l’application.',
+    authorship: 'FootNation est une réalisation de Flex-Web, marque de Fleximmo à Voglans. FLEX IMMO figure comme éditeur sur l’App Store, où l’application est proposée pour iPhone et iPad.',
+    app: 'Découvrir FootNation sur l’App Store',
+    journeys: 'Du profil au premier échange',
+    steps: [
+      ['Se présenter comme joueur', 'Le joueur renseigne son poste, son expérience et ses objectifs. Il peut ajouter des photos ou des vidéos. Son profil donne au recruteur un point de départ pour comprendre son parcours.'],
+      ['Découvrir des profils et des clubs', 'Depuis la recherche, un recruteur peut explorer les profils. Un joueur peut aussi chercher un club par son nom, parcourir les opportunités et suivre les comptes qui l’intéressent.'],
+      ['Poursuivre en messagerie', 'Après avoir repéré un contact, les membres peuvent échanger dans la messagerie de leur réseau. Le passage du profil à la conversation donne une suite concrète à la recherche.']
+    ],
+    gallery: 'Deux écrans de l’application publiée',
+    shots: ['Profil de démonstration avec numéro de maillot et bouton de publication.', 'Écran de recherche avec profils, clubs et opportunités.'],
+    source: 'Captures de la fiche FootNation publiée par FLEX IMMO sur l’App Store.',
+    distribution: 'Où retrouver l’application ?', countries: ['France','Suisse','Belgique','Canada'],
+    scope: 'Qu’en retenir pour votre projet ?',
+    transfer: 'Pour une entreprise qui veut mettre ses membres en relation, une première décision porte sur ce qu’un visiteur doit pouvoir repérer dans un profil. Pour un particulier qui lance une idée de communauté, on peut commencer par dessiner le parcours entre l’inscription et le premier échange. Le devis dépend ensuite des fonctions retenues, des accès et de la gestion des contenus.',
+    price: 'Pour un nouveau projet, l’offre Flex-Web démarre à 1 990 € TTC pour iOS et Android. Le devis précise le périmètre de votre première version et ses éventuels frais de publication et de maintenance.',
+    consult: 'Préparer mon devis application', serviceLink: 'Voir l’offre de développement mobile', about: 'À propos de Flex-Web'
+  },
+  en: {
+    title: 'FootNation mobile app for football players and clubs | Flex-Web',
+    description: 'Explore FootNation, built by Flex-Web and published by FLEX IMMO for iPhone and iPad. Follow the journey from a player profile to club discovery and messaging.',
+    home: 'Home', applications: 'Mobile apps', crumb: 'Breadcrumb',
+    service: '/en/applications/', date: '23 November 2026', reviewed: 'Updated on',
+    headline: 'FootNation connects football players, clubs and recruiters',
+    intro: 'How does a player introduce themselves to a recruiter who has never seen them play? Flex-Web developed FootNation to connect the two sides of that experience. A player builds a profile, a recruiter can discover it, and the two can start a conversation inside the app.',
+    authorship: 'Flex-Web, the Fleximmo brand based in Voglans, France, developed FootNation. The App Store lists FLEX IMMO as its publisher and offers the app for iPhone and iPad.',
+    app: 'Explore FootNation on the App Store',
+    journeys: 'From a player profile to a first conversation',
+    steps: [
+      ['Introduce yourself as a player', 'Players describe their position, experience and goals. They can add photos and videos to give a recruiter a better sense of how they play.'],
+      ['Discover players and clubs', 'Recruiters can look through player profiles in search. Players can look up clubs by name, browse opportunities and follow accounts that interest them.'],
+      ['Continue the conversation', 'Members can use the messaging feature to get in touch with people in their network. A recruiter and a player can follow up on an opportunity they have discovered.']
+    ],
+    gallery: 'Two screens from the published app',
+    shots: ['Demo player profile showing a shirt number and a button to create a post.', 'Search screen with player profiles, clubs and opportunities.'],
+    source: 'Screenshots from the FootNation App Store listing published by FLEX IMMO.',
+    distribution: 'Where can you find FootNation?', countries: ['France','Switzerland','Belgium','Canada'],
+    scope: 'How does this apply to your own app?',
+    transfer: 'For a business connecting members, the first decision is what a visitor needs to recognise in a profile. For someone launching a community of their own, start by mapping the steps from signing up to making a first contact. The features, access rules and content management requirements will shape the quote.',
+    price: 'For a new project, Flex-Web’s mobile app offer starts at €1,990 including tax for iOS and Android. Your quote sets out what the first release includes and any publishing or maintenance charges.',
+    consult: 'Request a mobile app quote (form in French)', serviceLink: 'Explore mobile app development', about: 'About Flex-Web'
+  }
+}[lang];
+
+const site = 'https://flex-web.fr';
+const path = paths[lang];
+const url = site + path;
+const publicationDate = '2026-11-23';
+const mainStore = lang === 'fr' ? appLinks.fr : appLinks.ca;
+const home = lang === 'fr' ? '/' : '/en/';
+const images = [2, 1].map(n => '/images/footnation/' + lang + '-iphone-' + n + '.jpg');
+const crumbs = [[copy.home,home],[copy.applications,copy.service],['FootNation',path]];
+const schema = [
+  {
+    '@context':'https://schema.org', '@type':'Article', '@id':url + '#article',
+    mainEntityOfPage:url, headline:copy.headline, description:copy.description, inLanguage:lang,
+    datePublished:publicationDate, dateModified:publicationDate, image:images.map(img => site + img),
+    author:{'@type':'Organization',name:'Flex-Web',url:site+'/about/'},
+    publisher:{'@type':'Organization',name:'Flex-Web',url:site+'/'}, citation:mainStore,
+    about:{'@type':'MobileApplication',name:'FootNation',operatingSystem:'iOS, iPadOS',applicationCategory:'SportsApplication',url:mainStore,publisher:{'@type':'Organization',name:'FLEX IMMO'}}
+  },
+  {
+    '@context':'https://schema.org','@type':'BreadcrumbList','@id':url+'#breadcrumbs',
+    itemListElement:crumbs.map(([name,p],index) => ({'@type':'ListItem',position:index+1,name,item:site+p}))
+  }
+];
+---
+<MobileLayout lang={lang} title={copy.title} description={copy.description} path={path} alternates={paths} schema={schema} image={images[0]} imageAlt={copy.shots[0]}>
+  <article class="case">
+    <nav aria-label={copy.crumb} class="crumbs"><a href={home}>{copy.home}</a><span aria-hidden="true">/</span><a href={copy.service}>{copy.applications}</a><span aria-hidden="true">/</span><span aria-current="page">FootNation</span></nav>
+    <header>
+      <h1>{copy.headline}</h1>
+      <p class="intro">{copy.intro}</p>
+      <p>{copy.authorship}</p>
+      <a class="source" href={mainStore}>{copy.app}</a>
+      <p class="date">{copy.reviewed} <time datetime={publicationDate}>{copy.date}</time></p>
+    </header>
+    <section class="gallery">
+      <h2>{copy.gallery}</h2>
+      <div class="screens">{images.map((src,i) =>
+        <figure><a href={src}><img src={src} width="423" height="920" loading="lazy" decoding="async" alt={copy.shots[i]} /></a><figcaption>{copy.shots[i]}</figcaption></figure>
+      )}</div>
+      <a class="source" href={mainStore}>{copy.source}</a>
+    </section>
+    <div class="walkthrough">
+      <section>
+        <h2>{copy.journeys}</h2>
+        {copy.steps.map(([heading, text]) => <div class="step"><h3>{heading}</h3><p>{text}</p></div>)}
+      </section>
+    </div>
+    <section class="stores"><h2>{copy.distribution}</h2><ul>{Object.values(appLinks).map((href,i) => <li><a href={href}>{copy.countries[i]}</a></li>)}</ul></section>
+    <section class="next">
+      <h2>{copy.scope}</h2><p>{copy.transfer}</p><p>{copy.price}</p>
+      <div class="links"><a class="cta" href="/demarrer/application/" data-conversion-event="quote_click" data-conversion-service="application">{copy.consult}</a><a href={copy.service}>{copy.serviceLink}</a></div>
+    </section>
+    <a class="about" href="/about/">{copy.about}</a>
+  </article>
+</MobileLayout>
+<style>
+  .case { max-width:73rem; margin:auto; padding:2.5rem clamp(1.1rem,4vw,3rem) 4rem; color:#1d1d1f; }
+  .case a { color:#005dbb; text-decoration:underline; text-underline-offset:.18em; }
+  .crumbs,.links,.stores ul { display:flex; flex-wrap:wrap; align-items:center; gap:.6rem; }
+  .crumbs,.date,.source,figcaption,.about { font-size:.9rem; }
+  .case header { max-width:50rem; padding:clamp(1.5rem,4vw,3.4rem) 0 1.6rem; }
+  .case h1,.case h2,.case h3 { line-height:1.12; letter-spacing:-.035em; margin:0 0 .9rem; }
+  .case h1 { font-size:clamp(2.25rem,5.5vw,4.6rem); }
+  .case h2 { font-size:clamp(1.6rem,2.6vw,2.3rem); }
+  .case h3 { font-size:1.25rem; }
+  .case p { max-width:71ch; line-height:1.65; margin:0 0 1rem; }
+  .case .intro { font-size:clamp(1.04rem,1.6vw,1.25rem); }
+  .case .date { margin-top:1.3rem; color:#585861; }
+  .walkthrough { display:grid; grid-template-columns:1fr 1fr; gap:clamp(1.8rem,5vw,4rem); align-items:start; padding-top:2rem; border-top:1px solid #d7d7dc; }
+  .step { padding:.85rem 0; }
+  .screens { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; }
+  .case figure { min-width:0; margin:0; }
+  .case figure img { width:100%; height:auto; border-radius:.85rem; border:1px solid #d7d7dc; box-sizing:border-box; }
+  figcaption { padding:.6rem 0; color:#45454a; line-height:1.45; }
+  .stores,.next { margin:2.6rem 0 0; }
+  .stores ul { padding:0; list-style:none; gap:.5rem 1.3rem; }
+  .next { background:#f5f5f7; border-radius:1.4rem; padding:clamp(1.25rem,3vw,2.4rem); }
+  .links { gap:1rem; }
+  .case .cta { background:#0068cf; color:white; border-radius:2rem; padding:.75rem 1.2rem; text-decoration:none; font-weight:600; }
+  .about { display:inline-block; margin-top:1.4rem; }
+  @media (max-width:48rem) { .walkthrough { grid-template-columns:1fr; } }
+</style>

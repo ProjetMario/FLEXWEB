@@ -1,4 +1,6 @@
 ---
+import websitePreview from '../../../acquisition-mobile/redesign/home/public/studio-redesign/2savoie-immo.webp?url';
+import { projectFeature } from '../../../acquisition-mobile/redesign/shared/feature.mjs';
 import ApplicationLinks from '../applications/ApplicationLinks.astro';
 import ResourceLayout from '../seo/national/ResourceLayout.astro';
 import StructuredData from '../seo/StructuredData.astro';
@@ -45,6 +47,7 @@ if (page.faq.length) schemas.push({ '@type': 'FAQPage', '@id': `${url}#questions
       <a class="action" href={cta.href} data-conversion-event={ctaEvent} data-conversion-service={conversionService}>{cta.label} ↗</a>
       {newProjectPage && <p>{en ? 'Businesses and individuals: email or telephone.' : 'Entreprises et particuliers : échangeons par e-mail ou téléphone.'} <a href={projectEmail(page.title)} data-conversion-event="email_click" data-conversion-service={conversionService}>{business.email}</a> · <a href={`tel:${business.telephone}`} data-conversion-event="phone_click" data-conversion-service={conversionService}>+33 7 57 83 02 62</a></p>}
     </header>
+    {page.path === '/en/websites/' && <Fragment set:html={projectFeature('website','en',websitePreview)} />}
     {page.sections.map(section => <section class="geo-section">
       <h2>{section.title}</h2>
       {section.paragraphs?.map(paragraph => <p>{paragraph}</p>)}

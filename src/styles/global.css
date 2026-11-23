@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../../acquisition-mobile/redesign/shared/studio.css";
 
 /* Premium base palette inspired by Stripe, Vercel, Linear and Framer */
 :root {

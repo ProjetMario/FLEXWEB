@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'scripts/cms/**'
+      - 'acquisition-mobile/catalogue/**'
       - 'cms/**'
       - '.github/workflows/emdash*'
       - 'apps/content-cms/**'
@@ -19,6 +20,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/cms/**'
+      - 'acquisition-mobile/catalogue/**'
       - 'cms/**'
       - '.github/workflows/emdash*'
       - 'apps/content-cms/**'
@@ -98,6 +100,7 @@ jobs:
       - run: npm ci
       - run: python3 scripts/prospects/test-generate-prospect-mockups.py
       - run: npm run cms:test
+      - run: node --test acquisition-mobile/catalogue/*.test.mjs acquisition-mobile/catalogue/audit/*.test.mjs
       - run: node --test scripts/seo/indexnow-submit.test.mjs
   cms-runtime:
     runs-on: ubuntu-latest

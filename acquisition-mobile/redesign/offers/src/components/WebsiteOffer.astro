@@ -1,0 +1,140 @@
+---
+import faqData from '../faq.json';
+
+const plans = [
+  {
+    name: 'Essentielle', price: '299 € TTC', slug: 'essentielle',
+    description: 'Un site vitrine jusqu’à 5 pages pour présenter vos services et recevoir vos premières demandes.',
+    action: 'Choisir Essentielle',
+  },
+  {
+    name: 'Business', price: '590 € TTC', slug: 'business',
+    description: 'Le site vitrine, avec des contenus et des pages structurés pour Google et les moteurs de recherche IA.',
+    action: 'Choisir Business',
+  },
+  {
+    name: 'Premium', price: 'Dès 990 € TTC', slug: 'premium',
+    description: 'Un site relié à votre CRM, avec un back-office et des automatisations selon les besoins définis au devis.',
+    action: 'Parler de Premium',
+  },
+];
+---
+<section class="offer-hero">
+  <div class="offer-wrap offer-hero-grid">
+    <div class="offer-intro">
+      <h1>Un site internet pour votre activité.</h1>
+      <p>Présentez vos services, montrez vos réalisations et donnez à vos futurs clients un moyen simple de vous contacter.</p>
+      <p class="offer-price">À partir de 299 € TTC</p>
+      <div class="offer-actions">
+        <a class="offer-primary" href="/demarrer/?service=site" data-conversion-event="quote_click" data-conversion-service="site">Demander mon devis</a>
+        <a class="offer-link" href="#offres">Comparer les formules</a>
+      </div>
+    </div>
+    <figure class="offer-art web-example">
+      <div class="web-stage">
+        <div class="web-browser">
+          <div class="web-browser-bar" aria-hidden="true"><i></i><span>2savoie.immo</span></div>
+          <img
+            src="/studio-redesign/2savoie-immo.webp"
+            srcset="/studio-redesign/2savoie-immo-small.webp 720w, /studio-redesign/2savoie-immo.webp 1440w"
+            sizes="(max-width: 760px) 90vw, (max-width: 1200px) 46vw, 570px"
+            alt="Accueil de 2 Savoie Immo avec un accès aux annonces immobilières et à la demande d’estimation."
+            width="1440" height="840" loading="eager" fetchpriority="high" decoding="async"
+          />
+        </div>
+      </div>
+      <figcaption id="studio-project-title">
+        <a href="/realisations/2savoie-immo/">Découvrir le site de 2 Savoie Immo <span aria-hidden="true">↗</span></a>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="offres" class="offer-section" aria-labelledby="web-plans-title">
+  <div class="offer-wrap">
+    <h2 id="web-plans-title">Quelle formule choisir&nbsp;?</h2>
+    <div class="offer-grid web-plans">
+      {plans.map(plan => (
+        <article class="offer-item web-plan">
+          <h3>{plan.name}</h3>
+          <p class="web-plan-price">{plan.price}</p>
+          <p>{plan.description}</p>
+          <a class="offer-link" href={'/demarrer/?service=site&offre=' + plan.slug} data-conversion-event="quote_click" data-conversion-service="site">
+            {plan.action} <span aria-hidden="true">↗</span>
+          </a>
+        </article>
+      ))}
+    </div>
+    <div class="web-conditions">
+      <p>La création du site est un paiement unique. Le devis précise les pages, les fonctionnalités, l’hébergement et le nom de domaine.</p>
+      <details>
+        <summary>Quelles sont les options mensuelles&nbsp;?</summary>
+        <p><strong>49 € TTC/mois</strong> pour la maintenance et les modifications de contenu.
+          <strong>99 € TTC/mois</strong> pour le CRM, l’automatisation et le référencement.</p>
+        <p>Vous pouvez choisir une option, les deux ou aucune. Les outils, les interventions et les éventuels frais tiers sont précisés au devis.</p>
+        <a class="offer-link" href="/pricing/#options">Consulter le détail des options</a>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="offer-section" aria-labelledby="web-faq-title">
+  <div class="offer-wrap">
+    <h2 id="web-faq-title">Avant de lancer votre site</h2>
+    <div class="offer-faq">
+      {faqData.web.map(({ question, answer }) => (
+        <details><summary>{question}</summary><p>{answer}</p></details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .web-example { margin: 0; min-width: 0; }
+  .web-stage {
+    box-sizing: border-box;
+    padding: clamp(1rem, 2.65vw, 2.4rem);
+    border-radius: 1.75rem;
+    background: #ede7df;
+    background: linear-gradient(145deg, #f3efe8, #e5dcce);
+    overflow: hidden;
+  }
+  .web-browser {
+    overflow: hidden;
+    background: white;
+    border: 1px solid #26201926;
+    border-radius: .67rem;
+    box-shadow: 0 .9rem 2rem -.85rem #3b32274a;
+    transform: rotate(-1deg);
+  }
+  .web-browser-bar {
+    display: flex; align-items: center; justify-content: center; position: relative;
+    height: clamp(1.1rem, 2vw, 1.65rem);
+    background: #fbfaf8; color: #53504d;
+    font: 500 clamp(.47rem, .6vw, .62rem)/1 system-ui,sans-serif;
+    border-bottom: 1px solid #e3e0da;
+  }
+  .web-browser-bar i {
+    position: absolute; left: .65rem; width: .27rem; height: .27rem;
+    border-radius: 50%; background: #ccc7c0; box-shadow: .42rem 0 #ccc7c0, .84rem 0 #ccc7c0;
+  }
+  .web-browser img { width: 100%; height: auto; display: block; }
+  .web-example figcaption { padding: .7rem .1rem 0; font-size: .85rem; text-align: end; }
+  .web-example figcaption a { color: #454340; text-underline-offset: .2rem; }
+  .web-plans { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .web-plan { display: flex; flex-direction: column; align-items: flex-start; }
+  .web-plan h3 { margin: 0; }
+  .web-plan .web-plan-price {
+    color: #19191b; margin: .7rem 0 .1rem; font-size: clamp(1.4rem, 2.4vw, 2rem);
+    font-weight: 630; letter-spacing: -.045em; line-height: 1.2;
+  }
+  .web-plan > .offer-link { margin-top: auto; padding-top: .7rem; }
+  .web-conditions { color: #454548; max-width: 55rem; margin-top: 1.3rem; }
+  .web-conditions p { line-height: 1.55; }
+  .web-conditions summary { width: fit-content; min-height: 2.75rem; padding-block: .65rem; font-weight: 600; color: #1d1d1f; cursor: pointer; }
+  .web-conditions details p { margin: .2rem 0 .5rem; }
+  @media (max-width: 760px) {
+    .web-plans { grid-template-columns: 1fr; }
+    .web-stage { border-radius: 1.15rem; }
+  }
+</style>

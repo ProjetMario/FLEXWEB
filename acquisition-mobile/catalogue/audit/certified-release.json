@@ -1,0 +1,79 @@
+{
+  "status": "verified",
+  "codeCommit": "f31cfce593f8a602f4f75b7b11fc151070bd54b5",
+  "baselineDeployId": "6af7884cf8420561604ee736",
+  "baselineDigest": "8d758bd8d9365a7286a7e62766365bea6ded669ff4b8e9d85b7cfef42e97fb05",
+  "artifactDigest": "00690223894f90114c3995cb91342672fd16547f2b76eb2f46dbe22ea5ef6079",
+  "marker": {
+    "schemaVersion": 1,
+    "snapshotId": "ad2e67b1a3d8cdf3a3622ccccb9bab6dacfc1e1076057c2747bbee525e4e493c",
+    "snapshotSha256": "bb776963c9ca620d92c53047210d5f2b838d67d06555a4e9a5aabf98812beeeb",
+    "codeCommit": "f31cfce593f8a602f4f75b7b11fc151070bd54b5",
+    "scopedPatch": {
+      "baseDeployId": "6af7884cf8420561604ee736",
+      "baseCodeCommit": "02875ccdbcc3e36e17bd731a2f6d8377a94e5600",
+      "paths": [
+        "/journal/",
+        "/creation-site-internet/"
+      ],
+      "sitemap": "/sitemaps/principal-1.xml"
+    }
+  },
+  "changed": [
+    {
+      "path": ".well-known/flexweb-release.json",
+      "size": 445,
+      "sha256": "3ee13e4945b6ad249e2e868b39ab7db309b11118f96d393556e62aa571f2c3b4"
+    },
+    {
+      "path": "_astro/global.D-i-UUTj.css",
+      "size": 66867,
+      "sha256": "3d54c2c5aaf662783b102d9458e8c2cf176bd21499a0e4159455372c2c0fbdbb"
+    },
+    {
+      "path": "creation-site-internet/index.html",
+      "size": 77700,
+      "sha256": "5de9184c60cc56f3810fa22dd11a78011721e6503f50eaee8e8a35050b85960a"
+    },
+    {
+      "path": "journal/index.html",
+      "size": 38389,
+      "sha256": "5d43cf6742a7f5399fd79923a166c815c19f616884bbb165f3793598b0cf0424"
+    },
+    {
+      "path": "sitemaps/principal-1.xml",
+      "size": 9790,
+      "sha256": "d2430517a57dd2500e6bd03e312d3a63d35d90dbc31d843acde1259f25e365fc"
+    }
+  ],
+  "assets": [
+    "_astro/Acquisition.astro_astro_type_script_index_0_lang.CxZlQFfq.js",
+    "_astro/ConversionEvents.astro_astro_type_script_index_0_lang.Cr74znjO.js",
+    "_astro/CookieConsent.Y-LJbude.js",
+    "_astro/Footer.D7N99i4O.js",
+    "_astro/JournalListing.Br9lR8qE.js",
+    "_astro/Logo.DsggdnDV.js",
+    "_astro/MotionWrapper.DjIz28hS.js",
+    "_astro/Navigation.D3TR4eUd.js",
+    "_astro/acquisition.B3iOXQPv.js",
+    "_astro/analytics.CexFF_rL.js",
+    "_astro/client.DIQWfPlE.js",
+    "_astro/global.D-i-UUTj.css",
+    "_astro/index.B02hbnpo.js",
+    "_astro/jsx-runtime.u17CrQMm.js"
+  ],
+  "unchangedFiles": 162489,
+  "preview": {
+    "id": "6af78f754ac816988580f30d",
+    "siteId": "5f0ec4e5-fe16-4ef3-8380-9b8aff26edbb",
+    "ready": true,
+    "url": "https://6af78f754ac816988580f30d--flex-webb.netlify.app"
+  },
+  "published": {
+    "id": "6af79012972137a7ad14d158",
+    "siteId": "5f0ec4e5-fe16-4ef3-8380-9b8aff26edbb",
+    "ready": true,
+    "url": "https://6af79012972137a7ad14d158--flex-webb.netlify.app"
+  },
+  "verifiedAt": "2026-11-13T22:34:46.140Z"
+}

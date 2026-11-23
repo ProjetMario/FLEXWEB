@@ -1,0 +1,168 @@
+---
+import {mobilePages, updated} from '../../../../src/data/mobile.mjs';
+
+const {faq} = mobilePages.find(page => page.id === 'hub' && page.lang === 'fr');
+const budgets = [
+  {name: 'Essentielle', price: '1 990 à 4 990 €', scope: 'Un parcours simple et ses fonctions indispensables.'},
+  {name: 'Business', price: '4 990 à 9 990 €', scope: 'Plusieurs écrans, des comptes utilisateurs ou des paiements.'},
+  {name: 'Premium', price: 'Au-delà de 9 990 €', scope: 'Un espace d’administration, des intégrations ou des droits avancés.'},
+];
+---
+<section class="offer-hero" aria-labelledby="mobile-title">
+  <div class="offer-wrap offer-hero-grid">
+    <div class="offer-intro">
+      <nav aria-label="Fil d’Ariane" class="mobile-crumb"><a href="/">Accueil</a><span aria-hidden="true"> / </span><span aria-current="page">Applications mobiles</span></nav>
+      <h1 id="mobile-title">Votre application iOS et Android.</h1>
+      <p>Un technicien saisit son intervention. Un membre réserve un cours. Flex-Web développe votre application autour de ce que vos utilisateurs viennent y faire.</p>
+      <p class="offer-price">Dès 1 990 € TTC pour les deux plateformes.</p>
+      <div class="offer-actions">
+        <a class="offer-primary" href="/demarrer/application/" data-conversion-event="quote_click" data-conversion-service="application">Demander mon devis</a>
+        <a class="offer-link" href="/realisations/footnation/">Découvrir FootNation <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+    <figure class="offer-art mobile-visual" aria-labelledby="studio-project-title">
+      <div class="mobile-device">
+        <img src="/studio-redesign/footnation-recherche.webp" alt="Dans FootNation, un joueur peut rechercher des profils, des clubs et des opportunités." width="423" height="920" loading="eager" fetchpriority="high" decoding="async" />
+      </div>
+      <figcaption id="studio-project-title">FootNation <span>Recherche dans l’application iPhone</span></figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="offer-section" id="budgets" aria-labelledby="mobile-budget">
+  <div class="offer-wrap" id="offres">
+    <h2 id="mobile-budget">Quel budget prévoir&nbsp;?</h2>
+    <p>Ces fourchettes TTC donnent un repère. Votre devis précise les écrans, les connexions, les tests sur appareils et le calendrier.</p>
+    <dl class="mobile-budgets">
+      {budgets.map(({name,price,scope}) => <div><dt>{name}</dt><dd>{scope}</dd><dd class="mobile-range">{price}</dd></div>)}
+    </dl>
+    <p class="offer-note">L’hébergement, les comptes de boutique et les services tiers éventuels sont détaillés au devis. Selon vos besoins, deux options de suivi sont proposées&nbsp;: maintenance à 49 € TTC/mois, ou CRM, automatisation et référencement à 99 € TTC/mois.</p>
+    <a class="offer-link" href="/applications/prix/">Comprendre le prix d’une application <span aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+<section class="offer-section" aria-labelledby="mobile-project">
+  <div class="offer-wrap">
+    <h2 id="mobile-project">Par où commencer&nbsp;?</h2>
+    <div class="offer-grid">
+      <div class="offer-item">
+        <h3>Vous équipez une entreprise</h3>
+        <p>Partez d’une tâche de terrain. Qui saisit l’information, qui la valide et quel logiciel doit la recevoir&nbsp;?</p>
+        <a class="offer-link" href="/applications/entreprises/">Préparer un outil métier <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="offer-item">
+        <h3>Vous portez une idée personnelle</h3>
+        <p>Choisissez le premier service à rendre. Un croquis et un exemple d’utilisation suffisent pour en discuter.</p>
+        <a class="offer-link" href="/applications/particuliers/">Cadrer ma première version <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <nav class="offer-links" aria-label="Guides par plateforme">
+      <a href="/applications/ios/">Développer pour iOS</a>
+      <a href="/applications/android/">Développer pour Android</a>
+      <a href="/applications/web-mobile-ou-logiciel/">Comparer web, mobile et logiciel</a>
+    </nav>
+  </div>
+</section>
+
+<section class="offer-section faqs" id="faq" aria-labelledby="mobile-questions">
+  <div class="offer-wrap offer-faq">
+    <h2 id="mobile-questions">Avant de vous lancer</h2>
+    {faq.map(([question,answer]) => <details><summary>{question}</summary><p>{answer}</p></details>)}
+  </div>
+</section>
+
+<section class="offer-section" aria-labelledby="mobile-contact">
+  <div class="offer-wrap">
+    <h2 id="mobile-contact">Parlons de votre projet.</h2>
+    <p>Depuis Voglans, nous accompagnons les entreprises et les particuliers en France et à distance, notamment en <a href="/applications/suisse-romande/">Suisse romande</a> et en <a href="/applications/belgique-francophone/">Belgique francophone</a>. Les échanges se font en français ou en anglais.</p>
+    <div class="offer-actions">
+      <a class="offer-primary" href="/demarrer/application/" data-conversion-event="quote_click" data-conversion-service="application">Décrire mon projet</a>
+      <a class="offer-link" href="mailto:contact@flex-web.fr?subject=Applications%20mobiles" data-conversion-event="email_click" data-conversion-service="application">Écrire à Flex-Web</a>
+      <a class="offer-link" href="tel:+33757830262" data-conversion-event="phone_click" data-conversion-service="application">+33 7 57 83 02 62</a>
+    </div>
+    <p class="offer-note">Révisé par Flex-Web le <time datetime={updated}>23 novembre 2026</time>.</p>
+  </div>
+</section>
+
+<style>
+  .mobile-crumb { margin-bottom: 1.25rem; color: #56565d; font-size: .8rem; }
+  .mobile-crumb a { color: inherit; }
+  .mobile-visual {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    overflow: hidden;
+    min-width: 0;
+    margin: 0;
+    padding: clamp(1.1rem, 2.5vw, 2rem) 1rem 3.6rem;
+    border-radius: 1.75rem;
+    background: radial-gradient(ellipse at 65% 43%, #4a4363 0%, #272637 47%, #12131c 86%);
+    color: #fff;
+  }
+  .mobile-device {
+    width: clamp(8.5rem, 13vw, 12.1rem);
+    padding: .28rem;
+    overflow: hidden;
+    border: 1px solid #97939e;
+    border-radius: 2.1rem;
+    background: #1c1a23;
+    box-shadow: 0 1.2rem 2.1rem #080810a6;
+    transform: rotate(5deg);
+  }
+  .mobile-device img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 1.8rem;
+  }
+  .mobile-visual figcaption {
+    position: absolute;
+    bottom: 1.1rem;
+    left: clamp(1rem, 2.5vw, 2rem);
+    display: flex;
+    align-items: baseline;
+    gap: .7rem;
+    flex-wrap: wrap;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 650;
+  }
+  .mobile-visual figcaption span { color: #dfdce8; font-size: .78rem; font-weight: 450; }
+  .mobile-budgets { margin: 1.6rem 0 1.1rem; }
+  .mobile-budgets > div {
+    display: grid;
+    align-items: baseline;
+    grid-template-columns: minmax(6rem, .75fr) minmax(0, 2.4fr) max-content;
+    gap: clamp(.7rem, 3vw, 2.4rem);
+    padding: 1.1rem 0;
+    border-bottom: 1px solid #d2d2d7;
+  }
+  .mobile-budgets > div:first-child { border-top: 1px solid #d2d2d7; }
+  .mobile-budgets dt, .mobile-range { font-weight: 650; }
+  .mobile-budgets dd { margin: 0; }
+  .mobile-range { text-align: end; font-variant-numeric: tabular-nums; }
+  @media (max-width: 680px) {
+    .mobile-visual { padding: 1.25rem 1rem 3rem; }
+    .mobile-device { width: 7.6rem; border-radius: 1.35rem; }
+    .mobile-device img { border-radius: 1.05rem; }
+    .mobile-visual figcaption { bottom: .85rem; }
+    .mobile-budgets > div { grid-template-columns: minmax(0, 1fr) max-content; gap: .35rem .6rem; }
+    .mobile-budgets dd:not(.mobile-range) { grid-column: 1 / -1; grid-row: 2; }
+    .mobile-range { grid-column: 2; grid-row: 1; }
+  }
+</style>
+
+<style is:global>
+  @media (max-width: 365px) {
+    html body:has(main[data-offer="mobile"]) .site-bar { padding-inline: .6rem; gap: .35rem; }
+    html body:has(main[data-offer="mobile"]) .site-bar .brand { font-size: .9rem; gap: .3rem; }
+    html body:has(main[data-offer="mobile"]) .site-bar .brand img { width: 28px; height: 28px; }
+    html body:has(main[data-offer="mobile"]) .site-bar :is(.quote,.menu summary) {
+      min-height: 44px; font-size: .82rem;
+    }
+    html body:has(main[data-offer="mobile"]) .site-bar .quote { padding-inline: .58rem; }
+    html body:has(main[data-offer="mobile"]) .site-bar .menu summary { padding-inline: 0; }
+  }
+</style>

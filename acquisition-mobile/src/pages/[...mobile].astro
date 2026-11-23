@@ -1,0 +1,71 @@
+---
+import {projectFeature} from '../../redesign/shared/feature.mjs';
+import MobileLayout from '../components/MobileLayout.astro';
+import {mobilePages, relatedPages, topicLabels, updated} from '../data/mobile.mjs';
+
+export function getStaticPaths() {
+  return mobilePages.map(page => ({params:{mobile:page.path.slice(1,-1)},props:{page}}));
+}
+
+const {page} = Astro.props;
+const {id,lang,path,title,description,intro,sections,faq,alternates,kind} = page;
+const en = lang === 'en';
+const t = (fr, english) => en ? english : fr;
+const origin = 'https://flex-web.fr';
+const url = origin + path;
+const hub = mobilePages.find(p=>p.lang===lang && p.id==='hub');
+const casePath = t('/realisations/footnation/','/en/case-studies/footnation/');
+const quote = '/demarrer/application/';
+const quoteLabel = t('Décrire mon projet','Describe my project (form in French)');
+const name = topicLabels[lang][id];
+const crumbs = [{name:t('Accueil','Home'),url:origin+t('/','/en/')}];
+if (id!=='hub') crumbs.push({name:topicLabels[lang].hub,url:origin+hub.path});
+crumbs.push({name,url});
+const entity = {'@id':origin+'/#organization'};
+const audience = t('Entreprises et particuliers','Businesses and individuals');
+const geographic = id==='suisse' ? ['CH'] : id==='belgique' ? ['BE'] : ['FR','CH','BE'];
+const service = {
+  '@type':'Service','@id':url+'#service',url,name:title,description,
+  serviceType:t('Développement d’application mobile iOS et Android','iOS and Android mobile app development'),
+  provider:entity,areaServed:geographic.map(code=>({'@type':'Country',name:{FR:'France',CH:t('Suisse','Switzerland'),BE:t('Belgique','Belgium')}[code]})),
+  audience:{'@type':'Audience',audienceType:audience},
+  offers:{'@type':'Offer',url:origin+quote,name:t('Développement mobile dès 1 990 € TTC, iOS et Android inclus','Mobile development from €1,990 including VAT for both iOS and Android'),
+    priceSpecification:{'@type':'PriceSpecification',minPrice:1990,priceCurrency:'EUR',valueAddedTaxIncluded:true}},
+};
+const article = {'@type':'Article','@id':url+'#article',mainEntityOfPage:{'@id':url+'#webpage'},headline:title,description,inLanguage:lang,dateModified:updated,author:entity,publisher:entity};
+const schema = [
+  kind === 'Article' ? article : service,
+  {'@type':'BreadcrumbList','@id':url+'#breadcrumbs',itemListElement:crumbs.map((crumb,index)=>({'@type':'ListItem',position:index+1,name:crumb.name,item:crumb.url}))},
+  {'@type':'FAQPage','@id':url+'#faq',inLanguage:lang,mainEntity:faq.map(([question,answer])=>({'@type':'Question',name:question,acceptedAnswer:{'@type':'Answer',text:answer}}))},
+];
+const tiers = [
+  [t('Essentielle','Essential'),t('1 990 à 4 990 €','€1,990–€4,990')],
+  [t('Business','Business'),t('4 990 à 9 990 €','€4,990–€9,990')],
+  [t('Premium','Premium'),t('Au-delà de 9 990 €','Above €9,990')],
+];
+---
+<MobileLayout lang={lang} title={title+' | Flex-Web'} description={description} path={path} alternates={alternates} schema={schema}>
+<div class="hero"><div class="wrap">
+<nav class="crumbs" aria-label={t('Fil d’Ariane','Breadcrumb')}>{crumbs.map((crumb,index)=><>{index>0&&<span aria-hidden="true">/</span>}{index===crumbs.length-1?<span aria-current="page">{crumb.name}</span>:<a href={new URL(crumb.url).pathname}>{crumb.name}</a>}</>)}</nav>
+<div class="hero-grid">
+  <div><h1>{title}</h1><p class="lead">{intro}</p><a class="action" href={quote} data-conversion-event="quote_click" data-conversion-service="application">{quoteLabel}</a></div>
+  {['hub','ios'].includes(id) && <Fragment set:html={projectFeature('app',lang)} />}
+<aside class="offer"><h2>{t('Votre première version','Your first release')}</h2><p class="amount">{t('Dès 1 990 € TTC','From €1,990 incl. VAT')}</p><p>{t('iOS et Android inclus. Le devis fixe les fonctionnalités, le calendrier, les essais sur appareils et les frais éventuels.','Both iOS and Android are included. Your quote details the features, schedule, device testing and any additional fees.')}</p><a href={id==='budget'?'#budgets':mobilePages.find(p=>p.lang===lang&&p.id==='budget').path}>{t('Comprendre le budget','Explore the costs')} →</a></aside>
+</div>
+</div></div>
+<div class="wrap body-grid">
+<div class="reading">
+  {(id==='budget'||id==='hub')&&<section id="budgets" class="budget"><h2>{t('Quels budgets Flex-Web propose-t-il ?','Which budget bands does Flex-Web offer?')}</h2><ul>{tiers.map(([label,range])=><li><strong>{label}</strong><span>{range}</span></li>)}</ul><p>{t('Ces fourchettes TTC dépendent du périmètre convenu. Les frais de boutique, d’hébergement et de services tiers éventuels figurent dans le devis.','These VAT-inclusive ranges depend on the agreed scope. The quote identifies any store, hosting and external service fees.')}</p>{id==='budget'&&<p>{t('Le tarif publié de maintenance facultative démarre à 49 € TTC par mois. L’option CRM, automatisation et SEO est à 99 € TTC par mois.','Optional maintenance starts at €49 per month including VAT. The CRM, automation and SEO option is €99 per month including VAT.')} <a href="/pricing/">{t('Consulter les tarifs Flex-Web','See Flex-Web pricing (French)')}</a></p>}</section>}
+  {sections.map(([heading,body])=><section class="chapter"><h2>{heading}</h2><p>{body}</p></section>)}
+  <section class="case"><h2>{t('Une application à découvrir : FootNation','Explore a published app: FootNation')}</h2><p>{t('FootNation relie des joueurs, des clubs et des recruteurs. Son profil joueur, sa recherche et sa messagerie illustrent trois parcours que vous pouvez examiner au moment de préparer le vôtre.','FootNation connects players, clubs and recruiters. Explore how player profiles, search and messaging work together before drawing up the user journey for your own app.')}</p><a href={casePath}>{t('Voir les écrans de FootNation et la fiche App Store','See FootNation screenshots and the App Store listing')} →</a></section>
+  <section class="faqs" id="faq"><h2>{t('Questions fréquentes','Frequently asked questions')}</h2>{faq.map(([q,a])=><details><summary>{q}</summary><p>{a}</p></details>)}</section>
+  <section class="contact"><h2>{t('Parlons de votre application','Tell us about your app')}</h2><p>{t('Précisez qui utilisera l’application, la première action à tester et les appareils concernés. Flex-Web vous accompagne depuis Voglans, en français ou en anglais.','Tell us who will use your app, the first action to test and the devices involved. Flex-Web supports projects from Voglans, France, in French and English.')}</p><a class="action" href={quote} data-conversion-event="quote_click" data-conversion-service="application">{quoteLabel}</a><div class="contacts"><a href={'mailto:contact@flex-web.fr?subject='+encodeURIComponent(name)} data-conversion-event="email_click" data-conversion-service="application">{t('Écrire à Flex-Web','Email Flex-Web')}</a><a href="tel:+33757830262" data-conversion-event="phone_click" data-conversion-service="application">+33 7 57 83 02 62</a></div></section>
+  <p class="review">{t('Révisé par Flex-Web le','Reviewed by Flex-Web on')} <time datetime={updated}>{t('23 novembre 2026','23 November 2026')}</time>.</p>
+</div>
+<aside class="related"><h2>{t('Préparer votre projet','Plan your project')}</h2><nav aria-label={t('Ressources complémentaires','Related resources')}>{relatedPages(page).map(p=><a href={p.path}>{topicLabels[lang][p.id]} <span aria-hidden="true">→</span></a>)}{en&&id==='hub'&&<><a href="/applications/suisse-romande/">French-speaking Switzerland (FR) →</a><a href="/applications/belgique-francophone/">French-speaking Belgium (FR) →</a></>}{id!=='hub'&&<a href={hub.path}>{t('Toute l’offre mobile','Explore our mobile services')} →</a>}</nav></aside>
+</div>
+</MobileLayout>
+<style>
+.wrap{max-width:1170px;padding-inline:28px;margin:auto}.hero{background:linear-gradient(135deg,#f2f7fd 0%,#fff 74%);border-bottom:1px solid #e4ebf3}.crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;color:#4c6177;font-size:.85rem;padding:1.1rem 0}.crumbs a{color:#365777}.hero-grid{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(220px,1fr);gap:clamp(24px,5vw,76px);align-items:center;padding:clamp(1rem,4vw,3.2rem) 0 clamp(2rem,5vw,4.4rem)}h1,h2{color:#142b44;line-height:1.15;letter-spacing:-.032em;text-wrap:balance}h1{font-size:clamp(2rem,5vw,3.6rem);margin:0 0 1.25rem}h2{font-size:clamp(1.45rem,3vw,2rem);margin:0 0 .75rem}.lead{font-size:clamp(1.05rem,2vw,1.22rem);color:#36485b;max-width:65ch;margin:0 0 1.5rem}.action{display:inline-flex;background:#0071e3;color:#fff;border-radius:100px;padding:.76rem 1.35rem;text-decoration:none;font-weight:650}.action:hover{background:#005fbf}.offer{background:#142b44;color:#f8fbff;border-radius:22px;padding:clamp(1.5rem,3vw,2.25rem);box-shadow:0 12px 40px #173b6412}.offer h2{color:#fff;font-size:1.18rem;letter-spacing:0}.offer .amount{font-size:clamp(1.6rem,3.5vw,2.25rem);font-weight:730;line-height:1.18;margin:.85rem 0}.offer p{color:#ebf3fc}.offer a{color:#fff;font-weight:650}.body-grid{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(210px,.85fr);align-items:start;gap:clamp(28px,7vw,90px);padding-block:clamp(2.5rem,5vw,4rem)}.reading{min-width:0}.reading section+section{margin-top:2.7rem}.reading p{font-size:1.05rem;color:#3d4d5e;margin:.65rem 0 0;line-height:1.7}.budget ul{padding:0;margin:1rem 0;list-style:none}.budget li{display:flex;justify-content:space-between;gap:.75rem;border-bottom:1px solid #dae5f0;padding:.65rem 0}.budget li span{color:#294966}.case,.contact,.related{border-radius:18px;background:#f3f7fb;padding:clamp(1.1rem,3vw,2rem)}.case>a{display:inline-block;margin-top:.8rem}.faqs details{padding:.85rem 0;border-bottom:1px solid #dce3e9}.faqs summary{font-weight:650;color:#243d56}.contact .action{margin-top:1rem}.contacts{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0 0}.related h2{font-size:1.25rem}.related nav a{display:flex;justify-content:space-between;gap:8px;padding:.65rem 0;border-bottom:1px solid #d9e3ed;text-decoration:none}.related nav a:hover{text-decoration:underline}.related nav a:last-child{border:0}.reading .review{margin-top:1rem;font-size:.85rem;color:#596878}
+@media(max-width:750px){.wrap{padding-inline:1rem}.hero-grid,.body-grid{grid-template-columns:1fr}.hero-grid{gap:1.4rem}.body-grid{gap:2rem}.offer{max-width:100%}.reading section+section{margin-top:2rem}}
+</style>

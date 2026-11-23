@@ -1,0 +1,20 @@
+{
+  "id": "6b0485a09cae4d4dbe96caf4",
+  "url": "https://6b0485a09cae4d4dbe96caf4--flex-webb.netlify.app",
+  "baseId": "6b0452114b315390275a0f53",
+  "digest": "6da1234e5081e8167b35dba13edf5dffd858a306",
+  "files": 380,
+  "redirects": 452,
+  "headers": 1,
+  "functions": [
+    "automation",
+    "automation-clock"
+  ],
+  "schedules": [
+    {
+      "name": "automation-clock",
+      "cron": "*/10 * * * *"
+    }
+  ],
+  "productionLocked": true
+}
