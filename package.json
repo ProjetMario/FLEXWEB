@@ -29,6 +29,7 @@
   "devDependencies": {
     "@netlify/functions": "^6.0.0",
     "playwright": "^1.63.0",
+    "smol-toml": "1.6.0",
     "tsx": "^4.23.13"
   }
 }

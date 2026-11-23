@@ -1,0 +1,51 @@
+name: Aperçu Netlify des applications mobiles
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: flexweb-mobile-acquisition-preview
+  cancel-in-progress: false
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    environment: emdash-publication
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npx --no-install playwright install --with-deps chromium
+      - name: Construire les pages Astro
+        run: npx --no-install astro build --root acquisition-mobile
+      - name: Assembler et contrôler les fichiers modifiés
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          node acquisition-mobile/scripts/assemble.mjs
+          node acquisition-mobile/scripts/verify.mjs
+      - name: Créer uniquement un aperçu sur la base publiée
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: node acquisition-mobile/scripts/preview.mjs
+      - name: Vérifier l’aperçu à distance et les demandes simulées
+        run: |
+          preview_url=$(node -p 'require("./acquisition-mobile/.release/preview.json").url')
+          node acquisition-mobile/scripts/verify.mjs "$preview_url"
+          node acquisition-mobile/scripts/verify-pages.mjs "$preview_url"
+          node acquisition-mobile/scripts/verify-quote.mjs "$preview_url"
+          node acquisition-mobile/scripts/verify-home.mjs "$preview_url"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-acquisition-preview-${{ github.sha }}
+          include-hidden-files: true
+          path: |
+            acquisition-mobile/.release/preview*.json
+            acquisition-mobile/.release/home/*.png
+          retention-days: 14
