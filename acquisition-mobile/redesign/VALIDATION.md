@@ -1,5 +1,11 @@
 # Refonte Flex-Web du 23 novembre 2026
 
+## Correction technique avant publication
+
+L’aperçu visuellement validé est `6b04b0901a10a257d97f8a2a`. Un contrôle de navigation a reproduit cinq erreurs React sur 66 parcours. La première tentative de publication a été arrêtée avant la bascule. La correction ajoute l’adresse du pied de page au moment où React termine son rendu sur les gabarits archivés. Elle conserve les mêmes pages HTML, feuilles de style, formulaires, URL et sitemaps. Le module de l’annuaire anglais continue de traiter uniquement son pied de page statique.
+
+La matrice de 66 parcours a réussi à deux reprises avec les modules corrigés sur les pages approuvées. Les 28 vérifications complémentaires d’adresse et de consentement ont réussi. [Version technique proposée à la publication](https://6b04b389389a8c7c5547b07e--flex-webb.netlify.app/) · [Aperçu visuellement validé](https://6b04b0901a10a257d97f8a2a--flex-webb.netlify.app/)
+
 ## Page Contact et menu de l’accueil
 
 « Contact » est la quatrième entrée du menu des accueils français et anglais. Le lien mène à la page dédiée de la langue choisie. En français, la page propose l’appel, l’e-mail, l’adresse postale, les horaires et le formulaire de devis général. [Accueil](https://6b04b0901a10a257d97f8a2a--flex-webb.netlify.app/) · [Contact en français](https://6b04b0901a10a257d97f8a2a--flex-webb.netlify.app/contact/) · [Contact en anglais](https://6b04b0901a10a257d97f8a2a--flex-webb.netlify.app/en/contact/)

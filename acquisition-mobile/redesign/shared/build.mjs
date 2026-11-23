@@ -140,12 +140,22 @@ await buildOffers();
 await rm(output,{recursive:true,force:true});
 await write(newStyle,style);
 const clientSource = await readFile(new URL('./legacy-postal-client.mjs',import.meta.url),'utf8');
-const client = clientSource+'\ninstallPostalFooter('+JSON.stringify(footerBrand)+','+JSON.stringify(postalAddress)+');\n';
+const client = clientSource+'\nconst brand = '+JSON.stringify(footerBrand)+';\nconst postal = '+JSON.stringify(postalAddress)+';\n';
 const clientPath = '/studio-redesign/postal-footer-'+sha1(client).slice(0,12)+'.mjs';
 await write(clientPath,client);
 await parallel(postalEntrypoints,3,async path => {
-  const dependency = Buffer.from('\nimport '+JSON.stringify(clientPath)+';\n');
-  await write(path, Buffer.concat([await original(path), dependency]));
+  const source = (await original(path)).toString('utf8');
+  if (path.startsWith('/_astro/Footer.')) {
+    // The two certified bundles directly render one or three language variants.
+    const opening = 'e.jsx("footer",{className:';
+    const count = source.split(opening).length-1;
+    assert.equal(count, path.includes('D7N99i4O') ? 3 : 1, path+' changed its footer layout');
+    const hook = 'import {attachPostalAddress} from '+JSON.stringify(clientPath)+';\n';
+    await write(path, hook+source.replaceAll(opening, 'e.jsx("footer",{ref:attachPostalAddress,className:'));
+  } else {
+    const hook = '\nimport {installDirectoryAddress} from '+JSON.stringify(clientPath)+';\ninstallDirectoryAddress();\n';
+    await write(path, source+hook);
+  }
 });
 await parallel(styles,3,async path=>write(path,Buffer.concat([await original(path),Buffer.from('\n'),style,archiveFooterStyle])));
 await parallel(routes, 4, async route => {
