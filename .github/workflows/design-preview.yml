@@ -26,7 +26,7 @@ jobs:
       - run: npm install --prefix "$RUNNER_TEMP/flexweb-a11y" --no-save --no-package-lock --ignore-scripts axe-core@4.14.0
       - name: Construire les pages et les feuilles de style
         run: |
-          node --test acquisition-mobile/redesign/manifest.test.mjs
+          node --test acquisition-mobile/redesign/manifest.test.mjs acquisition-mobile/redesign/shared/postal-footer.test.mjs
           node acquisition-mobile/catalogue/inventory.mjs
           node acquisition-mobile/redesign/home/build.mjs
           node acquisition-mobile/redesign/shared/build.mjs

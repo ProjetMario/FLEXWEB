@@ -129,6 +129,7 @@
 .atelier .faq summary { cursor: pointer; }
 .atelier .faq details p { margin-top: 10px; color: #41434a; }
 .atelier .studio-foot { background: var(--atelier-paper); border: 0; }
+.atelier .foot-inner [data-flexweb-postal-address] { line-height: 1.55; color: #424245; }
 .atelier .foot-inner { max-width: 1180px; padding-block: 24px; }
 @media(max-width: 900px){
   .atelier .header-inner { width: calc(100% - 36px); }

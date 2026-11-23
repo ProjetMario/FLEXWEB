@@ -2,6 +2,7 @@
 // catalogue candidate 6b04922cb721fd1ae1c8d810, including their exact scripts.
 // The older StudioLanding source predates the inline form and project gallery.
 import { parse } from "parse5";
+import { withPostalFooter } from "../../shared/postal-footer.mjs";
 import fr from "../baseline/fr.html?raw";
 import en from "../baseline/en.html?raw";
 
@@ -33,7 +34,7 @@ export function publishedContent(lang) {
       .replace('aria-label="English"', 'aria-label="EN – English"'),
     contact: markup(byId("contact")),
     faq: markup(byId("faq")),
-    footer: markup(footer),
+    footer: withPostalFooter(markup(footer), lang),
     scriptsAndConsent: source.slice(footer.sourceCodeLocation.endOffset, body.endTag.startOffset),
   };
 }

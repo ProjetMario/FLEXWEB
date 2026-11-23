@@ -9,6 +9,11 @@ import {cache, filePath, root, sha, site} from '../scripts/baseline.mjs';
 import {assertFunctions, digestOf} from '../scripts/deploys.mjs';
 
 export const directory = join(cache, 'redesign');
+// Public entrypoints referenced by the certified catalogue's footer islands and English directory.
+export const postalEntrypoints = [
+  '/_astro/Footer.D7N99i4O.js', '/_astro/Footer.D_sL6SOi.js',
+  '/_astro/Acquisition.astro_astro_type_script_index_0_lang.CxZlQFfq.js',
+];
 export const catalogue = JSON.parse(await readFile(join(root, 'catalogue/release-candidate.json'), 'utf8'));
 
 export async function save(name, data) {
@@ -45,6 +50,8 @@ export function assemble(original, sources, report) {
   const uploads = new Map(), changes = new Map();
   const html = changedSet(report.changedHTML), styles = changedSet(report.changedStylesheets);
   assert.ok(html.size > 0 && styles.size > 0, 'Rapport des pages et styles absent');
+  const scripts = changedSet(report.changedPostalEntrypoints ?? []);
+  for (const script of scripts) assert.ok(postalEntrypoints.some(path => path.toLowerCase() === script), 'Unexpected footer entrypoint '+script);
   const home = new Set(['/index.html', '/en/index.html']);
   for (const [owner, items] of Object.entries(sources)) {
     assert.ok(['home', 'shared'].includes(owner));
@@ -55,8 +62,9 @@ export function assemble(original, sources, report) {
       const asset = /^\/studio-redesign\/[a-z0-9_.@/-]+\.(?:css|js|mjs|webp|avif|jpe?g|png|svg|woff2?|mp4|webm)$/.test(key);
       const page = owner === 'home' ? home.has(key) : html.has(key) && key.endsWith('.html') && !home.has(key);
       const style = owner === 'shared' && styles.has(key) && /^\/_astro\/[\w.@-]+\.css$/.test(key);
-      assert.ok(page || style || asset, 'Modification hors du périmètre visuel ' + path);
-      if (page || style) assert.ok(Object.hasOwn(original, key), 'Page ou feuille absente du catalogue ' + key);
+      const script = owner === 'shared' && scripts.has(key);
+      assert.ok(page || style || script || asset, 'Modification hors du périmètre visuel ' + path);
+      if (page || style || script) assert.ok(Object.hasOwn(original, key), 'Page ou feuille absente du catalogue ' + key);
       assert.notEqual(hash, original[key], 'Fichier identique annoncé modifié ' + path);
       assert.ok(bytes.byteLength > 0, 'Fichier vide ' + path);
       changes.set(key, {path, hash, owner, added: !Object.hasOwn(original, key)});
@@ -65,7 +73,7 @@ export function assemble(original, sources, report) {
     }
   }
   for (const key of home) assert.equal(changes.get(key)?.owner, 'home', key);
-  for (const key of [...html, ...styles]) assert.equal(changes.get(key)?.owner, 'shared', key);
+  for (const key of [...html, ...styles, ...scripts]) assert.equal(changes.get(key)?.owner, 'shared', key);
   return {files, uploads, changes};
 }
 

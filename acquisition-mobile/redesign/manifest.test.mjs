@@ -39,3 +39,14 @@ test('refuse une langue ou un gabarit annoncé mais absent', () => {
     assert.throws(() => assemble(original, input, report));
   }
 });
+
+test('autorise uniquement les trois anciens modules du pied de page', () => {
+  const path = '/_astro/Footer.D7N99i4O.js';
+  const input = outputs();
+  input.shared.push(item(path));
+  const withModule = {...original, [path.toLowerCase()]: unchanged};
+  const allowed = {...report, changedPostalEntrypoints: [path]};
+  assert.equal(assemble(withModule, input, allowed).files[path.toLowerCase()], sha(Buffer.from(path)));
+  assert.throws(() => assemble(withModule, input, {...report, changedPostalEntrypoints: ['/_astro/contact.js']}));
+  assert.throws(() => assemble(withModule, outputs(), allowed));
+});

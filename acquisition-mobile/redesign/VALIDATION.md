@@ -1,8 +1,14 @@
 # Refonte Flex-Web du 23 novembre 2026
 
-## Aperçu à valider avec les trois offres françaises
+## Pied de page du nouvel aperçu
 
-Le brouillon Netlify `6b04a78f0f68c45095100b52` simplifie trois pages du premier aperçu. La comparaison des 160 330 fichiers hébergés confirme trois HTML modifiés et 160 327 empreintes identiques, dont celles des deux accueils, des formulaires et des 85 sous-sitemaps. Le sitemap compte 151 507 URL uniques. [Manifeste du nouvel aperçu](release-candidate.json) · [Sitemap](https://6b04a78f0f68c45095100b52--flex-webb.netlify.app/sitemap.xml)
+Le pied de page affiche « Flex Web by Flex Immo », 93 chemin de la Combe, 73420 Voglans, France. Les deux accueils, les offres et les devis servent les coordonnées dans leur HTML. Les modèles archivés utilisent leurs ressources communes pour afficher le même bloc, avec un affichage de repli quand JavaScript est désactivé. Les démonstrations de sites clients gardent leurs propres coordonnées. [Voir le pied de page](https://6b04aceb97d3a6cb2155e5c9--flex-webb.netlify.app/#coordonnees) · [Mentions légales](https://flex-web.fr/mentions-legales/)
+
+Les 22 contrôles sur 11 pages à 390 et 1 440 px ont retrouvé une seule adresse visible par pied de page et ont ouvert les préférences de cookies. Le contrôle de navigation sur 39 affichages a réussi. Le sitemap de l’aperçu contient 151 507 URL dans 85 sous-sitemaps. [Sitemap](https://6b04aceb97d3a6cb2155e5c9--flex-webb.netlify.app/sitemap.xml)
+
+## Aperçu précédent avec les trois offres françaises
+
+Le brouillon Netlify `6b04a78f0f68c45095100b52` simplifie trois pages du premier aperçu. La comparaison des 160 330 fichiers hébergés confirme trois HTML modifiés et 160 327 empreintes identiques, dont celles des deux accueils, des formulaires et des 85 sous-sitemaps. Le sitemap compte 151 507 URL uniques. [Manifeste de l’aperçu des trois offres](https://github.com/ProjetMario/FLEXWEB/blob/3dee403/acquisition-mobile/redesign/release-candidate.json) · [Sitemap](https://6b04a78f0f68c45095100b52--flex-webb.netlify.app/sitemap.xml)
 
 | Offre | Ce que le visiteur peut décider | Mots visibles sur mobile, avant → après |
 |---|---|---:|

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { footerBrand, postalAddress } from '../../src/data/business.ts';
 
 const origin = new URL(process.argv[2]).origin;
 const directory = fileURLToPath(new URL('../.release/redesign/qa/' + new URL(origin).hostname + '/', import.meta.url));
@@ -40,6 +41,15 @@ async function check(page, path, width) {
     assert.doesNotMatch(layout.robots, /noindex/i);
   }
   if (path === noindexSample) assert.match(layout.robots, /noindex/i);
+  if (path !== missing && path !== noindexSample) {
+    const address = page.locator('footer address[data-flexweb-postal-address]');
+    await address.waitFor({state:'visible', timeout:10000});
+    assert.equal(await address.count(), 1, path);
+    const text = await address.innerText();
+    for (const line of [footerBrand, postalAddress.streetAddress, postalAddress.postalCode+' '+postalAddress.addressLocality]) {
+      assert.ok(text.includes(line), path+' — '+line);
+    }
+  }
   if (path === '/' || path === '/en/') {
     const french = path === '/';
     const text = (await h1.innerText()).replace(/\s+/g, '');

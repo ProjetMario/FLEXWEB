@@ -11,9 +11,17 @@ export const canonicalUrlFor = (pathname: string) => {
   const path = pathname === "/" ? "/" : `${pathname.replace(/\/+$/, "")}/`;
   return new URL(path, business.url).toString();
 };
+export const footerBrand = "Flex Web by Flex Immo";
+export const postalAddress = {
+  "@type": "PostalAddress",
+  streetAddress: "93 chemin de la Combe",
+  postalCode: "73420",
+  addressLocality: "Voglans",
+  addressCountry: "FR",
+};
 export const organizationSchema = {
   "@type": "ProfessionalService", "@id": `${business.url}/#organization`, ...business,
-  address: { "@type": "PostalAddress", streetAddress: "93 chemin de la Combe", postalCode: "73420", addressLocality: "Voglans", addressCountry: "FR" },
+  address: postalAddress,
   logo: `${business.url}/logo.png`, image: `${business.url}/logo.png`,
   areaServed: [
     { "@type": "AdministrativeArea", name: "Savoie" },
