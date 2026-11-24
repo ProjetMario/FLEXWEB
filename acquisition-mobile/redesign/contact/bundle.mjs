@@ -8,7 +8,12 @@ import {cache} from '../../scripts/baseline.mjs';
 
 export const cataloguePrefixes = ['/territoires/', '/en/locations/', '/projets-sites/'];
 export const bundleDirectory = resolve(cache, 'contact', 'edge-bundle');
-export async function buildEdge() {
+const catalogueRules = cataloguePrefixes.map(prefix => ({function:'public-contact', path:prefix + '*'}));
+export const publicPageRules = [{
+  function:'public-contact', path:'/*',
+  excludedPath:['/.netlify/*','/_astro/*','/_next/*','/images/*','/sitemaps/*','/studio-redesign/*','/contact-assets/*'],
+}];
+export async function buildEdge(declarations = catalogueRules) {
   // Use the same official bundler as the installed Netlify CLI.
   const executable = execFileSync('which', ['netlify'], {encoding:'utf8'}).trim();
   const cliRequire = createRequire(await realpath(executable));
@@ -17,7 +22,6 @@ export async function buildEdge() {
   const root = resolve(source, '../../../..');
   await rm(bundleDirectory, {recursive:true, force:true});
   await mkdir(bundleDirectory, {recursive:true});
-  const declarations = cataloguePrefixes.map(prefix => ({function:'public-contact', path:prefix + '*'}));
   const {manifest} = await bundle([source], bundleDirectory, declarations, {basePath:root, rootPath:root});
   assert.ok(manifest?.bundles?.length && manifest.routes.length === declarations.length);
   return manifest;

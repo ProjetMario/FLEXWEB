@@ -2,7 +2,7 @@ import {readFile, writeFile, readdir} from 'node:fs/promises';
 import {join, relative, resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 
-import {isPublicContactAsset, hasPublicMailbox, transformPublicContact} from './public-contact.mjs';
+import {isPublicContactAsset, publishedAddresses, transformPublicContact} from './public-contact.mjs';
 
 export async function transformPublicDirectory(dist) {
   const pending = [dist];
@@ -17,7 +17,7 @@ export async function transformPublicDirectory(dist) {
       const path = '/' + relative(dist,filename).split('\\').join('/');
       const input = await readFile(filename,'utf8');
       const output = transformPublicContact(path, input);
-      if (hasPublicMailbox(output)) throw new Error('Contact public résiduel : ' + path);
+      if (publishedAddresses(output).length) throw new Error('Contact public résiduel : ' + path);
       if (output !== input) { await writeFile(filename,output); changed++; }
       files++;
     }));

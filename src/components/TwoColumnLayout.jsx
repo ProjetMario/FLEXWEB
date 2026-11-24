@@ -1,5 +1,12 @@
 import { MotionWrapper } from "./utils/MotionWrapper.jsx";
 
+const formUrl = /(https:\/\/flex-web\.fr\/contact\/|https:\/\/www\.medconsodev\.eu\/mediation-consommation-demande\.php)/;
+function linkedParagraph(text) {
+  return text.split(formUrl).map((part, index) => index % 2 === 1
+    ? <a key={index} href={part} className="underline">{part}</a>
+    : part);
+}
+
 export default function TwoColumnLayout({ data = { sections: [], updated: "" } }) {
   const { sections = [], updated = "" } = data;
 
@@ -19,7 +26,7 @@ export default function TwoColumnLayout({ data = { sections: [], updated: "" } }
               </div>
               <div>
                 {section.content.map((para, pIdx) => (
-                  <p key={pIdx} className="text-sm font-light text-gray-700 mb-4">{para}</p>
+                  <p key={pIdx} className="text-sm font-light text-gray-700 mb-4">{linkedParagraph(para)}</p>
                 ))}
               </div>
             </div>
