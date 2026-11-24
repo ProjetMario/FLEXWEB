@@ -50,12 +50,12 @@ export default function Contact({ data = {} }) {
             <a href="/demarrer/?service=application" className="text-[#0071e3] underline">devis application</a>.
           </p>
           <p className="mt-4 text-sm text-[#6e6e73]">
-            Vous pouvez aussi nous écrire :{" "}
+            Vous pouvez aussi utiliser notre{" "}
             <a
-              href="mailto:contact@flex-web.fr"
+              href="/contact/"
               className="text-[#0071e3] underline"
             >
-              contact@flex-web.fr
+              formulaire de contact
             </a>
           </p>
         </div>

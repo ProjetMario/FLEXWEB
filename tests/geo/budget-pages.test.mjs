@@ -24,7 +24,9 @@ test('budget and francophonie pages have usable contacts, FAQs and translations 
         assert.equal(await page.locator('h1').count(), 1, route);
         assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${route} overflow at ${width}`);
         const main = page.locator('main');
-        assert((await main.locator('a[href^="mailto:"]').count()) > 0, route);
+        const contact = main.locator(`a[href="${route.startsWith('/en/') ? '/en/contact/' : '/contact/'}"]`);
+        if (route === '/contact/') assert(await main.locator('form').count(), route);
+        else assert(await contact.count(), route);
         assert((await main.locator('a[href^="tel:"]').count()) > 0, route);
         assert.doesNotMatch(await main.innerText(), /Témoignage client à ajouter|Résultats chiffrés à confirmer|Deux fiches seront publiées/);
         if (routes.includes(route)) {
@@ -33,8 +35,8 @@ test('budget and francophonie pages have usable contacts, FAQs and translations 
           const faq = main.locator('details').first();
           await faq.locator('summary').click();
           assert.equal(await faq.getAttribute('open'), '');
-          await main.locator('a[href^="mailto:"]').first().focus();
-          assert(await main.locator('a[href^="mailto:"]').first().evaluate(node => document.activeElement === node));
+          await contact.first().focus();
+          assert(await contact.first().evaluate(node => document.activeElement === node));
           await page.screenshot({path:`.cms/geo-smoke/${route.split('/').filter(Boolean).join('-')}-${width}.png`, fullPage:true});
         }
       }
@@ -72,7 +74,10 @@ test('French and English homepages preserve all baseline content and are capture
           // Stabilise the existing entrance animations without changing content.
           await page.waitForTimeout(1200);
           let text = (await page.locator('body').innerText()).replace(/\s+/g,' ').trim();
-          if (route === '/' && version === 'before') text = text.replace('FLEX-WEB · SAVOIE, HAUTE-SAVOIE & FRANCE ', '');
+          if (version === 'before') {
+            if (route === '/') text = text.replace('FLEX-WEB · SAVOIE, HAUTE-SAVOIE & FRANCE ', '').replaceAll('contact@flex-web.fr','Formulaire de contact');
+            else text = text.replaceAll('contact@flex-web.fr','Contact form').replaceAll('Email about a website','Discuss a website').replaceAll('Email about an app','Discuss an app');
+          }
           visible.push(text);
           await page.screenshot({path:`.cms/geo-smoke/home-${route === '/' ? 'fr' : 'en'}-${version}-${width}.png`, fullPage:true});
         }

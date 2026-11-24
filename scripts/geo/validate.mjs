@@ -71,7 +71,7 @@ if(process.env.GEO_BASELINE_FILE){
 }
 for(const file of ['llms.txt','llms-full.txt']) {
   const summary=await readFile(path.join(root,file),'utf8');
-  for(const text of ['Fleximmo','Voglans','contact@flex-web.fr','2026-11-03','/en/crm/','/crm-automatisation-entreprise/'])assert(summary.includes(text),`${file}: ${text}`);
+  for(const text of ['Fleximmo','Voglans','https://flex-web.fr/contact/','2026-11-03','/en/crm/','/crm-automatisation-entreprise/'])assert(summary.includes(text),`${file}: ${text}`);
   for(const match of summary.matchAll(/https:\/\/flex-web\.fr([^\s)]+)/g))await access(htmlPath(new URL(match[0]).pathname));
 }
 const robots=await readFile(path.join(root,'robots.txt'),'utf8');

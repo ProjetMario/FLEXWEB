@@ -1,4 +1,5 @@
 ---
+import {contactFormAssets, renderContactForm} from '../../../acquisition-mobile/redesign/contact/form.mjs';
 import websitePreview from '../../../acquisition-mobile/redesign/home/public/studio-redesign/2savoie-immo.webp?url';
 import { projectFeature } from '../../../acquisition-mobile/redesign/shared/feature.mjs';
 import ApplicationLinks from '../applications/ApplicationLinks.astro';
@@ -16,7 +17,7 @@ const home = en ? '/en/' : '/';
 // Generic pages and contact do not imply a project type.
 const conversionService = page.service || (['/en/', '/en/about/', '/en/pricing/', '/en/contact/', '/francophonie/', '/en/french-speaking-clients/'].includes(page.path) ? 'unknown' : 'automation');
 const cta = page.cta ?? { label: 'Discuss your project', href: '/en/contact/' };
-const ctaEvent = cta.href.startsWith('mailto:') ? 'email_click' : cta.href.startsWith('tel:') ? 'phone_click' : 'quote_click';
+const ctaEvent = cta.href === '#contact-form' ? undefined : cta.href.startsWith('mailto:') ? 'email_click' : cta.href.startsWith('tel:') ? 'phone_click' : 'quote_click';
 const updatedOn = page.updatedOn ?? editorialDates[page.path] ?? geoUpdatedOn;
 const newProjectPage = ['/creation-site-internet-pas-cher/', '/francophonie/', '/en/affordable-websites/', '/en/french-speaking-clients/'].includes(page.path);
 const budgetPage = ['/creation-site-internet-pas-cher/', '/en/affordable-websites/'].includes(page.path);
@@ -36,7 +37,10 @@ if (page.kind === 'article') schemas.push({ '@type': 'Article', '@id': `${url}#a
 if (page.faq.length) schemas.push({ '@type': 'FAQPage', '@id': `${url}#questions`, mainEntity: page.faq.map(faq => ({ '@type': 'Question', name: faq.question, acceptedAnswer: { '@type': 'Answer', text: faq.answer } })) });
 ---
 <ResourceLayout title={page.title} description={page.description} lang={page.lang}>
-  <StructuredData schemas={schemas} slot="head" />
+  <Fragment slot="head">
+    <StructuredData schemas={schemas} />
+    {page.path === '/en/contact/' && <Fragment set:html={contactFormAssets} />}
+  </Fragment>
   <article class="geo-content">
     <nav aria-label={en ? 'Breadcrumb' : 'Fil d’Ariane'}><a href={home}>{en ? 'Home' : 'Accueil'}</a>{page.path !== home && <span aria-current="page">{page.breadcrumbLabel ?? (en ? 'Flex-Web · Services & guides' : page.kind === 'article' ? 'Guides pratiques' : 'CRM & automatisation')}</span>}</nav>
     <header>
@@ -47,6 +51,7 @@ if (page.faq.length) schemas.push({ '@type': 'FAQPage', '@id': `${url}#questions
       <a class="action" href={cta.href} data-conversion-event={ctaEvent} data-conversion-service={conversionService}>{cta.label} ↗</a>
       {newProjectPage && <p>{en ? 'Businesses and individuals: email or telephone.' : 'Entreprises et particuliers : échangeons par e-mail ou téléphone.'} <a href={projectEmail(page.title)} data-conversion-event="email_click" data-conversion-service={conversionService}>{business.email}</a> · <a href={`tel:${business.telephone}`} data-conversion-event="phone_click" data-conversion-service={conversionService}>+33 7 57 83 02 62</a></p>}
     </header>
+    {page.path === '/en/contact/' && <Fragment set:html={renderContactForm('en')} />}
     {page.path === '/en/websites/' && <Fragment set:html={projectFeature('website','en',websitePreview)} />}
     {page.sections.map(section => <section class="geo-section">
       <h2>{section.title}</h2>

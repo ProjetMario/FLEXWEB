@@ -166,7 +166,7 @@ export default function StartProject() {
     } catch (err) {
       setRetrying(false);
       setError(service === "application" && isTemporaryIntakeFailure(err)
-        ? "Nous n’avons pas pu confirmer l’envoi. Vous pouvez réessayer sans perdre vos informations, ou écrire à contact@flex-web.fr."
+        ? "Nous n’avons pas pu confirmer l’envoi. Vous pouvez réessayer sans perdre vos informations, ou utiliser le formulaire sur https://flex-web.fr/contact/."
         : err.name === "TimeoutError"
           ? "La connexion a pris trop de temps. Réessayez : votre demande ne sera pas dupliquée."
           : err.message);

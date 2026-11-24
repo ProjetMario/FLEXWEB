@@ -6,6 +6,13 @@ const respond = (error: string, status: number) =>
     { error },
     { status, headers: { "Cache-Control": "no-store" } },
   );
+// The upstream CRM can be released independently. Translate its previous public
+// error messages without rewriting visitor data or successful private responses.
+const previousErrors = new Map([
+  ["Lien privé invalide ou expiré. Contactez contact@flex-web.fr.", "Lien privé invalide ou expiré. Pour demander de l’aide, utilisez le formulaire sur https://flex-web.fr/contact/."],
+  ["Contactez contact@flex-web.fr pour toute question avant commande.", "Pour toute question avant commande, utilisez le formulaire sur https://flex-web.fr/contact/."],
+  ["Le service est momentanément indisponible. Vos saisies sont conservées à l’écran. Contactez contact@flex-web.fr si le problème persiste.", "Le service est momentanément indisponible. Vos saisies sont conservées à l’écran. Si le problème persiste, utilisez le formulaire sur https://flex-web.fr/contact/."],
+]);
 export default async (request: Request, context: Context) => {
   // A promoted manual deploy may retain its original preview metadata. Only
   // Netlify's canonical request URL may forward requests to the live service;
@@ -36,7 +43,7 @@ export default async (request: Request, context: Context) => {
   const secret = Netlify.env.get("AUTOMATION_SHARED_SECRET");
   if (!base || !secret || secret.length < 32)
     return respond(
-      "Le parcours en ligne est en cours d’activation. Contactez contact@flex-web.fr pour démarrer votre projet.",
+      "Le parcours en ligne est en cours d’activation. Pour décrire votre projet, utilisez le formulaire sur https://flex-web.fr/contact/.",
       503,
     );
   if (
@@ -67,7 +74,17 @@ export default async (request: Request, context: Context) => {
     );
     if (!response.headers.get("content-type")?.includes("application/json"))
       return respond("Le service est momentanément indisponible.", 502);
-    return new Response(await response.text(), {
+    let content = await response.text();
+    if (!response.ok && content.includes("contact@flex-web.fr")) {
+      try {
+        const data = JSON.parse(content);
+        if (previousErrors.has(data?.error)) {
+          data.error = previousErrors.get(data.error);
+          content = JSON.stringify(data);
+        }
+      } catch { /* Preserve an unrecognized upstream response. */ }
+    }
+    return new Response(content, {
       status: response.status,
       headers: {
         "Content-Type": "application/json",
@@ -77,7 +94,7 @@ export default async (request: Request, context: Context) => {
     });
   } catch {
     return respond(
-      "Connexion interrompue. Réessayez ou contactez contact@flex-web.fr.",
+      "Connexion interrompue. Réessayez dans quelques instants. Si le problème persiste, utilisez le formulaire sur https://flex-web.fr/contact/.",
       503,
     );
   }

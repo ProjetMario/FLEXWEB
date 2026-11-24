@@ -10,10 +10,9 @@
       "event": "phone_click"
     },
     {
-      "label": "E-mail",
-      "value": "contact@flex-web.fr",
-      "href": "mailto:contact@flex-web.fr?subject=Mon%20projet%20avec%20Flex-Web",
-      "event": "email_click"
+      "label": "Formulaire",
+      "value": "Envoyer un message",
+      "href": "#contact-form"
     },
     {
       "label": "Horaires",

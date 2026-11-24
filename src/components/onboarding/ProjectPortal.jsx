@@ -125,7 +125,7 @@ export default function ProjectPortal() {
           Ouvrez le lien privé obtenu à la création de votre demande ou reçu par
           e-mail. Si vous l’avez perdu, contactez-nous.
         </p>
-        <a className="flow-button" href="mailto:contact@flex-web.fr">
+        <a className="flow-button" href="/contact/">
           Contacter FLEX-WEB
         </a>
         <div className="flow-actions">

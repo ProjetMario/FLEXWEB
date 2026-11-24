@@ -60,7 +60,7 @@ export async function getProject(token: string | null) {
   if (!project || project.accessExpiresAt < new Date())
     throw new HttpError(
       401,
-      "Lien privé invalide ou expiré. Contactez contact@flex-web.fr.",
+      "Lien privé invalide ou expiré. Pour demander de l’aide, utilisez le formulaire sur https://flex-web.fr/contact/.",
     );
   return project;
 }

@@ -1,10 +1,9 @@
 import assert from 'node:assert/strict';
 import {parse} from 'parse5';
-import {createHash} from 'node:crypto';
 import {parallel} from '../netlify.mjs';
 import {readHTTP} from './inspect.mjs';
 
-export async function checkSupport(host,files,indexed) {
+export async function checkSupport(host,files,indexed,verifyBody) {
   const groups=new Map();
   for(const file of Object.keys(files).sort()){
     if(!file.startsWith('/projets-sites/')||!file.endsWith('/index.html'))continue;
@@ -22,7 +21,7 @@ export async function checkSupport(host,files,indexed) {
     const path=paths[Math.floor(paths.length/2)];
     const {bytes,type}=await readHTTP(host,path);
     assert.match(type,/text\/html/i);
-    assert.equal(createHash('sha1').update(bytes).digest('hex'),files[path+'index.html']);
+    await verifyBody(path+'index.html',path,bytes);
     function hasNoindex(node){
       const attrs=Object.fromEntries((node.attrs||[]).map(a=>[a.name,a.value]));
       if(node.tagName==='meta' && attrs.name==='robots' && /\bnoindex\b/i.test(attrs.content||''))return true;

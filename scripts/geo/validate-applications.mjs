@@ -33,7 +33,8 @@ for(const page of allPages){
  const schemas=all.filter(n=>n.tagName==='script'&&attr(n,'type')==='application/ld+json').flatMap(n=>{const s=JSON.parse((n.childNodes||[]).map(c=>c.value||'').join(''));return s['@graph']||[s];});
  for(const type of ['ProfessionalService','WebSite','WebPage','BreadcrumbList','FAQPage',page.topic.kind==='article'?'Article':'Service'])assert(schemas.some(s=>s['@type']===type),page.path+' '+type);
  const links=all.filter(n=>n.tagName==='a').map(n=>attr(n,'href')||'');
- assert(links.some(x=>x.startsWith('mailto:contact@flex-web.fr')),page.path+' email');
+ assert(links.includes(page.lang === 'fr' ? '/contact/' : '/en/contact/'),page.path+' formulaire de contact');
+ assert(!links.some(x=>/^mailto:contact(?:@|%40)flex-web\.fr(?:\?|$)/i.test(x)),page.path+' ancien contact');
  assert(links.includes('tel:+33757830262'),page.path+' phone');
  if(!base)for(const href of links.filter(x=>x.startsWith('/')&&!x.startsWith('//'))){const u=new URL(href,origin);await access(htmlPath(u.pathname)).catch(()=>assert.fail(page.path+' broken '+href));}
 }

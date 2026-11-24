@@ -37,7 +37,7 @@ for(let i=0;i<all.length;i++){
  }
  const noOffice=lang==='de'?'Diese Seite behauptet keine Niederlassung und keine Kunden in dieser Gemeinde.':lang==='it'?'Questa pagina non dichiara una sede né clienti in questo comune.':'Cette fiche ne revendique pas de bureau ni de client dans la commune';
  assert(html.includes(noOffice),`${route}: no invented office`);
- if(audience==='particuliers'||location.country==='CH')assert(html.includes('mailto:contact@flex-web.fr'),`${route}: direct contact`);
+ if(audience==='particuliers'||location.country==='CH')assert(html.includes(`href="${lang==='fr'?'/contact/':'/en/contact/'}"`),`${route}: formulaire de contact`);
  else assert(html.includes('/demarrer/?service=site'),`${route}: professional quote`);
  if(sampleIndexes.has(i)){
   const walk=n=>[n,...(n.childNodes||[]).flatMap(walk)], attr=(n,k)=>n.attrs?.find(a=>a.name===k)?.value;

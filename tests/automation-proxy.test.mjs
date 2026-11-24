@@ -88,3 +88,21 @@ test('the same handler and preview metadata satisfy the strict release probes be
     assert.equal(calls.length, 0); assert.equal(reads.length, 0);
   });
 });
+
+test('upstream compatibility only changes a known public error and preserves visitor fields', async () => {
+  await withProvider(async () => {
+    const fields = {email:['contact@flex-web.fr']};
+    const send = () => handler(new Request(canonical + '/api/automation/status', {
+      method:'POST', headers:{origin:canonical,'content-type':'application/json'}, body:'{}',
+    }), context('production','status'));
+    globalThis.fetch = async () => Response.json({error:'Lien privé invalide ou expiré. Contactez contact@flex-web.fr.', fields}, {status:403});
+    const response = await send();
+    assert.equal(response.status,403);
+    const data = await response.json();
+    assert.match(data.error,/https:\/\/flex-web\.fr\/contact\//);
+    assert.doesNotMatch(data.error,/@/);
+    assert.deepEqual(data.fields,fields);
+    globalThis.fetch = async () => Response.json({email:'contact@flex-web.fr'});
+    assert.deepEqual(await (await send()).json(),{email:'contact@flex-web.fr'});
+  });
+});

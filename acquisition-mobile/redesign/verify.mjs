@@ -36,8 +36,10 @@ async function followContactLink(page, lang) {
   assert.equal(await page.locator('html').getAttribute('lang'), lang);
   const main = page.getByRole('main').last();
   assert.equal(await page.getByRole('heading', { level: 1 }).count(), 1);
-  const email = 'mailto:' + business.email;
-  for (const selector of ['a[href="' + email + '"], a[href^="' + email + '?"]', 'a[href="tel:' + business.telephone + '"]', 'a[href="/demarrer/"]']) {
+  const channel = process.argv.includes('--legacy-contact')
+    ? 'a[href^="mailto:' + business.email + '"]'
+    : 'form[name="flexweb-contact"] textarea[name="message"]';
+  for (const selector of [channel, 'a[href="tel:' + business.telephone + '"]', 'a[href="/demarrer/"]']) {
     assert.ok(await main.locator(selector).first().isVisible(), path + ' — ' + selector);
   }
   assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), path + ' déborde sur mobile');
