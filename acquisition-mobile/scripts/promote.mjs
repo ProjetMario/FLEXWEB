@@ -34,6 +34,12 @@ assert.equal(receipt.sitemaps, 85);
 const current = async () => (await api('/sites/' + site)).published_deploy;
 const fetchDeploy = id => api('/deploys/' + id);
 const post = path => api(path, { method: 'POST' }, true);
+// Netlify detects forms across the complete archive before serving this deploy.
+// Keep the published site locked until the selected preview is ready and verified.
+if (contactRelease && mode === '--check') {
+  console.log('Attente du traitement du formulaire dans l’aperçu Netlify ' + approvedId);
+  await waitDeploy(approvedId, 5400);
+}
 const [base, preview, live] = await Promise.all([fetchDeploy(baseId), fetchDeploy(approvedId), current()]);
 for (const deploy of [base, preview, live]) assert.equal(deploy.site_id, site);
 assert.equal(preview.context, 'deploy-preview');
@@ -76,9 +82,11 @@ async function verifyCopy(candidate) {
   assert.deepEqual(rules(candidate), rules(preview));
 }
 if (live.id !== baseId) await verifyCopy(live);
-async function checkContact(host) {
+async function checkContact(host, expectedFormId) {
   const forms = (await netJSON('/sites/' + site + '/forms')).filter(form => form.name === 'flexweb-contact' && form.site_id === site);
   assert.equal(forms.length, 1, 'Formulaire de contact non enregistré chez Netlify');
+  assert.match(forms[0].id, /^[a-f0-9]{24}$/);
+  if (expectedFormId) assert.equal(forms[0].id, expectedFormId, 'Netlify a remplacé le formulaire enregistré');
   assert.deepEqual(forms[0].fields.map(field => field.name).sort(), ['bot-field','consent','email','language','message','name','topic']);
   const {assertServedHTML} = await import('../redesign/contact/promotion.mjs');
   await Promise.all(['/contact/', '/en/contact/'].map(async route => {
@@ -88,8 +96,9 @@ async function checkContact(host) {
   }));
   const result = await run(process.execPath, [join(root,'redesign/contact/public-check.mjs'), host, approvedId], {timeout:600_000});
   console.log(result.stdout.trim());
+  return forms[0].id;
 }
-if (contactRelease) await checkContact(receipt.url);
+const formId = contactRelease ? await checkContact(receipt.url, receipt.formId) : undefined;
 if (mode === '--check') {
   console.log('Promotion vérifiable :', approvedId, receipt.files, 'fichiers et fonctions validés. Production :', live.id);
   process.exit(0);
@@ -197,13 +206,13 @@ try {
   }
   await restoreLock(candidate.id);
   await publicChecks();
-  if (contactRelease) await checkContact('https://flex-web.fr');
+  if (contactRelease) await checkContact('https://flex-web.fr', formId);
   if (routingOnly || contactRelease) {
     const result = await run(process.execPath, [join(root, 'catalogue/verify-legacy-redirects.mjs'), 'https://flex-web.fr'], {timeout:300_000});
     console.log(result.stdout.trim());
   }
   assert.equal((await current()).id, candidate.id);
-  const result = { approvedId, productionId: candidate.id, previousId: baseId, digest: receipt.digest, files: receipt.files };
+  const result = { approvedId, productionId: candidate.id, previousId: baseId, digest: receipt.digest, files: receipt.files, ...(contactRelease ? {formId} : {}) };
   await put(cache, 'production.json', JSON.stringify(result, null, 2) + '\n');
   console.log(result);
 } finally {
