@@ -5,11 +5,14 @@ import {setTimeout as sleep} from 'node:timers/promises';
 import {filesOf, netJSON, parallel, rawFile, request, waitDeploy} from '../catalogue/netlify.mjs';
 import {sha, site} from '../scripts/baseline.mjs';
 import {assertFunctions, digestOf, functionPayload} from '../scripts/deploys.mjs';
-import {catalogue, directory, prepare, save} from './manifest.mjs';
+import {directory, prepare, save} from './manifest.mjs';
 
-const {files, uploads, immutable, facts} = await prepare();
+const routingOnly = process.argv.includes('--legacy-global');
+const {files, uploads, immutable, facts} = routingOnly
+  ? await (await import('../catalogue/legacy-release.mjs')).prepareLegacyRelease()
+  : await prepare();
 const {digest} = facts;
-const title = 'Aperçu design Flex-Web ' + digest;
+const title = (routingOnly ? 'Redirections Flex-Web ' : 'Aperçu design Flex-Web ') + digest;
 const checkpoint = 'pending-' + digest + '.json';
 const failed = new Set(['error', 'rejected', 'canceled']);
 let deploy;
@@ -64,7 +67,7 @@ for (let attempt = 0; attempt < 480; attempt++) {
       if (!source) {
         const path = byHash.get(hash);
         assert.ok(path, hash);
-        source = {path, bytes: await rawFile(catalogue.id, path)};
+        source = {path, bytes: await rawFile(immutable.id, path)};
       }
       assert.equal(sha(source.bytes), hash);
       const path = source.path.split('/').map(encodeURIComponent).join('/');
