@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {parse} from 'parse5';
+import {contactFormAssets} from '../contact/form.mjs';
 
 export const fragmentRoutes = new Map([
   ['/creation-application-mobile/', 'mobile'],
@@ -67,11 +68,16 @@ export async function composeFragment(html, route) {
   });
   assert.ok(styles.length, route + ' missing compiled styles');
   const metadata = sourceNodes.filter(n => n.tagName === 'link' && n.attrs.some(a => a.name === 'hreflang') || n.tagName === 'script' && n.attrs.some(a => a.name === 'type' && a.value === 'application/ld+json'));
-  assert.ok(!sourceNodes.some(n => (n.tagName === 'script' && !metadata.includes(n)) || (n.tagName === 'link' && n.attrs.some(a => a.value === 'stylesheet'))), 'Expected a static Astro fragment with inline styles');
+  const contactAssets = sourceNodes.filter(n => view === 'contact' && (
+    n.tagName === 'script' && n.attrs.some(a => a.name === 'src' && a.value === '/contact-assets/contact-form.mjs') ||
+    n.tagName === 'link' && n.attrs.some(a => a.name === 'href' && a.value === '/contact-assets/contact-form.css')
+  ));
+  assert.ok(!sourceNodes.some(n => !contactAssets.includes(n) && ((n.tagName === 'script' && !metadata.includes(n)) || (n.tagName === 'link' && n.attrs.some(a => a.value === 'stylesheet')))), 'Unexpected script or stylesheet in Astro fragment');
   const mainHTML = fragment.slice(inner.startOffset, inner.endOffset);
   const headEnd = single(layoutNodes, 'head').sourceCodeLocation.endTag.startOffset;
   const extraHead = metadata.map(n => fragment.slice(n.sourceCodeLocation.startOffset, n.sourceCodeLocation.endOffset)).join('');
   const originalHead = html.slice(0,headEnd);
   const head = view === 'contact' ? replaceContactHead(originalHead, layoutNodes, fragment, sourceNodes) : originalHead;
-  return head + styles.join('') + extraHead + html.slice(headEnd,range.startOffset) + mainHTML + html.slice(range.endOffset);
+  const formAssets = view === 'contact' ? contactFormAssets : '';
+  return head + styles.join('') + extraHead + formAssets + html.slice(headEnd,range.startOffset) + mainHTML + html.slice(range.endOffset);
 }

@@ -44,11 +44,11 @@ test('contact clicks on a recovered English page stay distinct from a received e
    await context.route('**/*',request=>new URL(request.request().url()).origin===preview.origin?request.continue():request.abort());
    await context.addInitScript(value=>{localStorage.setItem('flex-web-cookie-consent',value);document.addEventListener('click',event=>event.preventDefault(),true);},consent);
    const page=await context.newPage();await page.goto(new URL('/en/locations/crm/grenoble-38185/',preview).href,{waitUntil:'load'});
-   await page.locator('a[data-conversion-event="email_click"]').dispatchEvent('click');
+   await page.locator('a[href="/en/contact/"][data-conversion-event="contact_form_click"]').dispatchEvent('click');
    await page.locator('a[data-conversion-event="phone_click"]').dispatchEvent('click');
    const names=await page.evaluate(()=>Array.from(window.dataLayer||[]).map(event=>event[1]));
-   if(consent==='accepted'){assert(names.includes('email_click'));assert(names.includes('phone_click'));}
-   else {assert(!names.includes('email_click'));assert(!names.includes('phone_click'));}
+   if(consent==='accepted'){assert(names.includes('contact_form_click'));assert(names.includes('phone_click'));}
+   else {assert(!names.includes('contact_form_click'));assert(!names.includes('phone_click'));}
    assert(!names.includes('generate_lead'),'A click must never count as a received enquiry');
    await context.close();
   }

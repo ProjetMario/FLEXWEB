@@ -105,7 +105,7 @@ export async function POST(
       if (!project.paidAt)
         throw new HttpError(
           409,
-          "Contactez contact@flex-web.fr pour toute question avant commande.",
+          "Pour toute question avant commande, utilisez le formulaire sur https://flex-web.fr/contact/.",
         );
       await rateLimit(`support:${project.id}`, 10, 86400);
       const data = z
@@ -158,7 +158,7 @@ export async function POST(
     return json(
       {
         error:
-          "Le service est momentanément indisponible. Vos saisies sont conservées à l’écran. Contactez contact@flex-web.fr si le problème persiste.",
+          "Le service est momentanément indisponible. Vos saisies sont conservées à l’écran. Si le problème persiste, utilisez le formulaire sur https://flex-web.fr/contact/.",
       },
       503,
     );

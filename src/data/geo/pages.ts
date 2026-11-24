@@ -123,14 +123,14 @@ export const englishPages: GeoPage[] = [
   },
   {
     path: '/en/contact/', lang: 'en', kind: 'contact', title: 'Contact Flex-Web about a website, CRM or AI project',
-    description: 'Contact Flex-Web in Voglans, France: contact@flex-web.fr, +33 7 57 83 02 62. Describe your website, CRM or AI automation project for a scoped quote.',
-    answer: 'Email contact@flex-web.fr or call +33 7 57 83 02 62 to discuss a project with Flex-Web. The studio is based in Voglans, Savoie, France. A quote defines the work, timing, responsibilities and costs before you order.',
+    description: 'Contact Flex-Web in Voglans, France, using our English contact form or call +33 7 57 83 02 62. Ask a question or request a project quote.',
+    answer: 'Send a message about a project, partnership or personal data using the form, or call +33 7 57 83 02 62. The studio is based in Voglans, Savoie, France. A quote defines the work, timing, responsibilities and costs before you order.',
     sections: [
       { title: 'What should your first message include?', items: ['Your activity and country.', 'The task or customer journey you want to improve.', 'The tools you currently use.', 'The expected volume and difficult cases.', 'Your preferred working language and any scheduling constraint.'], paragraphs: ['Use anonymised examples. Please do not include passwords, API keys or confidential customer documents in your first message.'] },
-      { title: 'How can you send your request?', links: [{ label: 'Email contact@flex-web.fr', href: 'mailto:contact@flex-web.fr' }, { label: 'Call +33 7 57 83 02 62', href: 'tel:+33757830262' }, { label: 'Open the secure project request form (in French)', href: '/demarrer/' }], paragraphs: ['The existing professional project form is in French. Businesses and individuals can write their initial request in French or English by email. The working language and support arrangements are confirmed during scoping. Sending a request does not place an order.'] },
+      { title: 'How can you send your request?', links: [{ label: 'Write a message', href: '#contact-form' }, { label: 'Call +33 7 57 83 02 62', href: 'tel:+33757830262' }, { label: 'Open the secure project request form (in French)', href: '/demarrer/' }], paragraphs: ['The existing professional project form is in French. Businesses and individuals can use the contact form in French or English. The working language and support arrangements are confirmed during scoping. Sending a request does not place an order.'] },
       { title: 'Where is the studio based?', paragraphs: ['Flex-Web, a commercial brand of Fleximmo: 93 chemin de la Combe, 73420 Voglans, France. The studio works with businesses and individuals in France and Switzerland. Other French-speaking projects are assessed for remote delivery before agreement. Project discussions take place in French or English.'], links: [{ label: 'About the business', href: '/en/about/' }, { label: 'Privacy policy (in French)', href: '/privacy/' }] },
     ], faq: [enProjectFaq[0], enProjectFaq[2]], related: enServiceLinks,
-    cta: { label: 'Email Flex-Web', href: 'mailto:contact@flex-web.fr' },
+    cta: { label: 'Send a message', href: '#contact-form' },
   },
   {
     path: '/en/guides/website-enquiries-to-crm/', lang: 'en', kind: 'article', title: 'How to connect website enquiries to a CRM',

@@ -30,7 +30,7 @@ export async function GET(request: Request) {
     }))
   )
     return html(
-      "<h1>Lien non reconnu</h1><p>Pour ne plus être contacté, répondez STOP au message reçu ou écrivez à contact@flex-web.fr.</p>",
+      "<h1>Lien non reconnu</h1><p>Pour ne plus être contacté, répondez STOP au message reçu ou utilisez le <a href='https://flex-web.fr/contact/'>formulaire de contact</a>.</p>",
       404,
     );
   // GET is intentionally read-only: mail security scanners must not unsubscribe.

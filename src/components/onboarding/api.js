@@ -13,7 +13,7 @@ export async function api(action, body = {}, token) {
     data = await response.json();
   } catch {
     throw new Error(
-      "Le parcours en ligne est indisponible. Contactez contact@flex-web.fr pour démarrer votre projet.",
+      "Le parcours en ligne est indisponible. Pour démarrer votre projet, utilisez le formulaire sur https://flex-web.fr/contact/.",
     );
   }
   if (!response.ok) {

@@ -5,16 +5,16 @@ import {mkdir} from 'node:fs/promises';
 const origin=new URL(process.env.FLEXWEB_TEST_URL || 'http://127.0.0.1:4321');
 if(!['127.0.0.1','localhost'].includes(origin.hostname))throw Error('Local preview required');
 const cases=[
- ['/projets-sites/particuliers/paris-fr-75056/','mailto:'],
+ ['/projets-sites/particuliers/paris-fr-75056/','/contact/'],
  ['/projets-sites/entreprises/paris-fr-75056/','/demarrer/?service=site'],
- ['/projets-sites/particuliers/geneve-ch-6621/','mailto:'],
- ['/projets-sites/entreprises/geneve-ch-6621/','mailto:'],
+ ['/projets-sites/particuliers/geneve-ch-6621/','/contact/'],
+ ['/projets-sites/entreprises/geneve-ch-6621/','/contact/'],
  ['/projets-sites/entreprises/montalieu-vercieu-fr-38247/','/demarrer/?service=site'],
- ['/projets-sites/particuliers/zurich-ch-261/','mailto:','de'],
- ['/projets-sites/entreprises/lugano-ch-5192/','mailto:','it'],
- ['/projets-sites/suisse/fr/particuliers/zurich-ch-261/','mailto:','fr'],
- ['/projets-sites/suisse/it/particuliers/zurich-ch-261/','mailto:','it'],
- ['/projets-sites/suisse/de/entreprises/geneve-ch-6621/','mailto:','de'],
+ ['/projets-sites/particuliers/zurich-ch-261/','/en/contact/','de'],
+ ['/projets-sites/entreprises/lugano-ch-5192/','/en/contact/','it'],
+ ['/projets-sites/suisse/fr/particuliers/zurich-ch-261/','/contact/','fr'],
+ ['/projets-sites/suisse/it/particuliers/zurich-ch-261/','/en/contact/','it'],
+ ['/projets-sites/suisse/de/entreprises/geneve-ch-6621/','/en/contact/','de'],
 ];
 test('France and Switzerland project drafts are readable and use the correct request path', {skip:process.env.FLEXWEB_FR_CH_EXPANSION!=='1'}, async()=>{
  const browser=await chromium.launch({headless:true});await mkdir('.cms/geo-smoke',{recursive:true});
@@ -47,7 +47,7 @@ test('France and Switzerland project drafts are readable and use the correct req
     await page.goto(new URL('/projets-sites/particuliers/zurich-ch-261/',origin).href);
     await page.getByRole('button',{name:'Menü öffnen',exact:true}).click();
     const menu=page.locator('#mobile-navigation');await menu.waitFor({state:'visible'});
-    assert((await menu.getByRole('link',{name:'Offerte anfragen ↗'}).getAttribute('href')).startsWith('mailto:'));
+    assert((await menu.getByRole('link',{name:'Offerte anfragen ↗'}).getAttribute('href')).startsWith('/en/contact/'));
     await page.keyboard.press('Escape');assert.equal(await page.getByRole('button',{name:'Menü öffnen',exact:true}).getAttribute('aria-expanded'),'false');
    }
    await page.goto(new URL('/projets-sites/particuliers/geneve-ch-6621/',origin).href);
@@ -60,11 +60,11 @@ test('France and Switzerland project drafts are readable and use the correct req
  } finally {await browser.close();}
 });
 
-test('consented AI attribution stores only territory code and email click is not a confirmed lead', {skip:process.env.FLEXWEB_FR_CH_EXPANSION!=='1'}, async()=>{
+test('consented AI attribution stores only territory code and contact form navigation stays distinct from a confirmed lead', {skip:process.env.FLEXWEB_FR_CH_EXPANSION!=='1'}, async()=>{
  const browser=await chromium.launch({headless:true});const context=await browser.newContext();
  try{
   await context.route('**/*',r=>new URL(r.request().url()).origin===origin.origin?r.continue():r.abort());
-  await context.addInitScript(()=>document.addEventListener('click',event=>{if(event.target instanceof Element&&event.target.closest('a[href^="mailto:"]'))event.preventDefault();},true));
+  await context.addInitScript(()=>document.addEventListener('click',event=>{if(event.target instanceof Element&&event.target.closest('a[href="/en/contact/"]'))event.preventDefault();},true));
   const page=await context.newPage();
   await page.goto(new URL('/projets-sites/particuliers/zurich-ch-261/?utm_source=chatgpt&secret=do-not-store',origin).href);
   assert.equal(await page.evaluate(()=>sessionStorage.getItem('flexweb-acquisition-v1')),null);

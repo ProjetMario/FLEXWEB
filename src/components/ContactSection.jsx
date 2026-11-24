@@ -1,12 +1,11 @@
-import { motion } from "framer-motion";
-import { MotionWrapper } from "./utils/MotionWrapper.jsx";
+import { footerBrand, postalAddress } from "../data/business";
 
-export default function ContactSection({ data = {} }) {
+export default function ContactSection({ data = {}, children }) {
   const { label, title, description, details = [] } = data;
   const projects = [
-    { label: "Site internet", subject: "Projet de site internet", service: "site", guide: "/creation-site-internet/", quote: "/demarrer/?service=site" },
-    { label: "Application sur mesure", subject: "Projet d’application web, mobile ou ordinateur", service: "application", guide: "/creation-application-mobile/", quote: "/demarrer/?service=application" },
-    { label: "CRM et automatisation", subject: "Projet CRM ou automatisation", service: "automation", guide: "/crm-automatisation-entreprise/", quote: "/demarrer/?service=automation" },
+    { label: "Site internet", service: "site", guide: "/creation-site-internet/", quote: "/demarrer/?service=site" },
+    { label: "Application sur mesure", service: "application", guide: "/creation-application-mobile/", quote: "/demarrer/?service=application" },
+    { label: "CRM et automatisation", service: "automation", guide: "/crm-automatisation-entreprise/", quote: "/demarrer/?service=automation" },
   ];
 
   return (
@@ -18,7 +17,7 @@ export default function ContactSection({ data = {} }) {
         </span>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mt-10">
-        <MotionWrapper type="fade-up" className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6">
           {title && (
             <h1 className="text-4xl md:text-5xl font-light grotesque-font text-gray-900 leading-tight">
               {title}
@@ -29,6 +28,7 @@ export default function ContactSection({ data = {} }) {
               {description}
             </p>
           )}
+          {children}
           {details.length > 0 && (
             <div className="flex flex-col gap-4 mt-4">
               {details.map((d, idx) => (
@@ -39,20 +39,21 @@ export default function ContactSection({ data = {} }) {
               ))}
             </div>
           )}
-        </MotionWrapper>
+          <address className="text-sm not-italic leading-relaxed text-gray-800">{footerBrand}<br />{postalAddress.streetAddress}<br />{postalAddress.postalCode} {postalAddress.addressLocality}, France</address>
+        </div>
 
-        <motion.div initial={false} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.7 }} className="flex flex-col items-start gap-5 rounded-2xl border border-gray-200 bg-white p-8">
+        <div className="flex flex-col items-start gap-5 rounded-2xl border border-gray-200 bg-white p-8">
           <h2 className="text-2xl font-semibold text-gray-900">Quel projet souhaitez-vous préparer ?</h2>
-          <p className="text-gray-600 leading-relaxed">Entreprise ou particulier, contactez-nous par e-mail ou téléphone. Indiquez votre besoin, votre pays et les contenus ou outils déjà disponibles. Le périmètre, le prix et le calendrier sont confirmés au devis avant tout paiement.</p>
-          <a href="mailto:contact@flex-web.fr?subject=Mon%20projet%20avec%20Flex-Web" data-conversion-event="email_click" data-conversion-service="unknown" className="rounded-full bg-blue-600 px-7 py-3 font-medium text-white hover:bg-blue-700">Décrire mon projet par e-mail</a>
+          <p className="text-gray-600 leading-relaxed">Entreprise ou particulier, utilisez le formulaire de contact ou appelez-nous. Indiquez votre besoin, votre pays et les contenus ou outils déjà disponibles. Le périmètre, le prix et le calendrier sont confirmés au devis avant tout paiement.</p>
+          <a href="#contact-form" className="rounded-full bg-blue-600 px-7 py-3 font-medium text-white hover:bg-blue-700">Envoyer un message</a>
           <ul className="w-full space-y-5">
             {projects.map(project => <li key={project.service} className="border-t border-gray-200 pt-5">
               <h3 className="font-semibold text-gray-900">{project.label}</h3>
-              <p className="mt-2 text-sm leading-relaxed"><a href={`mailto:contact@flex-web.fr?subject=${encodeURIComponent(project.subject)}`} className="text-blue-700 underline" data-conversion-event="email_click" data-conversion-service={project.service}>Écrire à propos de ce projet</a> · <a href={project.guide} className="text-blue-700 underline">Comprendre la prestation</a></p>
+              <p className="mt-2 text-sm leading-relaxed"><a href="#contact-form" className="text-blue-700 underline">Écrire à propos de ce projet</a> · <a href={project.guide} className="text-blue-700 underline">Comprendre la prestation</a></p>
               <p className="mt-2 text-sm leading-relaxed"><a href={project.quote} className="text-blue-700 underline" data-conversion-event="quote_click" data-conversion-service={project.service}>Formulaire de devis professionnel</a></p>
             </li>)}
           </ul>
-        </motion.div>
+        </div>
       </div>
       <div className="mt-12 max-w-3xl space-y-4 text-sm leading-relaxed text-gray-600">
         <h2 className="text-2xl font-semibold text-gray-900">Des échanges en français ou en anglais</h2>

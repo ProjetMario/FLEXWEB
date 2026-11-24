@@ -1,0 +1,16 @@
+{
+  "id": "6b057c2c69ab9e23aaf27ee8",
+  "url": "https://6b057c2c69ab9e23aaf27ee8--flex-webb.netlify.app",
+  "baseId": "6b0571e482dfe03c8f565b08",
+  "digest": "020e20b905eb926c75d690da6f42400f66c1ec5f",
+  "files": 160335,
+  "routes": 151507,
+  "sitemaps": 85,
+  "sourceCatalogueId": "6b04922cb721fd1ae1c8d810",
+  "productionLocked": true,
+  "edgeFunctions": {
+    "eszip2": "1360c2b601c1f18180a8df55b82a99aa5e6198713498fc25c89e501d833dfa82"
+  },
+  "automationDigest": "dea587beeca6c6332a410520860577b201428134d06a9bd890857afb1d756878",
+  "formId": "6b057b8e51b2624e2817882d"
+}

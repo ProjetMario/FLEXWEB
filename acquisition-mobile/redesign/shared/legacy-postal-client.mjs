@@ -30,7 +30,7 @@ export function installDirectoryAddress() {
     if (!directory || directory.tagName !== 'P' || nav.closest('astro-island')) return;
     const first = directory.firstChild;
     if (first?.nodeType !== Node.TEXT_NODE || !first.data.includes(postal.streetAddress) ||
-      !directory.querySelector('a[href="mailto:contact@flex-web.fr"]')) return;
+      !directory.querySelector('a[href="/en/contact/"], a[href^="mailto:"]')) return;
     directory.before(makeAddress());
     first.remove();
   }

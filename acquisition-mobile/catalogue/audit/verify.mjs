@@ -8,7 +8,13 @@ import {parseSitemap} from '../inventory.mjs';
 import {inspectHTML,readHTTP,sampleRows} from './inspect.mjs';
 import {checkSupport} from './support.mjs';
 
-const id=process.argv[2];
+const [, , id, mode]=process.argv;
+assert.ok(mode === undefined || mode === '--contact', 'Mode d’audit inconnu');
+const contact = mode === '--contact';
+if (contact) {
+  const receipt = JSON.parse(await readFile(new URL('../../redesign/contact/release-candidate.json', import.meta.url)));
+  assert.equal(receipt.id, id, 'L’audit edge exige le reçu contact de cet aperçu');
+}
 assert.match(id||'',/^[a-f\d]{24}$/,'Indiquer l’identifiant du déploiement Netlify à contrôler');
 const certified='6af79012972137a7ad14d158';
 const certRun='https://github.com/ProjetMario/FLEXWEB/actions/runs/43517431541';
@@ -87,21 +93,27 @@ const inspected=new Map([...sampleRows(audited), ...reparse].map(r=>[r.path,r]))
 // Validate all 275 maintained pages over HTTP as well, even if the bytes still match the old artifact.
 if(!archiveMode)for(const row of rows)if(row.source==='candidate')inspected.set(row.path,row);
 const assets=new Set();
+const inspectContactBody=contact?(await import('../../redesign/contact/promotion.mjs')).assertServedHTML:null;
+const verifyBody=async (html,path,bytes)=>{
+  if (contact) await inspectContactBody(id,targetFiles,html,path,bytes);
+  else assert.equal(digest(bytes),targetFiles[html],path+' corps différent du fichier Netlify');
+};
 const verificationErrors=[];
 await parallel([...inspected.values()],7,async row=>{
   try {
     const res=await readHTTP(host,row.path);
     assert.match(res.type,/text\/html/i,row.path);
-    assert.equal(digest(res.bytes),targetFiles[row.html],row.path+' corps différent du fichier Netlify');
+    await verifyBody(row.html,row.path,res.bytes);
     const results=inspectHTML(res.bytes,row.path);
     for(const asset of results.assets)assets.add(asset);
   }catch(e){verificationErrors.push(row.path+' '+e.message);}
 });
 assert.equal(verificationErrors.length,0,JSON.stringify(verificationErrors.slice(0,12)));
 for(const path of assets) assert.ok(targetFiles[path.toLowerCase()],path+' ressource référencée absente du manifeste');
-const support=await checkSupport(host,targetFiles,paths);
+const support=await checkSupport(host,targetFiles,paths,verifyBody);
 const report={
   support,
+  ...(contact ? {servedContactTransformVerified:true} : {}),
   checkedAt:new Date().toISOString(),id,origin:host,certifiedDeployment:certified,certificationRun:certRun,
   sitemapUrls:targetURLs.size,subSitemaps:85,requiredHTML:audited.length,checkedFileDigests:audited.length,
   certifiedUnmodifiedHTML:inherited.length,changedOrNewHTMLDirectlyInspected:reparse.length,

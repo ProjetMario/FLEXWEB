@@ -1,17 +1,19 @@
 ---
 import {business, footerBrand, postalAddress} from '../../../src/data/business.ts';
 import contact from '../../../src/data/contact.json';
+import {renderContactForm, contactFormAssets} from './form.mjs';
 
 const phone = contact.details.find(detail => detail.event === 'phone_click')!;
 const hours = contact.details.find(detail => detail.label === 'Horaires')!;
 const title = 'Contacter Flex-Web — Sites internet, applications et automatisation';
-const description = 'Contactez Flex-Web par e-mail ou téléphone pour un site internet, une application ou une automatisation. Retrouvez l’adresse à Voglans et demandez un devis gratuit.';
+const description = 'Contactez Flex-Web par formulaire ou téléphone pour un site internet, une application ou une automatisation. Retrouvez l’adresse à Voglans et demandez un devis gratuit.';
 const pageUrl = new URL('/contact/', business.url).href;
 const englishUrl = new URL('/en/contact/', business.url).href;
 ---
 <!doctype html>
 <html lang="fr"><head>
   <meta charset="utf-8"/>
+  <Fragment set:html={contactFormAssets} />
   <title>{title}</title>
   <meta name="description" content={description}/>
   <meta property="og:title" content={title}/>
@@ -30,14 +32,14 @@ const englishUrl = new URL('/en/contact/', business.url).href;
   <div class="contact-inner">
     <header>
       <h1>Contacter Flex-Web</h1>
-      <p>Un site internet, une application ou une tâche à automatiser ? Parlez-nous de votre projet, que vous soyez une entreprise ou un particulier.</p>
+      <p>Une question, un partenariat ou un projet de site, d’application ou d’automatisation ? Écrivez-nous en français ou en anglais.</p>
     </header>
     <div class="contact-options">
       <section class="contact-channels" aria-labelledby="contact-details-title">
         <h2 id="contact-details-title">Nos coordonnées</h2>
         <dl>
-          <dt>E-mail</dt>
-          <dd><a href={'mailto:'+business.email} data-conversion-event="email_click" data-conversion-service="unknown">{business.email}</a></dd>
+          <dt>Formulaire</dt>
+          <dd><a href="#contact-form">Envoyer un message</a></dd>
           <dt>Téléphone</dt>
           <dd><a href={'tel:'+business.telephone} data-conversion-event="phone_click" data-conversion-service="unknown">{phone.value}</a><small>{hours.value}</small></dd>
           <dt>Adresse postale</dt>
@@ -45,6 +47,7 @@ const englishUrl = new URL('/en/contact/', business.url).href;
         </dl>
       </section>
       <section class="contact-quote" aria-labelledby="contact-quote-title">
+        <Fragment set:html={renderContactForm('fr')} />
         <h2 id="contact-quote-title">Demander un devis</h2>
         <p>Indiquez ce que vous souhaitez créer, pour qui et dans quel délai. Nous préciserons avec vous les prestations et le budget.</p>
         <a class="contact-action" href="/demarrer/" data-conversion-event="quote_click" data-conversion-service="unknown">Demander un devis gratuit <span aria-hidden="true">↗</span></a>
