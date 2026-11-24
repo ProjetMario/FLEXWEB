@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {parse as parseToml} from 'smol-toml';
+import {parse as parseHTML} from 'parse5';
 import {rawFile} from '../../catalogue/netlify.mjs';
 import {sha} from '../../scripts/baseline.mjs';
 import {assertFunctions, digestOf, functionPayload} from '../../scripts/deploys.mjs';
@@ -11,9 +12,44 @@ const edgeDirectory = '/.netlify/internal/edge-functions/';
 const edgeHTML = path => path.endsWith('.html') && cataloguePrefixes.some(prefix => path.startsWith(prefix));
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 
+// Netlify Forms rewrites only the opening form tag. The explicit hidden input
+// in both registered translations is preserved byte-for-byte with the rest.
+function contactFormTag(bytes) {
+  const html = bytes.toString('utf8');
+  const forms = [];
+  function visit(node) {
+    if (node.tagName === 'form' && node.attrs.some(a => a.name === 'name' && a.value === 'flexweb-contact')) forms.push(node);
+    for (const child of node.childNodes || []) visit(child);
+  }
+  visit(parseHTML(html, {sourceCodeLocationInfo:true}));
+  assert.equal(forms.length, 1);
+  const form = forms[0];
+  const {startOffset, endOffset} = form.sourceCodeLocation.startTag;
+  return {attrs:Object.fromEntries(form.attrs.map(a => [a.name, a.value])),
+    before:html.slice(0,startOffset), after:html.slice(endOffset)};
+}
+
+export function assertProcessedForm(stored, served) {
+  const source = contactFormTag(stored);
+  const deployed = contactFormTag(served);
+  assert.equal(source.attrs['data-netlify'], 'true');
+  assert.equal(source.attrs['data-netlify-honeypot'], 'bot-field');
+  delete source.attrs['data-netlify'];
+  delete source.attrs['data-netlify-honeypot'];
+  assert.deepEqual(deployed.attrs, source.attrs, 'Attribut du formulaire public inattendu');
+  assert.equal(sha(Buffer.from(deployed.before)), sha(Buffer.from(source.before)), 'HTML modifié avant le formulaire');
+  assert.equal(sha(Buffer.from(deployed.after)), sha(Buffer.from(source.after)), 'HTML modifié dans ou après le formulaire');
+}
+
 // The three high-volume families retain their certified HTML in the file store.
 // The edge bundle changes the publicly served bytes on these paths only.
 export async function assertServedHTML(id, files, path, route, body) {
+  if (path === '/contact/index.html' || path === '/en/contact/index.html') {
+    const stored = await rawFile(id, path);
+    assert.equal(sha(stored), files[path], path);
+    assertProcessedForm(stored, body);
+    return;
+  }
   if (!edgeHTML(path)) {
     assert.equal(sha(body), files[path], route + ' corps différent du fichier Netlify');
     return;
@@ -61,7 +97,9 @@ export async function inspectContactRelease({base, preview, receipt, legacy, sou
   assertContactInventory(source, files, receipt, legacy);
   assertContactFunctions(base, preview, receipt);
   assert.equal(base.title, 'Atelier Flex-Web — ' + legacy.id);
-  const rules = parseToml((await rawFile(preview.id, '/netlify.toml')).toString());
+  const routing = await rawFile(preview.id, '/netlify.toml');
+  assert.equal(sha(routing), source['/netlify.toml']);
+  const rules = parseToml(routing.toString());
   assert.equal(rules.redirects?.length, legacy.redirects);
   assert.equal(rules.headers?.length, legacy.headers);
   for (const message of base.summary.messages.filter(m => /(?:redirect|header) rules processed/i.test(m.title))) {
@@ -98,6 +136,7 @@ export async function sendRequiredBundles({candidate, base, receipt, edgeBytes, 
   for (const digest of new Set(candidate.required_edge_functions || [])) {
     assert.equal(digest, receipt.edgeFunctions.eszip2, 'Paquet edge non approuvé');
     if (!sent.has(digest)) {
+      assert.equal(sha256(edgeBytes), digest, 'Le paquet edge diffère du reçu');
       await upload('/edge_functions/' + digest, edgeBytes);
       sent.add(digest);
     }

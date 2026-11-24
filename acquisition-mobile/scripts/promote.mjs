@@ -80,6 +80,12 @@ async function checkContact(host) {
   const forms = (await netJSON('/sites/' + site + '/forms')).filter(form => form.name === 'flexweb-contact' && form.site_id === site);
   assert.equal(forms.length, 1, 'Formulaire de contact non enregistré chez Netlify');
   assert.deepEqual(forms[0].fields.map(field => field.name).sort(), ['bot-field','consent','email','language','message','name','topic']);
+  const {assertServedHTML} = await import('../redesign/contact/promotion.mjs');
+  await Promise.all(['/contact/', '/en/contact/'].map(async route => {
+    const response = await fetch(new URL(route,host), {redirect:'error', signal:AbortSignal.timeout(45_000)});
+    assert.equal(response.status, 200, route);
+    await assertServedHTML(approvedId, files, route + 'index.html', route, Buffer.from(await response.arrayBuffer()));
+  }));
   const result = await run(process.execPath, [join(root,'redesign/contact/public-check.mjs'), host, approvedId], {timeout:600_000});
   console.log(result.stdout.trim());
 }
