@@ -1,0 +1,35 @@
+name: Appliquer le correctif de contact
+on:
+  workflow_dispatch:
+    inputs:
+      preview:
+        description: Aperçu du correctif différentiel vérifié
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: emdash-publication-flex-webb
+  cancel-in-progress: false
+jobs:
+  contact:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    environment: emdash-publication
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      GH_TOKEN: ${{ github.token }}
+      APPROVED_PREVIEW: ${{ inputs.preview }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: node --test scripts/contact/public-contact.test.mjs acquisition-mobile/redesign/contact/edge.test.mjs
+      - name: Vérifier les empreintes et publier le correctif seul
+        run: node acquisition-mobile/redesign/contact/publish-delta.mjs "$APPROVED_PREVIEW"

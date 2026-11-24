@@ -4,7 +4,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import test from 'node:test';
 import {runInNewContext} from 'node:vm';
-import {transformPublicContact} from './public-contact.mjs';
+import {publishedAddresses, transformPublicContact} from './public-contact.mjs';
 import {transformPublicDirectory} from './build-public-contact.mjs';
 
 const agency = 'contact@flex-web.fr';
@@ -26,12 +26,14 @@ test('HTML localisé, JSON-LD, balises meta, rendu serveur et données hydratée
   assert.equal(transformPublicContact('/index.html',result), result);
 });
 
-test('les exemples, le médiateur, les événements de tiers et les champs des particuliers restent disponibles', () => {
+test('le médiateur conserve son propre formulaire et le champ e-mail reste utilisable', () => {
   const external = '<a href="mailto:' + thirdParty + '" data-conversion-event="email_click">E-mail du médiateur</a>';
   const field = '<input name="email" type="email" placeholder="vous@entreprise.fr">';
   const html = '<html lang="fr"><body><a href="mailto:' + agency + '?subject=Devis">Décrire mon projet par e-mail</a>' + external + field + '</body></html>';
   const out = transformPublicContact('/privacy/index.html',html);
-  assert.ok(out.includes(external) && out.includes(field));
+  assert.ok(out.includes('href="https://www.medconsodev.eu/mediation-consommation-demande.php"'));
+  assert.ok(out.includes('type="email" placeholder="Votre adresse e-mail"'));
+  assert.deepEqual(publishedAddresses(out), []);
   assert.match(out, /href="\/contact\/">Décrire mon projet</);
   const doc = 'Aide : ' + agency + '. Visiteur : info+' + agency + '. Support : contact@flex-web.fr.example.test.';
   assert.match(transformPublicContact('/sample.txt',doc),/info\+contact@flex-web\.fr\. Support : contact@flex-web\.fr\.example\.test/);
@@ -63,11 +65,11 @@ test('le post-traitement du build est idempotent et préserve fichiers binaires 
   const dist = await mkdtemp(join(tmpdir(),'flexweb-public-contact-test-'));
   try {
     await writeFile(join(dist,'llms-full.txt'),'- E-mail : ' + agency + '.');
-    await writeFile(join(dist,'contact.json'),JSON.stringify({organization:{email:agency},visitor:{email:'test@example.com'}}));
+    await writeFile(join(dist,'contact.json'),JSON.stringify({organization:{email:agency},visitor:{field:'email'}}));
     await writeFile(join(dist,'image.bin'),Buffer.from([5,6,127,0]));
     assert.deepEqual(await transformPublicDirectory(dist),{files:2,changed:2});
     assert.match(await readFile(join(dist,'llms-full.txt'),'utf8'),/Formulaire de contact : https:\/\/flex-web\.fr\/contact\//);
-    assert.deepEqual(JSON.parse(await readFile(join(dist,'contact.json'),'utf8')),{organization:{},visitor:{email:'test@example.com'}});
+    assert.deepEqual(JSON.parse(await readFile(join(dist,'contact.json'),'utf8')),{organization:{},visitor:{field:'email'}});
     assert.deepEqual(await readFile(join(dist,'image.bin')),Buffer.from([5,6,127,0]));
     assert.deepEqual(await transformPublicDirectory(dist),{files:2,changed:0});
   } finally { await rm(dist,{recursive:true,force:true}); }
@@ -87,4 +89,13 @@ test('legal articles retain an actionable contact outside the hydrated content',
   const output = transformPublicContact('/privacy/index.html',source);
   assert.match(output,/<\/astro-island><p[^>]*><a[^>]*data-legal-contact-form href="\/contact\/"/);
   assert.equal(transformPublicContact('/privacy/index.html',output),output);
+});
+
+test('le contrôle des fichiers publics distingue une adresse littérale des noms CSS Astro', async () => {
+  assert.deepEqual(publishedAddresses('/_astro/_@astro.BVHz7Lyp.css'), []);
+  const dir = await mkdtemp(join(tmpdir(), 'public-email-'));
+  try {
+    await writeFile(join(dir, 'public.json'), JSON.stringify({email:'unpublished%40example.org'}));
+    await assert.rejects(transformPublicDirectory(dir), /public.json/);
+  } finally { await rm(dir, {recursive:true, force:true}); }
 });

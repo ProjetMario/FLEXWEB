@@ -1,7 +1,29 @@
 const origin = 'https://flex-web.fr';
 const mailbox = String.raw`(?<![\w.%+-])contact(?:@|%40|&#0*64;|&#x0*40;|&commat;|\\u0040)flex-web\.fr(?![\w-]|\.[a-z])`;
 const hasMailbox = new RegExp(mailbox, 'i');
-export const hasPublicMailbox = text => hasMailbox.test(text);
+const atSign = String.raw`(?:@|%40|&#0*64;|&#x0*40;|&commat;|\\u0040)`;
+const mediator = new RegExp('contact-admin' + atSign + 'cnpm-mediation-consommation\\.eu', 'i');
+const example = new RegExp('vous' + atSign + '(?:exemple|entreprise)\\.fr', 'i');
+const mediationForm = 'https://www.medconsodev.eu/mediation-consommation-demande.php';
+export const hasPublicMailbox = text => hasMailbox.test(text) || mediator.test(text) || example.test(text);
+
+// A static public file must never contain a visitor address. Do not apply this
+// check to authenticated API responses or the value someone types in a form.
+export function publishedAddresses(text) {
+  const decoded = text.replace(/%40|&#0*64;|&#x0*40;|&commat;|\\u0040/gi, '@');
+  const addresses = decoded.match(/[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,63}\b/gi) || [];
+  return addresses.filter(value => !/^_@astro\.[a-z0-9_-]+\.css$/i.test(value));
+}
+
+function secondaryContacts(path, text) {
+  if (example.test(text)) {
+    text = text.replace(new RegExp(example.source, 'gi'), path.startsWith('/en/') ? 'Your email address' : 'Votre adresse e-mail');
+  }
+  if (!mediator.test(text)) return text;
+  // The legal articles also store their paragraphs in Astro hydration props.
+  return text.replace(new RegExp('mailto:' + mediator.source + '(?:\\?[^\\s"\'<>]*)?', 'gi'), mediationForm)
+    .replace(new RegExp('(?:e-?mail\\s*:\\s*)?' + mediator.source, 'gi'), mediationForm);
+}
 const embeddedMailto = new RegExp('mailto:' + mailbox + '(?:\\?[^\\s"\x27\x60<>\\)\\]]*)?', 'gi');
 const allMailboxes = new RegExp(mailbox, 'gi');
 const mailto = new RegExp('^mailto:' + mailbox + '(?:\\?[^#]*)?$', 'i');
@@ -123,6 +145,12 @@ function javascript(text, contact) {
 export function transformPublicContact(path, text) {
   if (!isPublicContactAsset(path)) return text;
   const ext = extension(path);
+  const hadMediator = mediator.test(text);
+  text = secondaryContacts(path, text);
+  if (hadMediator && /^\/(?:cgv|mentions-legales)\/index\.html$/.test(path)) {
+    // The original React legal article renders plain paragraphs again during hydration.
+    text = text.replace('</main>', '<p class="mx-auto max-w-7xl px-4 py-4"><a class="underline" href="' + mediationForm + '">Saisir le médiateur en ligne</a></p></main>');
+  }
   // Both analytics layers in historical Astro bundles validate the event before
   // sending it. Preserve their existing consent and confirmed-lead checks.
   if (['.js','.mjs','.html','.htm'].includes(ext) && text.includes('email_click')) {

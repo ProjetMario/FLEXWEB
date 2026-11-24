@@ -1,0 +1,85 @@
+{
+  "base": "6b0571e482dfe03c8f565b08",
+  "before": "06b8096b33aee37ec5e036077ee04bf37dcdbbef",
+  "after": "6a7123f07e1b4a4f1538fd5a14624249870fd8b0",
+  "edge": "861ffe5be1ebbf0cf3d3f52d72db2d0fad807b108aa2b26e28c2376ab107470b",
+  "changes": {
+    "/ai-overview.txt": {
+      "from": "15f99b9c576488f5b374d6780ad081599b57885c",
+      "to": "9863852894f972a8afb29ed607e6fe73ac280fd6"
+    },
+    "/llms-full.txt": {
+      "from": "9bc8b39f9152a03b6af53aed85ecb3601129b310",
+      "to": "08cb0d00e717b06eed825c0a073fd826b455b92b"
+    },
+    "/llms.txt": {
+      "from": "15f99b9c576488f5b374d6780ad081599b57885c",
+      "to": "9863852894f972a8afb29ed607e6fe73ac280fd6"
+    },
+    "/contact/index.html": {
+      "from": "0b6d71c07b6dbecf5ecd1fd33bc158043f1b893d",
+      "to": "d23b97868f6780c570bfed3839a6dfcd6128c3a9"
+    },
+    "/_astro/api.buhusuae.js": {
+      "from": "4bde77a15316035abd36b88cd11e0c9008a62c88",
+      "to": "8b3dcc25d2877c49bf05b9e75b91c3a8e7ef3b7b"
+    },
+    "/_astro/projectportal.s5ucsypc.js": {
+      "from": "9e8bf7713a25e10c4c9f76411c48253f1c33c8ac",
+      "to": "a26fc9fd7ed2d9ed41d6de9a7fa6fbbaf660b7ac"
+    },
+    "/_astro/contactsection.c4ptv6by.js": {
+      "from": "8d1c9c210e23382f77c5189d49dcf2b0bae6ff1f",
+      "to": "cb036b41bb369f5f182f819dfafa29941bb3ad47"
+    },
+    "/_astro/analytics.cexff_rl.js": {
+      "from": "473c1998d9b086b78584576bd7dedc0d5c2ee3c8",
+      "to": "9bf84e4d74719addafecaa89b701032b22964ec9"
+    },
+    "/_astro/startproject.dkygjc2l.js": {
+      "from": "6562485d5104afd400407f2979317339faaa1d80",
+      "to": "8051c7d1ca14cf11a156fb0de6499f3a3efd6f9d"
+    },
+    "/en/contact/index.html": {
+      "from": "c1d3c8bf56794c48d3bf6b39ccb62ddcaf016ae7",
+      "to": "09cd14406dfa4a8a1294098dd7cdfeb9def8c17d"
+    },
+    "/_astro/analytics.bdndok2_.js": {
+      "from": "3f37b0210b4c6b4d846413ebe13e4c7c1f3e8332",
+      "to": "f332b1d847b625d1169da2d105d1665541b94336"
+    },
+    "/_astro/projectportal.bx6rsnjl.js": {
+      "from": "25b5dba4144d1d3e15255d816db1b0922b09a362",
+      "to": "734170472137edc7eec183f2dc25c43a7e82c773"
+    },
+    "/_astro/footer.d7n99i4o.js": {
+      "from": "c667cac1e47a10a23934a8310d7b79aa5238949a",
+      "to": "e66235177b6684daf2f8fdcc6192df056618b34a"
+    },
+    "/_astro/conversionevents.astro_astro_type_script_index_0_lang.dcymbbtq.js": {
+      "from": "87098f93af116b54aa1b201aab4ff48aaa60d00a",
+      "to": "abebb762680a75b355768399dfaf7431a6ff4b24"
+    },
+    "/_astro/conversionevents.astro_astro_type_script_index_0_lang.cr74znjo.js": {
+      "from": "15463dc1c357276a43621efab0df0bcbd3fa487f",
+      "to": "abb034f31ebd4f4412a912b32e516c27364455ed"
+    },
+    "/_astro/contactsection.bqw2l_jq.js": {
+      "from": "b7a2f13b692875aea6ec187f0a4b3a3e45b93ff1",
+      "to": "22b86153facb636f2f024ad1cb69ad2fc60ddc00"
+    },
+    "/studio-redesign/postal-footer-13c409373917.mjs": {
+      "from": "13c40937391722e1b44702d0eb96a160c6b9f081",
+      "to": "5b199101b7833eb6a3084557b554c4a1f0e48764"
+    },
+    "/.netlify/internal/edge-functions/861ffe5be1ebbf0cf3d3f52d72db2d0fad807b108aa2b26e28c2376ab107470b.eszip": {
+      "from": null,
+      "to": "25a5ad968ef22e9eb1afd3579814b335cf5cef4c"
+    },
+    "/.netlify/internal/edge-functions/manifest.json": {
+      "from": null,
+      "to": "bb6d60e6f5dbb111701f8dbd60bc6132f417a315"
+    }
+  },
+  "preview": "6b05a039ce64c0c49ebd86d6"
+}

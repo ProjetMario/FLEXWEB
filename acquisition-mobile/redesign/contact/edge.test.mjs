@@ -34,3 +34,14 @@ test('the catalogue handler preserves redirects, error statuses, HEAD and non-HT
   assert.ok(!head.headers.has('etag'));
   assert.equal(await publicContact(new Request(url,{method:'POST'}), {next:()=>assert.fail('POST must go directly to Netlify')}),undefined);
 });
+
+test('existing CRM responses preserve incoming messages and only redact a public error', async () => {
+  const request = new Request('https://flex-web.fr/api/automation/intake', {method:'POST',body:'visitor'});
+  const success = Response.json({email:'private@example.test'});
+  assert.equal(await publicContact(request, {next:()=>success}),success);
+  const error = Response.json({error:'Contactez contact@flex-web.fr',code:'service'}, {status:503,headers:{'Cache-Control':'no-store'}});
+  const handled=await publicContact(request,{next:()=>error});
+  assert.equal(handled.status,503);
+  assert.equal(handled.headers.get('cache-control'),'no-store');
+  assert.deepEqual(await handled.json(),{error:'Utilisez le formulaire https://flex-web.fr/contact/',code:'service'});
+});
