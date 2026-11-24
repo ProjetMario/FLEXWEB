@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex,follow"><title>Send a message to Flex-Web</title><link rel="stylesheet" href="/form.css"><script type="module" src="/frame.mjs"></script></head><body><main><section class="fw-contact-form" id="contact-form" aria-labelledby="fw-contact-title">
+    <h2 id="fw-contact-title">Send a message</h2>
+    <form action="/en/thanks/" name="flexweb-contact" method="post" data-netlify="true" data-netlify-honeypot="bot-field" data-flexweb-contact
+      data-sending="Sending…" data-success="Thank you. Your message has been received." data-error="We could not confirm receipt. Your message is still here. Try again or contact us by phone.">
+      <input type="hidden" name="form-name" value="flexweb-contact">
+      <input type="hidden" name="language" value="en">
+      <p hidden aria-hidden="true"><label>Leave this field empty<input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+      <label for="fw-contact-name">Name (optional)</label>
+      <input id="fw-contact-name" name="name" autocomplete="name" maxlength="120">
+      <label for="fw-contact-email">Your email</label>
+      <input id="fw-contact-email" name="email" type="email" autocomplete="email" maxlength="254" required>
+      <label for="fw-contact-topic">Subject</label>
+      <select id="fw-contact-topic" name="topic"><option value="general">General enquiry</option><option value="quote">Request a quote</option><option value="partnership">Partnership</option><option value="privacy">Personal data</option></select>
+      <label for="fw-contact-message">Your message</label>
+      <textarea id="fw-contact-message" name="message" rows="5" maxlength="3000" required></textarea>
+      <div class="fw-contact-privacy">
+        <label><input type="checkbox" name="consent" value="yes" required><span>I agree that Flex-Web may contact me about this message.</span></label>
+        <a href="https://flex-web.fr/privacy/" target="_blank" rel="noopener">Privacy policy (in French)</a>
+      </div>
+      <button type="submit">Send my message</button>
+    </form>
+    <p role="status" aria-live="polite" data-contact-status tabindex="-1"></p>
+  </section><script type="module" src="/form.mjs"></script></main></body></html>
