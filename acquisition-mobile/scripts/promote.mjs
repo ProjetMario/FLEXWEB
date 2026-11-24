@@ -3,14 +3,20 @@ import { execFile } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
-import { api, baseId, cache, put, root, sha, site } from './baseline.mjs';
+import { api, baseId as designBaseId, cache, put, root, sha, site } from './baseline.mjs';
 import { assertFunctions, digestOf, functionPayload } from './deploys.mjs';
 import { filesOf, rawFile, waitDeploy, netJSON, parallel, request } from '../catalogue/netlify.mjs';
 
 const run = promisify(execFile);
 const [mode, approvedId] = process.argv.slice(2);
 assert.ok(['--check', '--publish'].includes(mode), 'Indiquer --check ou --publish et l’identifiant approuvé');
-const receipt = JSON.parse(await readFile(join(root, 'redesign/release-candidate.json'), 'utf8'));
+const design = JSON.parse(await readFile(join(root, 'redesign/release-candidate.json'), 'utf8'));
+const routingOnly = approvedId !== design.id;
+const receipt = routingOnly
+  ? JSON.parse(await readFile(join(root, 'catalogue/legacy-release-candidate.json'), 'utf8'))
+  : design;
+const baseId = routingOnly ? receipt.baseId : designBaseId;
+if (routingOnly) assert.equal(receipt.sourceDesignId, design.id);
 assert.equal(approvedId, receipt.id, 'Identifiant différent de l’aperçu contrôlé sur cette révision Git');
 const catalogue = JSON.parse(await readFile(join(root, 'catalogue/release-candidate.json'), 'utf8'));
 assert.equal(receipt.sourceCatalogueId, catalogue.id, 'Catalogue source différent du catalogue certifié');
@@ -30,6 +36,16 @@ const files = await filesOf(approvedId);
 assert.equal(Object.keys(files).length, receipt.files);
 assert.equal(digestOf(files), receipt.digest, 'Inventaire différent de l’aperçu validé');
 assertFunctions(base, preview);
+if (routingOnly) {
+  // The sole change to the certified site is the compiled routing configuration.
+  const source = await filesOf(baseId);
+  assert.equal(digestOf(source), design.digest);
+  assert.deepEqual(Object.keys(files).sort(), Object.keys(source).sort());
+  const changed = Object.keys(source).filter(path => source[path] !== files[path]);
+  assert.deepEqual(changed, ['/netlify.toml']);
+  const {verifyCompiledRedirects} = await import('../catalogue/legacy-release.mjs');
+  await verifyCompiledRedirects(await rawFile(baseId, '/netlify.toml'), await rawFile(approvedId, '/netlify.toml'));
+}
 const title = 'Atelier Flex-Web — ' + approvedId;
 assert.ok(live.id === baseId || live.title === title, 'Une autre version a été publiée. Réintégrer ses modifications avant de publier.');
 await run(process.execPath, [join(root, 'catalogue/check.mjs'), receipt.url, '--exact'], {timeout:240_000});
@@ -139,6 +155,10 @@ try {
   }
   await restoreLock(candidate.id);
   await publicChecks();
+  if (routingOnly) {
+    const result = await run(process.execPath, [join(root, 'catalogue/verify-legacy-redirects.mjs'), 'https://flex-web.fr'], {timeout:300_000});
+    console.log(result.stdout.trim());
+  }
   assert.equal((await current()).id, candidate.id);
   const result = { approvedId, productionId: candidate.id, previousId: baseId, digest: receipt.digest, files: receipt.files };
   await put(cache, 'production.json', JSON.stringify(result, null, 2) + '\n');

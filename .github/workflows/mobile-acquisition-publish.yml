@@ -35,7 +35,11 @@ jobs:
         run: |
           node acquisition-mobile/catalogue/inventory.mjs
           node acquisition-mobile/scripts/promote.mjs --check "$APPROVED_PREVIEW"
-          preview_url=$(node -p 'require("./acquisition-mobile/redesign/release-candidate.json").url')
+          preview_url="https://${APPROVED_PREVIEW}--flex-webb.netlify.app"
+          if [ "$APPROVED_PREVIEW" != "$(node -p 'require("./acquisition-mobile/redesign/release-candidate.json").id')" ]; then
+            node --test acquisition-mobile/catalogue/legacy-global.test.mjs
+            node acquisition-mobile/catalogue/verify-legacy-redirects.mjs "$preview_url"
+          fi
           node acquisition-mobile/catalogue/check.mjs "$preview_url" --exact
           node acquisition-mobile/catalogue/audit/verify.mjs "$APPROVED_PREVIEW"
           node acquisition-mobile/catalogue/browser.mjs "$preview_url" --design
