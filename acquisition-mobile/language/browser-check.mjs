@@ -107,5 +107,19 @@ try {
     let decisions=0;p.on('request',r=>{if(new URL(r.url()).pathname==='/api/langue/')decisions++;});
     await go(p,'/creation-site-internet/');await readable(p);await lang(p,'fr');assert.equal(decisions,0);
   });
+  await run('le devis termine son initialisation avant la traduction',{language:'en'},async p=>{
+    let unblock;
+    const hold=new Promise(resolve=>{unblock=resolve;});
+    await p.route('**/StartApplication.*.js',async r=>{await hold;await r.continue();});
+    try {
+      await go(p,'/demarrer/application/');await lang(p,'en');
+      const form=p.locator('form.flow-card');
+      assert.ok(await form.locator('fieldset').first().isDisabled());
+      assert.match(await p.locator('h1').innerText(),/Votre application/);
+      unblock();
+      await p.waitForFunction(()=>document.querySelector('h1')?.textContent.includes('Your custom'));
+      assert.ok(await form.locator('fieldset').first().isEnabled());
+    } finally {unblock();}
+  });
   console.log(report.length,'parcours validés');
 } finally {await browser.close();}

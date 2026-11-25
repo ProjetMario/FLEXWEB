@@ -13,6 +13,32 @@ const attributes = ['alt','aria-label','placeholder','title'];
 const controls = new Set();
 const original = new WeakMap();
 const dictionaries = new Map();
+const hydratedIslands=new WeakSet(), pendingIslands=new WeakSet();
+// Astro emits its hydrate event as soon as the renderer is invoked. React can
+// still be matching the French HTML. A live form enables its fieldset in its
+// mounting effect. For the other islands, wait for the committed React root.
+function canReadIsland(island) {
+  if(!island || hydratedIslands.has(island))return true;
+  if(island.hasAttribute('ssr'))return false;
+  const settled=()=>{
+    const key=Object.keys(island).find(k=>k.startsWith('__reactContainer'));
+    const dehydrated=key && island[key]?.stateNode?.current?.memoizedState?.isDehydrated;
+    return !island.querySelector('form.flow-card > fieldset[disabled]') && dehydrated!==true;
+  };
+  if(!pendingIslands.has(island)) {
+    pendingIslands.add(island);
+    let attempts=0;
+    const afterCommit=()=>{
+      if(!island.isConnected || !translation){pendingIslands.delete(island);return;}
+      if(settled()){
+        pendingIslands.delete(island);hydratedIslands.add(island);render(island);
+      }else if(++attempts<120){setTimeout(afterCommit,50);}
+      else {pendingIslands.delete(island);} // Later hydration/fieldset mutations resume the check.
+    };
+    requestAnimationFrame(()=>requestAnimationFrame(afterCommit));
+  }
+  return false;
+}
 let route, language = source, epoch = 0, dirty = false, translation = null;
 const frame = () => document.getElementById('flexweb-contact-frame');
 const readJson = async url => {
@@ -66,7 +92,7 @@ function field(node,key,get,set) {
 }
 function render(node) {
   const el = node.nodeType===Node.ELEMENT_NODE ? node : node.parentElement;
-  if (!el || el.closest(exclusions)) return;
+  if (!el || el.closest(exclusions) || !canReadIsland(el.closest('astro-island'))) return;
   if (node.nodeType===Node.TEXT_NODE) {
     if (!el.closest('textarea') && node.data.trim()) field(node,'#',()=>node.data,value=>{node.data=value;});
     return;
@@ -89,7 +115,7 @@ const observer = new MutationObserver(records=>{
 });
 function observe() {
   if (!translation) return;
-  const settings={subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:[...attributes,'ssr']};
+  const settings={subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:[...attributes,'ssr','disabled']};
   observer.observe(document.body,settings);
   const title=document.querySelector('head title');if(title)observer.observe(title,settings);
 }
@@ -135,7 +161,7 @@ function installControls() {
         const a=document.createElement('a');a.textContent=lang.toUpperCase();a.hreflang=lang;register(a,lang);nav.append(a);
       }
       row.append(nav);
-      const header=first?.closest('header') || first;
+      const header=first?.closest('astro-island') || first?.closest('header') || first;
       if(header && !header.closest('main,footer'))header.after(row);else (document.querySelector('main')||document.body).prepend(row);
     }
   }
