@@ -1,7 +1,9 @@
 // The production site already shares this small branch with its contact forms.
 (() => {
   'use strict';
-  if (!['flex-web.fr', 'www.flex-web.fr'].includes(location.hostname)) return;
+  const preview = /^https:\/\/[a-f0-9]{24}--flex-webb\.netlify\.app$/.test(location.origin) &&
+    document.currentScript?.src.startsWith('https://apercu-formulaire-langues--flex-webb.netlify.app/');
+  if (!preview && !['flex-web.fr', 'www.flex-web.fr'].includes(location.hostname)) return;
   if (/^\/(?:\.netlify|api|admin|private|crm|projet|portail|espace-projet|espace-client)(?:\/|$)/i.test(location.pathname)) return;
 
   const number = '+33 7 57 83 02 62';
@@ -10,6 +12,7 @@
   const forms = 'form.flow-card, form.studio-contact-form, form[data-flexweb-contact], form[action="/api/subscribe"]';
   const candidates = forms + ', a.action[href="' + phone + '"], a[data-conversion-event="quote_click"], a[href*="demarrer"], a[href*="contact"], a[href*="devis"], a[href*="quote"]';
   const agencyDomains = new Set(['flex-web.fr', 'www.flex-web.fr']);
+  if (preview) agencyDomains.add(location.hostname);
   const demo = /^\/(?:en\/)?(?:demo|demos|maquettes?|prospects?)(?:\/|$)/i.test(location.pathname);
   const translations = { fr: 'Appeler le', en: 'Call', de: 'Anrufen unter', it: 'Chiama il' };
   const language = document.documentElement.lang.slice(0, 2).toLowerCase();
