@@ -45,14 +45,14 @@ async function setDiscovery(settings, ignore) {
 // The receiving form already runs in its own latest successful branch deploy.
 // This catalogue delta contains no new Forms definition. Re-enable discovery
 // before returning, including on error; never touch stored responses or hooks.
-export async function deployDelta({base,files,receipt,draft,getBytes,locked=true}) {
+export async function deployDelta({base,files,receipt,draft,getBytes,locked=true,baseHasEdge=false,titlePrefix='Formulaires publics — correctif différentiel '}) {
   const before=await readSite();
   assert.equal(before.published_deploy.id,receipt.base);
   assert.equal(base.id,receipt.base);
   assert.equal(base.site_id,site);
   assert.equal(!!before.published_deploy.locked,locked);
   assert.deepEqual(base.available_functions.map(f=>f.n).sort(),['automation','automation-clock']);
-  assert.equal(!!base.edge_functions_present,false);
+  assert.equal(!!base.edge_functions_present,baseHasEdge);
   const settings=before.processing_settings;
   assert.equal(settings.ignore_html_forms,false);
   await checkReceiver();
@@ -60,7 +60,7 @@ export async function deployDelta({base,files,receipt,draft,getBytes,locked=true
   let id;
   try {
     await setDiscovery(settings,true);
-    const title='Formulaires publics — correctif différentiel ' + receipt.after;
+    const title=titlePrefix + receipt.after;
     const created=await netJSON(project+'/deploys?title='+encodeURIComponent(title),{method:'POST',...json({
       draft,async:true,branch:'main',files,...functionPayload(base),edge_functions:{eszip2:receipt.edge},
     })});

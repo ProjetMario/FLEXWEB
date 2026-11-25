@@ -5,13 +5,19 @@ import {setTimeout as sleep} from 'node:timers/promises';
 import {filesOf,rawFile,netJSON,request} from '../../catalogue/netlify.mjs';
 import {digestOf,functionPayload} from '../../scripts/deploys.mjs';
 import {applyPatch,checkReceiver,deployDelta,project,readSite,edgeFolder,sha256} from './delta.mjs';
-import {checkPages,checkSitemap} from './check-delta.mjs';
+import {applyLanguageDelta,titlePrefix as languageTitle} from '../../language/release.mjs';
+import {checkReadingPages,checkFormBridge} from '../../language/http-check.mjs';
+import {checkPages as checkContactPages,checkSitemap} from './check-delta.mjs';
 
 assert.equal(process.env.GITHUB_ACTIONS,'true');
 assert.equal(process.env.GITHUB_EVENT_NAME,'workflow_dispatch');
 assert.equal(process.env.GITHUB_REF,'refs/heads/main');
 assert.equal(process.env.GITHUB_REPOSITORY?.toLowerCase(),'projetmario/flexweb');
-const receipt=JSON.parse(await readFile(new URL('./delta-receipt.json',import.meta.url)));
+const language=process.argv[3]==='--language';
+const deltaOptions=language?{baseHasEdge:true,titlePrefix:languageTitle}:{};
+const checkPages=language?checkReadingPages:checkContactPages;
+if(language)await checkFormBridge();
+const receipt=JSON.parse(await readFile(new URL(language?'../../language/preview.json':'./delta-receipt.json',import.meta.url)));
 assert.equal(process.argv[2],receipt.preview);
 const checkHead=()=>assert.equal(execFileSync('gh',['api','repos/ProjetMario/FLEXWEB/commits/main','--jq','.sha'],{encoding:'utf8'}).trim(),process.env.GITHUB_SHA);
 checkHead();
@@ -25,7 +31,7 @@ assert.ok(draft.edge_functions_present && live.locked);
 assert.deepEqual(functionPayload(draft),functionPayload(base));
 assert.equal(sha256(await rawFile(draft.id,edgeFolder+receipt.edge+'.eszip')),receipt.edge);
 const source=await filesOf(base.id);
-const files=applyPatch(source,receipt);
+const files=(language?applyLanguageDelta:applyPatch)(source,receipt);
 const actualDraft=await filesOf(draft.id);
 assert.equal(digestOf(actualDraft),receipt.after);
 const url=id=>'https://'+id+'--flex-webb.netlify.app';
@@ -39,7 +45,7 @@ try {
   if(old) {
     assert.equal((await readSite()).published_deploy.id,base.id);
     // Preserve the live lock while Netlify prepares the new production-context copy.
-    const copy={base,receipt,files,draft:false,getBytes:path=>rawFile(draft.id,path)};
+    const copy={base,receipt,files,draft:false,...deltaOptions,getBytes:path=>rawFile(draft.id,path)};
     try {
       candidate=await deployDelta(copy);
     } catch (error) {
@@ -50,7 +56,7 @@ try {
       candidate=await deployDelta({...copy,locked:false});
     }
   } else {
-    assert.equal(live.title,'Formulaires publics — correctif différentiel '+receipt.after,'Une autre publication est active');
+    assert.equal(live.title,(deltaOptions.titlePrefix||'Formulaires publics — correctif différentiel ')+receipt.after,'Une autre publication est active');
     candidate=await netJSON('/deploys/'+live.id);
   }
   assert.equal(candidate.context,'production');

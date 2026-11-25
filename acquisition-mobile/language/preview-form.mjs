@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {mkdtemp,readFile,writeFile} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {site} from '../scripts/baseline.mjs';
+import {netJSON} from '../catalogue/netlify.mjs';
+const parent=process.argv[2], {commit:ref}=JSON.parse(await readFile(new URL('./form-release.json',import.meta.url)));
+assert.match(parent,/^[a-f0-9]{24}$/);
+const catalogue=await netJSON('/deploys/'+parent);
+assert.equal(catalogue.site_id,site);assert.equal(catalogue.context,'deploy-preview');
+const parents=[...new Set([parent,...process.argv.slice(3)])];
+for(const id of parents.slice(1)) {
+  assert.match(id,/^[a-f0-9]{24}$/);
+  const previous=await netJSON('/deploys/'+id);
+  assert.equal(previous.site_id,site);assert.equal(previous.context,'deploy-preview');
+}
+const hosts=parents.map(id=>'https://'+id+'--flex-webb.netlify.app');
+const url=hosts[0];
+const folder=await mkdtemp(join(tmpdir(),'flexweb-language-frame-'));
+const archive=execFileSync('git',['archive',ref,'public','netlify.toml']);
+execFileSync('tar',['-x','-C',folder],{input:archive});
+const config=join(folder,'netlify.toml'),toml=await readFile(config,'utf8');
+assert.ok(toml.includes('frame-ancestors https://flex-web.fr https://www.flex-web.fr;'));
+await writeFile(config,toml.replace('https://www.flex-web.fr;','https://www.flex-web.fr '+hosts.join(' ')+';'));
+const result=JSON.parse(execFileSync('netlify',['deploy','--no-build','--dir','public','--site',site,'--alias','apercu-formulaire-langues','--message','Formulaire de lecture bilingue en aperçu','--json'],{cwd:folder,encoding:'utf8'}));
+assert.equal(result.site_id,site);
+const headers=(await fetch('https://apercu-formulaire-langues--flex-webb.netlify.app/',{method:'HEAD'})).headers;
+assert.ok(headers.get('content-security-policy')?.includes(url));
+console.log('Formulaire d’aperçu',result.deploy_id,'autorisé pour',url);

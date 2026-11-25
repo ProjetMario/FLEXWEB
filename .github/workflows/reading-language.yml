@@ -1,0 +1,61 @@
+name: Publier les ressources de lecture bilingue
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'acquisition-mobile/language/**'
+      - 'public/language-assets/**'
+      - '.github/workflows/reading-language.yml'
+  workflow_dispatch:
+    inputs:
+      preview:
+        description: Identifiant Netlify de l’aperçu bilingue validé
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.event_name == 'pull_request' && format('flexweb-reading-preview-{0}', github.event.pull_request.number) || 'emdash-publication-flex-webb' }}
+  cancel-in-progress: false
+jobs:
+  apercu:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: node --test acquisition-mobile/language/reading.test.mjs acquisition-mobile/redesign/contact/edge.test.mjs
+      - run: node acquisition-mobile/language/inventory-check.mjs public
+      - name: Vérifier le parcours réel sur l’aperçu différentiel
+        run: |
+          id=$(node -p "require('./acquisition-mobile/language/preview.json').preview")
+          node acquisition-mobile/language/http-check.mjs "https://${id}--flex-webb.netlify.app"
+          node acquisition-mobile/language/browser-check.mjs "https://${id}--flex-webb.netlify.app"
+  lecture:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    environment: emdash-publication
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      GH_TOKEN: ${{ github.token }}
+      APPROVED_PREVIEW: ${{ inputs.preview }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: node --test scripts/contact/public-contact.test.mjs acquisition-mobile/redesign/contact/edge.test.mjs acquisition-mobile/language/reading.test.mjs
+      - run: node acquisition-mobile/language/inventory-check.mjs public
+      - name: Vérifier les empreintes et publier le correctif seul
+        run: node acquisition-mobile/redesign/contact/publish-delta.mjs "$APPROVED_PREVIEW" --language

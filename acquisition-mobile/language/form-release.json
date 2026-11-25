@@ -1,0 +1,8 @@
+{
+  "commit": "bd74ab29f6b1a4f7ad3f05f0cb9a3acbb6473b90",
+  "sha256": {
+    "frame.mjs": "827bdd2256bfdde6db3de84ef0381d282eb07990ee171da1ad3487ccf0afba66",
+    "form.mjs": "f1dcf4e1e99197f4deebe5990b2bd6dda00ce92efd4538ab14e5287b7b227101",
+    "call-options.js": "338ab6feb13e87dd46d01277b98cf45512c4271dbe1e9c1d616591679f4ef70c"
+  }
+}

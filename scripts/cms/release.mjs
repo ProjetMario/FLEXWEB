@@ -149,6 +149,7 @@ if (env.ENABLE_EMDASH_PUBLICATION !== 'true') {
         await command(node, ['scripts/geo/capture-homepages.mjs']);
         await command('npm', ['run', 'build']);
         await command(node, ['acquisition-mobile/catalogue/check.mjs', 'dist']);
+        await command(node, ['acquisition-mobile/language/refresh-build.mjs','dist']);
         await command(node, ['acquisition-mobile/scripts/guard-full-release.mjs']);
         await command(node, ['scripts/geo/validate-homepages.mjs']);
         await command(node, ['scripts/check-seo.mjs']);
