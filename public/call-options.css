@@ -1,0 +1,32 @@
+.fw-call-option {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: middle;
+}
+a + .fw-call-option { margin-inline-start: .65rem; }
+form > .fw-call-option { display: block; margin-block-start: .4rem; }
+.fw-call-option > a, .fw-call-fallback a {
+  display: inline-block;
+  box-sizing: border-box;
+  min-height: 44px;
+  padding-block: .6rem;
+  color: inherit;
+  font: inherit;
+  font-weight: 500;
+  line-height: 1.5;
+  text-decoration: underline;
+  text-underline-offset: .18em;
+}
+.fw-call-number { white-space: nowrap; }
+.fw-call-option > a:focus-visible, .fw-call-fallback a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+.fw-call-fallback { display: none; }
+body.project-flow:has(main form.flow-card) .fw-call-fallback,
+body:has(form[action="/api/subscribe"]) .fw-call-fallback,
+body:has(main a:is([href^="/demarrer/"],[data-conversion-event="quote_click"])):not(:has(main a[href^="tel:"])) .fw-call-fallback {
+  display: block !important;
+  margin: .5rem 1rem 1rem;
+  text-align: center;
+}
