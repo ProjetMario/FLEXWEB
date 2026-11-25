@@ -114,11 +114,11 @@ try {
     try {
       await go(p,'/demarrer/application/');await lang(p,'en');
       const form=p.locator('form.flow-card');
-      assert.ok(await form.locator('fieldset').first().isDisabled());
+      assert.equal(await form.locator('fieldset').first().evaluate(el=>el.disabled),true);
       assert.match(await p.locator('h1').innerText(),/Votre application/);
       unblock();
       await p.waitForFunction(()=>document.querySelector('h1')?.textContent.includes('Your custom'));
-      assert.ok(await form.locator('fieldset').first().isEnabled());
+      assert.equal(await form.locator('fieldset').first().evaluate(el=>el.disabled),false);
     } finally {unblock();}
   });
   console.log(report.length,'parcours validés');
