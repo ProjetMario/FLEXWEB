@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {readFile} from 'node:fs/promises';
+import {filesOf,netJSON} from '../catalogue/netlify.mjs';
+import {checkCatalog} from '../catalogue/check.mjs';
+import {digestOf,functionPayload} from '../scripts/deploys.mjs';
+import {checkReceiver,readSite} from '../redesign/contact/delta.mjs';
+import {applyLanguageDelta,receiptFile} from './release.mjs';
+import {checkReadingPages,checkFormBridge} from './http-check.mjs';
+import {previewFormOrigin} from './markup.mjs';
+import {verifyInventory} from './inventory-check.mjs';
+const receipt=JSON.parse(await readFile(receiptFile));
+const [base,draft,src,actual]=await Promise.all([netJSON('/deploys/'+receipt.base),netJSON('/deploys/'+receipt.preview),filesOf(receipt.base),filesOf(receipt.preview)]);
+assert.equal(draft.context,'deploy-preview');assert.equal(draft.state,'ready');
+assert.deepEqual(functionPayload(base),functionPayload(draft));assert.equal(draft.site_id,base.site_id);
+const candidate=applyLanguageDelta(src,receipt);assert.equal(digestOf(actual),digestOf(candidate));
+const files=Object.keys(src),html=files.filter(p=>p.endsWith('.html')),xml=files.filter(p=>p==='/sitemap.xml'||p.startsWith('/sitemaps/')&&p.endsWith('.xml'));
+assert.ok([...html,...xml].every(p=>src[p]===actual[p]));
+console.log('Netlify a conservé les empreintes des',html.length,'HTML et des',xml.length,'XML.');
+const preview='https://'+draft.id+'--flex-webb.netlify.app';
+const text=async(origin,path)=>{
+  const r=await fetch(origin+path,{redirect:'error',signal:AbortSignal.timeout(45000)});assert.equal(r.status,200,path);return r.text();
+};
+const sha=s=>createHash('sha256').update(s).digest('hex');
+const catalogue=await checkCatalog(async(path)=>{
+  const [a,b]=await Promise.all([text(preview,path),text('https://flex-web.fr',path)]);
+  assert.equal(sha(a),sha(b),path);return a;
+},true);
+await Promise.all([checkReadingPages(preview),checkReceiver(),checkFormBridge(previewFormOrigin)]);
+assert.equal((await readSite()).published_deploy.id,base.id);
+console.log(JSON.stringify({preview:draft.id,unchangedHTML:html.length,unchangedXML:xml.length,catalogue,coverage:await verifyInventory('public')},null,2));

@@ -1,3 +1,4 @@
+import {readingMarkup} from '../../../language/markup.mjs';
 import {hasPublicMailbox, transformPublicContact} from '../../../../scripts/contact/public-contact.mjs';
 
 export default async function publicContact(request, context) {
@@ -27,6 +28,7 @@ export default async function publicContact(request, context) {
   if (request.method === 'GET') {
     const filename = /\.html?$/i.test(path) ? path : path.replace(/\/?$/, '/index.html');
     body = transformPublicContact(filename, await response.text());
+    if (response.status === 200) body = readingMarkup(path,body,context.deploy?.context === 'deploy-preview' || /^[a-f0-9]{24}--flex-webb\.netlify\.app$/.test(new URL(request.url).hostname));
     if (hasPublicMailbox(body)) throw new Error('The archived contact could not be replaced');
   }
   return new Response(body, {status: response.status, headers: resultHeaders});

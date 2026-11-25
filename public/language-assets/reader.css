@@ -1,0 +1,5 @@
+.fw-language-row{max-width:72rem;margin:0 auto;padding:.3rem clamp(1rem,4vw,2.5rem);display:flex;justify-content:flex-end}
+.fw-language{display:inline-flex;align-items:center;gap:.45rem;font:600 .82rem/1.35 system-ui,sans-serif;color:inherit}
+.fw-language a{display:inline-flex;align-items:center;justify-content:center;min-width:2.25rem;min-height:2.25rem;text-decoration:none;color:inherit}
+[data-fw-language][aria-current=true]{text-decoration:underline;text-underline-offset:.24em}
+[data-fw-language]:focus-visible{outline:2px solid currentColor;outline-offset:2px}
