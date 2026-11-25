@@ -39,7 +39,7 @@ for (const form of document.querySelectorAll('form[data-flexweb-contact]')) {
       clearTimeout(timeout);
       form.removeAttribute('aria-busy');
       button.disabled = false;
-      button.textContent = originalLabel;
+      button.textContent = button.dataset.idle || originalLabel;
       status.focus();
     }
   });
