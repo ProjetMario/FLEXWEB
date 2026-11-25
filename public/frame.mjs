@@ -9,6 +9,9 @@ if (parent !== window && officialParent(parentOrigin)) {
   const initial = document.documentElement.lang;
   const copies = new Map([[initial, document.cloneNode(true)]]);
   const form = main.querySelector('form[data-flexweb-contact]');
+  // Signal only that a draft exists, including when focus has returned to the parent.
+  form.addEventListener('input',()=>send({type:'flexweb:contact-edited'}),{once:true});
+  form.addEventListener('change',()=>send({type:'flexweb:contact-edited'}),{once:true});
   const selectors = ['h2','label[for]','.fw-contact-privacy span','.fw-contact-privacy a',
     'select option','button[type="submit"]','.fw-contact-call'];
   let latest = 0;
