@@ -121,5 +121,26 @@ try {
       assert.equal(await form.locator('fieldset').first().evaluate(el=>el.disabled),false);
     } finally {unblock();}
   });
+  await run('envoi et erreur du devis affichés dans la langue de lecture',{language:'en'},async p=>{
+    let unblock,requests=0;
+    const hold=new Promise(resolve=>{unblock=resolve;});
+    await p.route('**/api/automation/intake',async r=>{
+      assert.equal(r.request().method(),'POST');requests++;await hold;
+      await r.fulfill({status:422,json:{error:'La demande n’a pas pu être enregistrée.'}});
+    });
+    try{
+      await go(p,'/demarrer/application/');await lang(p,'en');
+      const form=p.locator('form.flow-card');
+      await form.locator('[name=contactName]').fill('Local test');
+      await form.locator('[name=email]').fill('test@example.invalid');
+      await form.locator('[name=phone]').fill('0100000000');
+      await form.locator('[name=message]').fill('Local form test with a simulated reply.');
+      await form.locator('button[type=submit]').click();
+      await form.getByRole('button',{name:'Saving your request…'}).waitFor();
+      unblock();
+      await form.getByText('We couldn’t save your request.',{exact:true}).waitFor();
+      assert.equal(requests,1);assert.equal(await form.locator('[name=message]').inputValue(),'Local form test with a simulated reply.');
+    }finally{unblock();}
+  });
   console.log(report.length,'parcours validés');
 } finally {await browser.close();}

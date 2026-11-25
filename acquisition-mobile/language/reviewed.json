@@ -169,7 +169,13 @@
     "Listez votre périmètre réel ; pour le travail à distance, précisez le territoire accepté.": "List the areas you actually serve. For remote work, specify the locations you accept.",
     "Outils à raccorder, contraintes, informations à confirmer…": "Tools to connect, constraints and details to confirm…",
     "Ex. Chambéry, 73000, 2A004": "E.g. Chambéry, 73000, 2A004",
-    "Superficie administrative fournie pour {p0} : {n1} km². Cette surface n’est pas un rayon d’intervention.": "The administrative area given for {p0} is {n1} km². It does not describe the area served."
+    "Superficie administrative fournie pour {p0} : {n1} km². Cette surface n’est pas un rayon d’intervention.": "The administrative area given for {p0} is {n1} km². It does not describe the area served.",
+    "Enregistrement…": "Saving your request…",
+    "La demande n’a pas pu être enregistrée.": "We couldn’t save your request.",
+    "Le service est momentanément indisponible.": "The service is temporarily unavailable.",
+    "La connexion a pris trop de temps. Réessayez : votre demande ne sera pas dupliquée.": "The connection timed out. You can try again without sending a duplicate request.",
+    "Le service est momentanément indisponible. Vos saisies sont conservées à l’écran. Si le problème persiste, utilisez le formulaire sur https://flex-web.fr/contact/.": "The service is temporarily unavailable. Your entries are still on screen. If the problem persists, use the form at https://flex-web.fr/contact/.",
+    "Connexion interrompue. Réessayez dans quelques instants. Si le problème persiste, utilisez le formulaire sur https://flex-web.fr/contact/.": "The connection was interrupted. Please try again shortly. If the problem persists, use the form at https://flex-web.fr/contact/."
   },
   "en-fr": {
     "Home": "Accueil",
@@ -328,6 +334,12 @@
     "List the areas you actually serve. For remote work, specify the locations you accept.": "Listez votre périmètre réel ; pour le travail à distance, précisez le territoire accepté.",
     "Tools to connect, constraints and details to confirm…": "Outils à raccorder, contraintes, informations à confirmer…",
     "E.g. Chambéry, 73000, 2A004": "Ex. Chambéry, 73000, 2A004",
-    "The administrative area given for {p0} is {n1} km². It does not describe the area served.": "Superficie administrative fournie pour {p0} : {n1} km². Cette surface n’est pas un rayon d’intervention."
+    "The administrative area given for {p0} is {n1} km². It does not describe the area served.": "Superficie administrative fournie pour {p0} : {n1} km². Cette surface n’est pas un rayon d’intervention.",
+    "Saving your request…": "Enregistrement…",
+    "We couldn’t save your request.": "La demande n’a pas pu être enregistrée.",
+    "The service is temporarily unavailable.": "Le service est momentanément indisponible.",
+    "The connection timed out. You can try again without sending a duplicate request.": "La connexion a pris trop de temps. Réessayez : votre demande ne sera pas dupliquée.",
+    "The service is temporarily unavailable. Your entries are still on screen. If the problem persists, use the form at https://flex-web.fr/contact/.": "Le service est momentanément indisponible. Vos saisies sont conservées à l’écran. Si le problème persiste, utilisez le formulaire sur https://flex-web.fr/contact/.",
+    "The connection was interrupted. Please try again shortly. If the problem persists, use the form at https://flex-web.fr/contact/.": "Connexion interrompue. Réessayez dans quelques instants. Si le problème persiste, utilisez le formulaire sur https://flex-web.fr/contact/."
   }
 }

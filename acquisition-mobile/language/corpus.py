@@ -87,17 +87,20 @@ def archives(collection,archive,paths):
             if '/projets-sites/' in path:continue
             blocks=[s.get('text','') for b in row['content'] for s in b.get('children',[])]
             collection.add(path,'fr',blocks)
-def compile_corpus(cache,archive=None):
+def cached_documents(cache):
+    for f in sorted((cache/'pages').glob('*.json.gz')):
+        with gzip.open(f,'rt') as doc: yield json.load(doc)
+
+def compile_corpus(cache,archive=None,ui_source=(),documents=None):
     files=read(cache/'files.json')
     paths={clean_path(p) for p in files if p.endswith('/index.html') and is_public(p)}
     collection=Corpus(collect_names(ROOT))
     if archive:archives(collection,archive,paths)
-    for f in sorted((cache/'pages').glob('*.json.gz')):
-        row=json.load(gzip.open(f,'rt'))
+    for row in (documents if documents is not None else cached_documents(cache)):
         if row['path'] not in paths:continue
         collection.routes[row['path']]={'lang':row['lang'],'pairs':row['pairs']}
         collection.add(row['path'],row['lang'],row['copy'])
-    dynamic=json.loads(subprocess.check_output(['node',str(Path(__file__).with_name('ui-copy.mjs'))],cwd=ROOT,text=True))
+    dynamic=json.loads(subprocess.check_output(['node',str(Path(__file__).with_name('ui-copy.mjs')),*ui_source],cwd=ROOT,text=True))
     for path in ('/demarrer/','/demarrer/application/'):
         if path in paths:collection.add(path,'fr',dynamic)
     write_json(cache/'routes-captured.json',collection.routes)

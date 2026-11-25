@@ -22,7 +22,7 @@ Après validation du propriétaire, fusionner d’abord la modification du formu
 node --test acquisition-mobile/language/reading.test.mjs acquisition-mobile/redesign/contact/edge.test.mjs
 node acquisition-mobile/language/inventory-check.mjs public
 node acquisition-mobile/language/verify-preview.mjs
-node acquisition-mobile/language/browser-check.mjs https://6b0742f252e052f360da902d--flex-webb.netlify.app
+node acquisition-mobile/language/browser-check.mjs https://6b0744937022d646177929ae--flex-webb.netlify.app
 ```
 
 Le contrôle de l’inventaire porte sur les 151 507 URL du sitemap. Les tests navigateur simulent le choix associé aux pays et bloquent les envois de formulaires. Le contrôle HTTP interroge aussi la véritable décision de Netlify. Les vérifications du manifeste et des XML comparent l’aperçu à la production.
